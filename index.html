@@ -1781,6 +1781,54 @@ export default function ImageGallery({ images }) {
           description:
             "Missing alt attributes and accessibility improvements needed",
         },
+        "nextjs-router": {
+          filename: "ClientComponent.tsx",
+          code: `import { useState } from 'react';
+
+import {
+import { Button, Card } from 'components/ui';
+
+export default function ClientComponent({ data }) {
+  const [count, setCount] = useState(0);
+
+  return (
+    <Card>
+      <h2>Interactive Component</h2>
+      <Button onClick={() => setCount(count + 1)}>
+        Count: {count}
+      </Button>
+    </Card>
+  );
+}`,
+          description:
+            "Missing 'use client' directive and corrupted import statements for Next.js App Router",
+        },
+        "testing-validation": {
+          filename: "UserProfile.tsx",
+          code: `import React from 'react';
+
+export default function UserProfile({ user, onUpdate }) {
+  const handleSubmit = async (formData) => {
+    const response = await fetch('/api/users', {
+      method: 'POST',
+      body: JSON.stringify(formData)
+    });
+    const result = await response.json();
+    onUpdate(result);
+  };
+
+  return (
+    <div>
+      <h2>User Profile</h2>
+      <button onClick={handleSubmit}>
+        Update Profile
+      </button>
+    </div>
+  );
+}`,
+          description:
+            "Missing prop types, error handling, and accessibility attributes",
+        },
       };
 
       // Enhanced demo functionality with detailed analysis - MOVED TO TOP
