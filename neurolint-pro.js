@@ -1113,14 +1113,58 @@ class SmartLayerSelector {
       });
     }
 
-    // Layer 5: Next.js App Router issues
+    // Layer 5: Next.js App Router issues (based on fix-layer-5-nextjs.js)
     if (this.isReactComponent(code)) {
+      // Corrupted import statements - more comprehensive detection
+      if (
+        /import\s*{\s*$|import\s*{\s*\n\s*import/m.test(code) ||
+        /import\s*{\s*[^}]*\n\s*[^}]*from/m.test(code)
+      ) {
+        issues.push({
+          type: "nextjs",
+          severity: "critical",
+          description:
+            "Corrupted import statements detected - builds will fail",
+          fixedByLayer: 5,
+          pattern: "Corrupted imports",
+        });
+      }
+
+      // Misplaced 'use client' directives
+      const hasUseClient = code.includes("'use client'");
+      if (hasUseClient) {
+        const lines = code.split("\n");
+        const useClientIndex = lines.findIndex(
+          (line) => line.trim() === "'use client';",
+        );
+
+        // Check if there are imports or other statements before 'use client'
+        let hasMisplacedUseClient = false;
+        for (let i = 0; i < useClientIndex; i++) {
+          const line = lines[i].trim();
+          if (line && !line.startsWith("//") && !line.startsWith("/*")) {
+            hasMisplacedUseClient = true;
+            break;
+          }
+        }
+
+        if (hasMisplacedUseClient) {
+          issues.push({
+            type: "nextjs",
+            severity: "high",
+            description:
+              "'use client' directive must be at the top of the file",
+            fixedByLayer: 5,
+            pattern: "Misplaced use client",
+          });
+        }
+      }
+
       // Missing 'use client' for components using hooks
       const hasHooks =
         /use(State|Effect|Router|Context|Reducer|Callback|Memo|Ref|ImperativeHandle|LayoutEffect|DebugValue)/.test(
           code,
         );
-      const hasUseClient = code.includes("'use client'");
       const isComponent =
         code.includes("export default function") ||
         code.includes("export function");
@@ -1130,37 +1174,38 @@ class SmartLayerSelector {
           type: "nextjs",
           severity: "high",
           description:
-            "Missing 'use client' directive for component using hooks",
+            "Components using React hooks need 'use client' directive",
           fixedByLayer: 5,
-          pattern: "Missing use client",
+          pattern: "Missing use client for hooks",
         });
       }
 
-      // Misplaced 'use client' directives
-      if (hasUseClient && !code.startsWith("'use client';")) {
-        const lines = code.split("\n");
-        const useClientIndex = lines.findIndex(
-          (line) => line.trim() === "'use client';",
-        );
-        if (useClientIndex > 0) {
+      // Import order issues after 'use client'
+      if (hasUseClient && code.includes("\n\nimport")) {
+        const afterUseClient = code.split("'use client';")[1];
+        if (afterUseClient && !/^\n\n/.test(afterUseClient)) {
           issues.push({
             type: "nextjs",
             severity: "medium",
-            description: "Misplaced 'use client' directive found",
+            description: "Improper spacing after 'use client' directive",
             fixedByLayer: 5,
-            pattern: "Misplaced use client",
+            pattern: "Import order after use client",
           });
         }
       }
 
-      // Corrupted import statements
-      if (/import\s*{\s*$|import\s*{\s*\n\s*import/m.test(code)) {
+      // React import issues with 'use client'
+      if (
+        hasUseClient &&
+        !code.includes("import React") &&
+        (code.includes("useState") || code.includes("useEffect"))
+      ) {
         issues.push({
           type: "nextjs",
-          severity: "high",
-          description: "Corrupted import statements detected",
+          severity: "medium",
+          description: "Missing React import in client component using hooks",
           fixedByLayer: 5,
-          pattern: "Corrupted imports",
+          pattern: "React import cleanup",
         });
       }
     }
