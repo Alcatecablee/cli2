@@ -1804,24 +1804,36 @@ export default function ImageGallery({ images }) {
       }
 
       function loadSampleCode(sampleType) {
-        console.log("Loading sample code:", sampleType);
+        console.log("=== LOADING SAMPLE CODE ===");
+        console.log("Sample type requested:", sampleType);
+        console.log("Available sample types:", Object.keys(sampleCodes));
 
         // Update active sample button
         document.querySelectorAll(".sample-btn").forEach((btn) => {
           btn.classList.remove("active");
         });
-        document
-          .querySelector(`[data-sample="${sampleType}"]`)
-          .classList.add("active");
+        const sampleButton = document.querySelector(
+          `[data-sample="${sampleType}"]`,
+        );
+        console.log("Found sample button:", !!sampleButton);
+        if (sampleButton) {
+          sampleButton.classList.add("active");
+          console.log("Sample button activated");
+        }
 
         const sample = sampleCodes[sampleType];
-        console.log("Sample data:", sample);
+        console.log("Sample data found:", !!sample);
+        console.log("Sample content:", sample);
 
         if (sample) {
-          console.log("Calling analyzeCode with:", sample.filename);
+          console.log("Calling analyzeCode with real NeuroLint Pro engine");
+          console.log("- filename:", sample.filename);
+          console.log("- code length:", sample.code.length);
+          console.log("- is sample: true");
           analyzeCode(sample.code, sample.filename, true);
         } else {
-          console.error("Sample not found:", sampleType);
+          console.error("Sample not found for type:", sampleType);
+          console.error("Available types:", Object.keys(sampleCodes));
         }
       }
 
@@ -2061,30 +2073,49 @@ export default function ImageGallery({ images }) {
 
       // Main analysis function that calls the real engine
       async function analyzeCode(code, filename, isSample = false) {
+        console.log("=== STARTING ANALYSIS ===");
+        console.log("Filename:", filename);
+        console.log("Is Sample:", isSample);
+        console.log("Code length:", code.length);
+        console.log("Code preview:", code.substring(0, 200) + "...");
+
         const results = document.getElementById("results");
         const progressFill = document.getElementById("progressFill");
         const progressText = document.getElementById("progressText");
 
         // Show the results section
         results.classList.add("show");
+        console.log("Results section shown");
 
         try {
           // Start progress animation
           progressText.textContent = `Analyzing ${filename}...`;
           animateProgress(0, 30, 1000);
+          console.log("Progress animation started (0-30%)");
+
+          // Prepare API payload
+          const payload = {
+            code: code,
+            filename: filename,
+            demo: true,
+          };
+          console.log("API Payload:", payload);
 
           // Call the real NeuroLint Pro API
+          console.log("Calling NeuroLint Pro API at /api/analyze");
           const response = await fetch("/api/analyze", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({
-              code: code,
-              filename: filename,
-              demo: true,
-            }),
+            body: JSON.stringify(payload),
           });
+          console.log("API Response status:", response.status);
+          console.log("API Response ok:", response.ok);
+          console.log(
+            "API Response headers:",
+            Object.fromEntries(response.headers),
+          );
 
           if (!response.ok) {
             console.log(`API Error: Status ${response.status}`);
@@ -2131,34 +2162,57 @@ export default function ImageGallery({ images }) {
           }
 
           const result = await response.json();
+          console.log("=== RAW API RESPONSE ===");
+          console.log("Full result object:", result);
+          console.log("Result type:", typeof result);
+          console.log("Result keys:", Object.keys(result));
+          console.log("Result detectedIssues:", result.detectedIssues);
+          console.log("Result recommendedLayers:", result.recommendedLayers);
+          console.log("Result confidence:", result.confidence);
+          console.log("Result fixedCode:", result.fixedCode);
 
           // Continue progress
           animateProgress(30, 70, 800);
           progressText.textContent = "Processing analysis...";
+          console.log("Progress animation continued (30-70%)");
 
-          // Use REAL NeuroLint Pro analysis results
-          console.log("Real NeuroLint Pro analysis result:", result);
+          // Use REAL NeuroLint Pro analysis results - NO SIMULATION
+          console.log(
+            "Using REAL NeuroLint Pro analysis result (no simulation)",
+          );
 
           // Complete progress
           animateProgress(70, 100, 500);
           progressText.textContent = "Analysis complete!";
+          console.log("Progress animation completed (70-100%)");
 
           // Store results using REAL analysis from your engine
-          currentAnalysisResults.push({
+          const analysisData = {
             filename,
             originalCode: code,
-            result: result, // Use real result from NeuroLint Pro engine
+            result: result, // Use real result from NeuroLint Pro engine - NO SIMULATION
             isSample,
-          });
+          };
+          console.log("Storing analysis data:", analysisData);
+          currentAnalysisResults.push(analysisData);
+          console.log(
+            "Current analysis results array length:",
+            currentAnalysisResults.length,
+          );
 
           // Display results
+          console.log("Scheduling results display in 300ms");
           setTimeout(() => {
+            console.log("Calling displayAnalysisResults()");
             displayAnalysisResults();
           }, 300);
         } catch (error) {
+          console.log("=== ERROR CAUGHT ===");
           console.error("Analysis error:", error);
+          console.log("Error type:", typeof error);
           console.log("Error isDemoLimit flag:", error.isDemoLimit);
           console.log("Error message:", error.message);
+          console.log("Error stack:", error.stack);
 
           // Handle demo limit reached - check both flag and message content
           const isDemoLimit =
@@ -2190,88 +2244,8 @@ export default function ImageGallery({ images }) {
         }
       }
 
-      // Simulate what fixes would look like (for demo purposes)
-      async function simulateCodeFixes(originalCode, analysisResult) {
-        // Create a simulated "fixed" version based on detected issues
-        let fixedCode = originalCode;
-        const appliedFixes = [];
-
-        // Simulate fixing HTML entities
-        if (originalCode.includes("&quot;")) {
-          fixedCode = fixedCode.replace(/&quot;/g, '"');
-          appliedFixes.push({
-            type: "HTML Entity",
-            description: "Converted &quot; to proper quotes",
-          });
-        }
-        if (originalCode.includes("&amp;")) {
-          fixedCode = fixedCode.replace(/&amp;/g, "&");
-          appliedFixes.push({
-            type: "HTML Entity",
-            description: "Converted &amp; to proper ampersand",
-          });
-        }
-
-        // Simulate fixing missing keys
-        if (originalCode.includes(".map(") && !originalCode.includes("key=")) {
-          fixedCode = fixedCode.replace(/\.map\((\w+) => \(/g, ".map($1 => (");
-          fixedCode = fixedCode.replace(
-            /<div className="([^"]+)">/g,
-            '<div key={$1.id} className="$1">',
-          );
-          appliedFixes.push({
-            type: "React Keys",
-            description: "Added missing key props to mapped elements",
-          });
-        }
-
-        // Simulate fixing console.log
-        if (originalCode.includes("console.log")) {
-          fixedCode = fixedCode.replace(/console\.log\(/g, "// console.log(");
-          appliedFixes.push({
-            type: "Console Cleanup",
-            description: "Commented out console.log statements",
-          });
-        }
-
-        // Simulate fixing localStorage SSR issues
-        if (
-          originalCode.includes("localStorage") &&
-          !originalCode.includes("typeof window")
-        ) {
-          fixedCode = fixedCode.replace(
-            /localStorage\.getItem\('([^']+)'\)/g,
-            "typeof window !== 'undefined' ? localStorage.getItem('$1') : null",
-          );
-          appliedFixes.push({
-            type: "SSR Safety",
-            description: "Added SSR guards for localStorage access",
-          });
-        }
-
-        // Simulate fixing missing alt attributes
-        if (originalCode.includes("<img") && !originalCode.includes("alt=")) {
-          fixedCode = fixedCode.replace(
-            /<img src={([^}]+)} \/>/g,
-            '<img src={$1} alt="" />',
-          );
-          fixedCode = fixedCode.replace(
-            /<img src={([^}]+)} onClick/g,
-            '<img src={$1} alt="" onClick',
-          );
-          appliedFixes.push({
-            type: "Accessibility",
-            description: "Added alt attributes to images",
-          });
-        }
-
-        return {
-          ...analysisResult,
-          fixedCode,
-          appliedFixes,
-          changesMade: appliedFixes.length,
-        };
-      }
+      // REMOVED simulateCodeFixes - using REAL NeuroLint Pro analysis only
+      // All analysis data now comes directly from the /api/analyze endpoint
 
       function animateProgress(from, to, duration) {
         const progressFill = document.getElementById("progressFill");
@@ -2297,30 +2271,54 @@ export default function ImageGallery({ images }) {
       }
 
       function displayAnalysisResults() {
-        if (currentAnalysisResults.length === 0) return;
+        console.log("=== DISPLAYING ANALYSIS RESULTS ===");
+        console.log(
+          "Current analysis results count:",
+          currentAnalysisResults.length,
+        );
+
+        if (currentAnalysisResults.length === 0) {
+          console.log("No analysis results to display");
+          return;
+        }
 
         const latest =
           currentAnalysisResults[currentAnalysisResults.length - 1];
+        console.log("Latest analysis data:", latest);
         const result = latest.result;
+        console.log("Latest result:", result);
 
         // Update overview tab
+        console.log("Updating overview tab");
         displayOverview(latest);
 
         // Update comparison tab
+        console.log("Updating comparison tab");
         displayCodeComparison(latest);
 
         // Update issues tab
+        console.log("Updating issues tab");
         displayIssuesFound(latest);
 
         // Update layers tab
+        console.log("Updating layers tab");
         displayLayersApplied(latest);
+
+        console.log("All tabs updated successfully");
       }
 
       function displayOverview(analysisData) {
+        console.log("=== DISPLAYING OVERVIEW ===");
         const { result, filename } = analysisData;
+        console.log("Overview - filename:", filename);
+        console.log("Overview - result:", result);
+        console.log("Overview - detectedIssues:", result.detectedIssues);
+        console.log("Overview - recommendedLayers:", result.recommendedLayers);
+        console.log("Overview - confidence:", result.confidence);
 
         // Update summary stats using REAL NeuroLint Pro engine data
         const summaryEl = document.getElementById("analysisSummary");
+        console.log("Found analysisSummary element:", !!summaryEl);
         summaryEl.innerHTML = `
           <div class="analysis-stat">
             <div class="analysis-stat-value">${result.detectedIssues?.length || 0}</div>
@@ -2342,6 +2340,8 @@ export default function ImageGallery({ images }) {
 
         // Update overview content using REAL NeuroLint Pro engine results
         const overviewEl = document.getElementById("analysisOverview");
+        console.log("Found analysisOverview element:", !!overviewEl);
+        console.log("Setting overview content with real NeuroLint Pro data");
         overviewEl.innerHTML = `
           <div style="background: #000000; border: 1px solid #4a4a4a; padding: 2rem; margin-top: 1rem;">
             <h4 style="color: #ffffff; margin-bottom: 1rem; font-size: 1.2rem;">${filename}</h4>
@@ -2460,9 +2460,15 @@ export default function ImageGallery({ images }) {
       }
 
       function displayLayersApplied(analysisData) {
+        console.log("=== DISPLAYING LAYERS ===");
         const { result } = analysisData;
+        console.log("Layers - result:", result);
         const layers = result.recommendedLayers || [];
         const fixes = result.appliedFixes || [];
+        console.log("Layers - recommendedLayers:", layers);
+        console.log("Layers - appliedFixes:", fixes);
+        console.log("Layers - number of layers:", layers.length);
+        console.log("Layers - number of fixes:", fixes.length);
 
         const layersEl = document.getElementById("layersApplied");
 
