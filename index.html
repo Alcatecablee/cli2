@@ -2530,12 +2530,12 @@ export default function ImageGallery({ images }) {
             <div class="analysis-stat-label">Demo Limit</div>
           </div>
           <div class="analysis-stat">
-            <div class="analysis-stat-value">∞</div>
+            <div class="analysis-stat-value">Unlimited</div>
             <div class="analysis-stat-label">Pro Version</div>
           </div>
           <div class="analysis-stat">
             <div class="analysis-stat-value">$49</div>
-            <div class="analysis-stat-label">Unlock Now</div>
+            <div class="analysis-stat-label">Single Fix</div>
           </div>
           <div class="analysis-stat">
             <div class="analysis-stat-value">50+</div>
@@ -2545,52 +2545,51 @@ export default function ImageGallery({ images }) {
 
         const overviewEl = document.getElementById("analysisOverview");
         overviewEl.innerHTML = `
-          <div style="background: linear-gradient(135deg, rgba(255, 170, 0, 0.15) 0%, rgba(255, 136, 0, 0.1) 100%); border: 2px solid rgba(255, 170, 0, 0.4); border-radius: 16px; padding: 3rem; text-align: center; margin-top: 2rem;">
-            <div style="font-size: 3rem; margin-bottom: 1rem;">🚀</div>
-            <h4 style="color: #ffffff; margin-bottom: 1rem; font-size: 1.8rem; font-weight: 700;">Demo Limit Reached!</h4>
-            <p style="color: rgba(255, 255, 255, 0.9); margin-bottom: 2rem; font-size: 1.2rem; line-height: 1.6;">
-              You've experienced NeuroLint Pro's power! <strong style="color: #ffffff;">Ready to fix your entire codebase?</strong>
+          <div style="background: #000000; border: 1px solid #4a4a4a; padding: 3rem; text-align: center; margin-top: 2rem;">
+            <h4 style="color: #ffffff; margin-bottom: 1rem; font-size: 1.8rem; font-weight: 700;">Demo Limit Reached</h4>
+            <p style="color: #666666; margin-bottom: 2rem; font-size: 1.2rem; line-height: 1.6;">
+              You have reached the 3-file demo limit. <strong style="color: #ffffff;">Upgrade to process unlimited files.</strong>
             </p>
 
-            <div style="background: rgba(0, 0, 0, 0.3); border-radius: 12px; padding: 2rem; margin: 2rem 0;">
-              <h5 style="color: #ffaa00; margin-bottom: 1rem; font-size: 1.2rem;">🎯 What You Just Experienced:</h5>
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; text-align: left; color: rgba(255, 255, 255, 0.8);">
-                <div>✅ Real code analysis</div>
-                <div>✅ Before/after comparison</div>
-                <div>✅ Issue detection</div>
-                <div>✅ 4-layer fix system</div>
+            <div style="background: #000000; border: 1px solid #4a4a4a; padding: 2rem; margin: 2rem 0;">
+              <h5 style="color: #ffffff; margin-bottom: 1rem; font-size: 1.2rem;">Demo Features Experienced:</h5>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; text-align: left; color: #666666;">
+                <div>• Real code analysis</div>
+                <div>• Before/after comparison</div>
+                <div>• Issue detection</div>
+                <div>• 4-layer fix system</div>
               </div>
             </div>
 
-            <div style="background: rgba(100, 255, 100, 0.1); border: 1px solid rgba(100, 255, 100, 0.3); border-radius: 12px; padding: 2rem; margin: 2rem 0;">
-              <h5 style="color: #aaffaa; margin-bottom: 1rem; font-size: 1.2rem;">💎 Upgrade to Full Version:</h5>
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; text-align: left; color: rgba(255, 255, 255, 0.8);">
-                <div>🚀 Unlimited files</div>
-                <div>🛡️ Never corrupts code</div>
-                <div>⚡ Instant processing</div>
-                <div>🎯 Advanced safety</div>
-                <div>📊 Detailed reports</div>
-                <div>🔧 All 4 layers</div>
+            <div style="background: #000000; border: 1px solid #4a4a4a; padding: 2rem; margin: 2rem 0;">
+              <h5 style="color: #ffffff; margin-bottom: 1rem; font-size: 1.2rem;">Full Version Features:</h5>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; text-align: left; color: #666666;">
+                <div>• Unlimited file processing</div>
+                <div>• Zero code corruption guarantee</div>
+                <div>• Advanced safety validation</div>
+                <div>• Comprehensive reporting</div>
+                <div>• All 4 transformation layers</div>
+                <div>• Priority processing</div>
               </div>
             </div>
 
             <div style="margin-top: 2rem;">
-              <p style="color: rgba(255, 255, 255, 0.8); margin-bottom: 2rem; font-size: 1.1rem;">
-                <strong style="color: #ffffff;">Transform your entire React codebase safely.</strong><br>
-                <span style="color: #ffaa00;">Used by teams at scale. Zero corruption guarantee.</span>
+              <p style="color: #666666; margin-bottom: 2rem; font-size: 1.1rem;">
+                <strong style="color: #ffffff;">Professional React/Next.js code transformation service.</strong><br>
+                <span style="color: #666666;">Enterprise-grade reliability. Production-ready fixes.</span>
               </p>
 
               <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-                <button class="demo-upgrade-btn" onclick="openPaymentModal('single')" style="font-size: 1.1rem; padding: 1rem 2rem;">
-                  🛠️ Fix My Code Now - $49
+                <button class="btn" onclick="openPaymentModal('single')" style="font-size: 1.1rem; padding: 1rem 2rem;">
+                  Fix My Code Now - $49
                 </button>
-                <button class="demo-upgrade-btn secondary" onclick="openPaymentModal('professional')" style="font-size: 1.1rem; padding: 1rem 2rem;">
-                  ⚡ Go Professional - $149/mo
+                <button class="btn" onclick="openPaymentModal('professional')" style="font-size: 1.1rem; padding: 1rem 2rem; background: transparent; color: #ffffff; border: 1px solid #4a4a4a;">
+                  Professional Plan - $149/mo
                 </button>
               </div>
 
-              <p style="color: rgba(255, 255, 255, 0.6); margin-top: 1.5rem; font-size: 0.95rem;">
-                🔒 Secure PayPal checkout • 💳 All major cards accepted • ⚡ Instant access
+              <p style="color: #666666; margin-top: 1.5rem; font-size: 0.95rem;">
+                Secure PayPal checkout • All major cards accepted • Instant access
               </p>
             </div>
           </div>
@@ -2599,33 +2598,30 @@ export default function ImageGallery({ images }) {
         // Also update the comparison tab to show upgrade message
         const comparisonEl = document.getElementById("codeComparison");
         comparisonEl.innerHTML = `
-          <div style="grid-column: 1 / -1; background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 16px; padding: 3rem; text-align: center;">
-            <div style="font-size: 2rem; margin-bottom: 1rem;">🔐</div>
-            <h4 style="color: #ffffff; margin-bottom: 1rem; font-size: 1.4rem;">Before/After View Locked</h4>
-            <p style="color: rgba(255, 255, 255, 0.7); margin-bottom: 2rem;">Upgrade to see detailed code transformations and diff views</p>
-            <button class="demo-upgrade-btn" onclick="openPaymentModal('single')">🚀 Unlock Full Analysis - $49</button>
+          <div style="grid-column: 1 / -1; background: #000000; border: 1px solid #4a4a4a; padding: 3rem; text-align: center;">
+            <h4 style="color: #ffffff; margin-bottom: 1rem; font-size: 1.4rem;">Code Comparison Locked</h4>
+            <p style="color: #666666; margin-bottom: 2rem;">Upgrade to view detailed before/after code transformations and diff analysis</p>
+            <button class="btn" onclick="openPaymentModal('single')">Unlock Full Analysis - $49</button>
           </div>
         `;
 
         // Update issues tab
         const issuesEl = document.getElementById("issuesList");
         issuesEl.innerHTML = `
-          <div style="text-align: center; padding: 3rem; background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 16px;">
-            <div style="font-size: 2rem; margin-bottom: 1rem;">🔍</div>
-            <h4 style="color: #ffffff; margin-bottom: 1rem; font-size: 1.4rem;">Detailed Issue Analysis Locked</h4>
-            <p style="color: rgba(255, 255, 255, 0.7); margin-bottom: 2rem;">Get comprehensive issue reports with automatic fixes</p>
-            <button class="demo-upgrade-btn" onclick="openPaymentModal('single')">🎯 Get Full Analysis - $49</button>
+          <div style="text-align: center; padding: 3rem; background: #000000; border: 1px solid #4a4a4a;">
+            <h4 style="color: #ffffff; margin-bottom: 1rem; font-size: 1.4rem;">Issue Analysis Locked</h4>
+            <p style="color: #666666; margin-bottom: 2rem;">Access comprehensive issue reports with automatic fix recommendations</p>
+            <button class="btn" onclick="openPaymentModal('single')">Get Full Analysis - $49</button>
           </div>
         `;
 
         // Update layers tab
         const layersEl = document.getElementById("layersApplied");
         layersEl.innerHTML = `
-          <div style="text-align: center; padding: 3rem; background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 16px;">
-            <div style="font-size: 2rem; margin-bottom: 1rem;">🔧</div>
-            <h4 style="color: #ffffff; margin-bottom: 1rem; font-size: 1.4rem;">4-Layer Processing Locked</h4>
-            <p style="color: rgba(255, 255, 255, 0.7); margin-bottom: 2rem;">Experience our full 4-layer transformation system</p>
-            <button class="demo-upgrade-btn" onclick="openPaymentModal('single')">⚡ Unlock All Layers - $49</button>
+          <div style="text-align: center; padding: 3rem; background: #000000; border: 1px solid #4a4a4a;">
+            <h4 style="color: #ffffff; margin-bottom: 1rem; font-size: 1.4rem;">Layer Processing Locked</h4>
+            <p style="color: #666666; margin-bottom: 2rem;">Experience our complete 4-layer transformation system with safety validation</p>
+            <button class="btn" onclick="openPaymentModal('single')">Unlock All Layers - $49</button>
           </div>
         `;
       }
