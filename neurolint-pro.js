@@ -905,6 +905,60 @@ function applyLayerTransformations(layerId, code, options = {}) {
           );
         }
       }
+
+      // Add loading states for async components
+      if (
+        transformedCode.includes("async") &&
+        transformedCode.includes("useState") &&
+        !transformedCode.includes("loading") &&
+        !transformedCode.includes("isLoading")
+      ) {
+        const stateMatch = transformedCode.match(
+          /const \[([^,]+),\s*set[^\]]+\] = useState/,
+        );
+        if (stateMatch) {
+          transformedCode = transformedCode.replace(
+            stateMatch[0],
+            `const [isLoading, setIsLoading] = useState(false);\n  ${stateMatch[0]}`,
+          );
+          appliedFixes.push("Testing: Added loading state");
+          console.log(`🛠️  [FALLBACK] Added loading state`);
+        }
+      }
+
+      // Fix invalid component exports
+      if (
+        transformedCode.includes("function ") &&
+        !transformedCode.includes("export default") &&
+        !transformedCode.includes("export {")
+      ) {
+        const functionMatch = transformedCode.match(/function (\w+)\s*\(/);
+        if (
+          functionMatch &&
+          !transformedCode.includes(`export default ${functionMatch[1]}`)
+        ) {
+          transformedCode += `\n\nexport default ${functionMatch[1]};`;
+          appliedFixes.push("Testing: Added proper component export");
+          console.log(`🛠️  [FALLBACK] Added proper component export`);
+        }
+      }
+
+      // Replace 'any' types with 'unknown' for strict mode compliance
+      if (
+        transformedCode.includes("any") &&
+        !transformedCode.includes("// @ts-ignore") &&
+        transformedCode.includes("interface")
+      ) {
+        transformedCode = transformedCode
+          .replace(/:\s*any(?!\[\])/g, ": unknown")
+          .replace(/any\[\]/g, "unknown[]");
+        appliedFixes.push(
+          "Testing: Improved TypeScript strict mode compliance",
+        );
+        console.log(
+          `🛠️  [FALLBACK] Improved TypeScript strict mode compliance`,
+        );
+      }
       break;
 
     default:
