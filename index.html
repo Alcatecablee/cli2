@@ -1,0 +1,780 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NeuroLint Pro - Premium React/Next.js Code Fixing Service</title>
+    <script src="https://www.paypal.com/sdk/js?client-id=YOUR_PAYPAL_CLIENT_ID&currency=USD&intent=capture"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        line-height: 1.6;
+        color: #333;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+
+      header {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 1000;
+      }
+
+      nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 0;
+      }
+
+      .logo {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #667eea;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 2rem;
+        list-style: none;
+      }
+
+      .nav-links a {
+        text-decoration: none;
+        color: #333;
+        font-weight: 500;
+        transition: color 0.3s;
+      }
+
+      .nav-links a:hover {
+        color: #667eea;
+      }
+
+      .hero {
+        padding: 120px 0 80px;
+        text-align: center;
+        color: white;
+      }
+
+      .hero h1 {
+        font-size: 3.5rem;
+        margin-bottom: 1rem;
+        font-weight: 700;
+      }
+
+      .hero p {
+        font-size: 1.3rem;
+        margin-bottom: 2rem;
+        opacity: 0.9;
+      }
+
+      .features {
+        background: white;
+        padding: 80px 0;
+      }
+
+      .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin-top: 3rem;
+      }
+
+      .feature-card {
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        transition:
+          transform 0.3s,
+          box-shadow 0.3s;
+      }
+
+      .feature-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+      }
+
+      .feature-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+      }
+
+      .pricing {
+        background: #f8f9fa;
+        padding: 80px 0;
+      }
+
+      .pricing-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin-top: 3rem;
+      }
+
+      .pricing-card {
+        background: white;
+        padding: 2.5rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        position: relative;
+        transition: transform 0.3s;
+      }
+
+      .pricing-card:hover {
+        transform: translateY(-5px);
+      }
+
+      .pricing-card.popular {
+        border: 3px solid #667eea;
+        transform: scale(1.05);
+      }
+
+      .popular-badge {
+        position: absolute;
+        top: -15px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #667eea;
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: bold;
+      }
+
+      .price {
+        font-size: 3rem;
+        font-weight: bold;
+        color: #667eea;
+        margin: 1rem 0;
+      }
+
+      .price-per {
+        font-size: 1rem;
+        color: #666;
+        margin-left: 0.5rem;
+      }
+
+      .btn {
+        display: inline-block;
+        padding: 1rem 2rem;
+        background: #667eea;
+        color: white;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 1.1rem;
+        transition: all 0.3s;
+        border: none;
+        cursor: pointer;
+        margin-top: 1rem;
+      }
+
+      .btn:hover {
+        background: #5a6fd8;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+      }
+
+      .btn-secondary {
+        background: white;
+        color: #667eea;
+        border: 2px solid #667eea;
+      }
+
+      .btn-secondary:hover {
+        background: #667eea;
+        color: white;
+      }
+
+      .demo-section {
+        padding: 80px 0;
+        background: white;
+      }
+
+      .demo-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        margin-top: 2rem;
+      }
+
+      .code-editor {
+        background: #1e1e1e;
+        border-radius: 8px;
+        padding: 1.5rem;
+        font-family: "Monaco", "Menlo", monospace;
+        color: #d4d4d4;
+        font-size: 0.9rem;
+        overflow-x: auto;
+      }
+
+      .upload-area {
+        border: 2px dashed #667eea;
+        border-radius: 12px;
+        padding: 3rem;
+        text-align: center;
+        background: #f8f9ff;
+        transition: all 0.3s;
+        cursor: pointer;
+      }
+
+      .upload-area:hover {
+        border-color: #5a6fd8;
+        background: #f0f4ff;
+      }
+
+      .upload-area.dragover {
+        border-color: #5a6fd8;
+        background: #e8f0fe;
+        transform: scale(1.02);
+      }
+
+      .file-input {
+        display: none;
+      }
+
+      .results {
+        margin-top: 2rem;
+        padding: 2rem;
+        background: #f8f9fa;
+        border-radius: 8px;
+        display: none;
+      }
+
+      .results.show {
+        display: block;
+      }
+
+      .progress-bar {
+        width: 100%;
+        height: 6px;
+        background: #e0e0e0;
+        border-radius: 3px;
+        overflow: hidden;
+        margin: 1rem 0;
+      }
+
+      .progress-fill {
+        height: 100%;
+        background: #667eea;
+        width: 0%;
+        transition: width 0.3s;
+        border-radius: 3px;
+      }
+
+      .footer {
+        background: #2c3e50;
+        color: white;
+        padding: 3rem 0;
+        text-align: center;
+      }
+
+      .payment-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        z-index: 2000;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .payment-modal.show {
+        display: flex;
+      }
+
+      .payment-content {
+        background: white;
+        padding: 2rem;
+        border-radius: 12px;
+        max-width: 500px;
+        width: 90%;
+        position: relative;
+      }
+
+      .close-modal {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: #666;
+      }
+
+      #paypal-button-container {
+        margin-top: 1rem;
+      }
+
+      @media (max-width: 768px) {
+        .hero h1 {
+          font-size: 2.5rem;
+        }
+
+        .demo-container {
+          grid-template-columns: 1fr;
+        }
+
+        .nav-links {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav class="container">
+        <div class="logo">🧠 NeuroLint Pro</div>
+        <ul class="nav-links">
+          <li><a href="#features">Features</a></li>
+          <li><a href="#demo">Demo</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <div class="container">
+        <h1>Fix Your React/Next.js Code Instantly</h1>
+        <p>
+          Professional-grade automated debugging service that fixes HTML
+          entities, missing key props, SSR issues, and more
+        </p>
+        <button class="btn" onclick="openPaymentModal('single')">
+          Fix Code Now - $49
+        </button>
+        <a href="#demo" class="btn btn-secondary">Try Free Demo</a>
+      </div>
+    </section>
+
+    <section id="features" class="features">
+      <div class="container">
+        <h2 style="text-align: center; font-size: 2.5rem; margin-bottom: 1rem">
+          Why NeuroLint Pro?
+        </h2>
+        <p
+          style="
+            text-align: center;
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 3rem;
+          "
+        >
+          Built on battle-tested patterns from IMPLEMENTATION_PATTERNS.md -
+          Never corrupts your code
+        </p>
+
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon">🛡️</div>
+            <h3>Safe Transformations</h3>
+            <p>
+              Automatic rollback on validation failure. Your code is never
+              corrupted - guaranteed.
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">🧠</div>
+            <h3>Smart Detection</h3>
+            <p>
+              Automatically detects HTML entities, missing key props, SSR
+              issues, and accessibility problems.
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">⚡</div>
+            <h3>4-Layer System</h3>
+            <p>
+              Config → Patterns → Components → Hydration. Each layer builds on
+              the previous safely.
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">🔄</div>
+            <h3>Error Recovery</h3>
+            <p>
+              Intelligent error categorization with specific recovery
+              suggestions for each issue type.
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">📊</div>
+            <h3>Detailed Reports</h3>
+            <p>
+              Get comprehensive analysis of issues found, fixes applied, and
+              improvement recommendations.
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">⚡</div>
+            <h3>Enterprise Ready</h3>
+            <p>
+              Processes codebases up to 10,000+ files. Used by React teams at
+              scale.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="demo" class="demo-section">
+      <div class="container">
+        <h2 style="text-align: center; font-size: 2.5rem; margin-bottom: 1rem">
+          Try NeuroLint Pro Live
+        </h2>
+        <p
+          style="
+            text-align: center;
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 2rem;
+          "
+        >
+          Upload your React/Next.js files and see real fixes applied using our
+          4-layer system
+        </p>
+
+        <div
+          class="upload-area"
+          onclick="document.getElementById('fileInput').click()"
+        >
+          <div style="font-size: 3rem; margin-bottom: 1rem">📁</div>
+          <h3>Drop your files here or click to upload</h3>
+          <p style="color: #666; margin-top: 1rem">
+            Supports .jsx, .tsx, .js, .ts files
+          </p>
+          <input
+            type="file"
+            id="fileInput"
+            class="file-input"
+            multiple
+            accept=".jsx,.tsx,.js,.ts"
+            onchange="handleFileUpload(event)"
+          />
+        </div>
+
+        <div class="results" id="results">
+          <h3>Analysis Results:</h3>
+          <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+          </div>
+          <div id="analysisOutput"></div>
+          <div id="fixedCodeOutput"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="pricing" class="pricing">
+      <div class="container">
+        <h2 style="text-align: center; font-size: 2.5rem; margin-bottom: 1rem">
+          Simple, Transparent Pricing
+        </h2>
+        <p
+          style="
+            text-align: center;
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 3rem;
+          "
+        >
+          Pay per use or get unlimited access. No hidden fees.
+        </p>
+
+        <div class="pricing-grid">
+          <div class="pricing-card">
+            <h3>Single Fix</h3>
+            <div class="price">
+              $49<span class="price-per">per codebase</span>
+            </div>
+            <ul style="text-align: left; margin: 2rem 0">
+              <li>✅ Up to 50 files</li>
+              <li>✅ All 4 layers included</li>
+              <li>✅ Detailed analysis report</li>
+              <li>✅ 24-hour delivery</li>
+              <li>✅ PayPal/Card payment</li>
+            </ul>
+            <button class="btn" onclick="openPaymentModal('single')">
+              Fix Now
+            </button>
+          </div>
+
+          <div class="pricing-card popular">
+            <div class="popular-badge">Most Popular</div>
+            <h3>Professional</h3>
+            <div class="price">
+              $149<span class="price-per">per month</span>
+            </div>
+            <ul style="text-align: left; margin: 2rem 0">
+              <li>✅ Unlimited fixes</li>
+              <li>✅ Up to 500 files per fix</li>
+              <li>✅ Priority processing</li>
+              <li>✅ API access</li>
+              <li>✅ Team collaboration</li>
+              <li>✅ Cancel anytime</li>
+            </ul>
+            <button class="btn" onclick="openPaymentModal('professional')">
+              Get Started
+            </button>
+          </div>
+
+          <div class="pricing-card">
+            <h3>Enterprise</h3>
+            <div class="price">
+              $499<span class="price-per">per month</span>
+            </div>
+            <ul style="text-align: left; margin: 2rem 0">
+              <li>✅ Unlimited everything</li>
+              <li>✅ Custom layer development</li>
+              <li>✅ Dedicated support</li>
+              <li>✅ SLA guarantee</li>
+              <li>✅ On-premise deployment</li>
+              <li>✅ Training included</li>
+            </ul>
+            <button class="btn" onclick="openPaymentModal('enterprise')">
+              Contact Sales
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="container">
+        <p>
+          &copy; 2024 NeuroLint Pro. Professional React/Next.js debugging
+          service.
+        </p>
+        <p style="margin-top: 1rem; opacity: 0.8">
+          Built on proven patterns from IMPLEMENTATION_PATTERNS.md
+        </p>
+      </div>
+    </footer>
+
+    <!-- Payment Modal -->
+    <div id="paymentModal" class="payment-modal">
+      <div class="payment-content">
+        <button class="close-modal" onclick="closePaymentModal()">
+          &times;
+        </button>
+        <h3 id="paymentTitle">Complete Your Purchase</h3>
+        <div id="paymentDetails"></div>
+        <div id="paypal-button-container"></div>
+      </div>
+    </div>
+
+    <script>
+      let selectedPlan = null;
+
+      function openPaymentModal(plan) {
+        selectedPlan = plan;
+        const modal = document.getElementById("paymentModal");
+        const title = document.getElementById("paymentTitle");
+        const details = document.getElementById("paymentDetails");
+
+        const plans = {
+          single: {
+            name: "Single Fix",
+            price: 49,
+            description: "One-time codebase fix (up to 50 files)",
+          },
+          professional: {
+            name: "Professional",
+            price: 149,
+            description: "Monthly subscription with unlimited fixes",
+          },
+          enterprise: {
+            name: "Enterprise",
+            price: 499,
+            description: "Enterprise plan with custom features",
+          },
+        };
+
+        const planData = plans[plan];
+        title.textContent = `${planData.name} - $${planData.price}`;
+        details.innerHTML = `
+                <p style="margin-bottom: 1rem;">${planData.description}</p>
+                <p style="color: #666; margin-bottom: 1rem;">Secure payment via PayPal (supports all major cards)</p>
+            `;
+
+        // Initialize PayPal
+        initializePayPal(planData.price, planData.name);
+
+        modal.classList.add("show");
+      }
+
+      function closePaymentModal() {
+        document.getElementById("paymentModal").classList.remove("show");
+      }
+
+      function initializePayPal(amount, itemName) {
+        // Clear existing PayPal buttons
+        document.getElementById("paypal-button-container").innerHTML = "";
+
+        paypal
+          .Buttons({
+            createOrder: function (data, actions) {
+              return actions.order.create({
+                purchase_units: [
+                  {
+                    amount: {
+                      value: amount.toString(),
+                    },
+                    description: itemName,
+                  },
+                ],
+              });
+            },
+            onApprove: function (data, actions) {
+              return actions.order.capture().then(function (details) {
+                alert("Payment completed! Order ID: " + details.id);
+                closePaymentModal();
+
+                // Redirect to the code fixing interface
+                if (selectedPlan === "single") {
+                  window.location.href = "app.html?session=" + details.id;
+                } else {
+                  // Handle subscription plans
+                  window.location.href =
+                    "app.html?subscription=" +
+                    selectedPlan +
+                    "&session=" +
+                    details.id;
+                }
+              });
+            },
+            onError: function (err) {
+              console.error("PayPal error:", err);
+              alert("Payment failed. Please try again.");
+            },
+          })
+          .render("#paypal-button-container");
+      }
+
+      // Demo functionality - calls REAL NeuroLint Pro engine
+      async function handleFileUpload(event) {
+        const files = event.target.files;
+        if (files.length === 0) return;
+
+        const results = document.getElementById("results");
+        const progressFill = document.getElementById("progressFill");
+        const analysisOutput = document.getElementById("analysisOutput");
+        const fixedCodeOutput = document.getElementById("fixedCodeOutput");
+
+        results.classList.add("show");
+        progressFill.style.width = "0%";
+
+        for (let i = 0; i < Math.min(files.length, 3); i++) {
+          // Limit demo to 3 files
+          const file = files[i];
+          const content = await file.text();
+
+          progressFill.style.width = `${((i + 1) / Math.min(files.length, 3)) * 100}%`;
+
+          try {
+            // Call the REAL NeuroLint Pro API
+            const response = await fetch("/api/analyze", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                code: content,
+                filename: file.name,
+                demo: true, // Demo mode with limited features
+              }),
+            });
+
+            const result = await response.json();
+
+            analysisOutput.innerHTML += `
+                        <div style="margin-bottom: 1rem; padding: 1rem; border: 1px solid #ddd; border-radius: 6px;">
+                            <h4>${file.name}</h4>
+                            <p><strong>Issues Found:</strong> ${result.detectedIssues ? result.detectedIssues.length : 0}</p>
+                            <p><strong>Recommended Layers:</strong> ${result.recommendedLayers ? result.recommendedLayers.join(", ") : "None"}</p>
+                            <p><strong>Confidence:</strong> ${result.confidence ? (result.confidence * 100).toFixed(1) : 0}%</p>
+                            ${result.demo ? '<p style="color: #ff6b35;"><em>Demo Mode - Limited analysis</em></p>' : ""}
+                        </div>
+                    `;
+          } catch (error) {
+            analysisOutput.innerHTML += `
+                        <div style="margin-bottom: 1rem; padding: 1rem; border: 1px solid #ff6b35; border-radius: 6px; background: #fff5f5;">
+                            <h4>${file.name}</h4>
+                            <p style="color: #ff6b35;">Demo error: ${error.message}</p>
+                            <p><em>Upload working files for full analysis</em></p>
+                        </div>
+                    `;
+          }
+        }
+
+        if (files.length > 3) {
+          analysisOutput.innerHTML += `
+                    <div style="margin-top: 1rem; padding: 1rem; background: #f0f4ff; border-radius: 6px; text-align: center;">
+                        <p><strong>Demo limited to 3 files.</strong></p>
+                        <p>Purchase NeuroLint Pro to analyze unlimited files with full fixing capability.</p>
+                        <button class="btn" onclick="openPaymentModal('single')" style="margin-top: 1rem;">Unlock Full Analysis - $49</button>
+                    </div>
+                `;
+        }
+      }
+
+      // Drag and drop functionality
+      const uploadArea = document.querySelector(".upload-area");
+
+      uploadArea.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        uploadArea.classList.add("dragover");
+      });
+
+      uploadArea.addEventListener("dragleave", () => {
+        uploadArea.classList.remove("dragover");
+      });
+
+      uploadArea.addEventListener("drop", (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove("dragover");
+
+        const files = e.dataTransfer.files;
+        document.getElementById("fileInput").files = files;
+        handleFileUpload({ target: { files } });
+      });
+
+      // Smooth scrolling for navigation
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+          e.preventDefault();
+          document.querySelector(this.getAttribute("href")).scrollIntoView({
+            behavior: "smooth",
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
