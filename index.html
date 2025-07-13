@@ -1885,6 +1885,8 @@ export default function ImageGallery({ images }) {
 import {
 import { Button, Card } from 'components/ui';
 
+'use client';
+
 export default function ClientComponent({ data }) {
   const [count, setCount] = useState(0);
 
@@ -1898,13 +1900,13 @@ export default function ClientComponent({ data }) {
   );
 }`,
           description:
-            "Missing 'use client' directive and corrupted import statements for Next.js App Router",
+            "Corrupted import statements, misplaced 'use client' directive, and missing React imports for Next.js App Router",
         },
         "testing-validation": {
           filename: "UserProfile.tsx",
           code: `import React from 'react';
 
-export default function UserProfile({ user, onUpdate }) {
+function UserProfile({ user, onUpdate }) {
   const handleSubmit = async (formData) => {
     const response = await fetch('/api/users', {
       method: 'POST',
@@ -1920,11 +1922,12 @@ export default function UserProfile({ user, onUpdate }) {
       <button onClick={handleSubmit}>
         Update Profile
       </button>
+      <img src={user.avatar} />
     </div>
   );
 }`,
           description:
-            "Missing prop types, error handling, and accessibility attributes",
+            "Missing export, prop types, error handling, accessibility attributes, and loading states",
         },
       };
 
