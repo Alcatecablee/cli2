@@ -2140,6 +2140,8 @@ export default function ImageGallery({ images }) {
           }, 300);
         } catch (error) {
           console.error("Analysis error:", error);
+          console.log("Error isDemoLimit flag:", error.isDemoLimit);
+          console.log("Error message:", error.message);
 
           // Handle demo limit reached - check both flag and message content
           const isDemoLimit =
@@ -2148,7 +2150,10 @@ export default function ImageGallery({ images }) {
             error.message.toLowerCase().includes("rate limit") ||
             error.message.toLowerCase().includes("too many requests");
 
+          console.log("Final isDemoLimit decision:", isDemoLimit);
+
           if (isDemoLimit) {
+            console.log("Displaying demo limit reached message");
             progressText.textContent =
               "Demo limit reached - Upgrade for unlimited access";
             progressFill.style.width = "100%";
@@ -2157,6 +2162,7 @@ export default function ImageGallery({ images }) {
             // Show compelling upgrade message
             displayDemoLimitReached(filename);
           } else {
+            console.log("Displaying regular error message");
             progressText.textContent = `Error analyzing ${filename}: ${error.message}`;
             progressFill.style.width = "0%";
 
