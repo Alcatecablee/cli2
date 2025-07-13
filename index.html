@@ -2116,10 +2116,16 @@ export default function ImageGallery({ images }) {
         } catch (error) {
           console.error("Analysis error:", error);
 
-          // Handle demo limit reached
-          if (error.isDemoLimit) {
+          // Handle demo limit reached - check both flag and message content
+          const isDemoLimit =
+            error.isDemoLimit ||
+            error.message.toLowerCase().includes("demo limit") ||
+            error.message.toLowerCase().includes("rate limit") ||
+            error.message.toLowerCase().includes("too many requests");
+
+          if (isDemoLimit) {
             progressText.textContent =
-              "Demo limit reached - Upgrade for unlimited access!";
+              "Demo limit reached - Upgrade for unlimited access";
             progressFill.style.width = "100%";
             progressFill.style.background = "#666666";
 
