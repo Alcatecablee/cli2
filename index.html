@@ -8,123 +8,585 @@
       name="description"
       content="Professional automated debugging service that safely fixes React/Next.js code. Never corrupts your code."
     />
+    <link rel="icon" type="image/png" href="/favico.png" />
     <script src="https://www.paypal.com/sdk/js?client-id=AaZabZwUPYitlE5MOXwohkXxtMzI7GaSArFxw7JYMIDfZE_PHvsMzY1WEsZk_QwTdek4SEpjj_DC5ys7&currency=USD&intent=capture&enable-funding=venmo,card"></script>
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
     <style>
-      * {
+      :root {
+        --background: #000000;
+        --foreground: #ffffff;
+        --primary: #ffffff;
+        --primary-foreground: #000000;
+        --card: #000000;
+        --surface: #000000;
+        --border: #4a4a4a;
+        --border-subtle: #666666;
+        --muted: #666666;
+        --font-sans: "Inter", system-ui, sans-serif;
+        --font-mono: "JetBrains Mono", "Fira Code", "Consolas", monospace;
+      }
+      html,
+      body {
+        background: radial-gradient(
+          ellipse at top,
+          rgba(0, 0, 0, 0.9) 0%,
+          #000000 100%
+        );
+        color: var(--foreground);
+        font-family: var(--font-sans);
         margin: 0;
         padding: 0;
-        box-sizing: border-box;
-      }
-
-      body {
-        font-family:
-          "Inter",
-          -apple-system,
-          BlinkMacSystemFont,
-          sans-serif;
-        line-height: 1.6;
-        color: #ffffff;
-        background: #000000;
+        min-height: 100vh;
+        scroll-behavior: smooth;
         overflow-x: hidden;
       }
-
-      /* Smooth transitions */
       * {
-        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        box-sizing: border-box;
       }
-
-      .container {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 0 20px;
-      }
-
-      /* Header */
-      header {
-        background: #000000;
-        border-bottom: 1px solid #4a4a4a;
-        position: fixed;
-        width: 100%;
-        top: 0;
-        z-index: 1000;
-        backdrop-filter: blur(12px);
-      }
-
-      nav {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 1rem 0;
-        height: 70px;
-      }
-
-      .logo {
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: #ffffff;
-        letter-spacing: -0.025em;
-      }
-
-      .nav-links {
-        display: flex;
-        gap: 2rem;
-        list-style: none;
-      }
-
-      .nav-links a {
+      a {
+        color: inherit;
         text-decoration: none;
-        color: #666666;
-        font-weight: 500;
-        font-size: 0.95rem;
-        padding: 0.5rem 0;
-        border-bottom: 2px solid transparent;
       }
 
-      .nav-links a:hover,
-      .nav-links a:focus {
-        color: #ffffff;
-        border-bottom-color: #ffffff;
+      .header {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        width: 100%;
+        background: rgba(0, 0, 0, 0.95);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 4px 32px rgba(0, 0, 0, 0.3);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .header-inner {
+        max-width: 1400px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.75rem 2rem;
+        transition: padding 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        font-weight: 900;
+        font-size: 1.75rem;
+        color: var(--foreground);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      }
+      .logo:hover {
+        transform: scale(1.02);
+      }
+      .nav {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+      }
+      .nav a {
+        color: var(--muted);
+        font-weight: 500;
+        font-size: 1rem;
+        padding: 0.5rem 1rem;
+        border: 1px solid transparent;
+        border-radius: 6px;
+        transition:
+          color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+          border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+          background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        min-height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .nav a:hover,
+      .nav a:focus,
+      .nav a.active {
+        color: var(--foreground);
+        border-color: var(--border);
+        background-color: rgba(255, 255, 255, 0.05);
         outline: none;
       }
-
-      /* Hero Section */
-      .hero {
-        padding: 140px 0 100px;
-        text-align: center;
-        background: #000000;
+      .nav a:focus-visible {
+        outline: 2px solid var(--foreground);
+        outline-offset: 2px;
+      }
+      .nav .btn {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        font-weight: 600;
+        padding: 0.5rem 1.25rem;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        cursor: pointer;
+        transition:
+          background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+          color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+          transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        margin-left: 0.5rem;
+        min-height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .nav .btn:hover,
+      .nav .btn:focus {
+        background: var(--background);
+        color: var(--foreground);
+        transform: translateY(-1px);
+        outline: none;
+      }
+      .nav .btn:focus-visible {
+        outline: 2px solid var(--foreground);
+        outline-offset: 2px;
+      }
+      .nav .btn:active {
+        transform: translateY(0);
       }
 
-      .hero h1 {
-        font-size: clamp(2.5rem, 5vw, 4rem);
-        margin-bottom: 1.5rem;
-        font-weight: 700;
-        letter-spacing: -0.02em;
+      .hero {
+        min-height: 85vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 4rem 1rem 3rem 1rem;
+        position: relative;
+        background: radial-gradient(
+          ellipse at center,
+          rgba(255, 255, 255, 0.03) 0%,
+          transparent 70%
+        );
+      }
+      .hero-subtitle {
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: rgba(255, 255, 255, 0.8);
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 20px;
+        padding: 0.5rem 1rem;
+        margin-bottom: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        backdrop-filter: blur(8px);
+      }
+      .hero-subtitle:hover {
+        background: rgba(255, 255, 255, 0.15);
+        border-color: rgba(255, 255, 255, 0.3);
+        transform: translateY(-1px);
+      }
+      .typewriter {
+        font-size: 4.5rem;
+        font-weight: 900;
+        color: var(--foreground);
+        min-height: 6rem;
+        letter-spacing: -0.03em;
+        margin-bottom: 1rem;
+        font-family: var(--font-sans);
+        background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
         line-height: 1.1;
       }
-
-      .hero p {
-        font-size: 1.25rem;
+      .hero-desc {
+        font-size: 1.35rem;
+        color: var(--foreground);
         margin-bottom: 3rem;
+        max-width: 700px;
+        margin-left: auto;
+        margin-right: auto;
+        line-height: 1.6;
+        font-weight: 400;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 16px;
+        padding: 2rem 2.5rem;
+        background: rgba(255, 255, 255, 0.02);
+        backdrop-filter: blur(10px);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .hero-desc:hover {
+        border-color: rgba(255, 255, 255, 0.15);
+        background: rgba(255, 255, 255, 0.04);
+        transform: translateY(-2px);
+      }
+      .hero-desc strong {
+        font-weight: 900;
+        color: #ffffff;
+      }
+      .hero-actions {
+        display: flex;
+        gap: 1.5rem;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-bottom: 3rem;
+      }
+      .hero-actions .btn {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        font-weight: 700;
+        font-size: 1.1rem;
+        padding: 0.75rem 1.5rem;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        cursor: pointer;
+        transition:
+          background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+          color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+          transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+          box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        min-height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+      }
+      .hero-actions .btn:hover,
+      .hero-actions .btn:focus {
+        background: var(--background);
+        color: var(--foreground);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        outline: none;
+      }
+      .hero-actions .btn:focus-visible {
+        outline: 2px solid var(--foreground);
+        outline-offset: 2px;
+      }
+      .hero-actions .btn:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .features {
+        max-width: 1300px;
+        margin: 0 auto;
+        padding: 6rem 2rem 4rem 2rem;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 2.5rem;
+        position: relative;
+      }
+      .features::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 200px;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--border),
+          transparent
+        );
+        margin-bottom: 4rem;
+      }
+      .section-title {
+        text-align: center;
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        grid-column: 1 / -1;
+      }
+      .section-subtitle {
+        text-align: center;
+        font-size: 1.2rem;
         color: #666666;
+        margin-bottom: 4rem;
         max-width: 600px;
         margin-left: auto;
         margin-right: auto;
+        grid-column: 1 / -1;
       }
-
-      .hero-buttons {
+      .feature-card {
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.02) 0%,
+          rgba(255, 255, 255, 0.005) 100%
+        );
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 16px;
+        padding: 3rem 2.5rem 2.5rem 2.5rem;
         display: flex;
-        gap: 1rem;
-        justify-content: center;
-        flex-wrap: wrap;
+        flex-direction: column;
+        align-items: flex-start;
+        position: relative;
+        overflow: hidden;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        transition:
+          border-color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+          transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+          box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+          background 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .feature-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.3),
+          transparent
+        );
+        opacity: 0;
+        transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .feature-card:hover {
+        border-color: rgba(255, 255, 255, 0.3);
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.05) 0%,
+          rgba(255, 255, 255, 0.02) 100%
+        );
+      }
+      .feature-card:hover::before {
+        opacity: 1;
+      }
+      .feature-title {
+        font-size: 1.6rem;
+        font-weight: 800;
+        color: var(--foreground);
+        margin-bottom: 1rem;
+        letter-spacing: -0.01em;
+        line-height: 1.2;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      }
+      .feature-desc {
+        color: rgba(255, 255, 255, 0.75);
+        font-size: 1.15rem;
+        line-height: 1.6;
+        font-weight: 400;
+        margin-bottom: 1rem;
       }
 
-      /* Button Styles */
+      /* Demo Section */
+      .demo-section {
+        padding: 100px 0;
+        background: #000000;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .demo-container {
+        max-width: 1300px;
+        margin: 0 auto;
+        padding: 0 2rem;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        margin-top: 3rem;
+      }
+
+      .upload-area {
+        border: 1px dashed rgba(255, 255, 255, 0.2);
+        padding: 3rem;
+        text-align: center;
+        background: rgba(255, 255, 255, 0.02);
+        cursor: pointer;
+        min-height: 200px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        border-radius: 16px;
+        backdrop-filter: blur(10px);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .upload-area:hover,
+      .upload-area:focus-within {
+        border-color: rgba(255, 255, 255, 0.4);
+        background: rgba(255, 255, 255, 0.05);
+        transform: translateY(-2px);
+      }
+
+      .upload-area.dragover {
+        border-color: #ffffff;
+        background: rgba(255, 255, 255, 0.1);
+      }
+
+      .upload-area h3 {
+        font-size: 1.25rem;
+        margin-bottom: 0.5rem;
+        color: #ffffff;
+        font-weight: 600;
+      }
+
+      .upload-area p {
+        color: rgba(255, 255, 255, 0.7);
+        margin-bottom: 1rem;
+      }
+
+      .file-input {
+        display: none;
+      }
+
+      .results {
+        margin-top: 2rem;
+        padding: 2rem;
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        display: none;
+        border-radius: 16px;
+        backdrop-filter: blur(10px);
+      }
+
+      .results.show {
+        display: block;
+      }
+
+      .progress-bar {
+        width: 100%;
+        height: 4px;
+        background: rgba(255, 255, 255, 0.1);
+        overflow: hidden;
+        margin: 1rem 0;
+        border-radius: 2px;
+      }
+
+      .progress-fill {
+        height: 100%;
+        background: #ffffff;
+        width: 0%;
+        transition: width 0.3s ease;
+      }
+
+      /* Pricing Section */
+      .pricing {
+        background: #000000;
+        padding: 100px 0;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .pricing-container {
+        max-width: 1300px;
+        margin: 0 auto;
+        padding: 0 2rem;
+      }
+
+      .pricing-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin-top: 3rem;
+      }
+
+      .pricing-card {
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.02) 0%,
+          rgba(255, 255, 255, 0.005) 100%
+        );
+        padding: 2.5rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        text-align: center;
+        position: relative;
+        border-radius: 16px;
+        backdrop-filter: blur(10px);
+        transition:
+          border-color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+          transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+          box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+          background 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .pricing-card:hover {
+        border-color: rgba(255, 255, 255, 0.3);
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.05) 0%,
+          rgba(255, 255, 255, 0.02) 100%
+        );
+      }
+
+      .pricing-card.popular {
+        border-color: rgba(255, 255, 255, 0.4);
+        transform: scale(1.02);
+      }
+
+      .popular-badge {
+        position: absolute;
+        top: -12px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #ffffff;
+        color: #000000;
+        padding: 0.5rem 1rem;
+        font-size: 0.85rem;
+        font-weight: 600;
+        border-radius: 12px;
+      }
+
+      .price {
+        font-size: 3rem;
+        font-weight: 700;
+        color: #ffffff;
+        margin: 1rem 0;
+        letter-spacing: -0.02em;
+      }
+
+      .price-per {
+        font-size: 1rem;
+        color: rgba(255, 255, 255, 0.7);
+        font-weight: 400;
+      }
+
+      .pricing-card h3 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        font-weight: 600;
+        color: #ffffff;
+      }
+
+      .pricing-card ul {
+        text-align: left;
+        margin: 2rem 0;
+        list-style: none;
+      }
+
+      .pricing-card li {
+        padding: 0.5rem 0;
+        color: rgba(255, 255, 255, 0.7);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .pricing-card li:last-child {
+        border-bottom: none;
+      }
+
+      .pricing-card li::before {
+        content: "✓ ";
+        color: #ffffff;
+        font-weight: 600;
+        margin-right: 0.5rem;
+      }
+
+      /* Other Button Styles */
       .btn {
         display: inline-flex;
         align-items: center;
@@ -133,7 +595,7 @@
         background: transparent;
         color: #ffffff;
         text-decoration: none;
-        border: 1px solid #4a4a4a;
+        border: 1px solid rgba(255, 255, 255, 0.2);
         font-weight: 600;
         font-size: 1rem;
         cursor: pointer;
@@ -141,6 +603,12 @@
         min-width: 120px;
         position: relative;
         overflow: hidden;
+        border-radius: 8px;
+        transition:
+          background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+          color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+          transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+          border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       }
 
       .btn:hover,
@@ -156,258 +624,44 @@
         transform: translateY(0);
       }
 
-      .btn-primary {
-        background: #ffffff;
-        color: #000000;
-        border-color: #ffffff;
-      }
-
-      .btn-primary:hover,
-      .btn-primary:focus {
-        background: transparent;
-        color: #ffffff;
-        border-color: #ffffff;
-      }
-
-      .btn-secondary {
-        background: transparent;
-        color: #ffffff;
-        border-color: #4a4a4a;
-      }
-
-      /* Features Section */
-      .features {
-        background: #000000;
-        padding: 100px 0;
-        border-top: 1px solid #4a4a4a;
-      }
-
-      .section-title {
-        text-align: center;
-        font-size: 2.5rem;
-        margin-bottom: 1rem;
-        font-weight: 700;
-        letter-spacing: -0.02em;
-      }
-
-      .section-subtitle {
-        text-align: center;
-        font-size: 1.2rem;
-        color: #666666;
-        margin-bottom: 4rem;
-        max-width: 600px;
-        margin-left: auto;
-        margin-right: auto;
-      }
-
-      .features-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 2rem;
-      }
-
-      .feature-card {
-        padding: 2rem;
-        border: 1px solid #4a4a4a;
-        background: #000000;
-        text-align: left;
-      }
-
-      .feature-card:hover {
-        border-color: #666666;
-        transform: translateY(-2px);
-      }
-
-      .feature-card h3 {
-        font-size: 1.25rem;
-        margin-bottom: 1rem;
-        font-weight: 600;
-        color: #ffffff;
-      }
-
-      .feature-card p {
-        color: #666666;
-        line-height: 1.6;
-      }
-
-      /* Demo Section */
-      .demo-section {
-        padding: 100px 0;
-        background: #000000;
-        border-top: 1px solid #4a4a4a;
-      }
-
-      .demo-container {
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 2rem;
-        margin-top: 3rem;
-      }
-
-      .upload-area {
-        border: 1px dashed #4a4a4a;
-        padding: 3rem;
-        text-align: center;
-        background: #000000;
-        cursor: pointer;
-        min-height: 200px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-      }
-
-      .upload-area:hover,
-      .upload-area:focus-within {
-        border-color: #666666;
-        background: rgba(255, 255, 255, 0.02);
-      }
-
-      .upload-area.dragover {
-        border-color: #ffffff;
-        background: rgba(255, 255, 255, 0.05);
-      }
-
-      .upload-area h3 {
-        font-size: 1.25rem;
-        margin-bottom: 0.5rem;
-        color: #ffffff;
-      }
-
-      .upload-area p {
-        color: #666666;
-        margin-bottom: 1rem;
-      }
-
-      .file-input {
-        display: none;
-      }
-
-      .results {
-        margin-top: 2rem;
-        padding: 2rem;
-        background: #000000;
-        border: 1px solid #4a4a4a;
-        display: none;
-      }
-
-      .results.show {
-        display: block;
-      }
-
-      .progress-bar {
-        width: 100%;
-        height: 4px;
-        background: #4a4a4a;
-        overflow: hidden;
-        margin: 1rem 0;
-      }
-
-      .progress-fill {
-        height: 100%;
-        background: #ffffff;
-        width: 0%;
-        transition: width 0.3s ease;
-      }
-
-      /* Pricing Section */
-      .pricing {
-        background: #000000;
-        padding: 100px 0;
-        border-top: 1px solid #4a4a4a;
-      }
-
-      .pricing-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 2rem;
-        margin-top: 3rem;
-      }
-
-      .pricing-card {
-        background: #000000;
-        padding: 2.5rem;
-        border: 1px solid #4a4a4a;
-        text-align: center;
-        position: relative;
-      }
-
-      .pricing-card:hover {
-        border-color: #666666;
-        transform: translateY(-2px);
-      }
-
-      .pricing-card.popular {
-        border-color: #ffffff;
-        transform: scale(1.02);
-      }
-
-      .popular-badge {
-        position: absolute;
-        top: -12px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: #ffffff;
-        color: #000000;
-        padding: 0.5rem 1rem;
-        font-size: 0.85rem;
-        font-weight: 600;
-      }
-
-      .price {
-        font-size: 3rem;
-        font-weight: 700;
-        color: #ffffff;
-        margin: 1rem 0;
-        letter-spacing: -0.02em;
-      }
-
-      .price-per {
-        font-size: 1rem;
-        color: #666666;
-        font-weight: 400;
-      }
-
-      .pricing-card h3 {
-        font-size: 1.5rem;
-        margin-bottom: 1rem;
-        font-weight: 600;
-      }
-
-      .pricing-card ul {
-        text-align: left;
-        margin: 2rem 0;
-        list-style: none;
-      }
-
-      .pricing-card li {
-        padding: 0.5rem 0;
-        color: #666666;
-        border-bottom: 1px solid #4a4a4a;
-      }
-
-      .pricing-card li:last-child {
-        border-bottom: none;
-      }
-
-      .pricing-card li::before {
-        content: "✓ ";
-        color: #ffffff;
-        font-weight: 600;
-        margin-right: 0.5rem;
-      }
-
       /* Footer */
       .footer {
-        background: #000000;
-        color: #666666;
-        padding: 3rem 0;
-        text-align: center;
-        border-top: 1px solid #4a4a4a;
+        width: 100%;
+        padding: 4rem 2rem 2rem 2rem;
+        background: linear-gradient(
+          180deg,
+          rgba(0, 0, 0, 0.9) 0%,
+          rgba(0, 0, 0, 0.95) 100%
+        );
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 1rem;
+        margin-top: 6rem;
+        position: relative;
       }
-
-      .footer p {
-        margin-bottom: 0.5rem;
+      .footer::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.2),
+          transparent
+        );
+      }
+      .footer-inner {
+        max-width: 1400px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
       }
 
       /* Payment Modal */
@@ -418,7 +672,7 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background: rgba(0, 0, 0, 0.8);
+        background: rgba(0, 0, 0, 0.9);
         z-index: 2000;
         justify-content: center;
         align-items: center;
@@ -430,14 +684,16 @@
       }
 
       .payment-content {
-        background: #000000;
+        background: rgba(0, 0, 0, 0.95);
         padding: 2rem;
-        border: 1px solid #4a4a4a;
+        border: 1px solid rgba(255, 255, 255, 0.2);
         max-width: 500px;
         width: 90%;
         position: relative;
         max-height: 90vh;
         overflow-y: auto;
+        border-radius: 16px;
+        backdrop-filter: blur(20px);
       }
 
       .close-modal {
@@ -445,14 +701,16 @@
         top: 1rem;
         right: 1rem;
         background: transparent;
-        border: 1px solid #4a4a4a;
-        color: #666666;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: rgba(255, 255, 255, 0.7);
         width: 32px;
         height: 32px;
         cursor: pointer;
         display: flex;
         align-items: center;
         justify-content: center;
+        border-radius: 6px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       }
 
       .close-modal:hover,
@@ -487,67 +745,118 @@
 
       /* Mobile Responsive */
       @media (max-width: 768px) {
-        .container {
-          padding: 0 1rem;
-        }
-
-        .hero {
-          padding: 120px 0 80px;
-        }
-
-        .hero-buttons {
+        .header-inner {
           flex-direction: column;
-          align-items: center;
+          gap: 1.5rem;
+          padding: 1rem 1.5rem;
         }
-
-        .btn {
+        .nav {
+          flex-wrap: wrap;
+          gap: 0.75rem;
+          justify-content: center;
+        }
+        .nav a {
+          padding: 0.75rem 1.25rem;
+          font-size: 0.95rem;
+        }
+        .nav .btn {
+          margin-left: 0;
+          padding: 0.75rem 1.75rem;
+        }
+        .hero {
+          padding: 4rem 1rem 2rem 1rem;
+          min-height: 75vh;
+        }
+        .typewriter {
+          font-size: 3rem;
+          min-height: 4rem;
+          letter-spacing: -0.02em;
+        }
+        .hero-desc {
+          font-size: 1.1rem;
+          padding: 1.5rem 1.75rem;
+          border-radius: 12px;
+        }
+        .hero-actions {
+          flex-direction: column;
           width: 100%;
-          max-width: 300px;
+          align-items: stretch;
+          gap: 1rem;
         }
-
-        .nav-links {
-          display: none;
+        .hero-actions .btn {
+          padding: 0.875rem 1.5rem;
+          width: 100%;
+          max-width: 320px;
+          margin: 0 auto;
+          font-size: 1rem;
         }
-
-        .features,
+        .hero-subtitle {
+          font-size: 0.8rem;
+          padding: 0.4rem 0.8rem;
+        }
+        .features {
+          grid-template-columns: 1fr;
+          gap: 2rem;
+          padding: 4rem 1.5rem;
+        }
+        .feature-card {
+          padding: 2.5rem 2rem;
+          border-radius: 12px;
+        }
+        .feature-card:hover {
+          transform: translateY(-4px) scale(1.01);
+        }
         .demo-section,
         .pricing {
           padding: 60px 0;
         }
-
-        .features-grid,
+        .demo-container,
+        .pricing-container {
+          padding: 0 1.5rem;
+        }
         .pricing-grid {
           grid-template-columns: 1fr;
           gap: 1.5rem;
         }
-
         .section-title {
           font-size: 2rem;
         }
-
         .pricing-card {
           padding: 2rem;
         }
-
         .payment-content {
           margin: 1rem;
           padding: 1.5rem;
         }
+        .footer {
+          padding: 3rem 1.5rem 2rem 1.5rem;
+        }
       }
 
       @media (max-width: 480px) {
-        .hero h1 {
-          font-size: 2rem;
+        .nav {
+          gap: 0.5rem;
         }
-
-        .hero p {
-          font-size: 1.1rem;
+        .nav a {
+          padding: 0.5rem 0.75rem;
+          font-size: 0.85rem;
         }
-
+        .typewriter {
+          font-size: 2.25rem;
+          min-height: 3rem;
+        }
+        .hero-desc {
+          font-size: 1rem;
+        }
+        .feature-title {
+          font-size: 1.25rem;
+        }
+        .feature-desc {
+          font-size: 1rem;
+        }
         .upload-area {
           padding: 2rem 1rem;
         }
-
         .feature-card,
         .pricing-card {
           padding: 1.5rem;
@@ -567,7 +876,6 @@
         .btn {
           border-width: 2px;
         }
-
         .feature-card,
         .pricing-card {
           border-width: 2px;
@@ -576,153 +884,156 @@
     </style>
   </head>
   <body>
-    <header>
-      <nav class="container">
-        <div class="logo">NeuroLint Pro</div>
-        <ul class="nav-links">
-          <li><a href="#features">Features</a></li>
-          <li><a href="#demo">Demo</a></li>
-          <li><a href="#pricing">Pricing</a></li>
-        </ul>
-      </nav>
+    <!-- Header -->
+    <header class="header">
+      <div class="header-inner">
+        <a href="/" class="logo"> NeuroLint Pro </a>
+        <nav class="nav" role="navigation" aria-label="Main navigation">
+          <a href="#features">Features</a>
+          <a href="#demo">Demo</a>
+          <a href="#pricing">Pricing</a>
+          <button
+            class="btn"
+            onclick="openPaymentModal('single')"
+            aria-label="Purchase single fix for $49"
+          >
+            Fix Code Now
+          </button>
+        </nav>
+      </div>
     </header>
 
     <main>
+      <!-- Hero Section -->
       <section class="hero">
-        <div class="container">
-          <h1>Fix Your React/Next.js Code Instantly</h1>
-          <p>
-            Professional-grade automated debugging service that fixes HTML
-            entities, missing key props, SSR issues, and more
-          </p>
-          <div class="hero-buttons">
-            <button
-              class="btn btn-primary"
-              onclick="openPaymentModal('single')"
-              aria-label="Purchase single fix for $49"
-            >
-              Fix Code Now - $49
-            </button>
-            <a href="#demo" class="btn btn-secondary">Try Free Demo</a>
-          </div>
+        <div class="hero-subtitle">Premium Code Fixing Service</div>
+        <h1 class="typewriter" id="typewriter" aria-live="polite"></h1>
+        <p class="hero-desc">
+          Professional-grade automated debugging service that fixes
+          <strong>HTML entities</strong>, missing key props, SSR issues, and
+          <strong>never corrupts your code</strong>. Built on battle-tested
+          patterns.
+        </p>
+        <div class="hero-actions">
+          <button
+            class="btn"
+            onclick="openPaymentModal('single')"
+            aria-label="Purchase single fix for $49"
+          >
+            Fix Code Now - $49
+          </button>
+          <a href="#demo" class="btn" aria-label="Try free demo">
+            Try Free Demo
+          </a>
         </div>
       </section>
 
+      <!-- Features Section -->
+      <h2 class="sr-only">NeuroLint Pro Features</h2>
       <section id="features" class="features">
-        <div class="container">
-          <h2 class="section-title">Why NeuroLint Pro?</h2>
-          <p class="section-subtitle">
-            Built on battle-tested patterns from IMPLEMENTATION_PATTERNS.md -
-            Never corrupts your code
-          </p>
+        <h2 class="section-title">Why NeuroLint Pro?</h2>
+        <p class="section-subtitle">
+          Built on battle-tested patterns from IMPLEMENTATION_PATTERNS.md -
+          Never corrupts your code
+        </p>
 
-          <div class="features-grid">
-            <div class="feature-card">
-              <h3>Safe Transformations</h3>
-              <p>
-                Automatic rollback on validation failure. Your code is never
-                corrupted - guaranteed.
-              </p>
-            </div>
-
-            <div class="feature-card">
-              <h3>Smart Detection</h3>
-              <p>
-                Automatically detects HTML entities, missing key props, SSR
-                issues, and accessibility problems.
-              </p>
-            </div>
-
-            <div class="feature-card">
-              <h3>4-Layer System</h3>
-              <p>
-                Config → Patterns → Components → Hydration. Each layer builds on
-                the previous safely.
-              </p>
-            </div>
-
-            <div class="feature-card">
-              <h3>Error Recovery</h3>
-              <p>
-                Intelligent error categorization with specific recovery
-                suggestions for each issue type.
-              </p>
-            </div>
-
-            <div class="feature-card">
-              <h3>Detailed Reports</h3>
-              <p>
-                Get comprehensive analysis of issues found, fixes applied, and
-                improvement recommendations.
-              </p>
-            </div>
-
-            <div class="feature-card">
-              <h3>Enterprise Ready</h3>
-              <p>
-                Processes codebases up to 10,000+ files. Used by React teams at
-                scale.
-              </p>
-            </div>
+        <div class="feature-card">
+          <div class="feature-title">Safe Transformations</div>
+          <div class="feature-desc">
+            Automatic rollback on validation failure. Your code is never
+            corrupted - guaranteed.
+          </div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-title">Smart Detection</div>
+          <div class="feature-desc">
+            Automatically detects HTML entities, missing key props, SSR issues,
+            and accessibility problems.
+          </div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-title">4-Layer System</div>
+          <div class="feature-desc">
+            Config → Patterns → Components → Hydration. Each layer builds on the
+            previous safely.
+          </div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-title">Error Recovery</div>
+          <div class="feature-desc">
+            Intelligent error categorization with specific recovery suggestions
+            for each issue type.
+          </div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-title">Detailed Reports</div>
+          <div class="feature-desc">
+            Get comprehensive analysis of issues found, fixes applied, and
+            improvement recommendations.
+          </div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-title">Enterprise Ready</div>
+          <div class="feature-desc">
+            Processes codebases up to 10,000+ files. Used by React teams at
+            scale.
           </div>
         </div>
       </section>
 
       <section id="demo" class="demo-section">
-        <div class="container">
+        <div class="demo-container">
           <h2 class="section-title">Try NeuroLint Pro Live</h2>
           <p class="section-subtitle">
             Upload your React/Next.js files and see real fixes applied using our
             4-layer system
           </p>
 
-          <div class="demo-container">
-            <div
-              class="upload-area"
-              onclick="document.getElementById('fileInput').click()"
-              onkeydown="if(event.key==='Enter'||event.key===' ') document.getElementById('fileInput').click()"
-              tabindex="0"
-              role="button"
-              aria-label="Upload files for demo analysis"
-            >
-              <h3>Drop your files here or click to upload</h3>
-              <p>Supports .jsx, .tsx, .js, .ts files</p>
-              <input
-                type="file"
-                id="fileInput"
-                class="file-input"
-                multiple
-                accept=".jsx,.tsx,.js,.ts"
-                onchange="handleFileUpload(event)"
-                aria-label="Select files for analysis"
-              />
-            </div>
+          <div
+            class="upload-area"
+            onclick="document.getElementById('fileInput').click()"
+            onkeydown="if(event.key==='Enter'||event.key===' ') document.getElementById('fileInput').click()"
+            tabindex="0"
+            role="button"
+            aria-label="Upload files for demo analysis"
+          >
+            <h3>Drop your files here or click to upload</h3>
+            <p>Supports .jsx, .tsx, .js, .ts files</p>
+            <input
+              type="file"
+              id="fileInput"
+              class="file-input"
+              multiple
+              accept=".jsx,.tsx,.js,.ts"
+              onchange="handleFileUpload(event)"
+              aria-label="Select files for analysis"
+            />
+          </div>
 
+          <div
+            class="results"
+            id="results"
+            role="region"
+            aria-label="Analysis results"
+          >
+            <h3>Analysis Results:</h3>
             <div
-              class="results"
-              id="results"
-              role="region"
-              aria-label="Analysis results"
+              class="progress-bar"
+              role="progressbar"
+              aria-valuenow="0"
+              aria-valuemin="0"
+              aria-valuemax="100"
             >
-              <h3>Analysis Results:</h3>
-              <div
-                class="progress-bar"
-                role="progressbar"
-                aria-valuenow="0"
-                aria-valuemin="0"
-                aria-valuemax="100"
-              >
-                <div class="progress-fill" id="progressFill"></div>
-              </div>
-              <div id="analysisOutput"></div>
-              <div id="fixedCodeOutput"></div>
+              <div class="progress-fill" id="progressFill"></div>
             </div>
+            <div id="analysisOutput"></div>
+            <div id="fixedCodeOutput"></div>
           </div>
         </div>
       </section>
 
       <section id="pricing" class="pricing">
-        <div class="container">
+        <div class="pricing-container">
           <h2 class="section-title">Simple, Transparent Pricing</h2>
           <p class="section-subtitle">
             Pay per use or get unlimited access. No hidden fees.
@@ -800,7 +1111,7 @@
     </main>
 
     <footer class="footer">
-      <div class="container">
+      <div class="footer-inner">
         <p>
           &copy; 2024 NeuroLint Pro. Professional React/Next.js debugging
           service.
@@ -834,6 +1145,97 @@
     <script>
       let selectedPlan = null;
 
+      // Typewriter effect for hero with cursor
+      const words = [
+        "Fix React Code Instantly",
+        "Safe Transformations",
+        "Smart Detection",
+        "4-Layer System",
+        "Error Recovery",
+        "Enterprise Ready",
+      ];
+      let wordIndex = 0;
+      let charIndex = 0;
+      let isDeleting = false;
+      let typewriterEl = document.getElementById("typewriter");
+
+      // Add cursor styling
+      const style = document.createElement("style");
+      style.textContent = `
+        .typewriter::after {
+          content: '|';
+          color: var(--foreground);
+          animation: blink 1s infinite;
+          margin-left: 2px;
+        }
+        @keyframes blink {
+          0%, 50% { opacity: 1; }
+          51%, 100% { opacity: 0; }
+        }
+        .hero {
+          animation: fadeInUp 1s ease-out;
+        }
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        .feature-card {
+          animation: fadeInUp 0.8s ease-out forwards;
+          opacity: 0;
+        }
+
+        .feature-card:nth-child(3) { animation-delay: 0.1s; }
+        .feature-card:nth-child(4) { animation-delay: 0.2s; }
+        .feature-card:nth-child(5) { animation-delay: 0.3s; }
+        .feature-card:nth-child(6) { animation-delay: 0.4s; }
+        .feature-card:nth-child(7) { animation-delay: 0.5s; }
+        .feature-card:nth-child(8) { animation-delay: 0.6s; }
+
+        .header {
+          animation: slideDown 0.8s ease-out;
+        }
+
+        @keyframes slideDown {
+          from {
+            opacity: 0;
+            transform: translateY(-20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+      `;
+      document.head.appendChild(style);
+
+      function type() {
+        const word = words[wordIndex];
+        if (isDeleting) {
+          charIndex--;
+        } else {
+          charIndex++;
+        }
+        typewriterEl.textContent = word.substring(0, charIndex);
+        let delay = isDeleting ? 50 : 90;
+        if (!isDeleting && charIndex === word.length) {
+          delay = 1500;
+          isDeleting = true;
+        } else if (isDeleting && charIndex === 0) {
+          isDeleting = false;
+          wordIndex = (wordIndex + 1) % words.length;
+          delay = 300;
+        }
+        setTimeout(type, delay);
+      }
+      type();
+
       function openPaymentModal(plan) {
         selectedPlan = plan;
         const modal = document.getElementById("paymentModal");
@@ -861,8 +1263,8 @@
         const planData = plans[plan];
         title.textContent = `${planData.name} - $${planData.price}`;
         details.innerHTML = `
-                <p style="margin-bottom: 1rem; color: #666666;">${planData.description}</p>
-                <p style="color: #666666; margin-bottom: 1rem;">Secure payment via PayPal (supports all major cards)</p>
+                <p style="margin-bottom: 1rem; color: rgba(255, 255, 255, 0.7);">${planData.description}</p>
+                <p style="color: rgba(255, 255, 255, 0.7); margin-bottom: 1rem;">Secure payment via PayPal (supports all major cards)</p>
             `;
 
         // Initialize PayPal
@@ -1000,20 +1402,20 @@
             const result = await response.json();
 
             analysisOutput.innerHTML += `
-                        <div style="margin-bottom: 1rem; padding: 1rem; border: 1px solid #4A4A4A; background: #000000;">
+                        <div style="margin-bottom: 1rem; padding: 1rem; border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(255, 255, 255, 0.02); border-radius: 8px;">
                             <h4 style="color: #FFFFFF; margin-bottom: 0.5rem;">${file.name}</h4>
-                            <p style="color: #666666;"><strong>Issues Found:</strong> ${result.detectedIssues ? result.detectedIssues.length : 0}</p>
-                            <p style="color: #666666;"><strong>Recommended Layers:</strong> ${result.recommendedLayers ? result.recommendedLayers.join(", ") : "None"}</p>
-                            <p style="color: #666666;"><strong>Confidence:</strong> ${result.confidence ? (result.confidence * 100).toFixed(1) : 0}%</p>
-                            ${result.demo ? '<p style="color: #666666;"><em>Demo Mode - Limited analysis</em></p>' : ""}
+                            <p style="color: rgba(255, 255, 255, 0.7);"><strong>Issues Found:</strong> ${result.detectedIssues ? result.detectedIssues.length : 0}</p>
+                            <p style="color: rgba(255, 255, 255, 0.7);"><strong>Recommended Layers:</strong> ${result.recommendedLayers ? result.recommendedLayers.join(", ") : "None"}</p>
+                            <p style="color: rgba(255, 255, 255, 0.7);"><strong>Confidence:</strong> ${result.confidence ? (result.confidence * 100).toFixed(1) : 0}%</p>
+                            ${result.demo ? '<p style="color: rgba(255, 255, 255, 0.7);"><em>Demo Mode - Limited analysis</em></p>' : ""}
                         </div>
                     `;
           } catch (error) {
             analysisOutput.innerHTML += `
-                        <div style="margin-bottom: 1rem; padding: 1rem; border: 1px solid #4A4A4A; background: #000000;">
+                        <div style="margin-bottom: 1rem; padding: 1rem; border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(255, 255, 255, 0.02); border-radius: 8px;">
                             <h4 style="color: #FFFFFF; margin-bottom: 0.5rem;">${file.name}</h4>
-                            <p style="color: #666666;">Demo error: ${error.message}</p>
-                            <p style="color: #666666;"><em>Upload working files for full analysis</em></p>
+                            <p style="color: rgba(255, 255, 255, 0.7);">Demo error: ${error.message}</p>
+                            <p style="color: rgba(255, 255, 255, 0.7);"><em>Upload working files for full analysis</em></p>
                         </div>
                     `;
           }
@@ -1021,9 +1423,9 @@
 
         if (files.length > 3) {
           analysisOutput.innerHTML += `
-                    <div style="margin-top: 1rem; padding: 1rem; background: #000000; border: 1px solid #4A4A4A; text-align: center;">
+                    <div style="margin-top: 1rem; padding: 1rem; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.1); text-align: center; border-radius: 8px;">
                         <p style="color: #FFFFFF;"><strong>Demo limited to 3 files.</strong></p>
-                        <p style="color: #666666; margin-bottom: 1rem;">Purchase NeuroLint Pro to analyze unlimited files with full fixing capability.</p>
+                        <p style="color: rgba(255, 255, 255, 0.7); margin-bottom: 1rem;">Purchase NeuroLint Pro to analyze unlimited files with full fixing capability.</p>
                         <button class="btn" onclick="openPaymentModal('single')">Unlock Full Analysis - $49</button>
                     </div>
                 `;
