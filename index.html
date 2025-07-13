@@ -2146,6 +2146,7 @@ export default function ImageGallery({ images }) {
           // Handle demo limit reached - check both flag and message content
           const isDemoLimit =
             error.isDemoLimit ||
+            error.message === "DEMO_LIMIT_REACHED" ||
             error.message.toLowerCase().includes("demo limit") ||
             error.message.toLowerCase().includes("rate limit") ||
             error.message.toLowerCase().includes("too many requests");
