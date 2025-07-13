@@ -772,6 +772,127 @@ function applyLayerTransformations(layerId, code, options = {}) {
       }
       break;
 
+    case 5: // Next.js App Router
+      console.log(`🛠️  [FALLBACK] Layer 5: Next.js App Router fixes`);
+
+      // Fix misplaced 'use client' directives
+      if (
+        transformedCode.includes("'use client'") &&
+        !transformedCode.startsWith("'use client';")
+      ) {
+        // Remove misplaced 'use client'
+        transformedCode = transformedCode.replace(/\n\s*'use client';/g, "");
+        // Add at the top
+        transformedCode = "'use client';\n\n" + transformedCode;
+        appliedFixes.push("Next.js: Fixed misplaced use client directive");
+        console.log(`🛠️  [FALLBACK] Fixed misplaced 'use client' directive`);
+      }
+
+      // Add missing 'use client' for components using hooks
+      if (
+        (transformedCode.includes("useState") ||
+          transformedCode.includes("useEffect")) &&
+        !transformedCode.includes("'use client'") &&
+        (transformedCode.includes("export default function") ||
+          transformedCode.includes("export function"))
+      ) {
+        transformedCode = "'use client';\n\n" + transformedCode;
+        appliedFixes.push(
+          "Next.js: Added missing use client directive for hooks",
+        );
+        console.log(`🛠️  [FALLBACK] Added missing 'use client' directive`);
+      }
+
+      // Fix corrupted import statements
+      if (transformedCode.includes("import {\n import {")) {
+        transformedCode = transformedCode.replace(
+          /import\s*{\s*\n\s*import\s*{([^}]+)}\s*from\s*["']([^"']+)["']/gm,
+          'import { $1 } from "$2"',
+        );
+        appliedFixes.push("Next.js: Fixed corrupted import statements");
+        console.log(`🛠️  [FALLBACK] Fixed corrupted import statements`);
+      }
+      break;
+
+    case 6: // Testing & Validation
+      console.log(`🛠️  [FALLBACK] Layer 6: Testing and validation`);
+
+      // Add missing prop types for TypeScript
+      if (
+        transformedCode.includes("export default function") &&
+        transformedCode.includes("props") &&
+        !transformedCode.includes("interface") &&
+        !transformedCode.includes("type Props")
+      ) {
+        const componentMatch = transformedCode.match(
+          /export default function (\w+)\(\s*{\s*([^}]+)\s*}/,
+        );
+        if (componentMatch) {
+          const [, componentName, props] = componentMatch;
+          const propNames = props
+            .split(",")
+            .map((p) => p.trim().split(":")[0].trim());
+          const interfaceDefinition = `interface ${componentName}Props {\n  ${propNames.map((prop) => `${prop}: any;`).join("\n  ")}\n}\n\n`;
+          transformedCode =
+            interfaceDefinition +
+            transformedCode.replace(
+              `export default function ${componentName}({ ${props} }`,
+              `export default function ${componentName}({ ${props} }: ${componentName}Props`,
+            );
+          appliedFixes.push("Testing: Added TypeScript prop interfaces");
+          console.log(`🛠️  [FALLBACK] Added TypeScript prop interfaces`);
+        }
+      }
+
+      // Add basic accessibility attributes
+      if (
+        transformedCode.includes("<button") &&
+        !transformedCode.includes("aria-label")
+      ) {
+        transformedCode = transformedCode.replace(
+          /<button([^>]*?)>/g,
+          (match, attributes) => {
+            if (!attributes.includes("aria-label")) {
+              return `<button${attributes} aria-label="Button">`;
+            }
+            return match;
+          },
+        );
+        appliedFixes.push("Testing: Added accessibility attributes to buttons");
+        console.log(`🛠️  [FALLBACK] Added accessibility attributes`);
+      }
+
+      // Add error handling for async operations
+      if (
+        transformedCode.includes("async") &&
+        transformedCode.includes("await") &&
+        !transformedCode.includes("try") &&
+        !transformedCode.includes("catch")
+      ) {
+        // Add basic error handling pattern
+        const asyncMatch = transformedCode.match(
+          /(const \w+ = async \([^)]*\) => {[\s\S]*?})/,
+        );
+        if (asyncMatch) {
+          const asyncFunction = asyncMatch[1];
+          const wrappedFunction = asyncFunction.replace(
+            /(async \([^)]*\) => {)([\s\S]*)(})/,
+            '$1\n    try {$2\n    } catch (error) {\n      console.error("Error:", error);\n    }\n  $3',
+          );
+          transformedCode = transformedCode.replace(
+            asyncFunction,
+            wrappedFunction,
+          );
+          appliedFixes.push(
+            "Testing: Added error handling for async operations",
+          );
+          console.log(
+            `🛠️  [FALLBACK] Added error handling for async operations`,
+          );
+        }
+      }
+      break;
+
     default:
       console.log(
         `🛠️  [FALLBACK] Unknown layer ${layerId} - no transformations applied`,
