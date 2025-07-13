@@ -1210,9 +1210,29 @@ class SmartLayerSelector {
       }
     }
 
-    // Layer 6: Testing and validation issues
+    // Layer 6: Testing and validation issues (based on fix-layer-6-testing.js)
     if (this.isReactComponent(code)) {
-      // Missing prop types
+      // Missing error boundaries for components that might fail
+      if (
+        code.includes("export default function") &&
+        code.includes("useState") &&
+        !code.includes("ErrorBoundary") &&
+        !code.includes("componentDidCatch") &&
+        (code.includes("PDF") ||
+          code.includes("upload") ||
+          code.includes("API"))
+      ) {
+        issues.push({
+          type: "testing",
+          severity: "high",
+          description:
+            "Component handling uploads/APIs should have error boundaries",
+          fixedByLayer: 6,
+          pattern: "Missing error boundaries",
+        });
+      }
+
+      // Missing prop types for TypeScript
       if (
         code.includes("export default function") &&
         code.includes("props") &&
@@ -1225,6 +1245,72 @@ class SmartLayerSelector {
           description: "Missing TypeScript prop type definitions",
           fixedByLayer: 6,
           pattern: "Missing prop types",
+        });
+      }
+
+      // Missing loading states for async components
+      if (
+        code.includes("async") &&
+        code.includes("useState") &&
+        !code.includes("loading") &&
+        !code.includes("isLoading")
+      ) {
+        issues.push({
+          type: "testing",
+          severity: "medium",
+          description: "Async operations should have loading states",
+          fixedByLayer: 6,
+          pattern: "Missing loading states",
+        });
+      }
+
+      // Invalid component exports
+      if (
+        code.includes("function ") &&
+        !code.includes("export default") &&
+        !code.includes("export {")
+      ) {
+        issues.push({
+          type: "testing",
+          severity: "high",
+          description: "Component function should be properly exported",
+          fixedByLayer: 6,
+          pattern: "Invalid component exports",
+        });
+      }
+
+      // Missing accessibility attributes
+      if (
+        code.includes("<button") &&
+        !code.includes("aria-label") &&
+        !code.includes("aria-describedby")
+      ) {
+        const buttonMatches = code.match(/<button/g);
+        issues.push({
+          type: "testing",
+          severity: "medium",
+          description: `${buttonMatches?.length || 1} buttons missing accessibility attributes`,
+          fixedByLayer: 6,
+          pattern: "Missing accessibility attributes",
+          count: buttonMatches?.length || 1,
+        });
+      }
+
+      // Missing React.memo for pure components
+      if (
+        code.includes("export default function") &&
+        !code.includes("useState") &&
+        !code.includes("useEffect") &&
+        !code.includes("React.memo") &&
+        code.includes("props")
+      ) {
+        issues.push({
+          type: "testing",
+          severity: "low",
+          description:
+            "Pure component could benefit from React.memo optimization",
+          fixedByLayer: 6,
+          pattern: "Performance optimization",
         });
       }
 
@@ -1245,39 +1331,51 @@ class SmartLayerSelector {
           count: asyncMatches?.length || 1,
         });
       }
+    }
 
-      // Missing accessibility attributes
-      if (
-        code.includes("<button") &&
-        !code.includes("aria-label") &&
-        !code.includes("aria-describedby")
-      ) {
-        const buttonMatches = code.match(/<button/g);
+    // Additional Layer 6 validations
+    // Potential circular dependencies
+    if (filePath) {
+      const imports = code.match(/import.*from ['"](\.[^'"]+)['"]/g) || [];
+      const currentDir = filePath.split("/").slice(0, -1).join("/");
+      const currentFileName = filePath
+        .split("/")
+        .pop()
+        ?.replace(/\.(ts|tsx|js|jsx)$/, "");
+
+      const hasCircularRisk = imports.some((imp) => {
+        const importPath = imp.match(/from ['"](\.[^'"]+)['"]/)?.[1];
+        return (
+          importPath && currentFileName && importPath.includes(currentFileName)
+        );
+      });
+
+      if (hasCircularRisk) {
         issues.push({
           type: "testing",
           severity: "medium",
-          description: `${buttonMatches?.length || 1} buttons missing accessibility attributes`,
+          description: "Potential circular dependency detected",
           fixedByLayer: 6,
-          pattern: "Missing accessibility",
-          count: buttonMatches?.length || 1,
+          pattern: "Circular dependencies",
         });
       }
+    }
 
-      // Performance optimization opportunities
-      if (
-        code.includes("export default function") &&
-        !code.includes("useState") &&
-        !code.includes("useEffect") &&
-        !code.includes("React.memo") &&
-        code.includes("props")
-      ) {
+    // TypeScript strict mode compliance
+    if (
+      code.includes("any") &&
+      !code.includes("// @ts-ignore") &&
+      code.includes("interface")
+    ) {
+      const anyMatches = code.match(/:\s*any(?!\[\])/g);
+      if (anyMatches && anyMatches.length > 0) {
         issues.push({
           type: "testing",
           severity: "low",
-          description:
-            "Pure component could benefit from React.memo optimization",
+          description: `${anyMatches.length} uses of 'any' type - consider more specific types`,
           fixedByLayer: 6,
-          pattern: "Performance optimization",
+          pattern: "TypeScript strict mode",
+          count: anyMatches.length,
         });
       }
     }
