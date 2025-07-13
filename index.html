@@ -1328,6 +1328,16 @@
       .hero, .feature-card:hover { box-shadow: none !important; transform: none !important; }
       .hero-actions .btn:hover, .nav .btn:hover { box-shadow: none !important; }
       .section-subtitle { color: var(--muted) !important; }
+
+      /* Dark theme overrides – remove gradients */
+      body, .hero, .feature-card, .sample-code-section, .pricing-card, .upload-area {
+        background: var(--background) !important;
+      }
+      .feature-card, .sample-code-section, .pricing-card, .upload-area {
+        background-image: none !important;
+        border: 1px solid var(--border);
+      }
+      .features::before, .hero::before { display:none; }
     </style>
   </head>
   <body>
@@ -1353,13 +1363,12 @@
     <main>
       <!-- Hero Section -->
       <section class="hero">
-        <div class="hero-subtitle">Premium Code Fixing Service</div>
+        <div class="hero-subtitle">Automated Code Fixing Service</div>
         <h1 class="typewriter" id="typewriter" aria-live="polite"></h1>
         <p class="hero-desc">
-          Professional-grade automated debugging service that fixes
-          <strong>HTML entities</strong>, missing key props, SSR issues, and
-          <strong>never corrupts your code</strong>. Built on battle-tested
-          patterns.
+          Automated multi-layer code fixing for React and Next.js. Resolves
+          common issues—HTML entities, missing keys, SSR safety—using a
+          validated 6-layer pipeline with automatic rollback.
         </p>
         <div class="hero-actions">
           <button
@@ -1694,7 +1703,7 @@
               </div>
               <ul>
                 <li>Up to 50 files</li>
-                <li>All 4 layers included</li>
+                <li>All 6 layers included</li>
                 <li>Detailed analysis report</li>
                 <li>24-hour delivery</li>
                 <li>PayPal/Card payment</li>
