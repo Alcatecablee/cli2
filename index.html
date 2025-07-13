@@ -2129,18 +2129,18 @@ export default function ImageGallery({ images }) {
           animateProgress(30, 70, 800);
           progressText.textContent = "Processing analysis...";
 
-          // Simulate getting before/after code (since demo mode doesn't apply fixes)
-          const simulatedResult = await simulateCodeFixes(code, result);
+          // Use REAL NeuroLint Pro analysis results
+          console.log("Real NeuroLint Pro analysis result:", result);
 
           // Complete progress
           animateProgress(70, 100, 500);
           progressText.textContent = "Analysis complete!";
 
-          // Store results
+          // Store results using REAL analysis from your engine
           currentAnalysisResults.push({
             filename,
             originalCode: code,
-            result: simulatedResult,
+            result: result, // Use real result from NeuroLint Pro engine
             isSample,
           });
 
