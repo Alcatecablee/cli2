@@ -1,0 +1,32 @@
+{
+  "name": "neurolint-pro",
+  "version": "1.0.0",
+  "description": "NeuroLint Pro - Premium Debugging Service following IMPLEMENTATION_PATTERNS.md exactly",
+  "main": "neurolint-pro.js",
+  "scripts": {
+    "neurolint": "node neurolint-pro.js",
+    "neurolint-dry": "node neurolint-pro.js --dry-run",
+    "fix-all": "node fix-master.js",
+    "fix-dry-run": "node fix-master.js --dry-run",
+    "fix-verbose": "node fix-master.js --verbose",
+    "fix-layer-1": "node fix-layer-1-config.js",
+    "fix-layer-2": "node fix-layer-2-patterns.js",
+    "fix-layer-3": "node fix-layer-3-components.js",
+    "fix-layer-4": "node fix-layer-4-hydration.js"
+  },
+  "keywords": [
+    "react",
+    "nextjs",
+    "typescript",
+    "debugging",
+    "code-fixing",
+    "automation",
+    "ssr",
+    "hydration"
+  ],
+  "author": "NeuroLint Pro",
+  "license": "MIT",
+  "dependencies": {
+    "glob": "^8.0.3"
+  }
+}
