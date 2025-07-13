@@ -2054,8 +2054,12 @@ export default function ImageGallery({ images }) {
 
       // Main analysis function that calls the real engine
       async function analyzeCode(code, filename, isSample = false) {
+        const results = document.getElementById("results");
         const progressFill = document.getElementById("progressFill");
         const progressText = document.getElementById("progressText");
+
+        // Show the results section
+        results.classList.add("show");
 
         try {
           // Start progress animation
@@ -2398,7 +2402,7 @@ export default function ImageGallery({ images }) {
         if (issues.length === 0) {
           issuesEl.innerHTML = `
             <div style="text-align: center; padding: 3rem; color: rgba(255, 255, 255, 0.7);">
-              <h4 style="color: #aaffaa; margin-bottom: 1rem;">🎉 No Critical Issues Found!</h4>
+              <h4 style="color: #aaffaa; margin-bottom: 1rem;">��� No Critical Issues Found!</h4>
               <p>Your code looks well-structured. NeuroLint Pro found no major issues to fix.</p>
             </div>
           `;
