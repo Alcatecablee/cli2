@@ -1,11 +1,14 @@
 {
   "name": "neurolint-pro",
   "version": "1.0.0",
-  "description": "NeuroLint Pro - Premium Debugging Service following IMPLEMENTATION_PATTERNS.md exactly",
-  "main": "neurolint-pro.js",
+  "description": "NeuroLint Pro - Premium React/Next.js Code Fixing Service",
+  "main": "server.js",
   "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js",
     "neurolint": "node neurolint-pro.js",
     "neurolint-dry": "node neurolint-pro.js --dry-run",
+    "test-engine": "curl http://localhost:3000/api/test",
     "fix-all": "node fix-master.js",
     "fix-dry-run": "node fix-master.js --dry-run",
     "fix-verbose": "node fix-master.js --verbose",
@@ -22,11 +25,21 @@
     "code-fixing",
     "automation",
     "ssr",
-    "hydration"
+    "hydration",
+    "saas",
+    "premium-service"
   ],
   "author": "NeuroLint Pro",
   "license": "MIT",
   "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
     "glob": "^8.0.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "engines": {
+    "node": ">=16.0.0"
   }
 }
