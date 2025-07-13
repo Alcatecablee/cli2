@@ -1113,16 +1113,40 @@ async function NeuroLintPro(
     }
 
     if (dryRun) {
+      console.log("🔍 [DRY RUN] === DEMO MODE ANALYSIS ===");
       console.log(
         "🔍 [DRY RUN] Would execute layers:",
         layersToExecute.join(", "),
       );
-      return {
+      console.log("🔍 [DRY RUN] Analysis object:", analysis);
+      console.log(
+        "🔍 [DRY RUN] Detected issues:",
+        analysis ? analysis.detectedIssues : "none",
+      );
+      console.log("🔍 [DRY RUN] Recommended layers:", layersToExecute);
+      console.log(
+        "🔍 [DRY RUN] Confidence:",
+        analysis ? analysis.confidence : "no analysis",
+      );
+
+      const dryRunResult = {
         dryRun: true,
         recommendedLayers: layersToExecute,
         analysis: analysis || null,
         estimatedChanges: analysis ? analysis.detectedIssues.length : 0,
+        // Add demo-friendly properties that match what the frontend expects
+        detectedIssues: analysis ? analysis.detectedIssues : [],
+        confidence: analysis ? analysis.confidence : 0,
+        demo: true,
       };
+
+      console.log(
+        "🔍 [DRY RUN] Final response being returned to demo:",
+        dryRunResult,
+      );
+      console.log("🔍 [DRY RUN] === END DEMO MODE ANALYSIS ===");
+
+      return dryRunResult;
     }
 
     // Step 2: Execute Layers with Safe Pattern
