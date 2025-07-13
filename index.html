@@ -2124,11 +2124,24 @@ export default function ImageGallery({ images }) {
           }, 300);
         } catch (error) {
           console.error("Analysis error:", error);
-          progressText.textContent = `Error analyzing ${filename}: ${error.message}`;
-          progressFill.style.width = "0%";
 
-          // Show error in results
-          displayError(filename, error.message);
+          // Handle demo limit reached
+          if (error.isDemoLimit) {
+            progressText.textContent =
+              "Demo limit reached - Upgrade for unlimited access!";
+            progressFill.style.width = "100%";
+            progressFill.style.background =
+              "linear-gradient(90deg, #ffaa00 0%, #ff8800 100%)";
+
+            // Show compelling upgrade message
+            displayDemoLimitReached(filename);
+          } else {
+            progressText.textContent = `Error analyzing ${filename}: ${error.message}`;
+            progressFill.style.width = "0%";
+
+            // Show regular error
+            displayError(filename, error.message);
+          }
         }
       }
 
