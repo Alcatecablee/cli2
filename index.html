@@ -2085,6 +2085,15 @@ export default function ImageGallery({ images }) {
           });
 
           if (!response.ok) {
+            // Handle specific error cases
+            if (response.status === 429) {
+              // Parse the 429 response to get the proper error message
+              const errorData = await response.json().catch(() => ({}));
+              const error = new Error(errorData.error || "Demo limit reached");
+              error.isDemoLimit = true;
+              error.errorData = errorData;
+              throw error;
+            }
             throw new Error(`HTTP ${response.status}: ${response.statusText}`);
           }
 
