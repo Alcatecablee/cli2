@@ -21,13 +21,23 @@ const { execSync } = require("child_process");
 
 /**
  * Core Architecture Principles (from IMPLEMENTATION_PATTERNS.md)
- * Layers must execute in order (1→2→3→4) because each builds on the previous
+ * Layers must execute in order (1→2→3→4→5→6) because each builds on the previous
  */
 const LAYER_EXECUTION_ORDER = [
   { id: 1, name: "Configuration", description: "Foundation setup" },
   { id: 2, name: "Entity Cleanup", description: "Preprocessing patterns" },
   { id: 3, name: "Components", description: "React/TS specific fixes" },
   { id: 4, name: "Hydration", description: "Runtime safety guards" },
+  {
+    id: 5,
+    name: "Next.js App Router",
+    description: "Next.js specific optimizations",
+  },
+  {
+    id: 6,
+    name: "Testing & Validation",
+    description: "Testing patterns and validation",
+  },
 ];
 
 /**
@@ -40,6 +50,8 @@ class LayerDependencyManager {
     2: [1], // Entity cleanup depends on config foundation
     3: [1, 2], // Components depend on config + cleanup
     4: [1, 2, 3], // Hydration depends on all previous layers
+    5: [1, 2, 3, 4], // Next.js depends on all core layers
+    6: [1, 2, 3, 4, 5], // Testing depends on all previous layers
   };
 
   static LAYER_INFO = {
@@ -47,6 +59,8 @@ class LayerDependencyManager {
     2: { name: "Entity Cleanup", critical: false },
     3: { name: "Components", critical: false },
     4: { name: "Hydration", critical: false },
+    5: { name: "Next.js App Router", critical: false },
+    6: { name: "Testing & Validation", critical: false },
   };
 
   /**
@@ -915,6 +929,8 @@ function getLayerName(layerId) {
     2: "patterns",
     3: "components",
     4: "hydration",
+    5: "nextjs",
+    6: "testing",
   };
   return names[layerId] || "unknown";
 }
