@@ -4,18 +4,23 @@
   "description": "NeuroLint Pro - Premium React/Next.js Code Fixing Service",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js",
+    "start": "next start",
+    "dev": "next dev",
     "neurolint": "node neurolint-pro.js",
     "neurolint-dry": "node neurolint-pro.js --dry-run",
     "test-engine": "curl http://localhost:3000/api/test",
-    "fix-all": "node fix-master.js",
+    "fix-all": "node scripts/fix-layer-1-config.js && node scripts/fix-layer-2-patterns.js && node scripts/fix-layer-3-components.js",
     "fix-dry-run": "node fix-master.js --dry-run",
     "fix-verbose": "node fix-master.js --verbose",
     "fix-layer-1": "node fix-layer-1-config.js",
     "fix-layer-2": "node fix-layer-2-patterns.js",
     "fix-layer-3": "node fix-layer-3-components.js",
-    "fix-layer-4": "node fix-layer-4-hydration.js"
+    "fix-layer-4": "node fix-layer-4-hydration.js",
+    "build": "next build",
+    "lint": "next lint",
+    "lint:fix": "next lint --fix",
+    "type-check": "tsc --noEmit",
+    "clean": "rm -rf .next out dist"
   },
   "keywords": [
     "react",
