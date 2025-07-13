@@ -2312,7 +2312,7 @@ export default function ImageGallery({ images }) {
       function displayOverview(analysisData) {
         const { result, filename } = analysisData;
 
-        // Update summary stats
+        // Update summary stats using REAL NeuroLint Pro engine data
         const summaryEl = document.getElementById("analysisSummary");
         summaryEl.innerHTML = `
           <div class="analysis-stat">
@@ -2320,8 +2320,8 @@ export default function ImageGallery({ images }) {
             <div class="analysis-stat-label">Issues Found</div>
           </div>
           <div class="analysis-stat">
-            <div class="analysis-stat-value">${result.changesMade || 0}</div>
-            <div class="analysis-stat-label">Fixes Applied</div>
+            <div class="analysis-stat-value">${result.demo ? "Demo" : "Full"}</div>
+            <div class="analysis-stat-label">Analysis Mode</div>
           </div>
           <div class="analysis-stat">
             <div class="analysis-stat-value">${result.confidence ? (result.confidence * 100).toFixed(0) : 0}%</div>
