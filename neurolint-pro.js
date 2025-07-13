@@ -1113,6 +1113,130 @@ class SmartLayerSelector {
       });
     }
 
+    // Layer 5: Next.js App Router issues
+    if (this.isReactComponent(code)) {
+      // Missing 'use client' for components using hooks
+      const hasHooks =
+        /use(State|Effect|Router|Context|Reducer|Callback|Memo|Ref|ImperativeHandle|LayoutEffect|DebugValue)/.test(
+          code,
+        );
+      const hasUseClient = code.includes("'use client'");
+      const isComponent =
+        code.includes("export default function") ||
+        code.includes("export function");
+
+      if (hasHooks && !hasUseClient && isComponent) {
+        issues.push({
+          type: "nextjs",
+          severity: "high",
+          description:
+            "Missing 'use client' directive for component using hooks",
+          fixedByLayer: 5,
+          pattern: "Missing use client",
+        });
+      }
+
+      // Misplaced 'use client' directives
+      if (hasUseClient && !code.startsWith("'use client';")) {
+        const lines = code.split("\n");
+        const useClientIndex = lines.findIndex(
+          (line) => line.trim() === "'use client';",
+        );
+        if (useClientIndex > 0) {
+          issues.push({
+            type: "nextjs",
+            severity: "medium",
+            description: "Misplaced 'use client' directive found",
+            fixedByLayer: 5,
+            pattern: "Misplaced use client",
+          });
+        }
+      }
+
+      // Corrupted import statements
+      if (/import\s*{\s*$|import\s*{\s*\n\s*import/m.test(code)) {
+        issues.push({
+          type: "nextjs",
+          severity: "high",
+          description: "Corrupted import statements detected",
+          fixedByLayer: 5,
+          pattern: "Corrupted imports",
+        });
+      }
+    }
+
+    // Layer 6: Testing and validation issues
+    if (this.isReactComponent(code)) {
+      // Missing prop types
+      if (
+        code.includes("export default function") &&
+        code.includes("props") &&
+        !code.includes("interface") &&
+        !code.includes("type Props")
+      ) {
+        issues.push({
+          type: "testing",
+          severity: "medium",
+          description: "Missing TypeScript prop type definitions",
+          fixedByLayer: 6,
+          pattern: "Missing prop types",
+        });
+      }
+
+      // Missing error handling for async operations
+      if (
+        code.includes("async") &&
+        code.includes("await") &&
+        !code.includes("try") &&
+        !code.includes("catch")
+      ) {
+        const asyncMatches = code.match(/async/g);
+        issues.push({
+          type: "testing",
+          severity: "high",
+          description: `${asyncMatches?.length || 1} async operations without error handling`,
+          fixedByLayer: 6,
+          pattern: "Missing error handling",
+          count: asyncMatches?.length || 1,
+        });
+      }
+
+      // Missing accessibility attributes
+      if (
+        code.includes("<button") &&
+        !code.includes("aria-label") &&
+        !code.includes("aria-describedby")
+      ) {
+        const buttonMatches = code.match(/<button/g);
+        issues.push({
+          type: "testing",
+          severity: "medium",
+          description: `${buttonMatches?.length || 1} buttons missing accessibility attributes`,
+          fixedByLayer: 6,
+          pattern: "Missing accessibility",
+          count: buttonMatches?.length || 1,
+        });
+      }
+
+      // Performance optimization opportunities
+      if (
+        code.includes("export default function") &&
+        !code.includes("useState") &&
+        !code.includes("useEffect") &&
+        !code.includes("React.memo") &&
+        code.includes("props")
+      ) {
+        issues.push({
+          type: "testing",
+          severity: "low",
+          description:
+            "Pure component could benefit from React.memo optimization",
+          fixedByLayer: 6,
+          pattern: "Performance optimization",
+        });
+      }
+    }
+
     return issues;
   }
 
