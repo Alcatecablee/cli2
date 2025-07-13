@@ -1804,6 +1804,8 @@ export default function ImageGallery({ images }) {
       }
 
       function loadSampleCode(sampleType) {
+        console.log("Loading sample code:", sampleType);
+
         // Update active sample button
         document.querySelectorAll(".sample-btn").forEach((btn) => {
           btn.classList.remove("active");
@@ -1813,8 +1815,13 @@ export default function ImageGallery({ images }) {
           .classList.add("active");
 
         const sample = sampleCodes[sampleType];
+        console.log("Sample data:", sample);
+
         if (sample) {
+          console.log("Calling analyzeCode with:", sample.filename);
           analyzeCode(sample.code, sample.filename, true);
+        } else {
+          console.error("Sample not found:", sampleType);
         }
       }
 
