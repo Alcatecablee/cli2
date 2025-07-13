@@ -241,7 +241,7 @@ app.get("/api/session/:sessionId", (req, res) => {
  * Serve the main landing page
  */
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "index.html"));
+  res.sendFile(path.join(__dirname, "index.new.html"));
 });
 
 /**
