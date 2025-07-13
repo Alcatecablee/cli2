@@ -4,6 +4,16 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>NeuroLint Pro - Code Fixing Dashboard</title>
+    <meta
+      name="description"
+      content="Upload and fix your React/Next.js code with NeuroLint Pro's professional debugging service."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
     <style>
       * {
         margin: 0;
@@ -13,18 +23,30 @@
 
       body {
         font-family:
-          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-        background: #f5f7fa;
-        color: #333;
+          "Inter",
+          -apple-system,
+          BlinkMacSystemFont,
+          sans-serif;
+        background: #000000;
+        color: #ffffff;
+        line-height: 1.6;
+        overflow-x: hidden;
       }
 
+      /* Smooth transitions */
+      * {
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      /* Header */
       .header {
-        background: white;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        background: #000000;
+        border-bottom: 1px solid #4a4a4a;
         padding: 1rem 0;
         position: sticky;
         top: 0;
         z-index: 100;
+        backdrop-filter: blur(12px);
       }
 
       .header-content {
@@ -38,8 +60,9 @@
 
       .logo {
         font-size: 1.5rem;
-        font-weight: bold;
-        color: #667eea;
+        font-weight: 700;
+        color: #ffffff;
+        letter-spacing: -0.025em;
       }
 
       .user-info {
@@ -49,13 +72,76 @@
       }
 
       .credits {
-        background: #e8f0fe;
+        background: #000000;
+        border: 1px solid #4a4a4a;
         padding: 0.5rem 1rem;
-        border-radius: 20px;
-        color: #1565c0;
+        color: #ffffff;
         font-weight: 600;
+        font-size: 0.9rem;
       }
 
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.75rem 1.5rem;
+        background: transparent;
+        color: #ffffff;
+        text-decoration: none;
+        border: 1px solid #4a4a4a;
+        font-weight: 600;
+        font-size: 0.95rem;
+        cursor: pointer;
+        min-height: 44px;
+        transition: all 0.2s ease;
+      }
+
+      .btn:hover,
+      .btn:focus {
+        background: #ffffff;
+        color: #000000;
+        border-color: #ffffff;
+        transform: translateY(-1px);
+        outline: none;
+      }
+
+      .btn:active {
+        transform: translateY(0);
+      }
+
+      .btn-primary {
+        background: #ffffff;
+        color: #000000;
+        border-color: #ffffff;
+        flex: 1;
+      }
+
+      .btn-primary:hover,
+      .btn-primary:focus {
+        background: transparent;
+        color: #ffffff;
+      }
+
+      .btn-secondary {
+        background: transparent;
+        color: #ffffff;
+        border-color: #4a4a4a;
+        flex: 1;
+      }
+
+      .btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .btn:disabled:hover {
+        background: transparent;
+        color: #ffffff;
+        border-color: #4a4a4a;
+      }
+
+      /* Main Container */
       .main-container {
         max-width: 1400px;
         margin: 0 auto;
@@ -66,16 +152,19 @@
         min-height: calc(100vh - 100px);
       }
 
+      /* Panel Styles */
       .panel {
-        background: white;
-        border-radius: 12px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        background: #000000;
+        border: 1px solid #4a4a4a;
         overflow: hidden;
+        display: flex;
+        flex-direction: column;
       }
 
       .panel-header {
-        background: #667eea;
-        color: white;
+        background: #000000;
+        border-bottom: 1px solid #4a4a4a;
+        color: #ffffff;
         padding: 1.5rem;
         font-weight: 600;
         font-size: 1.1rem;
@@ -83,150 +172,152 @@
 
       .panel-content {
         padding: 1.5rem;
-        height: calc(100vh - 200px);
+        flex: 1;
         overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
       }
 
+      /* Upload Zone */
       .upload-zone {
-        border: 2px dashed #667eea;
-        border-radius: 8px;
+        border: 1px dashed #4a4a4a;
         padding: 3rem;
         text-align: center;
-        background: #f8f9ff;
-        margin-bottom: 2rem;
-        transition: all 0.3s;
+        background: #000000;
         cursor: pointer;
+        min-height: 200px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
       }
 
-      .upload-zone:hover {
-        border-color: #5a6fd8;
-        background: #f0f4ff;
+      .upload-zone:hover,
+      .upload-zone:focus-within {
+        border-color: #666666;
+        background: rgba(255, 255, 255, 0.02);
       }
 
       .upload-zone.dragover {
-        border-color: #5a6fd8;
-        background: #e8f0fe;
-        transform: scale(1.02);
+        border-color: #ffffff;
+        background: rgba(255, 255, 255, 0.05);
+        transform: scale(1.01);
+      }
+
+      .upload-zone h3 {
+        color: #ffffff;
+        margin-bottom: 0.5rem;
+        font-size: 1.25rem;
+      }
+
+      .upload-zone p {
+        color: #666666;
+        margin-bottom: 0.5rem;
       }
 
       .file-input {
         display: none;
       }
 
+      /* File List */
       .file-list {
-        margin-top: 1rem;
+        flex: 1;
       }
 
       .file-item {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 0.75rem;
-        background: #f8f9fa;
+        padding: 1rem;
+        background: #000000;
         margin-bottom: 0.5rem;
-        border-radius: 6px;
-        border-left: 4px solid #667eea;
+        border: 1px solid #4a4a4a;
       }
 
       .file-name {
         font-weight: 500;
+        color: #ffffff;
       }
 
       .file-size {
-        color: #666;
+        color: #666666;
         font-size: 0.9rem;
       }
 
       .remove-file {
-        background: #ff6b6b;
-        color: white;
-        border: none;
+        background: transparent;
+        color: #666666;
+        border: 1px solid #4a4a4a;
         padding: 0.25rem 0.5rem;
-        border-radius: 4px;
         cursor: pointer;
         font-size: 0.8rem;
       }
 
-      .controls {
-        display: flex;
-        gap: 1rem;
-        margin-bottom: 2rem;
+      .remove-file:hover,
+      .remove-file:focus {
+        color: #ffffff;
+        border-color: #ffffff;
+        outline: none;
       }
 
-      .btn {
-        padding: 0.75rem 1.5rem;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-        font-weight: 600;
-        transition: all 0.3s;
-        flex: 1;
+      /* Layer Selector */
+      .layer-selector h3 {
+        color: #ffffff;
+        margin-bottom: 0.5rem;
       }
 
-      .btn-primary {
-        background: #667eea;
-        color: white;
-      }
-
-      .btn-primary:hover {
-        background: #5a6fd8;
-      }
-
-      .btn-secondary {
-        background: #e9ecef;
-        color: #495057;
-      }
-
-      .btn-secondary:hover {
-        background: #dee2e6;
-      }
-
-      .btn:disabled {
-        opacity: 0.6;
-        cursor: not-allowed;
-      }
-
-      .layer-selector {
-        margin-bottom: 2rem;
+      .layer-selector p {
+        color: #666666;
+        margin-bottom: 1rem;
+        font-size: 0.9rem;
       }
 
       .layer-options {
         display: grid;
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
         gap: 1rem;
-        margin-top: 1rem;
       }
 
       .layer-option {
         padding: 1rem;
-        border: 2px solid #e9ecef;
-        border-radius: 8px;
+        border: 1px solid #4a4a4a;
+        background: #000000;
         cursor: pointer;
-        transition: all 0.3s;
+        transition: all 0.2s ease;
       }
 
       .layer-option.selected {
-        border-color: #667eea;
-        background: #f8f9ff;
+        border-color: #ffffff;
+        background: rgba(255, 255, 255, 0.05);
       }
 
       .layer-option:hover {
-        border-color: #667eea;
+        border-color: #666666;
+        background: rgba(255, 255, 255, 0.02);
       }
 
       .layer-title {
         font-weight: 600;
         margin-bottom: 0.5rem;
+        color: #ffffff;
       }
 
       .layer-desc {
         font-size: 0.9rem;
-        color: #666;
+        color: #666666;
       }
 
+      /* Controls */
+      .controls {
+        display: flex;
+        gap: 1rem;
+      }
+
+      /* Progress */
       .progress {
-        margin-bottom: 2rem;
         display: none;
+        margin-bottom: 1rem;
       }
 
       .progress.show {
@@ -235,42 +326,58 @@
 
       .progress-bar {
         width: 100%;
-        height: 8px;
-        background: #e9ecef;
-        border-radius: 4px;
+        height: 4px;
+        background: #4a4a4a;
         overflow: hidden;
         margin-bottom: 1rem;
       }
 
       .progress-fill {
         height: 100%;
-        background: #667eea;
+        background: #ffffff;
         width: 0%;
-        transition: width 0.3s;
-        border-radius: 4px;
+        transition: width 0.3s ease;
       }
 
       .progress-text {
         text-align: center;
         font-weight: 600;
-        color: #667eea;
+        color: #ffffff;
+      }
+
+      /* Results */
+      .results-placeholder {
+        text-align: center;
+        padding: 3rem;
+        color: #666666;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .results-placeholder h3 {
+        color: #ffffff;
+        margin-bottom: 1rem;
+        font-size: 1.5rem;
       }
 
       .results-container {
-        margin-top: 2rem;
+        flex: 1;
       }
 
       .result-item {
         margin-bottom: 2rem;
-        border: 1px solid #e9ecef;
-        border-radius: 8px;
+        border: 1px solid #4a4a4a;
+        background: #000000;
         overflow: hidden;
       }
 
       .result-header {
-        background: #f8f9fa;
+        background: #000000;
         padding: 1rem;
-        border-bottom: 1px solid #e9ecef;
+        border-bottom: 1px solid #4a4a4a;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -278,28 +385,32 @@
 
       .result-filename {
         font-weight: 600;
+        color: #ffffff;
       }
 
       .result-status {
         padding: 0.25rem 0.75rem;
-        border-radius: 12px;
         font-size: 0.8rem;
         font-weight: 600;
+        border: 1px solid transparent;
       }
 
       .status-success {
-        background: #d4edda;
-        color: #155724;
+        background: rgba(255, 255, 255, 0.1);
+        color: #ffffff;
+        border-color: #ffffff;
       }
 
       .status-warning {
-        background: #fff3cd;
-        color: #856404;
+        background: rgba(102, 102, 102, 0.1);
+        color: #666666;
+        border-color: #666666;
       }
 
       .status-error {
-        background: #f8d7da;
-        color: #721c24;
+        background: rgba(102, 102, 102, 0.1);
+        color: #666666;
+        border-color: #666666;
       }
 
       .result-content {
@@ -308,7 +419,7 @@
 
       .result-summary {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
         gap: 1rem;
         margin-bottom: 1rem;
       }
@@ -316,19 +427,19 @@
       .summary-item {
         text-align: center;
         padding: 1rem;
-        background: #f8f9fa;
-        border-radius: 6px;
+        background: #000000;
+        border: 1px solid #4a4a4a;
       }
 
       .summary-number {
         font-size: 2rem;
         font-weight: bold;
-        color: #667eea;
+        color: #ffffff;
       }
 
       .summary-label {
         font-size: 0.9rem;
-        color: #666;
+        color: #666666;
       }
 
       .improvements-list {
@@ -336,54 +447,213 @@
       }
 
       .improvement-item {
-        padding: 0.5rem;
-        background: #d4edda;
+        padding: 0.75rem;
+        background: rgba(255, 255, 255, 0.05);
         margin-bottom: 0.5rem;
-        border-radius: 4px;
-        color: #155724;
+        color: #ffffff;
         font-size: 0.9rem;
+        border: 1px solid #4a4a4a;
       }
 
       .improvement-item::before {
-        content: "✅ ";
+        content: "✓ ";
         margin-right: 0.5rem;
-      }
-
-      .code-viewer {
-        background: #1e1e1e;
-        color: #d4d4d4;
-        padding: 1rem;
-        border-radius: 6px;
-        font-family: "Monaco", "Menlo", monospace;
-        font-size: 0.85rem;
-        overflow-x: auto;
-        max-height: 300px;
-        overflow-y: auto;
-        margin-top: 1rem;
+        color: #ffffff;
       }
 
       .download-btn {
-        background: #28a745;
-        color: white;
+        background: transparent;
+        color: #ffffff;
+        border: 1px solid #4a4a4a;
         padding: 0.5rem 1rem;
-        border: none;
-        border-radius: 4px;
         cursor: pointer;
         margin-top: 1rem;
       }
 
-      .download-btn:hover {
-        background: #218838;
+      .download-btn:hover,
+      .download-btn:focus {
+        background: #ffffff;
+        color: #000000;
+        border-color: #ffffff;
+        outline: none;
       }
 
+      /* Accessibility */
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+
+      /* Focus styles */
+      *:focus {
+        outline: 2px solid #ffffff;
+        outline-offset: 2px;
+      }
+
+      /* Mobile Responsive */
       @media (max-width: 1024px) {
         .main-container {
           grid-template-columns: 1fr;
           gap: 1rem;
+          padding: 1rem;
+        }
+
+        .header-content {
+          padding: 0 1rem;
         }
 
         .layer-options {
           grid-template-columns: 1fr;
+        }
+
+        .controls {
+          flex-direction: column;
+        }
+
+        .panel-content {
+          padding: 1rem;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .upload-zone {
+          padding: 2rem 1rem;
+          min-height: 150px;
+        }
+
+        .result-header {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 0.5rem;
+        }
+
+        .result-summary {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .user-info {
+          flex-direction: column;
+          gap: 0.5rem;
+          align-items: flex-end;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .main-container {
+          padding: 0.5rem;
+        }
+
+        .header-content {
+          flex-direction: column;
+          gap: 1rem;
+          align-items: stretch;
+        }
+
+        .user-info {
+          flex-direction: row;
+          justify-content: space-between;
+          align-items: center;
+        }
+
+        .panel-header {
+          padding: 1rem;
+          font-size: 1rem;
+        }
+
+        .panel-content {
+          padding: 0.75rem;
+          gap: 1rem;
+        }
+
+        .upload-zone {
+          padding: 1.5rem 0.75rem;
+        }
+
+        .upload-zone h3 {
+          font-size: 1.1rem;
+        }
+
+        .result-summary {
+          grid-template-columns: 1fr;
+        }
+
+        .summary-item {
+          padding: 0.75rem;
+        }
+      }
+
+      /* Reduced motion */
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          transition: none !important;
+          animation: none !important;
+        }
+      }
+
+      /* High contrast mode */
+      @media (prefers-contrast: high) {
+        .btn,
+        .panel,
+        .file-item,
+        .layer-option {
+          border-width: 2px;
+        }
+      }
+
+      /* Error states */
+      .error-state {
+        text-align: center;
+        padding: 3rem;
+        color: #666666;
+      }
+
+      .error-state h3 {
+        color: #ffffff;
+        margin-bottom: 1rem;
+      }
+
+      /* Loading states */
+      .loading {
+        opacity: 0.7;
+        pointer-events: none;
+      }
+
+      /* Animations for better UX */
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .fade-in {
+        animation: fadeIn 0.3s ease-out;
+      }
+
+      /* Touch-friendly adjustments */
+      @media (hover: none) and (pointer: coarse) {
+        .btn {
+          min-height: 48px;
+          font-size: 1rem;
+        }
+
+        .layer-option {
+          padding: 1.25rem;
+        }
+
+        .file-item {
+          padding: 1.25rem;
         }
       }
     </style>
@@ -391,12 +661,20 @@
   <body>
     <div class="header">
       <div class="header-content">
-        <div class="logo">🧠 NeuroLint Pro</div>
+        <div class="logo">NeuroLint Pro</div>
         <div class="user-info">
-          <div class="credits" id="creditsDisplay">Credits: Loading...</div>
+          <div
+            class="credits"
+            id="creditsDisplay"
+            role="status"
+            aria-live="polite"
+          >
+            Credits: Loading...
+          </div>
           <button
             class="btn btn-secondary"
             onclick="window.location.href='index.html'"
+            aria-label="Return to home page"
           >
             Back to Home
           </button>
@@ -404,19 +682,22 @@
       </div>
     </div>
 
-    <div class="main-container">
+    <main class="main-container">
       <!-- Left Panel: Upload and Configuration -->
       <div class="panel">
-        <div class="panel-header">📁 Upload & Configure</div>
+        <div class="panel-header">Upload & Configure</div>
         <div class="panel-content">
           <div
             class="upload-zone"
             onclick="document.getElementById('fileInput').click()"
+            onkeydown="if(event.key==='Enter'||event.key===' ') document.getElementById('fileInput').click()"
+            tabindex="0"
+            role="button"
+            aria-label="Upload React/Next.js files for processing"
           >
-            <div style="font-size: 3rem; margin-bottom: 1rem">📁</div>
             <h3>Drop your React/Next.js files here</h3>
-            <p style="color: #666; margin-top: 0.5rem">or click to browse</p>
-            <p style="font-size: 0.9rem; color: #888; margin-top: 0.5rem">
+            <p>or click to browse</p>
+            <p style="font-size: 0.9rem; color: #666666; margin-top: 0.5rem">
               Supports: .jsx, .tsx, .js, .ts, .json
             </p>
             <input
@@ -426,55 +707,101 @@
               multiple
               accept=".jsx,.tsx,.js,.ts,.json"
               onchange="handleFileUpload(event)"
+              aria-label="Select files for processing"
             />
           </div>
 
-          <div class="file-list" id="fileList"></div>
+          <div
+            class="file-list"
+            id="fileList"
+            role="region"
+            aria-label="Uploaded files"
+          ></div>
 
           <div class="layer-selector">
             <h3>Select Layers to Execute</h3>
-            <p style="color: #666; margin-bottom: 1rem; font-size: 0.9rem">
+            <p>
               NeuroLint Pro will auto-detect needed layers, or choose manually
             </p>
 
-            <div class="layer-options">
-              <div class="layer-option selected" data-layer="auto">
-                <div class="layer-title">🧠 Smart Auto-Detect</div>
+            <div
+              class="layer-options"
+              role="radiogroup"
+              aria-label="Layer selection options"
+            >
+              <div
+                class="layer-option selected"
+                data-layer="auto"
+                tabindex="0"
+                role="radio"
+                aria-checked="true"
+              >
+                <div class="layer-title">Smart Auto-Detect</div>
                 <div class="layer-desc">
                   Automatically select layers based on code analysis
                 </div>
               </div>
 
-              <div class="layer-option" data-layer="1">
-                <div class="layer-title">⚙️ Layer 1: Config</div>
+              <div
+                class="layer-option"
+                data-layer="1"
+                tabindex="0"
+                role="radio"
+                aria-checked="false"
+              >
+                <div class="layer-title">Layer 1: Config</div>
                 <div class="layer-desc">
                   TypeScript, Next.js, package.json fixes
                 </div>
               </div>
 
-              <div class="layer-option" data-layer="2">
-                <div class="layer-title">🔧 Layer 2: Patterns</div>
+              <div
+                class="layer-option"
+                data-layer="2"
+                tabindex="0"
+                role="radio"
+                aria-checked="false"
+              >
+                <div class="layer-title">Layer 2: Patterns</div>
                 <div class="layer-desc">
                   HTML entities, imports, console.log
                 </div>
               </div>
 
-              <div class="layer-option" data-layer="3">
-                <div class="layer-title">⚛️ Layer 3: Components</div>
+              <div
+                class="layer-option"
+                data-layer="3"
+                tabindex="0"
+                role="radio"
+                aria-checked="false"
+              >
+                <div class="layer-title">Layer 3: Components</div>
                 <div class="layer-desc">
                   Key props, React imports, accessibility
                 </div>
               </div>
 
-              <div class="layer-option" data-layer="4">
-                <div class="layer-title">💧 Layer 4: Hydration</div>
+              <div
+                class="layer-option"
+                data-layer="4"
+                tabindex="0"
+                role="radio"
+                aria-checked="false"
+              >
+                <div class="layer-title">Layer 4: Hydration</div>
                 <div class="layer-desc">
                   SSR guards, localStorage protection
                 </div>
               </div>
 
-              <div class="layer-option" data-layer="all">
-                <div class="layer-title">🔥 All Layers</div>
+              <div
+                class="layer-option"
+                data-layer="all"
+                tabindex="0"
+                role="radio"
+                aria-checked="false"
+              >
+                <div class="layer-title">All Layers</div>
                 <div class="layer-desc">Execute all 4 layers sequentially</div>
               </div>
             </div>
@@ -486,21 +813,34 @@
               onclick="analyzeCode()"
               id="analyzeBtn"
               disabled
+              aria-label="Analyze code without applying fixes"
             >
-              🔍 Analyze Only
+              Analyze Only
             </button>
             <button
               class="btn btn-primary"
               onclick="fixCode()"
               id="fixBtn"
               disabled
+              aria-label="Fix code and apply changes"
             >
-              🛠️ Fix Code
+              Fix Code
             </button>
           </div>
 
-          <div class="progress" id="progress">
-            <div class="progress-bar">
+          <div
+            class="progress"
+            id="progress"
+            role="region"
+            aria-label="Processing progress"
+          >
+            <div
+              class="progress-bar"
+              role="progressbar"
+              aria-valuenow="0"
+              aria-valuemin="0"
+              aria-valuemax="100"
+            >
               <div class="progress-fill" id="progressFill"></div>
             </div>
             <div class="progress-text" id="progressText">Processing...</div>
@@ -510,11 +850,10 @@
 
       <!-- Right Panel: Results -->
       <div class="panel">
-        <div class="panel-header">📊 Results & Analysis</div>
+        <div class="panel-header">Results & Analysis</div>
         <div class="panel-content">
           <div id="resultsContent">
-            <div style="text-align: center; padding: 3rem; color: #666">
-              <div style="font-size: 4rem; margin-bottom: 1rem">🚀</div>
+            <div class="results-placeholder">
               <h3>Ready to Fix Your Code</h3>
               <p>
                 Upload your React/Next.js files to see detailed analysis and
@@ -524,7 +863,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </main>
 
     <script>
       let uploadedFiles = [];
@@ -548,32 +887,49 @@
         const creditsDisplay = document.getElementById("creditsDisplay");
         if (subscription === "professional") {
           creditsDisplay.textContent = "Professional Plan: Unlimited";
-          creditsDisplay.style.background = "#d4edda";
-          creditsDisplay.style.color = "#155724";
+          creditsDisplay.style.background = "rgba(255, 255, 255, 0.1)";
+          creditsDisplay.style.borderColor = "#FFFFFF";
         } else if (subscription === "enterprise") {
           creditsDisplay.textContent = "Enterprise Plan: Unlimited";
-          creditsDisplay.style.background = "#cce5ff";
-          creditsDisplay.style.color = "#0d47a1";
+          creditsDisplay.style.background = "rgba(255, 255, 255, 0.1)";
+          creditsDisplay.style.borderColor = "#FFFFFF";
         } else {
           creditsDisplay.textContent = "Single Fix: 1 Credit";
         }
       }
 
-      // Layer selection
+      // Layer selection with keyboard support
       document.querySelectorAll(".layer-option").forEach((option) => {
         option.addEventListener("click", function () {
-          // Remove selected from all options
-          document
-            .querySelectorAll(".layer-option")
-            .forEach((opt) => opt.classList.remove("selected"));
+          selectLayer(this);
+        });
 
-          // Add selected to clicked option
-          this.classList.add("selected");
-
-          // Update selected layers
-          selectedLayers = this.dataset.layer;
+        option.addEventListener("keydown", function (e) {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            selectLayer(this);
+          }
         });
       });
+
+      function selectLayer(element) {
+        // Remove selected from all options
+        document.querySelectorAll(".layer-option").forEach((opt) => {
+          opt.classList.remove("selected");
+          opt.setAttribute("aria-checked", "false");
+        });
+
+        // Add selected to clicked option
+        element.classList.add("selected");
+        element.setAttribute("aria-checked", "true");
+
+        // Update selected layers
+        selectedLayers = element.dataset.layer;
+
+        announceChange(
+          `Selected ${element.querySelector(".layer-title").textContent}`,
+        );
+      }
 
       // File upload handling
       function handleFileUpload(event) {
@@ -588,6 +944,7 @@
 
         updateFileList();
         updateButtons();
+        announceChange(`${files.length} files uploaded`);
       }
 
       function updateFileList() {
@@ -599,7 +956,7 @@
         }
 
         fileList.innerHTML = `
-                <h4 style="margin-bottom: 1rem;">Uploaded Files (${uploadedFiles.length})</h4>
+                <h4 style="margin-bottom: 1rem; color: #FFFFFF;">Uploaded Files (${uploadedFiles.length})</h4>
                 ${uploadedFiles
                   .map(
                     (file, index) => `
@@ -608,7 +965,7 @@
                             <div class="file-name">${file.name}</div>
                             <div class="file-size">${formatFileSize(file.size)}</div>
                         </div>
-                        <button class="remove-file" onclick="removeFile(${index})">Remove</button>
+                        <button class="remove-file" onclick="removeFile(${index})" aria-label="Remove ${file.name}">Remove</button>
                     </div>
                 `,
                   )
@@ -617,9 +974,11 @@
       }
 
       function removeFile(index) {
+        const fileName = uploadedFiles[index].name;
         uploadedFiles.splice(index, 1);
         updateFileList();
         updateButtons();
+        announceChange(`${fileName} removed`);
       }
 
       function updateButtons() {
@@ -642,13 +1001,16 @@
       // Analysis and fixing functions
       async function analyzeCode() {
         showProgress("Analyzing code...");
+        announceChange("Starting code analysis");
 
         try {
           const results = await processFiles(false); // Analysis only
           displayResults(results, false);
+          announceChange("Analysis complete");
         } catch (error) {
           console.error("Analysis error:", error);
           showError("Analysis failed: " + error.message);
+          announceChange("Analysis failed");
         } finally {
           hideProgress();
         }
@@ -660,13 +1022,16 @@
         }
 
         showProgress("Fixing code...");
+        announceChange("Starting code fixing");
 
         try {
           const results = await processFiles(true); // Full fixing
           displayResults(results, true);
+          announceChange("Code fixing complete");
         } catch (error) {
           console.error("Fixing error:", error);
           showError("Code fixing failed: " + error.message);
+          announceChange("Code fixing failed");
         } finally {
           hideProgress();
         }
@@ -739,8 +1104,8 @@
         );
 
         resultsContent.innerHTML = `
-                <div style="margin-bottom: 2rem;">
-                    <h3>${wasFixed ? "Code Fixing" : "Analysis"} Complete</h3>
+                <div class="fade-in" style="margin-bottom: 2rem;">
+                    <h3 style="color: #FFFFFF; margin-bottom: 1rem;">${wasFixed ? "Code Fixing" : "Analysis"} Complete</h3>
                     <div class="result-summary">
                         <div class="summary-item">
                             <div class="summary-number">${successfulFiles}/${totalFiles}</div>
@@ -765,8 +1130,8 @@
                   wasFixed && successfulFiles > 0
                     ? `
                     <div style="text-align: center; margin-top: 2rem;">
-                        <button class="btn btn-primary" onclick="downloadAllFixed()">
-                            📥 Download All Fixed Files
+                        <button class="btn btn-primary" onclick="downloadAllFixed()" aria-label="Download all fixed files as archive">
+                            Download All Fixed Files
                         </button>
                     </div>
                 `
@@ -778,20 +1143,20 @@
       function createResultItem(result, wasFixed) {
         if (!result.success) {
           return `
-                    <div class="result-item">
+                    <div class="result-item fade-in">
                         <div class="result-header">
                             <div class="result-filename">${result.filename}</div>
                             <div class="result-status status-error">Error</div>
                         </div>
                         <div class="result-content">
-                            <p style="color: #dc3545;">❌ ${result.error}</p>
+                            <p style="color: #666666;">${result.error}</p>
                         </div>
                     </div>
                 `;
         }
 
         return `
-                <div class="result-item">
+                <div class="result-item fade-in">
                     <div class="result-header">
                         <div class="result-filename">${result.filename}</div>
                         <div class="result-status ${result.layers?.length > 0 ? "status-success" : "status-warning"}">
@@ -802,8 +1167,8 @@
                         ${
                           result.analysis
                             ? `
-                            <p><strong>Confidence:</strong> ${(result.analysis.confidence * 100).toFixed(1)}%</p>
-                            <p><strong>Impact:</strong> ${result.analysis.estimatedImpact?.level} - ${result.analysis.estimatedImpact?.description}</p>
+                            <p style="color: #666666; margin-bottom: 0.5rem;"><strong>Confidence:</strong> ${(result.analysis.confidence * 100).toFixed(1)}%</p>
+                            <p style="color: #666666; margin-bottom: 1rem;"><strong>Impact:</strong> ${result.analysis.estimatedImpact?.level} - ${result.analysis.estimatedImpact?.description}</p>
                         `
                             : ""
                         }
@@ -811,8 +1176,8 @@
                         ${
                           result.detectedIssues?.length > 0
                             ? `
-                            <p><strong>Issues Detected:</strong></p>
-                            <ul style="margin-left: 1rem; margin-bottom: 1rem;">
+                            <p style="color: #FFFFFF; margin-bottom: 0.5rem;"><strong>Issues Detected:</strong></p>
+                            <ul style="margin-left: 1rem; margin-bottom: 1rem; color: #666666;">
                                 ${result.detectedIssues.map((issue) => `<li>${issue.description}</li>`).join("")}
                             </ul>
                         `
@@ -843,8 +1208,8 @@
                         ${
                           wasFixed && result.transformed
                             ? `
-                            <button class="download-btn" onclick="downloadFile('${result.filename}', \`${escapeForJS(result.transformed)}\`)">
-                                💾 Download Fixed File
+                            <button class="download-btn" onclick="downloadFile('${result.filename}', \`${escapeForJS(result.transformed)}\`)" aria-label="Download fixed ${result.filename}">
+                                Download Fixed File
                             </button>
                         `
                             : ""
@@ -866,8 +1231,10 @@
       function updateProgress(text, percentage) {
         const progressFill = document.getElementById("progressFill");
         const progressText = document.getElementById("progressText");
+        const progressBar = progressFill.parentElement;
 
         progressFill.style.width = percentage + "%";
+        progressBar.setAttribute("aria-valuenow", percentage.toString());
         progressText.textContent = text;
       }
 
@@ -878,11 +1245,10 @@
       function showError(message) {
         const resultsContent = document.getElementById("resultsContent");
         resultsContent.innerHTML = `
-                <div style="text-align: center; padding: 3rem; color: #dc3545;">
-                    <div style="font-size: 4rem; margin-bottom: 1rem;">❌</div>
+                <div class="error-state fade-in">
                     <h3>Error</h3>
                     <p>${message}</p>
-                    <p style="margin-top: 1rem; color: #666;">Please try again or contact support if the issue persists.</p>
+                    <p style="margin-top: 1rem;">Please try again or contact support if the issue persists.</p>
                 </div>
             `;
       }
@@ -897,6 +1263,8 @@
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
+
+        announceChange(`${filename} downloaded`);
       }
 
       function escapeForJS(str) {
@@ -931,7 +1299,22 @@
 
         updateFileList();
         updateButtons();
+        announceChange(`${files.length} files dropped and uploaded`);
       });
+
+      // Announce dynamic content changes for screen readers
+      function announceChange(message) {
+        const announcement = document.createElement("div");
+        announcement.setAttribute("aria-live", "polite");
+        announcement.setAttribute("aria-atomic", "true");
+        announcement.className = "sr-only";
+        announcement.textContent = message;
+        document.body.appendChild(announcement);
+
+        setTimeout(() => {
+          document.body.removeChild(announcement);
+        }, 1000);
+      }
 
       // Initialize the app
       initializeSession();
