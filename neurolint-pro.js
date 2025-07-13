@@ -700,16 +700,16 @@ function applyLayerTransformations(layerId, code, options = {}) {
         console.log(`🛠️  [FALLBACK] Fixed HTML entities: &gt;`);
       }
 
-      // Clean up console statements
+      // Clean up console statements - convert to console.debug (per documentation)
       if (transformedCode.includes("console.log")) {
         transformedCode = transformedCode.replace(
           /console\.log\(/g,
-          "// console.log(",
+          "console.debug(",
         );
         appliedFixes.push(
-          "Console Cleanup: Commented out console.log statements",
+          "Console Cleanup: Converted console.log to console.debug",
         );
-        console.log(`🛠️  [FALLBACK] Cleaned up console.log statements`);
+        console.log(`🛠️  [FALLBACK] Converted console.log to console.debug`);
       }
       break;
 
