@@ -2103,7 +2103,7 @@ export default function ImageGallery({ images }) {
               errorMessage.toLowerCase().includes("rate limit") ||
               errorData.demoLimit
             ) {
-              const error = new Error(errorMessage);
+              const error = new Error("DEMO_LIMIT_REACHED");
               error.isDemoLimit = true;
               error.errorData = errorData;
               console.log("Created demo limit error (non-429):", error);
@@ -2672,7 +2672,7 @@ export default function ImageGallery({ images }) {
         const overviewEl = document.getElementById("analysisOverview");
         overviewEl.innerHTML += `
           <div class="demo-upgrade-prompt" style="margin-top: 2rem;">
-            <h4>���� You uploaded ${totalFiles} files</h4>
+            <h4>📁 You uploaded ${totalFiles} files</h4>
             <p>Demo is limited to 3 files. Upgrade to NeuroLint Pro to analyze unlimited files with full fixing capability.</p>
             <div class="demo-upgrade-buttons">
               <button class="demo-upgrade-btn" onclick="openPaymentModal('single')">
