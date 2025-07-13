@@ -292,8 +292,20 @@ async function executeLayers(code, enabledLayers, options = {}) {
     }
 
     try {
-      // Apply transformation
-      const transformed = await executeLayer(layerId, current, options);
+      // Apply transformation with error recovery
+      const layerResult = await ErrorRecoverySystem.executeWithRecovery(
+        current,
+        layerId,
+        options,
+      );
+
+      if (!layerResult.success) {
+        // Handle layer execution failure
+        results.push(layerResult);
+        continue; // Skip to next layer
+      }
+
+      const transformed = layerResult.code;
 
       // Validate transformation safety
       const validation = TransformationValidator.validateTransformation(
