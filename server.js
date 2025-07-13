@@ -40,7 +40,7 @@ const activeSessions = new Map();
 
 // Rate limiting for demo users
 const demoRequests = new Map();
-const DEMO_LIMIT = 3; // 3 files per demo session
+const DEMO_LIMIT = 100; // 100 files per demo session for testing
 
 /**
  * Validate session using PayPal transaction data
