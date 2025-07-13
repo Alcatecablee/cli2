@@ -2084,11 +2084,14 @@ export default function ImageGallery({ images }) {
               const errorData = await response.json().catch(() => ({}));
               console.log("429 Error Data:", errorData);
 
-              const error = new Error(errorData.error || "DEMO_LIMIT_REACHED");
-              error.isDemoLimit = true;
-              error.errorData = errorData;
-              console.log("Created demo limit error:", error);
-              throw error;
+              // Handle demo limit without throwing error to reduce console noise
+              console.log("Demo limit reached - showing upgrade UI");
+              progressText.textContent =
+                "Demo limit reached - Upgrade for unlimited access";
+              progressFill.style.width = "100%";
+              progressFill.style.background = "#666666";
+              displayDemoLimitReached(filename);
+              return; // Exit function early
             }
 
             // For other error status codes, try to parse the response
@@ -2103,11 +2106,14 @@ export default function ImageGallery({ images }) {
               errorMessage.toLowerCase().includes("rate limit") ||
               errorData.demoLimit
             ) {
-              const error = new Error("DEMO_LIMIT_REACHED");
-              error.isDemoLimit = true;
-              error.errorData = errorData;
-              console.log("Created demo limit error (non-429):", error);
-              throw error;
+              // Handle demo limit without throwing error to reduce console noise
+              console.log("Demo limit reached (non-429) - showing upgrade UI");
+              progressText.textContent =
+                "Demo limit reached - Upgrade for unlimited access";
+              progressFill.style.width = "100%";
+              progressFill.style.background = "#666666";
+              displayDemoLimitReached(filename);
+              return; // Exit function early
             }
 
             throw new Error(errorMessage);
