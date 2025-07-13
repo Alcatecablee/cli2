@@ -358,21 +358,239 @@ async function executeLayers(code, enabledLayers, options = {}) {
 }
 
 /**
- * Execute individual layer (maps to existing layer scripts)
+ * Error Recovery and Reporting System (from IMPLEMENTATION_PATTERNS.md)
+ * Advanced error recovery system with categorized error handling
+ */
+class ErrorRecoverySystem {
+  /**
+   * Execute layer with comprehensive error recovery
+   * Exact implementation from IMPLEMENTATION_PATTERNS.md
+   */
+  static async executeWithRecovery(code, layerId, options = {}) {
+    const startTime = performance.now();
+
+    try {
+      // Attempt normal execution
+      const result = await executeLayer(layerId, code, options);
+
+      return {
+        success: true,
+        code: result,
+        executionTime: performance.now() - startTime,
+        improvements: detectImprovements(code, result),
+        layerId,
+      };
+    } catch (error) {
+      // Categorize and handle errors appropriately
+      const errorInfo = this.categorizeError(error, layerId, code);
+
+      console.error(`❌ Layer ${layerId} error:`, errorInfo.message);
+
+      return {
+        success: false,
+        code, // Return original code unchanged
+        executionTime: performance.now() - startTime,
+        error: errorInfo.message,
+        errorCategory: errorInfo.category,
+        suggestion: errorInfo.suggestion,
+        recoveryOptions: errorInfo.recoveryOptions,
+        layerId,
+      };
+    }
+  }
+
+  /**
+   * Categorize errors for appropriate handling and user feedback
+   * Exact implementation from IMPLEMENTATION_PATTERNS.md
+   */
+  static categorizeError(error, layerId, code) {
+    const errorMessage = error.message || error.toString();
+
+    // Syntax errors
+    if (
+      error.name === "SyntaxError" ||
+      errorMessage.includes("Unexpected token")
+    ) {
+      return {
+        category: "syntax",
+        message: "Code syntax prevented transformation",
+        suggestion: "Fix syntax errors before running NeuroLint",
+        recoveryOptions: [
+          "Run syntax validation first",
+          "Use a code formatter",
+          "Check for missing brackets or semicolons",
+        ],
+        severity: "high",
+      };
+    }
+
+    // File system errors
+    if (
+      errorMessage.includes("ENOENT") ||
+      errorMessage.includes("permission")
+    ) {
+      return {
+        category: "filesystem",
+        message: "File system access error",
+        suggestion: "Check file permissions and paths",
+        recoveryOptions: [
+          "Verify file exists",
+          "Check write permissions",
+          "Run with elevated privileges if needed",
+        ],
+        severity: "high",
+      };
+    }
+
+    // Layer-specific errors
+    const layerSpecificError = this.getLayerSpecificError(
+      layerId,
+      errorMessage,
+    );
+    if (layerSpecificError) {
+      return layerSpecificError;
+    }
+
+    // Generic errors
+    return {
+      category: "unknown",
+      message: `Unexpected error in Layer ${layerId}`,
+      suggestion: "Please report this issue with your code sample",
+      recoveryOptions: [
+        "Try running other layers individually",
+        "Check console for additional details",
+        "Report issue with minimal reproduction case",
+      ],
+      severity: "medium",
+    };
+  }
+
+  /**
+   * Handle layer-specific error patterns
+   * Exact implementation from IMPLEMENTATION_PATTERNS.md
+   */
+  static getLayerSpecificError(layerId, errorMessage) {
+    switch (layerId) {
+      case 1: // Configuration layer
+        if (errorMessage.includes("JSON")) {
+          return {
+            category: "config",
+            message: "Invalid JSON in configuration file",
+            suggestion: "Validate JSON syntax in config files",
+            recoveryOptions: [
+              "Use JSON validator",
+              "Check for trailing commas",
+            ],
+            severity: "high",
+          };
+        }
+        break;
+
+      case 2: // Pattern layer
+        if (errorMessage.includes("replace")) {
+          return {
+            category: "pattern",
+            message: "Pattern replacement failed",
+            suggestion: "Some patterns may conflict with your code structure",
+            recoveryOptions: [
+              "Skip pattern layer",
+              "Review conflicting patterns",
+            ],
+            severity: "low",
+          };
+        }
+        break;
+
+      case 3: // Component layer
+        if (errorMessage.includes("JSX")) {
+          return {
+            category: "component",
+            message: "JSX transformation error",
+            suggestion: "Complex JSX structures may need manual fixing",
+            recoveryOptions: ["Simplify JSX", "Use manual key addition"],
+            severity: "medium",
+          };
+        }
+        break;
+
+      case 4: // Hydration layer
+        if (
+          errorMessage.includes("localStorage") ||
+          errorMessage.includes("window")
+        ) {
+          return {
+            category: "hydration",
+            message: "Browser API protection failed",
+            suggestion: "Manual SSR guards may be needed for complex cases",
+            recoveryOptions: [
+              "Add manual typeof window checks",
+              "Use useEffect hooks",
+            ],
+            severity: "medium",
+          };
+        }
+        break;
+    }
+
+    return null;
+  }
+}
+
+/**
+ * Execute individual layer by calling existing layer scripts
+ * Uses child process since existing scripts are not properly modularized
  */
 async function executeLayer(layerId, code, options = {}) {
-  switch (layerId) {
-    case 1:
-      return await fixLayer1(code, options);
-    case 2:
-      return await fixLayer2(code, options);
-    case 3:
-      return await fixLayer3(code, options);
-    case 4:
-      return await fixLayer4(code, options);
-    default:
-      throw new Error(`Unknown layer: ${layerId}`);
+  // Create a temporary file for the code
+  const tempFile = path.join(
+    process.cwd(),
+    `.temp-layer-${layerId}-${Date.now()}.js`,
+  );
+
+  try {
+    // Write code to temp file
+    fs.writeFileSync(tempFile, code);
+
+    // Execute the appropriate layer script
+    const layerScript = `fix-layer-${layerId}-${getLayerName(layerId)}.js`;
+
+    if (!fs.existsSync(layerScript)) {
+      throw new Error(`Layer script not found: ${layerScript}`);
+    }
+
+    // Run layer script
+    const command = `node ${layerScript}`;
+    const result = execSync(command, {
+      cwd: process.cwd(),
+      encoding: "utf8",
+      stdio: options.verbose ? "inherit" : "pipe",
+    });
+
+    // Read the potentially modified temp file
+    const transformedCode = fs.existsSync(tempFile)
+      ? fs.readFileSync(tempFile, "utf8")
+      : code;
+
+    return transformedCode;
+  } finally {
+    // Clean up temp file
+    if (fs.existsSync(tempFile)) {
+      fs.unlinkSync(tempFile);
+    }
   }
+}
+
+/**
+ * Get layer name for script filename
+ */
+function getLayerName(layerId) {
+  const names = {
+    1: "config",
+    2: "patterns",
+    3: "components",
+    4: "hydration",
+  };
+  return names[layerId] || "unknown";
 }
 
 /**
