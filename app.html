@@ -1,0 +1,940 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NeuroLint Pro - Code Fixing Dashboard</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        background: #f5f7fa;
+        color: #333;
+      }
+
+      .header {
+        background: white;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        padding: 1rem 0;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+
+      .header-content {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .logo {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #667eea;
+      }
+
+      .user-info {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .credits {
+        background: #e8f0fe;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        color: #1565c0;
+        font-weight: 600;
+      }
+
+      .main-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 2rem;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        min-height: calc(100vh - 100px);
+      }
+
+      .panel {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+      }
+
+      .panel-header {
+        background: #667eea;
+        color: white;
+        padding: 1.5rem;
+        font-weight: 600;
+        font-size: 1.1rem;
+      }
+
+      .panel-content {
+        padding: 1.5rem;
+        height: calc(100vh - 200px);
+        overflow-y: auto;
+      }
+
+      .upload-zone {
+        border: 2px dashed #667eea;
+        border-radius: 8px;
+        padding: 3rem;
+        text-align: center;
+        background: #f8f9ff;
+        margin-bottom: 2rem;
+        transition: all 0.3s;
+        cursor: pointer;
+      }
+
+      .upload-zone:hover {
+        border-color: #5a6fd8;
+        background: #f0f4ff;
+      }
+
+      .upload-zone.dragover {
+        border-color: #5a6fd8;
+        background: #e8f0fe;
+        transform: scale(1.02);
+      }
+
+      .file-input {
+        display: none;
+      }
+
+      .file-list {
+        margin-top: 1rem;
+      }
+
+      .file-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.75rem;
+        background: #f8f9fa;
+        margin-bottom: 0.5rem;
+        border-radius: 6px;
+        border-left: 4px solid #667eea;
+      }
+
+      .file-name {
+        font-weight: 500;
+      }
+
+      .file-size {
+        color: #666;
+        font-size: 0.9rem;
+      }
+
+      .remove-file {
+        background: #ff6b6b;
+        color: white;
+        border: none;
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.8rem;
+      }
+
+      .controls {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 2rem;
+      }
+
+      .btn {
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s;
+        flex: 1;
+      }
+
+      .btn-primary {
+        background: #667eea;
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background: #5a6fd8;
+      }
+
+      .btn-secondary {
+        background: #e9ecef;
+        color: #495057;
+      }
+
+      .btn-secondary:hover {
+        background: #dee2e6;
+      }
+
+      .btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+
+      .layer-selector {
+        margin-bottom: 2rem;
+      }
+
+      .layer-options {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+        margin-top: 1rem;
+      }
+
+      .layer-option {
+        padding: 1rem;
+        border: 2px solid #e9ecef;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+
+      .layer-option.selected {
+        border-color: #667eea;
+        background: #f8f9ff;
+      }
+
+      .layer-option:hover {
+        border-color: #667eea;
+      }
+
+      .layer-title {
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+      }
+
+      .layer-desc {
+        font-size: 0.9rem;
+        color: #666;
+      }
+
+      .progress {
+        margin-bottom: 2rem;
+        display: none;
+      }
+
+      .progress.show {
+        display: block;
+      }
+
+      .progress-bar {
+        width: 100%;
+        height: 8px;
+        background: #e9ecef;
+        border-radius: 4px;
+        overflow: hidden;
+        margin-bottom: 1rem;
+      }
+
+      .progress-fill {
+        height: 100%;
+        background: #667eea;
+        width: 0%;
+        transition: width 0.3s;
+        border-radius: 4px;
+      }
+
+      .progress-text {
+        text-align: center;
+        font-weight: 600;
+        color: #667eea;
+      }
+
+      .results-container {
+        margin-top: 2rem;
+      }
+
+      .result-item {
+        margin-bottom: 2rem;
+        border: 1px solid #e9ecef;
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      .result-header {
+        background: #f8f9fa;
+        padding: 1rem;
+        border-bottom: 1px solid #e9ecef;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .result-filename {
+        font-weight: 600;
+      }
+
+      .result-status {
+        padding: 0.25rem 0.75rem;
+        border-radius: 12px;
+        font-size: 0.8rem;
+        font-weight: 600;
+      }
+
+      .status-success {
+        background: #d4edda;
+        color: #155724;
+      }
+
+      .status-warning {
+        background: #fff3cd;
+        color: #856404;
+      }
+
+      .status-error {
+        background: #f8d7da;
+        color: #721c24;
+      }
+
+      .result-content {
+        padding: 1rem;
+      }
+
+      .result-summary {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1rem;
+      }
+
+      .summary-item {
+        text-align: center;
+        padding: 1rem;
+        background: #f8f9fa;
+        border-radius: 6px;
+      }
+
+      .summary-number {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #667eea;
+      }
+
+      .summary-label {
+        font-size: 0.9rem;
+        color: #666;
+      }
+
+      .improvements-list {
+        margin-top: 1rem;
+      }
+
+      .improvement-item {
+        padding: 0.5rem;
+        background: #d4edda;
+        margin-bottom: 0.5rem;
+        border-radius: 4px;
+        color: #155724;
+        font-size: 0.9rem;
+      }
+
+      .improvement-item::before {
+        content: "✅ ";
+        margin-right: 0.5rem;
+      }
+
+      .code-viewer {
+        background: #1e1e1e;
+        color: #d4d4d4;
+        padding: 1rem;
+        border-radius: 6px;
+        font-family: "Monaco", "Menlo", monospace;
+        font-size: 0.85rem;
+        overflow-x: auto;
+        max-height: 300px;
+        overflow-y: auto;
+        margin-top: 1rem;
+      }
+
+      .download-btn {
+        background: #28a745;
+        color: white;
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-top: 1rem;
+      }
+
+      .download-btn:hover {
+        background: #218838;
+      }
+
+      @media (max-width: 1024px) {
+        .main-container {
+          grid-template-columns: 1fr;
+          gap: 1rem;
+        }
+
+        .layer-options {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <div class="header-content">
+        <div class="logo">🧠 NeuroLint Pro</div>
+        <div class="user-info">
+          <div class="credits" id="creditsDisplay">Credits: Loading...</div>
+          <button
+            class="btn btn-secondary"
+            onclick="window.location.href='index.html'"
+          >
+            Back to Home
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="main-container">
+      <!-- Left Panel: Upload and Configuration -->
+      <div class="panel">
+        <div class="panel-header">📁 Upload & Configure</div>
+        <div class="panel-content">
+          <div
+            class="upload-zone"
+            onclick="document.getElementById('fileInput').click()"
+          >
+            <div style="font-size: 3rem; margin-bottom: 1rem">📁</div>
+            <h3>Drop your React/Next.js files here</h3>
+            <p style="color: #666; margin-top: 0.5rem">or click to browse</p>
+            <p style="font-size: 0.9rem; color: #888; margin-top: 0.5rem">
+              Supports: .jsx, .tsx, .js, .ts, .json
+            </p>
+            <input
+              type="file"
+              id="fileInput"
+              class="file-input"
+              multiple
+              accept=".jsx,.tsx,.js,.ts,.json"
+              onchange="handleFileUpload(event)"
+            />
+          </div>
+
+          <div class="file-list" id="fileList"></div>
+
+          <div class="layer-selector">
+            <h3>Select Layers to Execute</h3>
+            <p style="color: #666; margin-bottom: 1rem; font-size: 0.9rem">
+              NeuroLint Pro will auto-detect needed layers, or choose manually
+            </p>
+
+            <div class="layer-options">
+              <div class="layer-option selected" data-layer="auto">
+                <div class="layer-title">🧠 Smart Auto-Detect</div>
+                <div class="layer-desc">
+                  Automatically select layers based on code analysis
+                </div>
+              </div>
+
+              <div class="layer-option" data-layer="1">
+                <div class="layer-title">⚙️ Layer 1: Config</div>
+                <div class="layer-desc">
+                  TypeScript, Next.js, package.json fixes
+                </div>
+              </div>
+
+              <div class="layer-option" data-layer="2">
+                <div class="layer-title">🔧 Layer 2: Patterns</div>
+                <div class="layer-desc">
+                  HTML entities, imports, console.log
+                </div>
+              </div>
+
+              <div class="layer-option" data-layer="3">
+                <div class="layer-title">⚛️ Layer 3: Components</div>
+                <div class="layer-desc">
+                  Key props, React imports, accessibility
+                </div>
+              </div>
+
+              <div class="layer-option" data-layer="4">
+                <div class="layer-title">💧 Layer 4: Hydration</div>
+                <div class="layer-desc">
+                  SSR guards, localStorage protection
+                </div>
+              </div>
+
+              <div class="layer-option" data-layer="all">
+                <div class="layer-title">🔥 All Layers</div>
+                <div class="layer-desc">Execute all 4 layers sequentially</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="controls">
+            <button
+              class="btn btn-secondary"
+              onclick="analyzeCode()"
+              id="analyzeBtn"
+              disabled
+            >
+              🔍 Analyze Only
+            </button>
+            <button
+              class="btn btn-primary"
+              onclick="fixCode()"
+              id="fixBtn"
+              disabled
+            >
+              🛠️ Fix Code
+            </button>
+          </div>
+
+          <div class="progress" id="progress">
+            <div class="progress-bar">
+              <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text" id="progressText">Processing...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Panel: Results -->
+      <div class="panel">
+        <div class="panel-header">📊 Results & Analysis</div>
+        <div class="panel-content">
+          <div id="resultsContent">
+            <div style="text-align: center; padding: 3rem; color: #666">
+              <div style="font-size: 4rem; margin-bottom: 1rem">🚀</div>
+              <h3>Ready to Fix Your Code</h3>
+              <p>
+                Upload your React/Next.js files to see detailed analysis and
+                fixes
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let uploadedFiles = [];
+      let selectedLayers = "auto";
+      let userSession = null;
+
+      // Initialize session from URL parameters
+      function initializeSession() {
+        const urlParams = new URLSearchParams(window.location.search);
+        userSession = urlParams.get("session");
+        const subscription = urlParams.get("subscription");
+
+        if (!userSession && !subscription) {
+          // No valid session, redirect to payment
+          alert("No valid session found. Please purchase NeuroLint Pro first.");
+          window.location.href = "index.html";
+          return;
+        }
+
+        // Update credits display based on subscription type
+        const creditsDisplay = document.getElementById("creditsDisplay");
+        if (subscription === "professional") {
+          creditsDisplay.textContent = "Professional Plan: Unlimited";
+          creditsDisplay.style.background = "#d4edda";
+          creditsDisplay.style.color = "#155724";
+        } else if (subscription === "enterprise") {
+          creditsDisplay.textContent = "Enterprise Plan: Unlimited";
+          creditsDisplay.style.background = "#cce5ff";
+          creditsDisplay.style.color = "#0d47a1";
+        } else {
+          creditsDisplay.textContent = "Single Fix: 1 Credit";
+        }
+      }
+
+      // Layer selection
+      document.querySelectorAll(".layer-option").forEach((option) => {
+        option.addEventListener("click", function () {
+          // Remove selected from all options
+          document
+            .querySelectorAll(".layer-option")
+            .forEach((opt) => opt.classList.remove("selected"));
+
+          // Add selected to clicked option
+          this.classList.add("selected");
+
+          // Update selected layers
+          selectedLayers = this.dataset.layer;
+        });
+      });
+
+      // File upload handling
+      function handleFileUpload(event) {
+        const files = Array.from(event.target.files);
+
+        files.forEach((file) => {
+          // Check if file already exists
+          if (!uploadedFiles.find((f) => f.name === file.name)) {
+            uploadedFiles.push(file);
+          }
+        });
+
+        updateFileList();
+        updateButtons();
+      }
+
+      function updateFileList() {
+        const fileList = document.getElementById("fileList");
+
+        if (uploadedFiles.length === 0) {
+          fileList.innerHTML = "";
+          return;
+        }
+
+        fileList.innerHTML = `
+                <h4 style="margin-bottom: 1rem;">Uploaded Files (${uploadedFiles.length})</h4>
+                ${uploadedFiles
+                  .map(
+                    (file, index) => `
+                    <div class="file-item">
+                        <div>
+                            <div class="file-name">${file.name}</div>
+                            <div class="file-size">${formatFileSize(file.size)}</div>
+                        </div>
+                        <button class="remove-file" onclick="removeFile(${index})">Remove</button>
+                    </div>
+                `,
+                  )
+                  .join("")}
+            `;
+      }
+
+      function removeFile(index) {
+        uploadedFiles.splice(index, 1);
+        updateFileList();
+        updateButtons();
+      }
+
+      function updateButtons() {
+        const analyzeBtn = document.getElementById("analyzeBtn");
+        const fixBtn = document.getElementById("fixBtn");
+
+        const hasFiles = uploadedFiles.length > 0;
+        analyzeBtn.disabled = !hasFiles;
+        fixBtn.disabled = !hasFiles;
+      }
+
+      function formatFileSize(bytes) {
+        if (bytes === 0) return "0 Bytes";
+        const k = 1024;
+        const sizes = ["Bytes", "KB", "MB"];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
+      }
+
+      // Analysis and fixing functions
+      async function analyzeCode() {
+        showProgress("Analyzing code...");
+
+        try {
+          const results = await processFiles(false); // Analysis only
+          displayResults(results, false);
+        } catch (error) {
+          console.error("Analysis error:", error);
+          showError("Analysis failed: " + error.message);
+        } finally {
+          hideProgress();
+        }
+      }
+
+      async function fixCode() {
+        if (!confirm("This will process and fix your code. Continue?")) {
+          return;
+        }
+
+        showProgress("Fixing code...");
+
+        try {
+          const results = await processFiles(true); // Full fixing
+          displayResults(results, true);
+        } catch (error) {
+          console.error("Fixing error:", error);
+          showError("Code fixing failed: " + error.message);
+        } finally {
+          hideProgress();
+        }
+      }
+
+      async function processFiles(applyFixes) {
+        const results = [];
+
+        for (let i = 0; i < uploadedFiles.length; i++) {
+          const file = uploadedFiles[i];
+          const content = await file.text();
+
+          updateProgress(
+            `Processing ${file.name}...`,
+            (i / uploadedFiles.length) * 100,
+          );
+
+          try {
+            // Call the REAL NeuroLint Pro API
+            const response = await fetch("/api/process", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${userSession}`,
+              },
+              body: JSON.stringify({
+                code: content,
+                filename: file.name,
+                layers: selectedLayers,
+                applyFixes: applyFixes,
+                session: userSession,
+              }),
+            });
+
+            if (!response.ok) {
+              throw new Error(
+                `HTTP ${response.status}: ${response.statusText}`,
+              );
+            }
+
+            const result = await response.json();
+            result.filename = file.name;
+            result.originalSize = file.size;
+            results.push(result);
+          } catch (error) {
+            results.push({
+              filename: file.name,
+              success: false,
+              error: error.message,
+              originalSize: file.size,
+            });
+          }
+        }
+
+        return results;
+      }
+
+      function displayResults(results, wasFixed) {
+        const resultsContent = document.getElementById("resultsContent");
+
+        const totalFiles = results.length;
+        const successfulFiles = results.filter((r) => r.success).length;
+        const totalIssues = results.reduce(
+          (sum, r) => sum + (r.detectedIssues?.length || 0),
+          0,
+        );
+        const totalFixes = results.reduce(
+          (sum, r) => sum + (r.layers?.length || 0),
+          0,
+        );
+
+        resultsContent.innerHTML = `
+                <div style="margin-bottom: 2rem;">
+                    <h3>${wasFixed ? "Code Fixing" : "Analysis"} Complete</h3>
+                    <div class="result-summary">
+                        <div class="summary-item">
+                            <div class="summary-number">${successfulFiles}/${totalFiles}</div>
+                            <div class="summary-label">Files Processed</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-number">${totalIssues}</div>
+                            <div class="summary-label">Issues Found</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-number">${totalFixes}</div>
+                            <div class="summary-label">Layers Applied</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="results-container">
+                    ${results.map((result) => createResultItem(result, wasFixed)).join("")}
+                </div>
+                
+                ${
+                  wasFixed && successfulFiles > 0
+                    ? `
+                    <div style="text-align: center; margin-top: 2rem;">
+                        <button class="btn btn-primary" onclick="downloadAllFixed()">
+                            📥 Download All Fixed Files
+                        </button>
+                    </div>
+                `
+                    : ""
+                }
+            `;
+      }
+
+      function createResultItem(result, wasFixed) {
+        if (!result.success) {
+          return `
+                    <div class="result-item">
+                        <div class="result-header">
+                            <div class="result-filename">${result.filename}</div>
+                            <div class="result-status status-error">Error</div>
+                        </div>
+                        <div class="result-content">
+                            <p style="color: #dc3545;">❌ ${result.error}</p>
+                        </div>
+                    </div>
+                `;
+        }
+
+        return `
+                <div class="result-item">
+                    <div class="result-header">
+                        <div class="result-filename">${result.filename}</div>
+                        <div class="result-status ${result.layers?.length > 0 ? "status-success" : "status-warning"}">
+                            ${result.layers?.length > 0 ? "Fixed" : "No Issues"}
+                        </div>
+                    </div>
+                    <div class="result-content">
+                        ${
+                          result.analysis
+                            ? `
+                            <p><strong>Confidence:</strong> ${(result.analysis.confidence * 100).toFixed(1)}%</p>
+                            <p><strong>Impact:</strong> ${result.analysis.estimatedImpact?.level} - ${result.analysis.estimatedImpact?.description}</p>
+                        `
+                            : ""
+                        }
+                        
+                        ${
+                          result.detectedIssues?.length > 0
+                            ? `
+                            <p><strong>Issues Detected:</strong></p>
+                            <ul style="margin-left: 1rem; margin-bottom: 1rem;">
+                                ${result.detectedIssues.map((issue) => `<li>${issue.description}</li>`).join("")}
+                            </ul>
+                        `
+                            : ""
+                        }
+                        
+                        ${
+                          result.layers?.length > 0
+                            ? `
+                            <div class="improvements-list">
+                                ${result.layers
+                                  .map(
+                                    (layer) =>
+                                      layer.improvements
+                                        ?.map(
+                                          (improvement) =>
+                                            `<div class="improvement-item">${improvement}</div>`,
+                                        )
+                                        .join("") ||
+                                      `<div class="improvement-item">Layer ${layer.layerId} applied successfully</div>`,
+                                  )
+                                  .join("")}
+                            </div>
+                        `
+                            : ""
+                        }
+                        
+                        ${
+                          wasFixed && result.transformed
+                            ? `
+                            <button class="download-btn" onclick="downloadFile('${result.filename}', \`${escapeForJS(result.transformed)}\`)">
+                                💾 Download Fixed File
+                            </button>
+                        `
+                            : ""
+                        }
+                    </div>
+                </div>
+            `;
+      }
+
+      function showProgress(text) {
+        const progress = document.getElementById("progress");
+        const progressText = document.getElementById("progressText");
+
+        progress.classList.add("show");
+        progressText.textContent = text;
+        updateProgress(text, 0);
+      }
+
+      function updateProgress(text, percentage) {
+        const progressFill = document.getElementById("progressFill");
+        const progressText = document.getElementById("progressText");
+
+        progressFill.style.width = percentage + "%";
+        progressText.textContent = text;
+      }
+
+      function hideProgress() {
+        document.getElementById("progress").classList.remove("show");
+      }
+
+      function showError(message) {
+        const resultsContent = document.getElementById("resultsContent");
+        resultsContent.innerHTML = `
+                <div style="text-align: center; padding: 3rem; color: #dc3545;">
+                    <div style="font-size: 4rem; margin-bottom: 1rem;">❌</div>
+                    <h3>Error</h3>
+                    <p>${message}</p>
+                    <p style="margin-top: 1rem; color: #666;">Please try again or contact support if the issue persists.</p>
+                </div>
+            `;
+      }
+
+      function downloadFile(filename, content) {
+        const blob = new Blob([content], { type: "text/plain" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }
+
+      function escapeForJS(str) {
+        return str
+          .replace(/\\/g, "\\\\")
+          .replace(/`/g, "\\`")
+          .replace(/\$/g, "\\$");
+      }
+
+      // Drag and drop functionality
+      const uploadZone = document.querySelector(".upload-zone");
+
+      uploadZone.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        uploadZone.classList.add("dragover");
+      });
+
+      uploadZone.addEventListener("dragleave", () => {
+        uploadZone.classList.remove("dragover");
+      });
+
+      uploadZone.addEventListener("drop", (e) => {
+        e.preventDefault();
+        uploadZone.classList.remove("dragover");
+
+        const files = Array.from(e.dataTransfer.files);
+        files.forEach((file) => {
+          if (!uploadedFiles.find((f) => f.name === file.name)) {
+            uploadedFiles.push(file);
+          }
+        });
+
+        updateFileList();
+        updateButtons();
+      });
+
+      // Initialize the app
+      initializeSession();
+    </script>
+  </body>
+</html>
