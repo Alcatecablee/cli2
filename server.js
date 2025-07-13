@@ -10,12 +10,25 @@ const express = require("express");
 const path = require("path");
 const fs = require("fs");
 const cors = require("cors");
+require("dotenv").config();
 
 // Import the REAL NeuroLint Pro engine
 const NeuroLintPro = require("./neurolint-pro.js");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Environment configuration
+const config = {
+  supabaseUrl: process.env.SUPABASE_URL,
+  supabaseAnonKey: process.env.SUPABASE_ANON_KEY,
+  supabaseServiceRole: process.env.SUPABASE_SERVICE_ROLE,
+  paypalClientId: process.env.PAYPAL_CLIENT_ID,
+  paypalSecret: process.env.PAYPAL_SECRET,
+  resendApiKey: process.env.RESEND_API_KEY,
+  nodeEnv: process.env.NODE_ENV || "development",
+  nextAuthUrl: process.env.NEXTAUTH_URL,
+};
 
 // Middleware
 app.use(cors());
