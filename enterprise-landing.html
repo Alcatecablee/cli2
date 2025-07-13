@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NeuroLint Pro – Automated React/Next.js Code Fixing</title>
+    <meta name="description" content="Safe, automated multi-layer code fixing for modern React and Next.js projects." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --black: #000000;
+        --white: #ffffff;
+        --zinc-600: #4a4a4a;
+        --zinc-500: #666666;
+        --font-sans: 'Inter', system-ui, sans-serif;
+      }
+      * { box-sizing: border-box; }
+      html,body { margin:0;padding:0;background:var(--black);color:var(--white);font-family:var(--font-sans);line-height:1.5; }
+      a{color:var(--white);text-decoration:none;}
+      header{border-bottom:1px solid var(--zinc-600);padding:1rem 1.5rem;display:flex;justify-content:space-between;align-items:center;}
+      nav a{margin-left:1rem;color:var(--zinc-500);}nav a:hover,nav a:focus-visible{color:var(--white);outline:2px solid var(--zinc-600);outline-offset:2px;}
+      main{max-width:960px;margin:0 auto;padding:3rem 1.25rem;}
+      .hero-title{font-size:2.5rem;font-weight:700;margin:0 0 1rem;}@media(max-width:480px){.hero-title{font-size:2rem;}}
+      .hero-desc{max-width:620px;color:var(--zinc-500);margin-bottom:2rem;}
+      button{background:transparent;color:var(--white);border:1px solid var(--zinc-600);padding:0.6rem 1.25rem;font-size:1rem;cursor:pointer;}button:hover{background:var(--zinc-600);}button:focus-visible{outline:2px solid var(--white);outline-offset:2px;}
+      .card{border:1px solid var(--zinc-600);border-radius:6px;background:var(--black);padding:1rem;}
+      /* Demo */
+      #demo{margin-top:4rem;}
+      textarea,input{background:var(--black);color:var(--white);border:1px solid var(--zinc-600);padding:0.5rem;font-family:monospace;}
+      .sample-buttons{display:flex;flex-wrap:wrap;gap:0.5rem;margin-bottom:1rem;}
+      .sample-buttons button{font-size:0.9rem;padding:0.4rem 0.8rem;}
+      pre{white-space:pre-wrap;border:1px solid var(--zinc-600);padding:0.75rem;margin-top:1rem;overflow:auto;max-height:320px;}
+    </style>
+  </head>
+  <body>
+    <header>
+      <div style="font-weight:700;">NeuroLint Pro</div>
+      <nav>
+        <a href="#demo">Demo</a>
+        <a href="https://github.com" target="_blank" rel="noopener">GitHub</a>
+      </nav>
+    </header>
+
+    <main>
+      <!-- Hero -->
+      <section id="hero">
+        <h1 class="hero-title">Safe, Automated Code Fixing</h1>
+        <p class="hero-desc">NeuroLint Pro applies a validated 6-layer transformation pipeline to modernise, clean and safeguard your React / Next.js codebase—without introducing regressions.</p>
+        <div style="display:flex;gap:1rem;flex-wrap:wrap;">
+          <button onclick="document.getElementById('code').focus()">Try the Demo</button>
+          <button onclick="document.getElementById('pricing').scrollIntoView({behavior:'smooth'});">View Pricing</button>
+        </div>
+      </section>
+
+      <!-- Pricing -->
+      <section id="pricing" style="margin-top:4rem;">
+        <h2 style="font-size:1.5rem;margin-bottom:1rem;">Pricing</h2>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem;">
+          <div class="card">
+            <h3 style="margin-top:0;">Single Fix</h3>
+            <p style="font-size:1.75rem;font-weight:700;margin:0.5rem 0;">$49</p>
+            <ul style="list-style:none;padding:0;color:var(--zinc-500);font-size:0.9rem;">
+              <li>Up to 50 files</li>
+              <li>All 6 layers</li>
+              <li>24-hour turnaround</li>
+            </ul>
+            <button onclick="alert('Redirecting to secure payment …')">Purchase</button>
+          </div>
+          <div class="card">
+            <h3 style="margin-top:0;">Professional</h3>
+            <p style="font-size:1.75rem;font-weight:700;margin:0.5rem 0;">$149 <span style="font-size:0.9rem;font-weight:400;">/ mo</span></p>
+            <ul style="list-style:none;padding:0;color:var(--zinc-500);font-size:0.9rem;">
+              <li>Unlimited fixes</li>
+              <li>Up to 500 files/run</li>
+              <li>Email support</li>
+            </ul>
+            <button onclick="alert('Redirecting to subscription checkout …')">Start Trial</button>
+          </div>
+          <div class="card">
+            <h3 style="margin-top:0;">Enterprise</h3>
+            <p style="font-size:1.75rem;font-weight:700;margin:0.5rem 0;">Custom</p>
+            <ul style="list-style:none;padding:0;color:var(--zinc-500);font-size:0.9rem;">
+              <li>Unlimited scale</li>
+              <li>Dedicated engineer</li>
+              <li>SLA & on-prem options</li>
+            </ul>
+            <button onclick="location.href='mailto:contact@neurolintpro.com'">Contact Us</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Demo -->
+      <section id="demo">
+        <h2 style="font-size:1.5rem;margin-bottom:1rem;">Live Demo</h2>
+        <div class="card" style="display:flex;flex-direction:column;gap:0.75rem;">
+          <label for="filename">Filename</label>
+          <input id="filename" type="text" placeholder="example.jsx" />
+          <label for="code">Paste your code</label>
+          <textarea id="code" rows="10"></textarea>
+          <div class="sample-buttons">
+            <button data-sample="entities">HTML Entities</button>
+            <button data-sample="keys">Missing Keys</button>
+          </div>
+          <button id="analyzeBtn" style="align-self:flex-start;">Analyze</button>
+          <pre id="results" hidden></pre>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      const samples={
+        entities:{filename:'Product.jsx',code:`const msg = &quot;Hello &amp; world&quot;;`},
+        keys:{filename:'List.jsx',code:`export default function List({items}){return items.map(i=> <li>{i}</li>)}`}
+      };
+      document.querySelectorAll('.sample-buttons button').forEach(btn=>{
+        btn.addEventListener('click',()=>{
+          const sample=samples[btn.dataset.sample];
+          document.getElementById('filename').value=sample.filename;
+          document.getElementById('code').value=sample.code;
+        });
+      });
+      document.getElementById('analyzeBtn').addEventListener('click',async()=>{
+        const code=document.getElementById('code').value.trim();
+        if(!code){alert('Provide code.');return;}
+        const filename=document.getElementById('filename').value.trim()||'snippet.js';
+        const res=await fetch('/api/analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code,filename,demo:true})});
+        const data=await res.json();
+        const pre=document.getElementById('results');
+        pre.hidden=false;pre.textContent=JSON.stringify(data,null,2);
+      });
+    </script>
+  </body>
+</html>
