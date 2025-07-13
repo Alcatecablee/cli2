@@ -1316,6 +1316,18 @@
           border-width: 2px;
         }
       }
+
+      /* Enterprise dark overrides */
+      body, .hero, .feature-card, .sample-code-section, .pricing-card, .upload-area {
+        background: var(--background) !important;
+      }
+      .feature-card, .sample-code-section, .pricing-card {
+        border: 1px solid var(--border) !important;
+      }
+      .features::before { background: var(--border); }
+      .hero, .feature-card:hover { box-shadow: none !important; transform: none !important; }
+      .hero-actions .btn:hover, .nav .btn:hover { box-shadow: none !important; }
+      .section-subtitle { color: var(--muted) !important; }
     </style>
   </head>
   <body>
