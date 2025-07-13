@@ -48,7 +48,47 @@
       <section id="hero">
         <h1 class="hero-title">Safe, Automated Code Fixing</h1>
         <p class="hero-desc">NeuroLint Pro applies a validated 6-layer transformation pipeline to modernise, clean and safeguard your React / Next.js codebase—without introducing regressions.</p>
-        <button onclick="document.getElementById('code').focus()">Try the Demo</button>
+        <div style="display:flex;gap:1rem;flex-wrap:wrap;">
+          <button onclick="document.getElementById('code').focus()">Try the Demo</button>
+          <button onclick="document.getElementById('pricing').scrollIntoView({behavior:'smooth'});">View Pricing</button>
+        </div>
+      </section>
+
+      <!-- Pricing -->
+      <section id="pricing" style="margin-top:4rem;">
+        <h2 style="font-size:1.5rem;margin-bottom:1rem;">Pricing</h2>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem;">
+          <div class="card">
+            <h3 style="margin-top:0;">Single Fix</h3>
+            <p style="font-size:1.75rem;font-weight:700;margin:0.5rem 0;">$49</p>
+            <ul style="list-style:none;padding:0;color:var(--zinc-500);font-size:0.9rem;">
+              <li>Up to 50 files</li>
+              <li>All 6 layers</li>
+              <li>24-hour turnaround</li>
+            </ul>
+            <button onclick="alert('Redirecting to secure payment …')">Purchase</button>
+          </div>
+          <div class="card">
+            <h3 style="margin-top:0;">Professional</h3>
+            <p style="font-size:1.75rem;font-weight:700;margin:0.5rem 0;">$149 <span style="font-size:0.9rem;font-weight:400;">/ mo</span></p>
+            <ul style="list-style:none;padding:0;color:var(--zinc-500);font-size:0.9rem;">
+              <li>Unlimited fixes</li>
+              <li>Up to 500 files/run</li>
+              <li>Email support</li>
+            </ul>
+            <button onclick="alert('Redirecting to subscription checkout …')">Start Trial</button>
+          </div>
+          <div class="card">
+            <h3 style="margin-top:0;">Enterprise</h3>
+            <p style="font-size:1.75rem;font-weight:700;margin:0.5rem 0;">Custom</p>
+            <ul style="list-style:none;padding:0;color:var(--zinc-500);font-size:0.9rem;">
+              <li>Unlimited scale</li>
+              <li>Dedicated engineer</li>
+              <li>SLA & on-prem options</li>
+            </ul>
+            <button onclick="location.href='mailto:contact@neurolintpro.com'">Contact Us</button>
+          </div>
+        </div>
       </section>
 
       <!-- Demo -->
