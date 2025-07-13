@@ -17,11 +17,7 @@ const fs = require("fs");
 const path = require("path");
 const { execSync } = require("child_process");
 
-// Import existing layer scripts
-const fixLayer1 = require("./fix-layer-1-config.js");
-const fixLayer2 = require("./fix-layer-2-patterns.js");
-const fixLayer3 = require("./fix-layer-3-components.js");
-const fixLayer4 = require("./fix-layer-4-hydration.js");
+// Execute existing layer scripts via child process since they are not properly modularized
 
 /**
  * Core Architecture Principles (from IMPLEMENTATION_PATTERNS.md)
