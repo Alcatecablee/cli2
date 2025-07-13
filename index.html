@@ -2333,33 +2333,51 @@ export default function ImageGallery({ images }) {
           </div>
         `;
 
-        // Update overview content
+        // Update overview content using REAL NeuroLint Pro engine results
         const overviewEl = document.getElementById("analysisOverview");
         overviewEl.innerHTML = `
-          <div style="background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 2rem; margin-top: 1rem;">
-            <h4 style="color: #ffffff; margin-bottom: 1rem; font-size: 1.2rem;">📄 ${filename}</h4>
-            <p style="color: rgba(255, 255, 255, 0.7); margin-bottom: 1.5rem; line-height: 1.6;">
-              NeuroLint Pro analyzed your code and found <strong style="color: #ffffff;">${result.detectedIssues?.length || 0} issues</strong>
-              that can be automatically fixed using our <strong style="color: #ffffff;">${result.recommendedLayers?.length || 0}-layer system</strong>.
+          <div style="background: #000000; border: 1px solid #4a4a4a; padding: 2rem; margin-top: 1rem;">
+            <h4 style="color: #ffffff; margin-bottom: 1rem; font-size: 1.2rem;">${filename}</h4>
+            <p style="color: #666666; margin-bottom: 1.5rem; line-height: 1.6;">
+              NeuroLint Pro engine analyzed your code and detected <strong style="color: #ffffff;">${result.detectedIssues?.length || 0} issues</strong>
+              using <strong style="color: #ffffff;">${result.recommendedLayers?.length || 0} recommended layers</strong>.
             </p>
-            <div style="background: rgba(100, 255, 100, 0.1); border: 1px solid rgba(100, 255, 100, 0.2); border-radius: 8px; padding: 1rem; margin-top: 1rem;">
-              <h5 style="color: #aaffaa; margin-bottom: 0.5rem; font-size: 1rem;">✨ What We Can Fix:</h5>
-              <ul style="color: rgba(255, 255, 255, 0.8); margin-left: 1rem; line-height: 1.6;">
-                ${(result.appliedFixes || []).map((fix) => `<li>${fix.description}</li>`).join("")}
-                ${(result.appliedFixes || []).length === 0 ? "<li>Your code looks great! No critical issues found.</li>" : ""}
+            <div style="background: #000000; border: 1px solid #4a4a4a; padding: 1rem; margin-top: 1rem;">
+              <h5 style="color: #ffffff; margin-bottom: 0.5rem; font-size: 1rem;">Detected Issues:</h5>
+              <ul style="color: #666666; margin-left: 1rem; line-height: 1.6;">
+                ${
+                  result.detectedIssues?.length > 0
+                    ? result.detectedIssues
+                        .map(
+                          (issue) =>
+                            `<li>${issue.type || issue.description || "Code issue detected"}</li>`,
+                        )
+                        .join("")
+                    : "<li>No critical issues found in this analysis.</li>"
+                }
               </ul>
+              ${
+                result.recommendedLayers?.length > 0
+                  ? `
+                <h5 style="color: #ffffff; margin: 1rem 0 0.5rem 0; font-size: 1rem;">Recommended Layers:</h5>
+                <ul style="color: #666666; margin-left: 1rem; line-height: 1.6;">
+                  ${result.recommendedLayers.map((layer) => `<li>Layer ${layer}</li>`).join("")}
+                </ul>
+              `
+                  : ""
+              }
             </div>
           </div>
 
-          <div class="demo-upgrade-prompt">
-            <h4>🚀 Ready to Fix Your Entire Codebase?</h4>
-            <p>This demo shows just a glimpse of NeuroLint Pro's power. Get unlimited fixes, larger file support, and advanced safety features.</p>
-            <div class="demo-upgrade-buttons">
-              <button class="demo-upgrade-btn" onclick="openPaymentModal('single')">
-                🛠️ Fix My Code - $49
+          <div style="background: #000000; border: 1px solid #4a4a4a; padding: 2rem; text-align: center; margin-top: 2rem;">
+            <h4 style="color: #ffffff; margin-bottom: 1rem;">Ready to Fix Your Entire Codebase?</h4>
+            <p style="color: #666666; margin-bottom: 2rem;">This demo shows real analysis from NeuroLint Pro. Get unlimited processing and advanced safety features.</p>
+            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+              <button class="btn" onclick="openPaymentModal('single')">
+                Fix My Code - $49
               </button>
-              <button class="demo-upgrade-btn secondary" onclick="openPaymentModal('professional')">
-                🔧 Go Professional - $149/mo
+              <button class="btn" onclick="openPaymentModal('professional')" style="background: transparent; color: #ffffff; border: 1px solid #4a4a4a;">
+                Go Professional - $149/mo
               </button>
             </div>
           </div>
