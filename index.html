@@ -2076,16 +2076,41 @@ export default function ImageGallery({ images }) {
           });
 
           if (!response.ok) {
+            console.log(`API Error: Status ${response.status}`);
+
             // Handle specific error cases
             if (response.status === 429) {
               // Parse the 429 response to get the proper error message
               const errorData = await response.json().catch(() => ({}));
+              console.log("429 Error Data:", errorData);
+
               const error = new Error(errorData.error || "Demo limit reached");
               error.isDemoLimit = true;
               error.errorData = errorData;
+              console.log("Created demo limit error:", error);
               throw error;
             }
-            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+
+            // For other error status codes, try to parse the response
+            const errorData = await response.json().catch(() => ({}));
+            const errorMessage =
+              errorData.error ||
+              `HTTP ${response.status}: ${response.statusText}`;
+
+            // Check if it's a demo limit error even if not 429
+            if (
+              errorMessage.toLowerCase().includes("demo limit") ||
+              errorMessage.toLowerCase().includes("rate limit") ||
+              errorData.demoLimit
+            ) {
+              const error = new Error(errorMessage);
+              error.isDemoLimit = true;
+              error.errorData = errorData;
+              console.log("Created demo limit error (non-429):", error);
+              throw error;
+            }
+
+            throw new Error(errorMessage);
           }
 
           const result = await response.json();
