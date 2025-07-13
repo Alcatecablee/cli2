@@ -1,0 +1,1090 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NeuroLint Pro - Premium React/Next.js Code Fixing Service</title>
+    <meta
+      name="description"
+      content="Professional automated debugging service that safely fixes React/Next.js code. Never corrupts your code."
+    />
+    <script src="https://www.paypal.com/sdk/js?client-id=AaZabZwUPYitlE5MOXwohkXxtMzI7GaSArFxw7JYMIDfZE_PHvsMzY1WEsZk_QwTdek4SEpjj_DC5ys7&currency=USD&intent=capture&enable-funding=venmo,card"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family:
+          "Inter",
+          -apple-system,
+          BlinkMacSystemFont,
+          sans-serif;
+        line-height: 1.6;
+        color: #ffffff;
+        background: #000000;
+        overflow-x: hidden;
+      }
+
+      /* Smooth transitions */
+      * {
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+
+      /* Header */
+      header {
+        background: #000000;
+        border-bottom: 1px solid #4a4a4a;
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 1000;
+        backdrop-filter: blur(12px);
+      }
+
+      nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 0;
+        height: 70px;
+      }
+
+      .logo {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #ffffff;
+        letter-spacing: -0.025em;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 2rem;
+        list-style: none;
+      }
+
+      .nav-links a {
+        text-decoration: none;
+        color: #666666;
+        font-weight: 500;
+        font-size: 0.95rem;
+        padding: 0.5rem 0;
+        border-bottom: 2px solid transparent;
+      }
+
+      .nav-links a:hover,
+      .nav-links a:focus {
+        color: #ffffff;
+        border-bottom-color: #ffffff;
+        outline: none;
+      }
+
+      /* Hero Section */
+      .hero {
+        padding: 140px 0 100px;
+        text-align: center;
+        background: #000000;
+      }
+
+      .hero h1 {
+        font-size: clamp(2.5rem, 5vw, 4rem);
+        margin-bottom: 1.5rem;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        line-height: 1.1;
+      }
+
+      .hero p {
+        font-size: 1.25rem;
+        margin-bottom: 3rem;
+        color: #666666;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .hero-buttons {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      /* Button Styles */
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem 2rem;
+        background: transparent;
+        color: #ffffff;
+        text-decoration: none;
+        border: 1px solid #4a4a4a;
+        font-weight: 600;
+        font-size: 1rem;
+        cursor: pointer;
+        min-height: 48px;
+        min-width: 120px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .btn:hover,
+      .btn:focus {
+        background: #ffffff;
+        color: #000000;
+        border-color: #ffffff;
+        transform: translateY(-1px);
+        outline: none;
+      }
+
+      .btn:active {
+        transform: translateY(0);
+      }
+
+      .btn-primary {
+        background: #ffffff;
+        color: #000000;
+        border-color: #ffffff;
+      }
+
+      .btn-primary:hover,
+      .btn-primary:focus {
+        background: transparent;
+        color: #ffffff;
+        border-color: #ffffff;
+      }
+
+      .btn-secondary {
+        background: transparent;
+        color: #ffffff;
+        border-color: #4a4a4a;
+      }
+
+      /* Features Section */
+      .features {
+        background: #000000;
+        padding: 100px 0;
+        border-top: 1px solid #4a4a4a;
+      }
+
+      .section-title {
+        text-align: center;
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+      }
+
+      .section-subtitle {
+        text-align: center;
+        font-size: 1.2rem;
+        color: #666666;
+        margin-bottom: 4rem;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+      }
+
+      .feature-card {
+        padding: 2rem;
+        border: 1px solid #4a4a4a;
+        background: #000000;
+        text-align: left;
+      }
+
+      .feature-card:hover {
+        border-color: #666666;
+        transform: translateY(-2px);
+      }
+
+      .feature-card h3 {
+        font-size: 1.25rem;
+        margin-bottom: 1rem;
+        font-weight: 600;
+        color: #ffffff;
+      }
+
+      .feature-card p {
+        color: #666666;
+        line-height: 1.6;
+      }
+
+      /* Demo Section */
+      .demo-section {
+        padding: 100px 0;
+        background: #000000;
+        border-top: 1px solid #4a4a4a;
+      }
+
+      .demo-container {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        margin-top: 3rem;
+      }
+
+      .upload-area {
+        border: 1px dashed #4a4a4a;
+        padding: 3rem;
+        text-align: center;
+        background: #000000;
+        cursor: pointer;
+        min-height: 200px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .upload-area:hover,
+      .upload-area:focus-within {
+        border-color: #666666;
+        background: rgba(255, 255, 255, 0.02);
+      }
+
+      .upload-area.dragover {
+        border-color: #ffffff;
+        background: rgba(255, 255, 255, 0.05);
+      }
+
+      .upload-area h3 {
+        font-size: 1.25rem;
+        margin-bottom: 0.5rem;
+        color: #ffffff;
+      }
+
+      .upload-area p {
+        color: #666666;
+        margin-bottom: 1rem;
+      }
+
+      .file-input {
+        display: none;
+      }
+
+      .results {
+        margin-top: 2rem;
+        padding: 2rem;
+        background: #000000;
+        border: 1px solid #4a4a4a;
+        display: none;
+      }
+
+      .results.show {
+        display: block;
+      }
+
+      .progress-bar {
+        width: 100%;
+        height: 4px;
+        background: #4a4a4a;
+        overflow: hidden;
+        margin: 1rem 0;
+      }
+
+      .progress-fill {
+        height: 100%;
+        background: #ffffff;
+        width: 0%;
+        transition: width 0.3s ease;
+      }
+
+      /* Pricing Section */
+      .pricing {
+        background: #000000;
+        padding: 100px 0;
+        border-top: 1px solid #4a4a4a;
+      }
+
+      .pricing-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin-top: 3rem;
+      }
+
+      .pricing-card {
+        background: #000000;
+        padding: 2.5rem;
+        border: 1px solid #4a4a4a;
+        text-align: center;
+        position: relative;
+      }
+
+      .pricing-card:hover {
+        border-color: #666666;
+        transform: translateY(-2px);
+      }
+
+      .pricing-card.popular {
+        border-color: #ffffff;
+        transform: scale(1.02);
+      }
+
+      .popular-badge {
+        position: absolute;
+        top: -12px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #ffffff;
+        color: #000000;
+        padding: 0.5rem 1rem;
+        font-size: 0.85rem;
+        font-weight: 600;
+      }
+
+      .price {
+        font-size: 3rem;
+        font-weight: 700;
+        color: #ffffff;
+        margin: 1rem 0;
+        letter-spacing: -0.02em;
+      }
+
+      .price-per {
+        font-size: 1rem;
+        color: #666666;
+        font-weight: 400;
+      }
+
+      .pricing-card h3 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        font-weight: 600;
+      }
+
+      .pricing-card ul {
+        text-align: left;
+        margin: 2rem 0;
+        list-style: none;
+      }
+
+      .pricing-card li {
+        padding: 0.5rem 0;
+        color: #666666;
+        border-bottom: 1px solid #4a4a4a;
+      }
+
+      .pricing-card li:last-child {
+        border-bottom: none;
+      }
+
+      .pricing-card li::before {
+        content: "✓ ";
+        color: #ffffff;
+        font-weight: 600;
+        margin-right: 0.5rem;
+      }
+
+      /* Footer */
+      .footer {
+        background: #000000;
+        color: #666666;
+        padding: 3rem 0;
+        text-align: center;
+        border-top: 1px solid #4a4a4a;
+      }
+
+      .footer p {
+        margin-bottom: 0.5rem;
+      }
+
+      /* Payment Modal */
+      .payment-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        z-index: 2000;
+        justify-content: center;
+        align-items: center;
+        backdrop-filter: blur(8px);
+      }
+
+      .payment-modal.show {
+        display: flex;
+      }
+
+      .payment-content {
+        background: #000000;
+        padding: 2rem;
+        border: 1px solid #4a4a4a;
+        max-width: 500px;
+        width: 90%;
+        position: relative;
+        max-height: 90vh;
+        overflow-y: auto;
+      }
+
+      .close-modal {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: transparent;
+        border: 1px solid #4a4a4a;
+        color: #666666;
+        width: 32px;
+        height: 32px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .close-modal:hover,
+      .close-modal:focus {
+        color: #ffffff;
+        border-color: #ffffff;
+        outline: none;
+      }
+
+      #paypal-button-container {
+        margin-top: 1rem;
+      }
+
+      /* Accessibility */
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+
+      /* Focus styles */
+      *:focus {
+        outline: 2px solid #ffffff;
+        outline-offset: 2px;
+      }
+
+      /* Mobile Responsive */
+      @media (max-width: 768px) {
+        .container {
+          padding: 0 1rem;
+        }
+
+        .hero {
+          padding: 120px 0 80px;
+        }
+
+        .hero-buttons {
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .btn {
+          width: 100%;
+          max-width: 300px;
+        }
+
+        .nav-links {
+          display: none;
+        }
+
+        .features,
+        .demo-section,
+        .pricing {
+          padding: 60px 0;
+        }
+
+        .features-grid,
+        .pricing-grid {
+          grid-template-columns: 1fr;
+          gap: 1.5rem;
+        }
+
+        .section-title {
+          font-size: 2rem;
+        }
+
+        .pricing-card {
+          padding: 2rem;
+        }
+
+        .payment-content {
+          margin: 1rem;
+          padding: 1.5rem;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .hero h1 {
+          font-size: 2rem;
+        }
+
+        .hero p {
+          font-size: 1.1rem;
+        }
+
+        .upload-area {
+          padding: 2rem 1rem;
+        }
+
+        .feature-card,
+        .pricing-card {
+          padding: 1.5rem;
+        }
+      }
+
+      /* Reduced motion */
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          transition: none !important;
+          animation: none !important;
+        }
+      }
+
+      /* High contrast mode */
+      @media (prefers-contrast: high) {
+        .btn {
+          border-width: 2px;
+        }
+
+        .feature-card,
+        .pricing-card {
+          border-width: 2px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav class="container">
+        <div class="logo">NeuroLint Pro</div>
+        <ul class="nav-links">
+          <li><a href="#features">Features</a></li>
+          <li><a href="#demo">Demo</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="container">
+          <h1>Fix Your React/Next.js Code Instantly</h1>
+          <p>
+            Professional-grade automated debugging service that fixes HTML
+            entities, missing key props, SSR issues, and more
+          </p>
+          <div class="hero-buttons">
+            <button
+              class="btn btn-primary"
+              onclick="openPaymentModal('single')"
+              aria-label="Purchase single fix for $49"
+            >
+              Fix Code Now - $49
+            </button>
+            <a href="#demo" class="btn btn-secondary">Try Free Demo</a>
+          </div>
+        </div>
+      </section>
+
+      <section id="features" class="features">
+        <div class="container">
+          <h2 class="section-title">Why NeuroLint Pro?</h2>
+          <p class="section-subtitle">
+            Built on battle-tested patterns from IMPLEMENTATION_PATTERNS.md -
+            Never corrupts your code
+          </p>
+
+          <div class="features-grid">
+            <div class="feature-card">
+              <h3>Safe Transformations</h3>
+              <p>
+                Automatic rollback on validation failure. Your code is never
+                corrupted - guaranteed.
+              </p>
+            </div>
+
+            <div class="feature-card">
+              <h3>Smart Detection</h3>
+              <p>
+                Automatically detects HTML entities, missing key props, SSR
+                issues, and accessibility problems.
+              </p>
+            </div>
+
+            <div class="feature-card">
+              <h3>4-Layer System</h3>
+              <p>
+                Config → Patterns → Components → Hydration. Each layer builds on
+                the previous safely.
+              </p>
+            </div>
+
+            <div class="feature-card">
+              <h3>Error Recovery</h3>
+              <p>
+                Intelligent error categorization with specific recovery
+                suggestions for each issue type.
+              </p>
+            </div>
+
+            <div class="feature-card">
+              <h3>Detailed Reports</h3>
+              <p>
+                Get comprehensive analysis of issues found, fixes applied, and
+                improvement recommendations.
+              </p>
+            </div>
+
+            <div class="feature-card">
+              <h3>Enterprise Ready</h3>
+              <p>
+                Processes codebases up to 10,000+ files. Used by React teams at
+                scale.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="demo" class="demo-section">
+        <div class="container">
+          <h2 class="section-title">Try NeuroLint Pro Live</h2>
+          <p class="section-subtitle">
+            Upload your React/Next.js files and see real fixes applied using our
+            4-layer system
+          </p>
+
+          <div class="demo-container">
+            <div
+              class="upload-area"
+              onclick="document.getElementById('fileInput').click()"
+              onkeydown="if(event.key==='Enter'||event.key===' ') document.getElementById('fileInput').click()"
+              tabindex="0"
+              role="button"
+              aria-label="Upload files for demo analysis"
+            >
+              <h3>Drop your files here or click to upload</h3>
+              <p>Supports .jsx, .tsx, .js, .ts files</p>
+              <input
+                type="file"
+                id="fileInput"
+                class="file-input"
+                multiple
+                accept=".jsx,.tsx,.js,.ts"
+                onchange="handleFileUpload(event)"
+                aria-label="Select files for analysis"
+              />
+            </div>
+
+            <div
+              class="results"
+              id="results"
+              role="region"
+              aria-label="Analysis results"
+            >
+              <h3>Analysis Results:</h3>
+              <div
+                class="progress-bar"
+                role="progressbar"
+                aria-valuenow="0"
+                aria-valuemin="0"
+                aria-valuemax="100"
+              >
+                <div class="progress-fill" id="progressFill"></div>
+              </div>
+              <div id="analysisOutput"></div>
+              <div id="fixedCodeOutput"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="pricing" class="pricing">
+        <div class="container">
+          <h2 class="section-title">Simple, Transparent Pricing</h2>
+          <p class="section-subtitle">
+            Pay per use or get unlimited access. No hidden fees.
+          </p>
+
+          <div class="pricing-grid">
+            <div class="pricing-card">
+              <h3>Single Fix</h3>
+              <div class="price">
+                $49<span class="price-per">per codebase</span>
+              </div>
+              <ul>
+                <li>Up to 50 files</li>
+                <li>All 4 layers included</li>
+                <li>Detailed analysis report</li>
+                <li>24-hour delivery</li>
+                <li>PayPal/Card payment</li>
+              </ul>
+              <button
+                class="btn"
+                onclick="openPaymentModal('single')"
+                aria-label="Purchase single fix plan"
+              >
+                Fix Now
+              </button>
+            </div>
+
+            <div class="pricing-card popular">
+              <div class="popular-badge">Most Popular</div>
+              <h3>Professional</h3>
+              <div class="price">
+                $149<span class="price-per">per month</span>
+              </div>
+              <ul>
+                <li>Unlimited fixes</li>
+                <li>Up to 500 files per fix</li>
+                <li>Priority processing</li>
+                <li>API access</li>
+                <li>Team collaboration</li>
+                <li>Cancel anytime</li>
+              </ul>
+              <button
+                class="btn"
+                onclick="openPaymentModal('professional')"
+                aria-label="Subscribe to professional plan"
+              >
+                Get Started
+              </button>
+            </div>
+
+            <div class="pricing-card">
+              <h3>Enterprise</h3>
+              <div class="price">
+                $499<span class="price-per">per month</span>
+              </div>
+              <ul>
+                <li>Unlimited everything</li>
+                <li>Custom layer development</li>
+                <li>Dedicated support</li>
+                <li>SLA guarantee</li>
+                <li>On-premise deployment</li>
+                <li>Training included</li>
+              </ul>
+              <button
+                class="btn"
+                onclick="openPaymentModal('enterprise')"
+                aria-label="Contact sales for enterprise plan"
+              >
+                Contact Sales
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container">
+        <p>
+          &copy; 2024 NeuroLint Pro. Professional React/Next.js debugging
+          service.
+        </p>
+        <p>Built on proven patterns from IMPLEMENTATION_PATTERNS.md</p>
+      </div>
+    </footer>
+
+    <!-- Payment Modal -->
+    <div
+      id="paymentModal"
+      class="payment-modal"
+      role="dialog"
+      aria-labelledby="paymentTitle"
+      aria-hidden="true"
+    >
+      <div class="payment-content">
+        <button
+          class="close-modal"
+          onclick="closePaymentModal()"
+          aria-label="Close payment modal"
+        >
+          &times;
+        </button>
+        <h3 id="paymentTitle">Complete Your Purchase</h3>
+        <div id="paymentDetails"></div>
+        <div id="paypal-button-container"></div>
+      </div>
+    </div>
+
+    <script>
+      let selectedPlan = null;
+
+      function openPaymentModal(plan) {
+        selectedPlan = plan;
+        const modal = document.getElementById("paymentModal");
+        const title = document.getElementById("paymentTitle");
+        const details = document.getElementById("paymentDetails");
+
+        const plans = {
+          single: {
+            name: "Single Fix",
+            price: 49,
+            description: "One-time codebase fix (up to 50 files)",
+          },
+          professional: {
+            name: "Professional",
+            price: 149,
+            description: "Monthly subscription with unlimited fixes",
+          },
+          enterprise: {
+            name: "Enterprise",
+            price: 499,
+            description: "Enterprise plan with custom features",
+          },
+        };
+
+        const planData = plans[plan];
+        title.textContent = `${planData.name} - $${planData.price}`;
+        details.innerHTML = `
+                <p style="margin-bottom: 1rem; color: #666666;">${planData.description}</p>
+                <p style="color: #666666; margin-bottom: 1rem;">Secure payment via PayPal (supports all major cards)</p>
+            `;
+
+        // Initialize PayPal
+        initializePayPal(planData.price, planData.name);
+
+        modal.classList.add("show");
+        modal.setAttribute("aria-hidden", "false");
+
+        // Focus management
+        const closeButton = modal.querySelector(".close-modal");
+        closeButton.focus();
+
+        // Trap focus in modal
+        trapFocus(modal);
+      }
+
+      function closePaymentModal() {
+        const modal = document.getElementById("paymentModal");
+        modal.classList.remove("show");
+        modal.setAttribute("aria-hidden", "true");
+      }
+
+      function trapFocus(element) {
+        const focusableElements = element.querySelectorAll(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+        );
+        const firstFocusableElement = focusableElements[0];
+        const lastFocusableElement =
+          focusableElements[focusableElements.length - 1];
+
+        element.addEventListener("keydown", function (e) {
+          if (e.key === "Tab") {
+            if (e.shiftKey) {
+              if (document.activeElement === firstFocusableElement) {
+                lastFocusableElement.focus();
+                e.preventDefault();
+              }
+            } else {
+              if (document.activeElement === lastFocusableElement) {
+                firstFocusableElement.focus();
+                e.preventDefault();
+              }
+            }
+          }
+
+          if (e.key === "Escape") {
+            closePaymentModal();
+          }
+        });
+      }
+
+      function initializePayPal(amount, itemName) {
+        // Clear existing PayPal buttons
+        document.getElementById("paypal-button-container").innerHTML = "";
+
+        paypal
+          .Buttons({
+            createOrder: function (data, actions) {
+              return actions.order.create({
+                purchase_units: [
+                  {
+                    amount: {
+                      value: amount.toString(),
+                    },
+                    description: itemName,
+                  },
+                ],
+              });
+            },
+            onApprove: function (data, actions) {
+              return actions.order.capture().then(function (details) {
+                alert("Payment completed! Order ID: " + details.id);
+                closePaymentModal();
+
+                // Redirect to the code fixing interface
+                if (selectedPlan === "single") {
+                  window.location.href = "app.html?session=" + details.id;
+                } else {
+                  window.location.href =
+                    "app.html?subscription=" +
+                    selectedPlan +
+                    "&session=" +
+                    details.id;
+                }
+              });
+            },
+            onError: function (err) {
+              console.error("PayPal error:", err);
+              alert("Payment failed. Please try again.");
+            },
+          })
+          .render("#paypal-button-container");
+      }
+
+      // Demo functionality - calls REAL NeuroLint Pro engine
+      async function handleFileUpload(event) {
+        const files = event.target.files;
+        if (files.length === 0) return;
+
+        const results = document.getElementById("results");
+        const progressFill = document.getElementById("progressFill");
+        const analysisOutput = document.getElementById("analysisOutput");
+        const fixedCodeOutput = document.getElementById("fixedCodeOutput");
+
+        results.classList.add("show");
+        progressFill.style.width = "0%";
+        progressFill.parentElement.setAttribute("aria-valuenow", "0");
+
+        analysisOutput.innerHTML = "";
+
+        for (let i = 0; i < Math.min(files.length, 3); i++) {
+          const file = files[i];
+          const content = await file.text();
+
+          const progress = ((i + 1) / Math.min(files.length, 3)) * 100;
+          progressFill.style.width = `${progress}%`;
+          progressFill.parentElement.setAttribute(
+            "aria-valuenow",
+            progress.toString(),
+          );
+
+          try {
+            const response = await fetch("/api/analyze", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                code: content,
+                filename: file.name,
+                demo: true,
+              }),
+            });
+
+            const result = await response.json();
+
+            analysisOutput.innerHTML += `
+                        <div style="margin-bottom: 1rem; padding: 1rem; border: 1px solid #4A4A4A; background: #000000;">
+                            <h4 style="color: #FFFFFF; margin-bottom: 0.5rem;">${file.name}</h4>
+                            <p style="color: #666666;"><strong>Issues Found:</strong> ${result.detectedIssues ? result.detectedIssues.length : 0}</p>
+                            <p style="color: #666666;"><strong>Recommended Layers:</strong> ${result.recommendedLayers ? result.recommendedLayers.join(", ") : "None"}</p>
+                            <p style="color: #666666;"><strong>Confidence:</strong> ${result.confidence ? (result.confidence * 100).toFixed(1) : 0}%</p>
+                            ${result.demo ? '<p style="color: #666666;"><em>Demo Mode - Limited analysis</em></p>' : ""}
+                        </div>
+                    `;
+          } catch (error) {
+            analysisOutput.innerHTML += `
+                        <div style="margin-bottom: 1rem; padding: 1rem; border: 1px solid #4A4A4A; background: #000000;">
+                            <h4 style="color: #FFFFFF; margin-bottom: 0.5rem;">${file.name}</h4>
+                            <p style="color: #666666;">Demo error: ${error.message}</p>
+                            <p style="color: #666666;"><em>Upload working files for full analysis</em></p>
+                        </div>
+                    `;
+          }
+        }
+
+        if (files.length > 3) {
+          analysisOutput.innerHTML += `
+                    <div style="margin-top: 1rem; padding: 1rem; background: #000000; border: 1px solid #4A4A4A; text-align: center;">
+                        <p style="color: #FFFFFF;"><strong>Demo limited to 3 files.</strong></p>
+                        <p style="color: #666666; margin-bottom: 1rem;">Purchase NeuroLint Pro to analyze unlimited files with full fixing capability.</p>
+                        <button class="btn" onclick="openPaymentModal('single')">Unlock Full Analysis - $49</button>
+                    </div>
+                `;
+        }
+      }
+
+      // Drag and drop functionality
+      const uploadArea = document.querySelector(".upload-area");
+
+      uploadArea.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        uploadArea.classList.add("dragover");
+      });
+
+      uploadArea.addEventListener("dragleave", () => {
+        uploadArea.classList.remove("dragover");
+      });
+
+      uploadArea.addEventListener("drop", (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove("dragover");
+
+        const files = e.dataTransfer.files;
+        document.getElementById("fileInput").files = files;
+        handleFileUpload({ target: { files } });
+      });
+
+      // Smooth scrolling for navigation
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute("href"));
+          if (target) {
+            target.scrollIntoView({
+              behavior: "smooth",
+              block: "start",
+            });
+          }
+        });
+      });
+
+      // Close modal with Escape key
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") {
+          closePaymentModal();
+        }
+      });
+
+      // Announce dynamic content changes for screen readers
+      function announceChange(message) {
+        const announcement = document.createElement("div");
+        announcement.setAttribute("aria-live", "polite");
+        announcement.setAttribute("aria-atomic", "true");
+        announcement.className = "sr-only";
+        announcement.textContent = message;
+        document.body.appendChild(announcement);
+
+        setTimeout(() => {
+          document.body.removeChild(announcement);
+        }, 1000);
+      }
+    </script>
+  </body>
+</html>

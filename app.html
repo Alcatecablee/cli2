@@ -1,0 +1,1323 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NeuroLint Pro - Code Fixing Dashboard</title>
+    <meta
+      name="description"
+      content="Upload and fix your React/Next.js code with NeuroLint Pro's professional debugging service."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family:
+          "Inter",
+          -apple-system,
+          BlinkMacSystemFont,
+          sans-serif;
+        background: #000000;
+        color: #ffffff;
+        line-height: 1.6;
+        overflow-x: hidden;
+      }
+
+      /* Smooth transitions */
+      * {
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      /* Header */
+      .header {
+        background: #000000;
+        border-bottom: 1px solid #4a4a4a;
+        padding: 1rem 0;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        backdrop-filter: blur(12px);
+      }
+
+      .header-content {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .logo {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #ffffff;
+        letter-spacing: -0.025em;
+      }
+
+      .user-info {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .credits {
+        background: #000000;
+        border: 1px solid #4a4a4a;
+        padding: 0.5rem 1rem;
+        color: #ffffff;
+        font-weight: 600;
+        font-size: 0.9rem;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.75rem 1.5rem;
+        background: transparent;
+        color: #ffffff;
+        text-decoration: none;
+        border: 1px solid #4a4a4a;
+        font-weight: 600;
+        font-size: 0.95rem;
+        cursor: pointer;
+        min-height: 44px;
+        transition: all 0.2s ease;
+      }
+
+      .btn:hover,
+      .btn:focus {
+        background: #ffffff;
+        color: #000000;
+        border-color: #ffffff;
+        transform: translateY(-1px);
+        outline: none;
+      }
+
+      .btn:active {
+        transform: translateY(0);
+      }
+
+      .btn-primary {
+        background: #ffffff;
+        color: #000000;
+        border-color: #ffffff;
+        flex: 1;
+      }
+
+      .btn-primary:hover,
+      .btn-primary:focus {
+        background: transparent;
+        color: #ffffff;
+      }
+
+      .btn-secondary {
+        background: transparent;
+        color: #ffffff;
+        border-color: #4a4a4a;
+        flex: 1;
+      }
+
+      .btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .btn:disabled:hover {
+        background: transparent;
+        color: #ffffff;
+        border-color: #4a4a4a;
+      }
+
+      /* Main Container */
+      .main-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 2rem;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        min-height: calc(100vh - 100px);
+      }
+
+      /* Panel Styles */
+      .panel {
+        background: #000000;
+        border: 1px solid #4a4a4a;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .panel-header {
+        background: #000000;
+        border-bottom: 1px solid #4a4a4a;
+        color: #ffffff;
+        padding: 1.5rem;
+        font-weight: 600;
+        font-size: 1.1rem;
+      }
+
+      .panel-content {
+        padding: 1.5rem;
+        flex: 1;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+
+      /* Upload Zone */
+      .upload-zone {
+        border: 1px dashed #4a4a4a;
+        padding: 3rem;
+        text-align: center;
+        background: #000000;
+        cursor: pointer;
+        min-height: 200px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .upload-zone:hover,
+      .upload-zone:focus-within {
+        border-color: #666666;
+        background: rgba(255, 255, 255, 0.02);
+      }
+
+      .upload-zone.dragover {
+        border-color: #ffffff;
+        background: rgba(255, 255, 255, 0.05);
+        transform: scale(1.01);
+      }
+
+      .upload-zone h3 {
+        color: #ffffff;
+        margin-bottom: 0.5rem;
+        font-size: 1.25rem;
+      }
+
+      .upload-zone p {
+        color: #666666;
+        margin-bottom: 0.5rem;
+      }
+
+      .file-input {
+        display: none;
+      }
+
+      /* File List */
+      .file-list {
+        flex: 1;
+      }
+
+      .file-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem;
+        background: #000000;
+        margin-bottom: 0.5rem;
+        border: 1px solid #4a4a4a;
+      }
+
+      .file-name {
+        font-weight: 500;
+        color: #ffffff;
+      }
+
+      .file-size {
+        color: #666666;
+        font-size: 0.9rem;
+      }
+
+      .remove-file {
+        background: transparent;
+        color: #666666;
+        border: 1px solid #4a4a4a;
+        padding: 0.25rem 0.5rem;
+        cursor: pointer;
+        font-size: 0.8rem;
+      }
+
+      .remove-file:hover,
+      .remove-file:focus {
+        color: #ffffff;
+        border-color: #ffffff;
+        outline: none;
+      }
+
+      /* Layer Selector */
+      .layer-selector h3 {
+        color: #ffffff;
+        margin-bottom: 0.5rem;
+      }
+
+      .layer-selector p {
+        color: #666666;
+        margin-bottom: 1rem;
+        font-size: 0.9rem;
+      }
+
+      .layer-options {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+      }
+
+      .layer-option {
+        padding: 1rem;
+        border: 1px solid #4a4a4a;
+        background: #000000;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+
+      .layer-option.selected {
+        border-color: #ffffff;
+        background: rgba(255, 255, 255, 0.05);
+      }
+
+      .layer-option:hover {
+        border-color: #666666;
+        background: rgba(255, 255, 255, 0.02);
+      }
+
+      .layer-title {
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: #ffffff;
+      }
+
+      .layer-desc {
+        font-size: 0.9rem;
+        color: #666666;
+      }
+
+      /* Controls */
+      .controls {
+        display: flex;
+        gap: 1rem;
+      }
+
+      /* Progress */
+      .progress {
+        display: none;
+        margin-bottom: 1rem;
+      }
+
+      .progress.show {
+        display: block;
+      }
+
+      .progress-bar {
+        width: 100%;
+        height: 4px;
+        background: #4a4a4a;
+        overflow: hidden;
+        margin-bottom: 1rem;
+      }
+
+      .progress-fill {
+        height: 100%;
+        background: #ffffff;
+        width: 0%;
+        transition: width 0.3s ease;
+      }
+
+      .progress-text {
+        text-align: center;
+        font-weight: 600;
+        color: #ffffff;
+      }
+
+      /* Results */
+      .results-placeholder {
+        text-align: center;
+        padding: 3rem;
+        color: #666666;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .results-placeholder h3 {
+        color: #ffffff;
+        margin-bottom: 1rem;
+        font-size: 1.5rem;
+      }
+
+      .results-container {
+        flex: 1;
+      }
+
+      .result-item {
+        margin-bottom: 2rem;
+        border: 1px solid #4a4a4a;
+        background: #000000;
+        overflow: hidden;
+      }
+
+      .result-header {
+        background: #000000;
+        padding: 1rem;
+        border-bottom: 1px solid #4a4a4a;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .result-filename {
+        font-weight: 600;
+        color: #ffffff;
+      }
+
+      .result-status {
+        padding: 0.25rem 0.75rem;
+        font-size: 0.8rem;
+        font-weight: 600;
+        border: 1px solid transparent;
+      }
+
+      .status-success {
+        background: rgba(255, 255, 255, 0.1);
+        color: #ffffff;
+        border-color: #ffffff;
+      }
+
+      .status-warning {
+        background: rgba(102, 102, 102, 0.1);
+        color: #666666;
+        border-color: #666666;
+      }
+
+      .status-error {
+        background: rgba(102, 102, 102, 0.1);
+        color: #666666;
+        border-color: #666666;
+      }
+
+      .result-content {
+        padding: 1rem;
+      }
+
+      .result-summary {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1rem;
+      }
+
+      .summary-item {
+        text-align: center;
+        padding: 1rem;
+        background: #000000;
+        border: 1px solid #4a4a4a;
+      }
+
+      .summary-number {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #ffffff;
+      }
+
+      .summary-label {
+        font-size: 0.9rem;
+        color: #666666;
+      }
+
+      .improvements-list {
+        margin-top: 1rem;
+      }
+
+      .improvement-item {
+        padding: 0.75rem;
+        background: rgba(255, 255, 255, 0.05);
+        margin-bottom: 0.5rem;
+        color: #ffffff;
+        font-size: 0.9rem;
+        border: 1px solid #4a4a4a;
+      }
+
+      .improvement-item::before {
+        content: "✓ ";
+        margin-right: 0.5rem;
+        color: #ffffff;
+      }
+
+      .download-btn {
+        background: transparent;
+        color: #ffffff;
+        border: 1px solid #4a4a4a;
+        padding: 0.5rem 1rem;
+        cursor: pointer;
+        margin-top: 1rem;
+      }
+
+      .download-btn:hover,
+      .download-btn:focus {
+        background: #ffffff;
+        color: #000000;
+        border-color: #ffffff;
+        outline: none;
+      }
+
+      /* Accessibility */
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+
+      /* Focus styles */
+      *:focus {
+        outline: 2px solid #ffffff;
+        outline-offset: 2px;
+      }
+
+      /* Mobile Responsive */
+      @media (max-width: 1024px) {
+        .main-container {
+          grid-template-columns: 1fr;
+          gap: 1rem;
+          padding: 1rem;
+        }
+
+        .header-content {
+          padding: 0 1rem;
+        }
+
+        .layer-options {
+          grid-template-columns: 1fr;
+        }
+
+        .controls {
+          flex-direction: column;
+        }
+
+        .panel-content {
+          padding: 1rem;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .upload-zone {
+          padding: 2rem 1rem;
+          min-height: 150px;
+        }
+
+        .result-header {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 0.5rem;
+        }
+
+        .result-summary {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .user-info {
+          flex-direction: column;
+          gap: 0.5rem;
+          align-items: flex-end;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .main-container {
+          padding: 0.5rem;
+        }
+
+        .header-content {
+          flex-direction: column;
+          gap: 1rem;
+          align-items: stretch;
+        }
+
+        .user-info {
+          flex-direction: row;
+          justify-content: space-between;
+          align-items: center;
+        }
+
+        .panel-header {
+          padding: 1rem;
+          font-size: 1rem;
+        }
+
+        .panel-content {
+          padding: 0.75rem;
+          gap: 1rem;
+        }
+
+        .upload-zone {
+          padding: 1.5rem 0.75rem;
+        }
+
+        .upload-zone h3 {
+          font-size: 1.1rem;
+        }
+
+        .result-summary {
+          grid-template-columns: 1fr;
+        }
+
+        .summary-item {
+          padding: 0.75rem;
+        }
+      }
+
+      /* Reduced motion */
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          transition: none !important;
+          animation: none !important;
+        }
+      }
+
+      /* High contrast mode */
+      @media (prefers-contrast: high) {
+        .btn,
+        .panel,
+        .file-item,
+        .layer-option {
+          border-width: 2px;
+        }
+      }
+
+      /* Error states */
+      .error-state {
+        text-align: center;
+        padding: 3rem;
+        color: #666666;
+      }
+
+      .error-state h3 {
+        color: #ffffff;
+        margin-bottom: 1rem;
+      }
+
+      /* Loading states */
+      .loading {
+        opacity: 0.7;
+        pointer-events: none;
+      }
+
+      /* Animations for better UX */
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .fade-in {
+        animation: fadeIn 0.3s ease-out;
+      }
+
+      /* Touch-friendly adjustments */
+      @media (hover: none) and (pointer: coarse) {
+        .btn {
+          min-height: 48px;
+          font-size: 1rem;
+        }
+
+        .layer-option {
+          padding: 1.25rem;
+        }
+
+        .file-item {
+          padding: 1.25rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <div class="header-content">
+        <div class="logo">NeuroLint Pro</div>
+        <div class="user-info">
+          <div
+            class="credits"
+            id="creditsDisplay"
+            role="status"
+            aria-live="polite"
+          >
+            Credits: Loading...
+          </div>
+          <button
+            class="btn btn-secondary"
+            onclick="window.location.href='index.html'"
+            aria-label="Return to home page"
+          >
+            Back to Home
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <main class="main-container">
+      <!-- Left Panel: Upload and Configuration -->
+      <div class="panel">
+        <div class="panel-header">Upload & Configure</div>
+        <div class="panel-content">
+          <div
+            class="upload-zone"
+            onclick="document.getElementById('fileInput').click()"
+            onkeydown="if(event.key==='Enter'||event.key===' ') document.getElementById('fileInput').click()"
+            tabindex="0"
+            role="button"
+            aria-label="Upload React/Next.js files for processing"
+          >
+            <h3>Drop your React/Next.js files here</h3>
+            <p>or click to browse</p>
+            <p style="font-size: 0.9rem; color: #666666; margin-top: 0.5rem">
+              Supports: .jsx, .tsx, .js, .ts, .json
+            </p>
+            <input
+              type="file"
+              id="fileInput"
+              class="file-input"
+              multiple
+              accept=".jsx,.tsx,.js,.ts,.json"
+              onchange="handleFileUpload(event)"
+              aria-label="Select files for processing"
+            />
+          </div>
+
+          <div
+            class="file-list"
+            id="fileList"
+            role="region"
+            aria-label="Uploaded files"
+          ></div>
+
+          <div class="layer-selector">
+            <h3>Select Layers to Execute</h3>
+            <p>
+              NeuroLint Pro will auto-detect needed layers, or choose manually
+            </p>
+
+            <div
+              class="layer-options"
+              role="radiogroup"
+              aria-label="Layer selection options"
+            >
+              <div
+                class="layer-option selected"
+                data-layer="auto"
+                tabindex="0"
+                role="radio"
+                aria-checked="true"
+              >
+                <div class="layer-title">Smart Auto-Detect</div>
+                <div class="layer-desc">
+                  Automatically select layers based on code analysis
+                </div>
+              </div>
+
+              <div
+                class="layer-option"
+                data-layer="1"
+                tabindex="0"
+                role="radio"
+                aria-checked="false"
+              >
+                <div class="layer-title">Layer 1: Config</div>
+                <div class="layer-desc">
+                  TypeScript, Next.js, package.json fixes
+                </div>
+              </div>
+
+              <div
+                class="layer-option"
+                data-layer="2"
+                tabindex="0"
+                role="radio"
+                aria-checked="false"
+              >
+                <div class="layer-title">Layer 2: Patterns</div>
+                <div class="layer-desc">
+                  HTML entities, imports, console.log
+                </div>
+              </div>
+
+              <div
+                class="layer-option"
+                data-layer="3"
+                tabindex="0"
+                role="radio"
+                aria-checked="false"
+              >
+                <div class="layer-title">Layer 3: Components</div>
+                <div class="layer-desc">
+                  Key props, React imports, accessibility
+                </div>
+              </div>
+
+              <div
+                class="layer-option"
+                data-layer="4"
+                tabindex="0"
+                role="radio"
+                aria-checked="false"
+              >
+                <div class="layer-title">Layer 4: Hydration</div>
+                <div class="layer-desc">
+                  SSR guards, localStorage protection
+                </div>
+              </div>
+
+              <div
+                class="layer-option"
+                data-layer="all"
+                tabindex="0"
+                role="radio"
+                aria-checked="false"
+              >
+                <div class="layer-title">All Layers</div>
+                <div class="layer-desc">Execute all 4 layers sequentially</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="controls">
+            <button
+              class="btn btn-secondary"
+              onclick="analyzeCode()"
+              id="analyzeBtn"
+              disabled
+              aria-label="Analyze code without applying fixes"
+            >
+              Analyze Only
+            </button>
+            <button
+              class="btn btn-primary"
+              onclick="fixCode()"
+              id="fixBtn"
+              disabled
+              aria-label="Fix code and apply changes"
+            >
+              Fix Code
+            </button>
+          </div>
+
+          <div
+            class="progress"
+            id="progress"
+            role="region"
+            aria-label="Processing progress"
+          >
+            <div
+              class="progress-bar"
+              role="progressbar"
+              aria-valuenow="0"
+              aria-valuemin="0"
+              aria-valuemax="100"
+            >
+              <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text" id="progressText">Processing...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Panel: Results -->
+      <div class="panel">
+        <div class="panel-header">Results & Analysis</div>
+        <div class="panel-content">
+          <div id="resultsContent">
+            <div class="results-placeholder">
+              <h3>Ready to Fix Your Code</h3>
+              <p>
+                Upload your React/Next.js files to see detailed analysis and
+                fixes
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      let uploadedFiles = [];
+      let selectedLayers = "auto";
+      let userSession = null;
+
+      // Initialize session from URL parameters
+      function initializeSession() {
+        const urlParams = new URLSearchParams(window.location.search);
+        userSession = urlParams.get("session");
+        const subscription = urlParams.get("subscription");
+
+        if (!userSession && !subscription) {
+          // No valid session, redirect to payment
+          alert("No valid session found. Please purchase NeuroLint Pro first.");
+          window.location.href = "index.html";
+          return;
+        }
+
+        // Update credits display based on subscription type
+        const creditsDisplay = document.getElementById("creditsDisplay");
+        if (subscription === "professional") {
+          creditsDisplay.textContent = "Professional Plan: Unlimited";
+          creditsDisplay.style.background = "rgba(255, 255, 255, 0.1)";
+          creditsDisplay.style.borderColor = "#FFFFFF";
+        } else if (subscription === "enterprise") {
+          creditsDisplay.textContent = "Enterprise Plan: Unlimited";
+          creditsDisplay.style.background = "rgba(255, 255, 255, 0.1)";
+          creditsDisplay.style.borderColor = "#FFFFFF";
+        } else {
+          creditsDisplay.textContent = "Single Fix: 1 Credit";
+        }
+      }
+
+      // Layer selection with keyboard support
+      document.querySelectorAll(".layer-option").forEach((option) => {
+        option.addEventListener("click", function () {
+          selectLayer(this);
+        });
+
+        option.addEventListener("keydown", function (e) {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            selectLayer(this);
+          }
+        });
+      });
+
+      function selectLayer(element) {
+        // Remove selected from all options
+        document.querySelectorAll(".layer-option").forEach((opt) => {
+          opt.classList.remove("selected");
+          opt.setAttribute("aria-checked", "false");
+        });
+
+        // Add selected to clicked option
+        element.classList.add("selected");
+        element.setAttribute("aria-checked", "true");
+
+        // Update selected layers
+        selectedLayers = element.dataset.layer;
+
+        announceChange(
+          `Selected ${element.querySelector(".layer-title").textContent}`,
+        );
+      }
+
+      // File upload handling
+      function handleFileUpload(event) {
+        const files = Array.from(event.target.files);
+
+        files.forEach((file) => {
+          // Check if file already exists
+          if (!uploadedFiles.find((f) => f.name === file.name)) {
+            uploadedFiles.push(file);
+          }
+        });
+
+        updateFileList();
+        updateButtons();
+        announceChange(`${files.length} files uploaded`);
+      }
+
+      function updateFileList() {
+        const fileList = document.getElementById("fileList");
+
+        if (uploadedFiles.length === 0) {
+          fileList.innerHTML = "";
+          return;
+        }
+
+        fileList.innerHTML = `
+                <h4 style="margin-bottom: 1rem; color: #FFFFFF;">Uploaded Files (${uploadedFiles.length})</h4>
+                ${uploadedFiles
+                  .map(
+                    (file, index) => `
+                    <div class="file-item">
+                        <div>
+                            <div class="file-name">${file.name}</div>
+                            <div class="file-size">${formatFileSize(file.size)}</div>
+                        </div>
+                        <button class="remove-file" onclick="removeFile(${index})" aria-label="Remove ${file.name}">Remove</button>
+                    </div>
+                `,
+                  )
+                  .join("")}
+            `;
+      }
+
+      function removeFile(index) {
+        const fileName = uploadedFiles[index].name;
+        uploadedFiles.splice(index, 1);
+        updateFileList();
+        updateButtons();
+        announceChange(`${fileName} removed`);
+      }
+
+      function updateButtons() {
+        const analyzeBtn = document.getElementById("analyzeBtn");
+        const fixBtn = document.getElementById("fixBtn");
+
+        const hasFiles = uploadedFiles.length > 0;
+        analyzeBtn.disabled = !hasFiles;
+        fixBtn.disabled = !hasFiles;
+      }
+
+      function formatFileSize(bytes) {
+        if (bytes === 0) return "0 Bytes";
+        const k = 1024;
+        const sizes = ["Bytes", "KB", "MB"];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
+      }
+
+      // Analysis and fixing functions
+      async function analyzeCode() {
+        showProgress("Analyzing code...");
+        announceChange("Starting code analysis");
+
+        try {
+          const results = await processFiles(false); // Analysis only
+          displayResults(results, false);
+          announceChange("Analysis complete");
+        } catch (error) {
+          console.error("Analysis error:", error);
+          showError("Analysis failed: " + error.message);
+          announceChange("Analysis failed");
+        } finally {
+          hideProgress();
+        }
+      }
+
+      async function fixCode() {
+        if (!confirm("This will process and fix your code. Continue?")) {
+          return;
+        }
+
+        showProgress("Fixing code...");
+        announceChange("Starting code fixing");
+
+        try {
+          const results = await processFiles(true); // Full fixing
+          displayResults(results, true);
+          announceChange("Code fixing complete");
+        } catch (error) {
+          console.error("Fixing error:", error);
+          showError("Code fixing failed: " + error.message);
+          announceChange("Code fixing failed");
+        } finally {
+          hideProgress();
+        }
+      }
+
+      async function processFiles(applyFixes) {
+        const results = [];
+
+        for (let i = 0; i < uploadedFiles.length; i++) {
+          const file = uploadedFiles[i];
+          const content = await file.text();
+
+          updateProgress(
+            `Processing ${file.name}...`,
+            (i / uploadedFiles.length) * 100,
+          );
+
+          try {
+            // Call the REAL NeuroLint Pro API
+            const response = await fetch("/api/process", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${userSession}`,
+              },
+              body: JSON.stringify({
+                code: content,
+                filename: file.name,
+                layers: selectedLayers,
+                applyFixes: applyFixes,
+                session: userSession,
+              }),
+            });
+
+            if (!response.ok) {
+              throw new Error(
+                `HTTP ${response.status}: ${response.statusText}`,
+              );
+            }
+
+            const result = await response.json();
+            result.filename = file.name;
+            result.originalSize = file.size;
+            results.push(result);
+          } catch (error) {
+            results.push({
+              filename: file.name,
+              success: false,
+              error: error.message,
+              originalSize: file.size,
+            });
+          }
+        }
+
+        return results;
+      }
+
+      function displayResults(results, wasFixed) {
+        const resultsContent = document.getElementById("resultsContent");
+
+        const totalFiles = results.length;
+        const successfulFiles = results.filter((r) => r.success).length;
+        const totalIssues = results.reduce(
+          (sum, r) => sum + (r.detectedIssues?.length || 0),
+          0,
+        );
+        const totalFixes = results.reduce(
+          (sum, r) => sum + (r.layers?.length || 0),
+          0,
+        );
+
+        resultsContent.innerHTML = `
+                <div class="fade-in" style="margin-bottom: 2rem;">
+                    <h3 style="color: #FFFFFF; margin-bottom: 1rem;">${wasFixed ? "Code Fixing" : "Analysis"} Complete</h3>
+                    <div class="result-summary">
+                        <div class="summary-item">
+                            <div class="summary-number">${successfulFiles}/${totalFiles}</div>
+                            <div class="summary-label">Files Processed</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-number">${totalIssues}</div>
+                            <div class="summary-label">Issues Found</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-number">${totalFixes}</div>
+                            <div class="summary-label">Layers Applied</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="results-container">
+                    ${results.map((result) => createResultItem(result, wasFixed)).join("")}
+                </div>
+                
+                ${
+                  wasFixed && successfulFiles > 0
+                    ? `
+                    <div style="text-align: center; margin-top: 2rem;">
+                        <button class="btn btn-primary" onclick="downloadAllFixed()" aria-label="Download all fixed files as archive">
+                            Download All Fixed Files
+                        </button>
+                    </div>
+                `
+                    : ""
+                }
+            `;
+      }
+
+      function createResultItem(result, wasFixed) {
+        if (!result.success) {
+          return `
+                    <div class="result-item fade-in">
+                        <div class="result-header">
+                            <div class="result-filename">${result.filename}</div>
+                            <div class="result-status status-error">Error</div>
+                        </div>
+                        <div class="result-content">
+                            <p style="color: #666666;">${result.error}</p>
+                        </div>
+                    </div>
+                `;
+        }
+
+        return `
+                <div class="result-item fade-in">
+                    <div class="result-header">
+                        <div class="result-filename">${result.filename}</div>
+                        <div class="result-status ${result.layers?.length > 0 ? "status-success" : "status-warning"}">
+                            ${result.layers?.length > 0 ? "Fixed" : "No Issues"}
+                        </div>
+                    </div>
+                    <div class="result-content">
+                        ${
+                          result.analysis
+                            ? `
+                            <p style="color: #666666; margin-bottom: 0.5rem;"><strong>Confidence:</strong> ${(result.analysis.confidence * 100).toFixed(1)}%</p>
+                            <p style="color: #666666; margin-bottom: 1rem;"><strong>Impact:</strong> ${result.analysis.estimatedImpact?.level} - ${result.analysis.estimatedImpact?.description}</p>
+                        `
+                            : ""
+                        }
+                        
+                        ${
+                          result.detectedIssues?.length > 0
+                            ? `
+                            <p style="color: #FFFFFF; margin-bottom: 0.5rem;"><strong>Issues Detected:</strong></p>
+                            <ul style="margin-left: 1rem; margin-bottom: 1rem; color: #666666;">
+                                ${result.detectedIssues.map((issue) => `<li>${issue.description}</li>`).join("")}
+                            </ul>
+                        `
+                            : ""
+                        }
+                        
+                        ${
+                          result.layers?.length > 0
+                            ? `
+                            <div class="improvements-list">
+                                ${result.layers
+                                  .map(
+                                    (layer) =>
+                                      layer.improvements
+                                        ?.map(
+                                          (improvement) =>
+                                            `<div class="improvement-item">${improvement}</div>`,
+                                        )
+                                        .join("") ||
+                                      `<div class="improvement-item">Layer ${layer.layerId} applied successfully</div>`,
+                                  )
+                                  .join("")}
+                            </div>
+                        `
+                            : ""
+                        }
+                        
+                        ${
+                          wasFixed && result.transformed
+                            ? `
+                            <button class="download-btn" onclick="downloadFile('${result.filename}', \`${escapeForJS(result.transformed)}\`)" aria-label="Download fixed ${result.filename}">
+                                Download Fixed File
+                            </button>
+                        `
+                            : ""
+                        }
+                    </div>
+                </div>
+            `;
+      }
+
+      function showProgress(text) {
+        const progress = document.getElementById("progress");
+        const progressText = document.getElementById("progressText");
+
+        progress.classList.add("show");
+        progressText.textContent = text;
+        updateProgress(text, 0);
+      }
+
+      function updateProgress(text, percentage) {
+        const progressFill = document.getElementById("progressFill");
+        const progressText = document.getElementById("progressText");
+        const progressBar = progressFill.parentElement;
+
+        progressFill.style.width = percentage + "%";
+        progressBar.setAttribute("aria-valuenow", percentage.toString());
+        progressText.textContent = text;
+      }
+
+      function hideProgress() {
+        document.getElementById("progress").classList.remove("show");
+      }
+
+      function showError(message) {
+        const resultsContent = document.getElementById("resultsContent");
+        resultsContent.innerHTML = `
+                <div class="error-state fade-in">
+                    <h3>Error</h3>
+                    <p>${message}</p>
+                    <p style="margin-top: 1rem;">Please try again or contact support if the issue persists.</p>
+                </div>
+            `;
+      }
+
+      function downloadFile(filename, content) {
+        const blob = new Blob([content], { type: "text/plain" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+
+        announceChange(`${filename} downloaded`);
+      }
+
+      function escapeForJS(str) {
+        return str
+          .replace(/\\/g, "\\\\")
+          .replace(/`/g, "\\`")
+          .replace(/\$/g, "\\$");
+      }
+
+      // Drag and drop functionality
+      const uploadZone = document.querySelector(".upload-zone");
+
+      uploadZone.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        uploadZone.classList.add("dragover");
+      });
+
+      uploadZone.addEventListener("dragleave", () => {
+        uploadZone.classList.remove("dragover");
+      });
+
+      uploadZone.addEventListener("drop", (e) => {
+        e.preventDefault();
+        uploadZone.classList.remove("dragover");
+
+        const files = Array.from(e.dataTransfer.files);
+        files.forEach((file) => {
+          if (!uploadedFiles.find((f) => f.name === file.name)) {
+            uploadedFiles.push(file);
+          }
+        });
+
+        updateFileList();
+        updateButtons();
+        announceChange(`${files.length} files dropped and uploaded`);
+      });
+
+      // Announce dynamic content changes for screen readers
+      function announceChange(message) {
+        const announcement = document.createElement("div");
+        announcement.setAttribute("aria-live", "polite");
+        announcement.setAttribute("aria-atomic", "true");
+        announcement.className = "sr-only";
+        announcement.textContent = message;
+        document.body.appendChild(announcement);
+
+        setTimeout(() => {
+          document.body.removeChild(announcement);
+        }, 1000);
+      }
+
+      // Initialize the app
+      initializeSession();
+    </script>
+  </body>
+</html>
