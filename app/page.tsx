@@ -743,6 +743,36 @@ function ImageGallery({ images }) {
               </div>
             </div>
 
+            {/* Demo Settings Status */}
+            <div
+              style={{
+                textAlign: "center",
+                marginBottom: "1rem",
+                padding: "0.75rem",
+                background: "rgba(255, 255, 255, 0.05)",
+                borderRadius: "8px",
+                fontSize: "0.9rem",
+                color: "rgba(255, 255, 255, 0.8)",
+              }}
+            >
+              <strong>Current Settings:</strong>{" "}
+              <span
+                style={{ color: demoState.applyFixes ? "#ff9800" : "#4caf50" }}
+              >
+                {demoState.applyFixes
+                  ? "🔧 Apply Fixes Mode"
+                  : "🔍 Dry-Run Mode"}
+              </span>
+              {" • "}
+              <span style={{ color: "#2196f3" }}>
+                {demoState.selectedLayers.length === 0
+                  ? "🌟 Auto-Detect Layers"
+                  : demoState.selectedLayers.length === 6
+                    ? "📋 All 6 Layers"
+                    : `⚙️ Custom Layers [${demoState.selectedLayers.join(",")}]`}
+              </span>
+            </div>
+
             <div className="demo-upload-section">
               <div
                 className="upload-area"
