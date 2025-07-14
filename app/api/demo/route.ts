@@ -26,15 +26,66 @@ export async function POST(req: Request) {
 
     const { code, filename, layers = "auto", applyFixes = false } = requestData;
 
+    // Comprehensive input validation
     if (typeof code !== "string" || code.length === 0) {
       return NextResponse.json(
         { error: "Parameter 'code' must be a non-empty string" },
         { status: 400 },
       );
     }
+
+    // Security: Limit code size to prevent abuse
+    if (code.length > 100000) {
+      // 100KB limit
+      return NextResponse.json(
+        { error: "Code size too large. Maximum 100KB allowed." },
+        { status: 413 },
+      );
+    }
+
     if (typeof filename !== "string" || filename.length === 0) {
       return NextResponse.json(
         { error: "Parameter 'filename' must be provided" },
+        { status: 400 },
+      );
+    }
+
+    // Validate filename extension
+    if (!filename.match(/\.(ts|tsx|js|jsx)$/i)) {
+      return NextResponse.json(
+        {
+          error: "Filename must have a valid extension (.ts, .tsx, .js, .jsx)",
+        },
+        { status: 400 },
+      );
+    }
+
+    // Validate layers parameter
+    if (layers !== "auto" && layers !== "all" && !Array.isArray(layers)) {
+      return NextResponse.json(
+        {
+          error:
+            "Parameter 'layers' must be 'auto', 'all', or an array of numbers",
+        },
+        { status: 400 },
+      );
+    }
+
+    if (Array.isArray(layers)) {
+      const validLayers = layers.every(
+        (layer) => typeof layer === "number" && layer >= 1 && layer <= 6,
+      );
+      if (!validLayers) {
+        return NextResponse.json(
+          { error: "Layer numbers must be between 1 and 6" },
+          { status: 400 },
+        );
+      }
+    }
+
+    if (typeof applyFixes !== "boolean") {
+      return NextResponse.json(
+        { error: "Parameter 'applyFixes' must be a boolean" },
         { status: 400 },
       );
     }
