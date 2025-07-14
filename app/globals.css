@@ -329,11 +329,16 @@ a {
 .section-subtitle {
   text-align: center;
   font-size: 1.2rem;
-  color: #666666;
+  color: #ffffff;
   margin-bottom: 4rem;
   max-width: 600px;
   margin-left: auto;
   margin-right: auto;
+}
+
+.section-subtitle strong {
+  font-weight: 700;
+  color: #ffffff;
 }
 
 /* Demo Section */
