@@ -325,10 +325,10 @@ function ImageGallery({ images }) {
         }));
       } catch (error) {
         console.error("🔍 [FRONTEND] Demo analysis failed:", error);
-        console.error("���� [FRONTEND] Error details:", {
-          name: error?.name,
-          message: error?.message,
-          stack: error?.stack,
+        console.error("🔍 [FRONTEND] Error details:", {
+          name: error instanceof Error ? error.name : "Unknown",
+          message: error instanceof Error ? error.message : String(error),
+          stack: error instanceof Error ? error.stack : undefined,
         });
 
         let errorMessage = "Unknown error occurred";
