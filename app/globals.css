@@ -83,9 +83,9 @@ a {
 }
 
 .logo-img {
-  height: 40px;
+  height: 24px;
   width: auto;
-  max-width: 200px;
+  max-width: 120px;
   object-fit: contain;
   transition: var(--transition-fast);
 }
