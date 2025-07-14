@@ -1375,6 +1375,15 @@
       .hero::before {
         display: none;
       }
+
+      /* Minimalist landing page overrides */
+      header,
+      #features,
+      #pricing,
+      footer,
+      #paymentModal {
+        display: none !important;
+      }
     </style>
   </head>
   <body>
@@ -1400,160 +1409,10 @@
     <main>
       <!-- Hero Section -->
       <section class="hero">
-        <div class="hero-subtitle">Automated Code Fixing Service</div>
         <h1 class="typewriter" id="typewriter" aria-live="polite"></h1>
-        <p class="hero-desc">
-          Automated multi-layer code fixing for React and Next.js. Resolves
-          common issues—HTML entities, missing keys, SSR safety—using a
-          validated 6-layer pipeline with automatic rollback.
-        </p>
         <div class="hero-actions">
-          <button
-            class="btn"
-            onclick="openPaymentModal('single')"
-            aria-label="Purchase single fix for $49"
-          >
-            Fix Code Now - $49
-          </button>
-          <a href="#demo" class="btn" aria-label="Try free demo">
-            Try Free Demo
-          </a>
-        </div>
-      </section>
-
-      <!-- Features Section -->
-      <h2 class="sr-only">NeuroLint Pro Features</h2>
-      <section id="features" class="features">
-        <h2 class="section-title">Why NeuroLint Pro?</h2>
-        <p class="section-subtitle">
-          Built on battle-tested patterns from IMPLEMENTATION_PATTERNS.md -
-          Never corrupts your code
-        </p>
-
-        <div class="feature-card">
-          <div class="feature-title">Safe Transformations</div>
-          <div class="feature-desc">
-            Automatic rollback on validation failure. Your code is never
-            corrupted - guaranteed.
-          </div>
-        </div>
-        <div class="feature-card">
-          <div class="feature-title">Smart Detection</div>
-          <div class="feature-desc">
-            Automatically detects HTML entities, missing key props, SSR issues,
-            and accessibility problems.
-          </div>
-        </div>
-        <div class="feature-card">
-          <div class="feature-title">6-Layer System</div>
-          <div class="feature-desc">
-            Config → Patterns → Components → Hydration → Next.js → Testing. Each
-            layer builds on the previous safely.
-          </div>
-        </div>
-        <div class="feature-card">
-          <div class="feature-title">Error Recovery</div>
-          <div class="feature-desc">
-            Intelligent error categorization with specific recovery suggestions
-            for each issue type.
-          </div>
-        </div>
-        <div class="feature-card">
-          <div class="feature-title">Detailed Reports</div>
-          <div class="feature-desc">
-            Get comprehensive analysis of issues found, fixes applied, and
-            improvement recommendations.
-          </div>
-        </div>
-        <div class="feature-card">
-          <div class="feature-title">Enterprise Ready</div>
-          <div class="feature-desc">
-            Processes codebases up to 10,000+ files. Used by React teams at
-            scale.
-          </div>
-        </div>
-
-        <div class="feature-card" style="grid-column: 1 / -1; margin-top: 2rem">
-          <div class="feature-title">
-            Complete 6-Layer Transformation System
-          </div>
-          <div
-            class="feature-desc"
-            style="
-              display: grid;
-              grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-              gap: 1rem;
-              margin-top: 1rem;
-            "
-          >
-            <div
-              style="
-                background: rgba(255, 255, 255, 0.02);
-                padding: 1rem;
-                border-radius: 8px;
-              "
-            >
-              <strong style="color: #ffffff">Layer 1: Configuration</strong
-              ><br />
-              TypeScript, Next.js, package.json foundation setup
-            </div>
-            <div
-              style="
-                background: rgba(255, 255, 255, 0.02);
-                padding: 1rem;
-                border-radius: 8px;
-              "
-            >
-              <strong style="color: #ffffff">Layer 2: Entity Cleanup</strong
-              ><br />
-              HTML entities, imports, console statements
-            </div>
-            <div
-              style="
-                background: rgba(255, 255, 255, 0.02);
-                padding: 1rem;
-                border-radius: 8px;
-              "
-            >
-              <strong style="color: #ffffff">Layer 3: Component Fixes</strong
-              ><br />
-              React keys, accessibility, component patterns
-            </div>
-            <div
-              style="
-                background: rgba(255, 255, 255, 0.02);
-                padding: 1rem;
-                border-radius: 8px;
-              "
-            >
-              <strong style="color: #ffffff">Layer 4: Hydration Safety</strong
-              ><br />
-              SSR guards, browser API protection
-            </div>
-            <div
-              style="
-                background: rgba(255, 255, 255, 0.02);
-                padding: 1rem;
-                border-radius: 8px;
-              "
-            >
-              <strong style="color: #ffffff">Layer 5: Next.js App Router</strong
-              ><br />
-              'use client' directives, corrupted imports, Next.js patterns
-            </div>
-            <div
-              style="
-                background: rgba(255, 255, 255, 0.02);
-                padding: 1rem;
-                border-radius: 8px;
-              "
-            >
-              <strong style="color: #ffffff"
-                >Layer 6: Testing & Validation</strong
-              ><br />
-              Prop types, error handling, accessibility, performance
-            </div>
-          </div>
+          <a href="#demo" class="btn" aria-label="Try live demo">Try Demo</a>
+          <a href="/app" class="btn" aria-label="Log in to dashboard">Log&nbsp;In</a>
         </div>
       </section>
 
@@ -2112,12 +1971,11 @@
 
             // Typewriter effect for hero with cursor
             const words = [
-              "Fix React Code Instantly",
-              "Safe Transformations",
-              "Smart Detection",
-              "6-Layer System",
-              "Error Recovery",
-              "Enterprise Ready",
+              "Upload Code",
+              "Analyze Issues",
+              "Apply Fixes",
+              "Review Changes",
+              "Push with Confidence",
             ];
             let wordIndex = 0;
             let charIndex = 0;
