@@ -2315,12 +2315,29 @@ legend {
     width: 100%;
   }
 
-  .layers-grid {
+    .layers-grid {
     grid-template-columns: 1fr;
   }
 
   .mode-toggle {
     flex-direction: column;
+  }
+
+  /* Demo controls small screen adjustments */
+  .demo-controls {
+    padding: 1.5rem;
+  }
+
+  .control-options {
+    flex-direction: column;
+  }
+
+  .layer-controls {
+    flex-direction: column;
+  }
+
+  .layer-checkboxes {
+    grid-template-columns: 1fr;
   }
 
   .header-title h1 {
