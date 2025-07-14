@@ -556,14 +556,18 @@ export default function Dashboard() {
       >
         <div className="sidebar-header">
           <div className="brand">
-            <div className="brand-logo" aria-label="NeuroLint Pro Logo">
+            <a
+              href="/"
+              className="brand-logo"
+              aria-label="NeuroLint Pro Logo - Go to homepage"
+            >
               <img
                 src="https://cdn.builder.io/api/v1/image/assets%2Fbcdfdb608d38407b88c1584fe3705961%2F1b38a4a385ed4a0bb404148fae0ce80e?format=webp&width=800"
                 alt="NeuroLint Pro"
                 width="32"
                 height="32"
               />
-            </div>
+            </a>
             {!dashboardState.sidebarCollapsed && (
               <div className="brand-text">
                 <span className="brand-name">NeuroLint</span>
