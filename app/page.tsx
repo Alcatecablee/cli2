@@ -221,8 +221,8 @@ function ImageGallery({ images }) {
     return () => clearTimeout(timer);
   }, [currentText, currentIndex, texts]);
 
-  const openPaymentModal = (plan: string) => {
-    alert(`Opening payment modal for ${plan} plan`);
+  const openDashboard = () => {
+    window.location.href = "/dashboard";
   };
 
   // Sophisticated sample code loading with real engine integration
@@ -464,15 +464,13 @@ function ImageGallery({ images }) {
             NeuroLint Pro
           </a>
           <nav className="nav" role="navigation" aria-label="Main navigation">
-            <a href="#features">Features</a>
             <a href="#demo">Demo</a>
-            <a href="#pricing">Pricing</a>
             <button
               className="btn"
-              onClick={() => openPaymentModal("single")}
-              aria-label="Purchase single fix for $49"
+              onClick={openDashboard}
+              aria-label="Access dashboard"
             >
-              Fix Code Now
+              Dashboard
             </button>
           </nav>
         </div>
@@ -491,70 +489,16 @@ function ImageGallery({ images }) {
             validated 6-layer pipeline with automatic rollback.
           </p>
           <div className="hero-actions">
+            <a href="#demo" className="btn" aria-label="Try free demo">
+              Try Demo
+            </a>
             <button
               className="btn"
-              onClick={() => openPaymentModal("single")}
-              aria-label="Purchase single fix for $49"
+              onClick={openDashboard}
+              aria-label="Access dashboard"
             >
-              Fix Code Now - $49
+              Dashboard
             </button>
-            <a href="#demo" className="btn" aria-label="Try free demo">
-              Try Free Demo
-            </a>
-          </div>
-        </section>
-
-        {/* Features Section */}
-        <section id="features" className="features">
-          <h2 className="section-title">Why NeuroLint Pro?</h2>
-          <p className="section-subtitle">
-            Built on battle-tested patterns from IMPLEMENTATION_PATTERNS.md -
-            Never corrupts your code
-          </p>
-
-          <div className="feature-card">
-            <div className="feature-title">Safe Transformations</div>
-            <div className="feature-desc">
-              Automatic rollback on validation failure. Your code is never
-              corrupted - guaranteed.
-            </div>
-          </div>
-          <div className="feature-card">
-            <div className="feature-title">Smart Detection</div>
-            <div className="feature-desc">
-              Detects 50+ types of issues across 6 layers with smart confidence
-              scoring and impact estimation. Advanced pattern recognition for
-              comprehensive code analysis.
-            </div>
-          </div>
-          <div className="feature-card">
-            <div className="feature-title">6-Layer System</div>
-            <div className="feature-desc">
-              Config → Patterns → Components → Hydration → Next.js → Testing.
-              Each layer builds on the previous safely.
-            </div>
-          </div>
-          <div className="feature-card">
-            <div className="feature-title">Error Recovery</div>
-            <div className="feature-desc">
-              Comprehensive error categorization and recovery suggestions.
-              Built-in fallback transformations when layer scripts unavailable
-              ensure continuous operation.
-            </div>
-          </div>
-          <div className="feature-card">
-            <div className="feature-title">Detailed Reports</div>
-            <div className="feature-desc">
-              Get comprehensive analysis of issues found, fixes applied, and
-              improvement recommendations.
-            </div>
-          </div>
-          <div className="feature-card">
-            <div className="feature-title">Enterprise Ready</div>
-            <div className="feature-desc">
-              Processes codebases up to 10,000+ files. Used by React teams at
-              scale.
-            </div>
           </div>
         </section>
 
@@ -927,97 +871,7 @@ function ImageGallery({ images }) {
             )}
           </div>
         </section>
-
-        {/* Pricing Section */}
-        <section id="pricing" className="pricing">
-          <div className="pricing-container">
-            <h2 className="section-title">Simple, Transparent Pricing</h2>
-            <p className="section-subtitle">
-              Pay per use or get unlimited access. No hidden fees.
-            </p>
-
-            <div className="pricing-grid">
-              <div className="pricing-card">
-                <h3>Single Fix</h3>
-                <div className="price">
-                  $49<span className="price-per">per codebase</span>
-                </div>
-                <ul>
-                  <li>Up to 50 files</li>
-                  <li>All 6 layers included</li>
-                  <li>Detailed analysis report</li>
-                  <li>24-hour delivery</li>
-                  <li>PayPal/Card payment</li>
-                </ul>
-                <button
-                  className="btn"
-                  onClick={() => openPaymentModal("single")}
-                  aria-label="Purchase single fix plan"
-                >
-                  Fix Now
-                </button>
-              </div>
-
-              <div className="pricing-card popular">
-                <div className="popular-badge">Most Popular</div>
-                <h3>Professional</h3>
-                <div className="price">
-                  $149<span className="price-per">per month</span>
-                </div>
-                <ul>
-                  <li>Unlimited fixes</li>
-                  <li>Up to 500 files per fix</li>
-                  <li>Priority processing</li>
-                  <li>API access</li>
-                  <li>Team collaboration</li>
-                  <li>Cancel anytime</li>
-                </ul>
-                <button
-                  className="btn"
-                  onClick={() => openPaymentModal("professional")}
-                  aria-label="Subscribe to professional plan"
-                >
-                  Get Started
-                </button>
-              </div>
-
-              <div className="pricing-card">
-                <h3>Enterprise</h3>
-                <div className="price">
-                  $499<span className="price-per">per month</span>
-                </div>
-                <ul>
-                  <li>Unlimited everything</li>
-                  <li>Custom layer development</li>
-                  <li>Dedicated support</li>
-                  <li>SLA guarantee</li>
-                  <li>On-premise deployment</li>
-                  <li>Training included</li>
-                </ul>
-                <button
-                  className="btn"
-                  onClick={() => openPaymentModal("enterprise")}
-                  aria-label="Contact sales for enterprise plan"
-                >
-                  Contact Sales
-                </button>
-              </div>
-            </div>
-          </div>
-        </section>
       </main>
-
-      <footer className="footer">
-        <div className="footer-inner">
-          <p>
-            &copy; 2024 NeuroLint Pro. Professional React/Next.js debugging
-            service.
-          </p>
-          <p>
-            Built on proven 6-layer patterns from IMPLEMENTATION_PATTERNS.md
-          </p>
-        </div>
-      </footer>
     </div>
   );
 }
