@@ -264,12 +264,8 @@ a {
 }
 
 .feature-card {
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.02) 0%,
-    rgba(255, 255, 255, 0.005) 100%
-  );
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #000000;
+  border: 1px solid #4a4a4a;
   border-radius: 16px;
   padding: 3rem 2.5rem 2.5rem 2.5rem;
   display: flex;
@@ -277,24 +273,14 @@ a {
   align-items: flex-start;
   position: relative;
   overflow: hidden;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
   transition:
     border-color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-    transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-    box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-    background 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .feature-card:hover {
-  border-color: rgba(255, 255, 255, 0.3);
-  transform: translateY(-8px) scale(1.02);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.05) 0%,
-    rgba(255, 255, 255, 0.02) 100%
-  );
+  border-color: #666666;
+  transform: translateY(-4px);
 }
 
 .feature-title {
