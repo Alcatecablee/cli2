@@ -245,22 +245,19 @@
 }
 
 .sidebar-toggle {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.15);
   color: rgba(255, 255, 255, 0.8);
   cursor: pointer;
   padding: 8px;
-  border-radius: 12px;
-  transition: var(--transition-spring);
+  border-radius: 8px;
+  transition: var(--transition-smooth);
   font-size: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 50px;
-  height: 50px;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  box-shadow: var(--shadow-subtle);
+  width: 40px;
+  height: 40px;
   position: relative;
   overflow: hidden;
 }
