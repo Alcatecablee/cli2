@@ -2063,9 +2063,15 @@ function UserProfile({ user, onUpdate }) {
       document.addEventListener("DOMContentLoaded", initTabs);
 
       function loadSampleCode(sampleType) {
-        console.log("=== LOADING SAMPLE CODE ===");
-        console.log("Sample type requested:", sampleType);
-        console.log("Available sample types:", Object.keys(sampleCodes));
+        console.log(
+          "%c🧪 LOADING SAMPLE CODE",
+          "color: #e91e63; font-weight: bold; font-size: 16px;",
+        );
+        console.log(`📋 Sample Information:`);
+        console.log(`   - Type Requested: ${sampleType}`);
+        console.log(
+          `   - Available Types: [${Object.keys(sampleCodes).join(", ")}]`,
+        );
 
         // Update active sample button
         document.querySelectorAll(".sample-btn").forEach((btn) => {
