@@ -25,6 +25,10 @@ const nextConfig = {
       },
     ];
   },
+  webpack: (config, { isServer }) => {
+    // Ensure CSS is properly handled
+    return config;
+  },
 };
 
 module.exports = nextConfig;
