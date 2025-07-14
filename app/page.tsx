@@ -485,6 +485,10 @@ function ImageGallery({ images }) {
         dryRun: result?.dryRun,
         hasAnalysis: !!result?.analysis,
         hasError: !!result?.error,
+        hasOriginalCode: !!result?.originalCode,
+        hasTransformed: !!result?.transformed,
+        originalCodeLength: result?.originalCode?.length || 0,
+        transformedCodeLength: result?.transformed?.length || 0,
         errorMessage: result?.error,
       });
 
