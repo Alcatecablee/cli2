@@ -127,8 +127,9 @@ export default function HomePage() {
           <div className="feature-card">
             <div className="feature-title">Error Recovery</div>
             <div className="feature-desc">
-              Intelligent error categorization with specific recovery
-              suggestions for each issue type.
+              Comprehensive error categorization and recovery suggestions.
+              Built-in fallback transformations when layer scripts unavailable
+              ensure continuous operation.
             </div>
           </div>
           <div className="feature-card">
