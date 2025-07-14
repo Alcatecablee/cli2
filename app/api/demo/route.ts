@@ -45,8 +45,11 @@ export async function POST(req: Request) {
     );
   }
   try {
+    console.log("🔍 [DEMO API] Validating request body...");
+
     // Validate request has body
     if (!req.body) {
+      console.log("🔍 [DEMO API] ERROR: No request body");
       return NextResponse.json(
         { error: "Request body is required" },
         { status: 400 },
@@ -56,7 +59,15 @@ export async function POST(req: Request) {
     let requestData;
     try {
       requestData = await req.json();
+      console.log("🔍 [DEMO API] Request data parsed:", {
+        hasCode: !!requestData.code,
+        codeLength: requestData.code?.length,
+        filename: requestData.filename,
+        layers: requestData.layers,
+        applyFixes: requestData.applyFixes,
+      });
     } catch (parseError) {
+      console.log("🔍 [DEMO API] ERROR: JSON parse failed:", parseError);
       return NextResponse.json(
         { error: "Invalid JSON in request body" },
         { status: 400 },
