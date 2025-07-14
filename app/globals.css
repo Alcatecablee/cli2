@@ -687,6 +687,20 @@ a {
   border-color: rgba(255, 255, 255, 0.2);
 }
 
+/* Layer checkbox color states */
+.layer-checkbox:has(input:checked) {
+  background: rgba(76, 175, 80, 0.15);
+  border-color: rgba(76, 175, 80, 0.4);
+  box-shadow: 0 0 0 1px rgba(76, 175, 80, 0.2);
+}
+
+.layer-checkbox:has(input:checked):hover {
+  background: rgba(76, 175, 80, 0.2);
+  border-color: rgba(76, 175, 80, 0.5);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+}
+
 .layer-checkbox input[type="checkbox"] {
   width: 16px;
   height: 16px;
