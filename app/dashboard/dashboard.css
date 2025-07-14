@@ -719,7 +719,7 @@
 }
 
 /* The actual centered header content */
-.dashboard-header > * {
+.header-content {
   padding: 16px 32px;
   background: linear-gradient(
     135deg,
@@ -742,6 +742,7 @@
   border-radius: 16px;
   width: fit-content;
   gap: 40px;
+  max-width: 90%;
 }
 
 /* Add fade effect at the bottom of the centered header */
