@@ -488,10 +488,29 @@ export default function Dashboard() {
       {/* Sidebar */}
       <aside
         className={`dashboard-sidebar ${dashboardState.sidebarCollapsed ? "collapsed" : ""}`}
+        aria-label="Main navigation"
+        role="navigation"
       >
         <div className="sidebar-header">
           <div className="brand">
-            <div className="brand-icon">NL</div>
+            <div className="brand-icon" aria-label="NeuroLint Pro Logo">
+              <svg
+                viewBox="0 0 24 24"
+                width="20"
+                height="20"
+                fill="currentColor"
+              >
+                <path d="M12 2L2 7v10c0 5.55 3.84 9.74 9 11 5.16-1.26 9-5.45 9-11V7l-10-5z" />
+                <path
+                  d="M9 12l2 2 4-4"
+                  stroke="#000"
+                  strokeWidth="2"
+                  fill="none"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </div>
             {!dashboardState.sidebarCollapsed && (
               <div className="brand-text">
                 <span className="brand-name">NeuroLint</span>
@@ -507,13 +526,25 @@ export default function Dashboard() {
                 sidebarCollapsed: !prev.sidebarCollapsed,
               }))
             }
+            aria-label={
+              dashboardState.sidebarCollapsed
+                ? "Expand sidebar"
+                : "Collapse sidebar"
+            }
+            aria-expanded={!dashboardState.sidebarCollapsed}
           >
-            {dashboardState.sidebarCollapsed ? "→" : "←"}
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+              {dashboardState.sidebarCollapsed ? (
+                <path d="M9 18l6-6-6-6" />
+              ) : (
+                <path d="M15 18l-6-6 6-6" />
+              )}
+            </svg>
           </button>
         </div>
 
-        <nav className="sidebar-nav">
-          {sidebarItems.map((item) => (
+        <nav className="sidebar-nav" role="menu">
+          {sidebarItems.map((item, index) => (
             <button
               key={item.id}
               className={`nav-item ${dashboardState.activeSection === item.id ? "active" : ""}`}
@@ -523,8 +554,26 @@ export default function Dashboard() {
                   activeSection: item.id,
                 }))
               }
+              role="menuitem"
+              aria-current={
+                dashboardState.activeSection === item.id ? "page" : undefined
+              }
+              aria-label={`${item.label}: ${item.description}`}
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  setDashboardState((prev) => ({
+                    ...prev,
+                    activeSection: item.id,
+                  }));
+                }
+              }}
+              style={{ animationDelay: `${index * 0.1}s` }}
             >
-              <span className="nav-icon">{item.icon}</span>
+              <span className="nav-icon" aria-hidden="true">
+                {item.icon}
+              </span>
               {!dashboardState.sidebarCollapsed && (
                 <div className="nav-content">
                   <span className="nav-label">{item.label}</span>
@@ -535,17 +584,28 @@ export default function Dashboard() {
           ))}
         </nav>
 
-        {!dashboardState.sidebarCollapsed && (
-          <div className="sidebar-footer">
-            <div className="user-section">
-              <div className="user-avatar">U</div>
+        <div
+          className={`sidebar-footer ${dashboardState.sidebarCollapsed ? "collapsed" : ""}`}
+        >
+          <div className="user-section">
+            <div className="user-avatar" aria-label="User profile">
+              <svg
+                viewBox="0 0 24 24"
+                width="16"
+                height="16"
+                fill="currentColor"
+              >
+                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+              </svg>
+            </div>
+            {!dashboardState.sidebarCollapsed && (
               <div className="user-info">
                 <span className="user-name">Free User</span>
                 <span className="user-plan">Unlimited Access</span>
               </div>
-            </div>
+            )}
           </div>
-        )}
+        </div>
       </aside>
 
       {/* Main Content */}
