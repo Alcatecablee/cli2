@@ -19,7 +19,6 @@ export async function POST(req: Request) {
     // The path is relative to <projectRoot>/app/api/demo/route.ts
     // ../../.. brings us back to project root where neurolint-pro.js resides.
     // Using dynamic import sidesteps Next.js ESM ↔ CJS mismatch.
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore - Node will handle CommonJS default export
     const neuroLintModule = await import("../../../neurolint-pro.js");
     // Handle both `module.exports = fn` and `{ default: fn }` patterns.

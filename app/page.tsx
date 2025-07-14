@@ -34,14 +34,99 @@ export default function HomePage() {
     alert(`Opening payment modal for ${plan} plan`);
   };
 
-  const loadSampleCode = (sample: string) => {
-    alert(`Loading sample code: ${sample}`);
+  const sampleCodeSnippets: Record<string, { code: string; filename: string }> = {
+    "missing-keys": {
+      filename: "MissingKeys.jsx",
+      code: `export default function TodoList() {
+  const todos = [
+    { id: 1, text: "Learn React" },
+    { id: 2, text: "Build an App" },
+  ];
+  return (
+    <ul>
+      {todos.map((todo) => (
+        <li>{todo.text}</li> // ⛔️ missing key
+      ))}
+    </ul>
+  );
+}`,
+    },
+    "html-entities": {
+      filename: "HtmlEntities.jsx",
+      code: `export default function Greeting() {
+  return <h1>Hello &amp; Welcome to &quot;NeuroLint&quot;!</h1>; // &amp; and &quot; entities
+}`,
+    },
+    "ssr-issues": {
+      filename: "SsrIssue.jsx",
+      code: `export default function Theme() {
+  const theme = localStorage.getItem("theme") || "light"; // ⛔️ un-guarded localStorage
+  return <div>{theme}</div>;
+}`,
+    },
+    accessibility: {
+      filename: "Accessibility.jsx",
+      code: `export default function SubmitButton() {
+  return <button onClick={() => alert('submit')}>Submit</button>; // ⛔️ no aria-label
+}`,
+    },
   };
 
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const [loadingSample, setLoadingSample] = useState<string | null>(null);
+  const [demoResult, setDemoResult] = useState<any>(null);
+  const loadSampleCode = async (sample: string) => {
+    const snippet = sampleCodeSnippets[sample];
+    if (!snippet) return;
+    setLoadingSample(sample);
+    setDemoResult(null);
+    try {
+      const response = await fetch("/api/demo/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code: snippet.code, filename: snippet.filename }),
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error || "Unexpected server error");
+      }
+      setDemoResult({ data });
+    } catch (error) {
+      setDemoResult({ error: (error as Error).message });
+    } finally {
+      setLoadingSample(null);
+    }
+  };
+
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
-    if (files) {
-      alert(`Uploaded ${files.length} files`);
+    if (!files || files.length === 0) return;
+
+    const file = files[0]; // Only first file for demo
+    const allowed = [".jsx", ".tsx", ".js", ".ts"];
+    const ext = file.name.slice(file.name.lastIndexOf(".")).toLowerCase();
+    if (!allowed.includes(ext)) {
+      setDemoResult({ error: "Unsupported file type. Please upload .js, .ts, .jsx, or .tsx files." });
+      return;
+    }
+
+    const code = await file.text();
+    setLoadingSample(file.name);
+    setDemoResult(null);
+    try {
+      const response = await fetch("/api/demo/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code, filename: file.name }),
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error || "Unexpected server error");
+      }
+      setDemoResult({ data });
+    } catch (error) {
+      setDemoResult({ error: (error as Error).message });
+    } finally {
+      setLoadingSample(null);
     }
   };
 
@@ -216,6 +301,33 @@ export default function HomePage() {
                   </button>
                 </div>
               </div>
+              {/* Demo analysis output */}
+              {demoResult && (
+                <div
+                  style={{
+                    marginTop: "2rem",
+                    padding: "1rem",
+                    background: "#111",
+                    borderRadius: "8px",
+                    maxHeight: "400px",
+                    overflow: "auto",
+                    color: "#0f0",
+                    fontFamily: "JetBrains Mono, monospace",
+                    fontSize: "0.85rem",
+                    whiteSpace: "pre-wrap",
+                  }}
+                >
+                  {loadingSample && (
+                    <span>Analyzing <strong>{loadingSample}</strong>…</span>
+                  )}
+                  {!loadingSample && demoResult?.error && (
+                    <span style={{ color: "#f55" }}>{demoResult.error}</span>
+                  )}
+                  {!loadingSample && demoResult?.data && (
+                    <pre>{JSON.stringify(demoResult.data, null, 2)}</pre>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </section>
