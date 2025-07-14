@@ -769,8 +769,8 @@ a {
     font-size: 0.9rem;
   }
   .hero {
-    padding: 5rem 1.5rem 3rem 1.5rem;
-    min-height: 85vh;
+    padding: 3rem 1.5rem 4rem 1.5rem;
+    min-height: 75vh;
   }
   .hero-subtitle {
     font-size: 0.8rem;
