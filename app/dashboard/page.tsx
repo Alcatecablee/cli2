@@ -1546,7 +1546,7 @@ export default function Dashboard() {
                     {/* Premium Business Insights */}
                     {dashboardState.result.analysis && (
                       <div className="business-insights">
-                        <h3>💼 Technical Impact Analysis</h3>
+                        <h3>Technical Impact Analysis</h3>
                         <div className="insights-grid">
                           <div className="insight-card">
                             <div className="insight-label">
