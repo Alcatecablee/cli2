@@ -1567,13 +1567,13 @@ legend {
 }
 
 .status.success {
-  color: #4ade80;
-  filter: drop-shadow(0 1px 2px rgba(74, 222, 128, 0.3));
+  color: var(--status-active);
+  filter: drop-shadow(0 1px 2px rgba(76, 175, 80, 0.4));
 }
 
 .status.error {
-  color: #f87171;
-  filter: drop-shadow(0 1px 2px rgba(248, 113, 113, 0.3));
+  color: var(--status-error);
+  filter: drop-shadow(0 1px 2px rgba(229, 62, 62, 0.4));
 }
 
 .sample-header {
