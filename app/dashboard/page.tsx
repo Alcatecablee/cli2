@@ -666,34 +666,38 @@ export default function Dashboard() {
       {/* Main Content */}
       <main className="dashboard-main">
         <header className="dashboard-header">
-          <div className="header-title">
-            <h1>NeuroLint Pro Dashboard</h1>
-          </div>
+          <div className="header-content">
+            <div className="header-title">
+              <h1>NeuroLint Pro Dashboard</h1>
+            </div>
 
-          <div className="header-info">
-            {dashboardState.currentFile && (
-              <div className="current-file">
-                <span className="file-icon">FILE</span>
-                <span className="file-name">{dashboardState.currentFile}</span>
-              </div>
-            )}
-
-            {rateLimitInfo && (
-              <div className="rate-limit-info">
-                <div className="plan-badge">
-                  {rateLimitInfo.plan.toUpperCase()}
-                </div>
-                <div className="usage-info">
-                  <span className="remaining">
-                    {rateLimitInfo.remaining} analyses remaining
-                  </span>
-                  <span className="reset-time">
-                    Resets{" "}
-                    {new Date(rateLimitInfo.resetTime).toLocaleTimeString()}
+            <div className="header-info">
+              {dashboardState.currentFile && (
+                <div className="current-file">
+                  <span className="file-icon">FILE</span>
+                  <span className="file-name">
+                    {dashboardState.currentFile}
                   </span>
                 </div>
-              </div>
-            )}
+              )}
+
+              {rateLimitInfo && (
+                <div className="rate-limit-info">
+                  <div className="plan-badge">
+                    {rateLimitInfo.plan.toUpperCase()}
+                  </div>
+                  <div className="usage-info">
+                    <span className="remaining">
+                      {rateLimitInfo.remaining} analyses remaining
+                    </span>
+                    <span className="reset-time">
+                      Resets{" "}
+                      {new Date(rateLimitInfo.resetTime).toLocaleTimeString()}
+                    </span>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </header>
 
