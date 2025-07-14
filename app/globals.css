@@ -10,6 +10,14 @@
   --muted: #666666;
   --font-sans: "Inter", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", "Fira Code", "Consolas", monospace;
+
+  /* Enhanced animation variables */
+  --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-fast: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-spring: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  --shadow-subtle: 0 2px 8px rgba(0, 0, 0, 0.12);
+  --shadow-medium: 0 8px 24px rgba(0, 0, 0, 0.15);
+  --shadow-strong: 0 16px 40px rgba(0, 0, 0, 0.2);
 }
 
 html,
@@ -22,6 +30,10 @@ body {
   min-height: 100vh;
   scroll-behavior: smooth;
   overflow-x: hidden;
+  /* Improve text rendering */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 * {
@@ -41,9 +53,11 @@ a {
   background: rgba(0, 0, 0, 0.95);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 4px 32px rgba(0, 0, 0, 0.3);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-bottom: 1px solid #4a4a4a;
+  box-shadow: var(--shadow-strong);
+  transition: var(--transition-smooth);
+  /* Improve header accessibility */
+  will-change: transform, opacity;
 }
 
 .header-inner {
@@ -63,12 +77,23 @@ a {
   font-weight: 900;
   font-size: 1.75rem;
   color: var(--foreground);
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: var(--transition-fast);
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  /* Improve accessibility */
+  position: relative;
+  text-decoration: none;
+  border-radius: 8px;
+  padding: 0.5rem;
+  margin: -0.5rem;
 }
 
 .logo:hover {
   transform: scale(1.02);
+}
+
+.logo:focus {
+  outline: 2px solid #ffffff;
+  outline-offset: 4px;
 }
 
 .nav {
@@ -81,17 +106,19 @@ a {
   color: var(--muted);
   font-weight: 500;
   font-size: 1rem;
-  padding: 0.5rem 1rem;
+  padding: 0.75rem 1.25rem;
   border: 1px solid transparent;
-  border-radius: 6px;
-  transition:
-    color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-    border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-    background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  min-height: 36px;
+  border-radius: 8px;
+  transition: var(--transition-smooth);
+  min-height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
+  overflow: hidden;
+  /* Improve touch targets */
+  min-width: 44px;
+  touch-action: manipulation;
 }
 
 .nav a:hover,
@@ -99,8 +126,19 @@ a {
 .nav a.active {
   color: var(--foreground);
   border-color: var(--border);
-  background-color: rgba(255, 255, 255, 0.05);
-  outline: none;
+  background-color: rgba(255, 255, 255, 0.08);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-subtle);
+}
+
+.nav a:focus {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+}
+
+.nav a:active {
+  transform: translateY(0);
+  transition: var(--transition-fast);
 }
 
 .nav .btn {
@@ -151,11 +189,13 @@ a {
   border: 1px solid #4a4a4a;
   border-radius: 8px;
   padding: 0.75rem 1.5rem;
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: var(--transition-smooth);
   font-family: var(--font-mono);
+  /* Add subtle animation */
+  animation: fadeInUp 0.6s ease-out 0.2s both;
 }
 
 .typewriter {
@@ -164,10 +204,13 @@ a {
   color: var(--foreground);
   min-height: 7rem;
   letter-spacing: -0.04em;
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem;
   font-family: var(--font-sans);
   line-height: 1.1;
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  /* Enhance typewriter animation */
+  animation: fadeInUp 0.8s ease-out 0.4s both;
+  position: relative;
 }
 
 .hero-desc {
@@ -183,13 +226,17 @@ a {
   border-radius: 12px;
   padding: 2.5rem 3rem;
   background: rgba(255, 255, 255, 0.02);
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: var(--transition-smooth);
+  /* Add entrance animation */
+  animation: fadeInUp 0.8s ease-out 0.6s both;
+  backdrop-filter: blur(10px);
 }
 
 .hero-desc:hover {
   border-color: #666666;
   background: rgba(255, 255, 255, 0.04);
   transform: translateY(-2px);
+  box-shadow: var(--shadow-medium);
 }
 
 .hero-actions {
@@ -197,7 +244,9 @@ a {
   gap: 2rem;
   justify-content: center;
   flex-wrap: wrap;
-  margin-bottom: 4rem;
+  margin-bottom: 6rem;
+  /* Add entrance animation */
+  animation: fadeInUp 0.8s ease-out 0.8s both;
 }
 
 .hero-actions .btn {
@@ -205,31 +254,62 @@ a {
   color: var(--primary-foreground);
   font-weight: 700;
   font-size: 1.2rem;
-  padding: 1rem 2rem;
+  padding: 1.25rem 2.5rem;
   border: 1px solid #4a4a4a;
   border-radius: 8px;
   cursor: pointer;
-  transition:
-    background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-    color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-    transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-    border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  min-height: 52px;
-  min-width: 160px;
+  transition: var(--transition-smooth);
+  min-height: 56px;
+  min-width: 180px;
   display: flex;
   align-items: center;
   justify-content: center;
   text-decoration: none;
   font-family: var(--font-sans);
+  position: relative;
+  overflow: hidden;
+  /* Improve touch targets */
+  touch-action: manipulation;
 }
 
 .hero-actions .btn:hover,
 .hero-actions .btn:focus {
   background: var(--background);
   color: var(--foreground);
-  transform: translateY(-2px);
+  transform: translateY(-3px);
   border-color: #666666;
-  outline: none;
+  box-shadow: var(--shadow-strong);
+}
+
+.hero-actions .btn:focus {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+}
+
+.hero-actions .btn:active {
+  transform: translateY(-1px);
+  transition: var(--transition-fast);
+}
+
+/* Add ripple effect */
+.hero-actions .btn::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  transform: translate(-50%, -50%);
+  transition:
+    width 0.4s,
+    height 0.4s;
+}
+
+.hero-actions .btn:active::before {
+  width: 300px;
+  height: 300px;
 }
 
 .section-title {
