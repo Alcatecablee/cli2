@@ -999,11 +999,11 @@ a {
 }
 
 .layer-status.success {
-  color: #22c55e;
+  color: #ffffff;
 }
 
 .layer-status.failed {
-  color: #ef4444;
+  color: #666666;
 }
 
 .layer-time {
