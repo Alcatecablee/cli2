@@ -685,6 +685,25 @@ function ImageGallery({ images }) {
               </div>
             </div>
 
+            {/* Demo Reset Button */}
+            {demoState.showResults && (
+              <div style={{ textAlign: "center", marginBottom: "1rem" }}>
+                <button
+                  className="control-btn"
+                  onClick={() =>
+                    setDemoState((prev) => ({
+                      ...prev,
+                      showResults: false,
+                      result: null,
+                    }))
+                  }
+                  aria-label="Clear demo results and start over"
+                >
+                  Clear Results
+                </button>
+              </div>
+            )}
+
             {/* Sophisticated Analysis Results Display */}
             {demoState.showResults && demoState.result && (
               <div className="demo-results">
