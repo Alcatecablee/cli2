@@ -1,10 +1,44 @@
 // @ts-nocheck
 import { NextResponse } from "next/server";
 
+// Simple in-memory rate limiting (for production, use Redis or similar)
+const requestCounts = new Map<string, { count: number; resetTime: number }>();
+const RATE_LIMIT = 10; // 10 requests per minute
+const RATE_WINDOW = 60 * 1000; // 1 minute
+
+function isRateLimited(clientIP: string): boolean {
+  const now = Date.now();
+  const clientData = requestCounts.get(clientIP);
+
+  if (!clientData || now > clientData.resetTime) {
+    requestCounts.set(clientIP, { count: 1, resetTime: now + RATE_WINDOW });
+    return false;
+  }
+
+  if (clientData.count >= RATE_LIMIT) {
+    return true;
+  }
+
+  clientData.count++;
+  return false;
+}
+
 // POST /api/demo
 // Consumes JSON: { code: string, filename: string, layers?: number[] | "auto" | "all", applyFixes?: boolean }
 // Returns the raw NeuroLintPro response or an error.
 export async function POST(req: Request) {
+  // Basic rate limiting
+  const clientIP =
+    req.headers.get("x-forwarded-for") ||
+    req.headers.get("x-real-ip") ||
+    "unknown";
+
+  if (isRateLimited(clientIP)) {
+    return NextResponse.json(
+      { error: "Rate limit exceeded. Please try again later." },
+      { status: 429 },
+    );
+  }
   try {
     // Validate request has body
     if (!req.body) {
