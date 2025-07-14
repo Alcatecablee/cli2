@@ -1,33 +1,43 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  trailingSlash: true,
   experimental: {
-    // Enable server actions if needed
+    // Remove deprecated appDir option
   },
-  env: {
-    CUSTOM_KEY: process.env.CUSTOM_KEY,
+  typescript: {
+    ignoreBuildErrors: false,
   },
+  eslint: {
+    ignoreDuringBuilds: false,
+  },
+  images: {
+    domains: [],
+  },
+  // Optimize for production
+  swcMinify: true,
+  compress: true,
+  poweredByHeader: false,
+  generateEtags: false,
+  // Security headers
   async headers() {
     return [
       {
-        source: "/api/:path*",
+        source: '/(.*)',
         headers: [
-          { key: "Access-Control-Allow-Origin", value: "*" },
           {
-            key: "Access-Control-Allow-Methods",
-            value: "GET, POST, PUT, DELETE, OPTIONS",
+            key: 'X-Frame-Options',
+            value: 'DENY',
           },
           {
-            key: "Access-Control-Allow-Headers",
-            value: "Content-Type, Authorization",
+            key: 'X-Content-Type-Options',
+            value: 'nosniff',
+          },
+          {
+            key: 'Referrer-Policy',
+            value: 'origin-when-cross-origin',
           },
         ],
       },
     ];
-  },
-  webpack: (config, { isServer }) => {
-    // Ensure CSS is properly handled
-    return config;
   },
 };
 
