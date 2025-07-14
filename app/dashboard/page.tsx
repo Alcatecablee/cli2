@@ -1349,6 +1349,25 @@ export default function Dashboard() {
             </div>
           )}
 
+          {/* Clear Results Button */}
+          {dashboardState.showResults && (
+            <div style={{ textAlign: "center", marginBottom: "1rem" }}>
+              <button
+                className="control-btn"
+                onClick={() =>
+                  setDashboardState((prev) => ({
+                    ...prev,
+                    showResults: false,
+                    result: null,
+                  }))
+                }
+                aria-label="Clear analysis results and start over"
+              >
+                Clear Results
+              </button>
+            </div>
+          )}
+
           {/* Results Section */}
           {dashboardState.showResults && (
             <div className="results-section">
