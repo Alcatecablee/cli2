@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 
 // Demo state interface for sophisticated analysis results - matches NeuroLint Pro output
 interface DemoResult {
