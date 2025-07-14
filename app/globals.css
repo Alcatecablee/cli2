@@ -550,21 +550,8 @@ a {
     margin: 0 auto;
     font-size: 1rem;
   }
-  .features {
-    grid-template-columns: 1fr;
-    gap: 2rem;
-    padding: 4rem 1.5rem;
-  }
-  .feature-card {
-    padding: 2.5rem 2rem;
-    border-radius: 12px;
-  }
   .demo-upload-section {
     grid-template-columns: 1fr;
-  }
-  .pricing-grid {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
   }
 }
 
