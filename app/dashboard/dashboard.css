@@ -2082,17 +2082,19 @@ legend {
 }
 
 .layer-item.success {
-  border-left-color: #4ade80;
+  border-left-color: var(--status-active);
+  background: var(--active-glow);
   box-shadow:
     var(--shadow-subtle),
-    -4px 0 8px rgba(74, 222, 128, 0.2);
+    -4px 0 8px rgba(76, 175, 80, 0.2);
 }
 
 .layer-item.failed {
-  border-left-color: #f87171;
+  border-left-color: var(--status-error);
+  background: var(--error-glow);
   box-shadow:
     var(--shadow-subtle),
-    -4px 0 8px rgba(248, 113, 113, 0.2);
+    -4px 0 8px rgba(229, 62, 62, 0.2);
 }
 
 .issue-header,
