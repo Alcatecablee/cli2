@@ -318,7 +318,7 @@ function ImageGallery({ images }) {
 
         if (!response.ok) {
           const errorText = await response.text();
-          console.log("🔍 [FRONTEND] API error response:", errorText);
+          console.log("[FRONTEND] API error response:", errorText);
           throw new Error(`API error: ${response.status} - ${errorText}`);
         }
 
