@@ -323,7 +323,7 @@ function ImageGallery({ images }) {
         }
 
         const result = await response.json();
-        console.log("🔍 [FRONTEND] Sample API result received:", {
+        console.log("[FRONTEND] Sample API result received:", {
           hasResult: !!result,
           success: result?.success,
           dryRun: result?.dryRun,
