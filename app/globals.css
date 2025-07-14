@@ -14,11 +14,7 @@
 
 html,
 body {
-  background: radial-gradient(
-    ellipse at top,
-    rgba(0, 0, 0, 0.9) 0%,
-    #000000 100%
-  );
+  background: #000000;
   color: var(--foreground);
   font-family: var(--font-sans);
   margin: 0;
