@@ -482,7 +482,7 @@ function ImageGallery({ images }) {
                         }))
                       }
                     >
-                      🤖 Auto-Detect
+                      Auto-Detect
                     </button>
                     <button
                       className={`control-btn ${demoState.selectedLayers.length === 6 ? "active" : ""}`}
@@ -493,7 +493,7 @@ function ImageGallery({ images }) {
                         }))
                       }
                     >
-                      🎯 All Layers
+                      All Layers
                     </button>
                   </div>
                   <div className="layer-checkboxes">
