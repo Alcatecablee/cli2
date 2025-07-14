@@ -280,13 +280,13 @@ export default function Dashboard() {
   const sidebarItems = [
     {
       id: "editor",
-      icon: "📝",
+      icon: "ED",
       label: "Code Editor",
       description: "Upload and analyze code",
     },
     {
       id: "samples",
-      icon: "🔬",
+      icon: "SA",
       label: "Sample Files",
       description: "Test with example files",
     },
