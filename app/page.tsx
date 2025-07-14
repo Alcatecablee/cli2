@@ -484,7 +484,7 @@ function ImageGallery({ images }) {
       }
 
       const result = await response.json();
-      console.log("🔍 [FRONTEND] Upload API result received:", {
+      console.log("[FRONTEND] Upload API result received:", {
         hasResult: !!result,
         success: result?.success,
         dryRun: result?.dryRun,
