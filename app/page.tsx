@@ -714,7 +714,7 @@ function ImageGallery({ images }) {
                                   <span
                                     className={`layer-status ${layer.success ? "success" : "failed"}`}
                                   >
-                                    {layer.success ? "✅" : "❌"}
+                                    {layer.success ? "SUCCESS" : "FAILED"}
                                   </span>
                                 </div>
                                 <div className="layer-time">
