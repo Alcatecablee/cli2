@@ -396,11 +396,8 @@ a {
   text-align: center;
   font-size: 1.2rem;
   color: #ffffff;
-  margin-bottom: 0.5rem;
-  margin-top: 0;
+  margin: 0 auto;
   max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
 }
 
 .section-subtitle strong {
