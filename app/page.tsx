@@ -444,6 +444,91 @@ function ImageGallery({ images }) {
               analysis without changes, letting you explore safely.
             </p>
 
+            {/* Advanced Demo Controls */}
+            <div className="demo-controls">
+              <h3>Analysis Configuration</h3>
+              <div className="controls-grid">
+                <div className="control-group">
+                  <label className="control-label">Mode</label>
+                  <div className="control-options">
+                    <button
+                      className={`control-btn ${!demoState.applyFixes ? "active" : ""}`}
+                      onClick={() =>
+                        setDemoState((prev) => ({ ...prev, applyFixes: false }))
+                      }
+                    >
+                      🔍 Dry-Run (Analysis Only)
+                    </button>
+                    <button
+                      className={`control-btn ${demoState.applyFixes ? "active" : ""}`}
+                      onClick={() =>
+                        setDemoState((prev) => ({ ...prev, applyFixes: true }))
+                      }
+                    >
+                      🔧 Apply Fixes
+                    </button>
+                  </div>
+                </div>
+
+                <div className="control-group">
+                  <label className="control-label">Layer Selection</label>
+                  <div className="layer-controls">
+                    <button
+                      className={`control-btn ${demoState.selectedLayers.length === 0 ? "active" : ""}`}
+                      onClick={() =>
+                        setDemoState((prev) => ({
+                          ...prev,
+                          selectedLayers: [],
+                        }))
+                      }
+                    >
+                      🤖 Auto-Detect
+                    </button>
+                    <button
+                      className={`control-btn ${demoState.selectedLayers.length === 6 ? "active" : ""}`}
+                      onClick={() =>
+                        setDemoState((prev) => ({
+                          ...prev,
+                          selectedLayers: [1, 2, 3, 4, 5, 6],
+                        }))
+                      }
+                    >
+                      🎯 All Layers
+                    </button>
+                  </div>
+                  <div className="layer-checkboxes">
+                    {[1, 2, 3, 4, 5, 6].map((layerId) => (
+                      <label key={layerId} className="layer-checkbox">
+                        <input
+                          type="checkbox"
+                          checked={demoState.selectedLayers.includes(layerId)}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setDemoState((prev) => ({
+                                ...prev,
+                                selectedLayers: [
+                                  ...prev.selectedLayers,
+                                  layerId,
+                                ].sort(),
+                              }));
+                            } else {
+                              setDemoState((prev) => ({
+                                ...prev,
+                                selectedLayers: prev.selectedLayers.filter(
+                                  (id) => id !== layerId,
+                                ),
+                              }));
+                            }
+                          }}
+                        />
+                        <span className="layer-label">Layer {layerId}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <div className="demo-upload-section">
               <div
                 className="upload-area"
@@ -460,7 +545,6 @@ function ImageGallery({ images }) {
                   type="file"
                   id="fileInput"
                   className="file-input"
-                  multiple
                   accept=".jsx,.tsx,.js,.ts"
                   onChange={handleFileUpload}
                   aria-label="Select files for analysis"
