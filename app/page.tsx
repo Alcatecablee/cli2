@@ -200,7 +200,7 @@ export default function HomePage() {
 
     return (
       impacts[issueType]?.[severity] ||
-      "Performance and maintainability improvements"
+      "Improves code standards and maintainability"
     );
   };
 
