@@ -166,6 +166,8 @@
   transition: var(--transition-smooth);
   cursor: pointer;
   overflow: hidden;
+  text-decoration: none;
+  color: inherit;
 }
 
 .brand-logo:hover {
