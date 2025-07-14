@@ -668,7 +668,6 @@ export default function Dashboard() {
         <header className="dashboard-header">
           <div className="header-title">
             <h1>NeuroLint Pro Dashboard</h1>
-            <p>Professional code analysis and automated fixing</p>
           </div>
 
           <div className="header-info">
