@@ -72,7 +72,7 @@
 
 /* Sidebar Styles - Glass Morphism */
 .dashboard-sidebar {
-  width: 280px;
+  width: var(--sidebar-width);
   background: linear-gradient(
     145deg,
     rgba(255, 255, 255, 0.12) 0%,
@@ -82,7 +82,9 @@
   border-right: 1px solid rgba(255, 255, 255, 0.15);
   display: flex;
   flex-direction: column;
-  transition: var(--transition-smooth);
+  transition:
+    width var(--transition-spring),
+    backdrop-filter var(--transition-smooth);
   position: relative;
   z-index: 10;
   backdrop-filter: blur(25px) saturate(1.2);
@@ -90,10 +92,24 @@
   box-shadow:
     4px 0 24px rgba(0, 0, 0, 0.15),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  overflow-x: hidden;
+  will-change: width;
 }
 
 .dashboard-sidebar.collapsed {
-  width: 70px;
+  width: var(--sidebar-collapsed-width);
+}
+
+.dashboard-sidebar.collapsed .sidebar-footer {
+  padding: 16px 8px;
+}
+
+.dashboard-sidebar.collapsed .user-info,
+.dashboard-sidebar.collapsed .brand-text,
+.dashboard-sidebar.collapsed .nav-content {
+  opacity: 0;
+  transform: translateX(-20px);
+  pointer-events: none;
 }
 
 .sidebar-header {
