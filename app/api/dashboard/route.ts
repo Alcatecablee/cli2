@@ -1,0 +1,327 @@
+import { NextResponse } from "next/server";
+import { randomUUID } from "crypto";
+
+// Simple session tracking for dashboard users (in production, use proper auth)
+const dashboardSessions = new Map<
+  string,
+  {
+    created: number;
+    lastUsed: number;
+    analysisCount: number;
+    plan: "free" | "professional" | "enterprise";
+  }
+>();
+
+const RATE_LIMITS = {
+  free: { maxAnalyses: 5, windowMs: 60 * 60 * 1000 }, // 5 per hour
+  professional: { maxAnalyses: 100, windowMs: 60 * 60 * 1000 }, // 100 per hour
+  enterprise: { maxAnalyses: 1000, windowMs: 60 * 60 * 1000 }, // 1000 per hour
+};
+
+function validateSession(sessionId?: string) {
+  if (!sessionId) {
+    // Create a new free session
+    const newSessionId = randomUUID();
+    dashboardSessions.set(newSessionId, {
+      created: Date.now(),
+      lastUsed: Date.now(),
+      analysisCount: 0,
+      plan: "free",
+    });
+    return {
+      sessionId: newSessionId,
+      session: dashboardSessions.get(newSessionId)!,
+    };
+  }
+
+  const session = dashboardSessions.get(sessionId);
+  if (!session) {
+    // Session expired or invalid, create new one
+    const newSessionId = randomUUID();
+    dashboardSessions.set(newSessionId, {
+      created: Date.now(),
+      lastUsed: Date.now(),
+      analysisCount: 0,
+      plan: "free",
+    });
+    return {
+      sessionId: newSessionId,
+      session: dashboardSessions.get(newSessionId)!,
+    };
+  }
+
+  // Update last used
+  session.lastUsed = Date.now();
+  return { sessionId, session };
+}
+
+function checkRateLimit(session: any): {
+  allowed: boolean;
+  remaining: number;
+  resetTime: number;
+} {
+  const limits = RATE_LIMITS[session.plan];
+  const now = Date.now();
+  const windowStart = now - limits.windowMs;
+
+  // Reset count if window has passed
+  if (session.lastUsed < windowStart) {
+    session.analysisCount = 0;
+  }
+
+  const remaining = Math.max(0, limits.maxAnalyses - session.analysisCount);
+  const allowed = session.analysisCount < limits.maxAnalyses;
+  const resetTime = session.lastUsed + limits.windowMs;
+
+  return { allowed, remaining, resetTime };
+}
+
+export async function POST(req: Request) {
+  const requestId = randomUUID().substring(0, 8);
+  const startTime = Date.now();
+
+  try {
+    const body = await req.json();
+    const {
+      code,
+      filename,
+      layers = "auto",
+      applyFixes = false,
+      sessionId,
+    } = body;
+
+    console.log(`[DASHBOARD API ${requestId}] Request:`, {
+      filename,
+      codeLength: code?.length,
+      layers,
+      applyFixes,
+      hasSession: !!sessionId,
+    });
+
+    // Validate session and get/create session
+    const { sessionId: validSessionId, session } = validateSession(sessionId);
+
+    // Check rate limits
+    const rateLimit = checkRateLimit(session);
+    if (!rateLimit.allowed) {
+      return NextResponse.json(
+        {
+          error: "Rate limit exceeded",
+          rateLimitInfo: {
+            plan: session.plan,
+            remaining: rateLimit.remaining,
+            resetTime: rateLimit.resetTime,
+          },
+          sessionId: validSessionId,
+        },
+        { status: 429 },
+      );
+    }
+
+    // Validate input
+    if (!code || typeof code !== "string") {
+      return NextResponse.json(
+        {
+          error: "Code is required and must be a string",
+          sessionId: validSessionId,
+        },
+        { status: 400 },
+      );
+    }
+
+    if (!filename || typeof filename !== "string") {
+      return NextResponse.json(
+        {
+          error: "Filename is required",
+          sessionId: validSessionId,
+        },
+        { status: 400 },
+      );
+    }
+
+    // File size limit (200KB for dashboard)
+    if (code.length > 200000) {
+      return NextResponse.json(
+        {
+          error: "File too large. Maximum size is 200KB for dashboard analysis",
+          sessionId: validSessionId,
+        },
+        { status: 413 },
+      );
+    }
+
+    // Validate file extension
+    if (!filename.match(/\.(ts|tsx|js|jsx)$/i)) {
+      return NextResponse.json(
+        {
+          error:
+            "Unsupported file type. Please upload .ts, .tsx, .js, or .jsx files",
+          sessionId: validSessionId,
+        },
+        { status: 400 },
+      );
+    }
+
+    console.log(
+      `[DASHBOARD API ${requestId}] Importing NeuroLint Pro engine...`,
+    );
+
+    // Import the real NeuroLint Pro engine
+    let NeuroLintPro;
+    try {
+      NeuroLintPro = await import("../../../neurolint-pro.js");
+    } catch (importError) {
+      console.error(
+        `[DASHBOARD API ${requestId}] Engine import failed:`,
+        importError,
+      );
+      return NextResponse.json(
+        {
+          error: "Analysis engine unavailable",
+          sessionId: validSessionId,
+        },
+        { status: 500 },
+      );
+    }
+
+    const engine = NeuroLintPro.default || NeuroLintPro;
+    if (!engine || typeof engine !== "function") {
+      return NextResponse.json(
+        {
+          error: "Analysis engine misconfigured",
+          sessionId: validSessionId,
+        },
+        { status: 500 },
+      );
+    }
+
+    // Parse layers parameter
+    let layersToUse = null;
+    if (layers === "auto") {
+      layersToUse = null; // Let engine auto-detect
+    } else if (layers === "all") {
+      layersToUse = [1, 2, 3, 4, 5, 6];
+    } else if (Array.isArray(layers)) {
+      layersToUse = layers.filter(
+        (l) => typeof l === "number" && l >= 1 && l <= 6,
+      );
+    }
+
+    console.log(`[DASHBOARD API ${requestId}] Running analysis...`);
+
+    // Run the analysis
+    const result = await engine(
+      code,
+      filename,
+      !applyFixes, // dryRun = true when applyFixes = false
+      layersToUse,
+      {
+        isDashboard: true,
+        singleFile: true,
+        verbose: false,
+        requestId,
+      },
+    );
+
+    // Increment analysis count
+    session.analysisCount++;
+
+    const processingTime = Date.now() - startTime;
+    const newRateLimit = checkRateLimit(session);
+
+    console.log(`[DASHBOARD API ${requestId}] Analysis complete:`, {
+      success: result?.success,
+      processingTime,
+      remaining: newRateLimit.remaining,
+    });
+
+    // Return enhanced result with session info
+    const enhancedResult = {
+      ...result,
+      sessionInfo: {
+        sessionId: validSessionId,
+        plan: session.plan,
+        analysisCount: session.analysisCount,
+        rateLimitInfo: {
+          remaining: newRateLimit.remaining,
+          resetTime: newRateLimit.resetTime,
+          plan: session.plan,
+        },
+      },
+      metadata: {
+        requestId,
+        processingTimeMs: processingTime,
+        timestamp: new Date().toISOString(),
+        version: "dashboard-1.0.0",
+      },
+    };
+
+    return NextResponse.json(enhancedResult);
+  } catch (error) {
+    const processingTime = Date.now() - startTime;
+    console.error(`[DASHBOARD API ${requestId}] Error:`, error);
+
+    return NextResponse.json(
+      {
+        error: "Analysis failed",
+        message: error instanceof Error ? error.message : "Unknown error",
+        metadata: {
+          requestId,
+          processingTimeMs: processingTime,
+          timestamp: new Date().toISOString(),
+        },
+      },
+      { status: 500 },
+    );
+  }
+}
+
+// Health check and session info endpoint
+export async function GET(req: Request) {
+  const url = new URL(req.url);
+  const sessionId = url.searchParams.get("sessionId");
+
+  if (sessionId) {
+    // Return session info
+    const session = dashboardSessions.get(sessionId);
+    if (session) {
+      const rateLimit = checkRateLimit(session);
+      return NextResponse.json({
+        sessionId,
+        plan: session.plan,
+        analysisCount: session.analysisCount,
+        rateLimitInfo: {
+          remaining: rateLimit.remaining,
+          resetTime: rateLimit.resetTime,
+          plan: session.plan,
+        },
+        created: new Date(session.created).toISOString(),
+        lastUsed: new Date(session.lastUsed).toISOString(),
+      });
+    }
+  }
+
+  // General health check
+  return NextResponse.json({
+    status: "healthy",
+    service: "NeuroLint Pro Dashboard API",
+    timestamp: new Date().toISOString(),
+    activeSessions: dashboardSessions.size,
+    plans: Object.keys(RATE_LIMITS),
+  });
+}
+
+// Clean up old sessions every hour
+setInterval(
+  () => {
+    const now = Date.now();
+    const TWENTY_FOUR_HOURS = 24 * 60 * 60 * 1000;
+
+    for (const [sessionId, session] of dashboardSessions.entries()) {
+      if (now - session.lastUsed > TWENTY_FOUR_HOURS) {
+        dashboardSessions.delete(sessionId);
+      }
+    }
+  },
+  60 * 60 * 1000,
+);
