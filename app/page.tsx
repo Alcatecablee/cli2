@@ -479,32 +479,221 @@ function ImageGallery({ images }) {
                 </p>
                 <div className="sample-buttons">
                   <button
-                    className="sample-btn"
+                    className={`sample-btn ${demoState.isLoading && demoState.currentSample === "missing-keys" ? "loading" : ""}`}
                     onClick={() => loadSampleCode("missing-keys")}
+                    disabled={demoState.isLoading}
                   >
-                    Missing Keys
+                    {demoState.isLoading &&
+                    demoState.currentSample === "missing-keys"
+                      ? "Analyzing..."
+                      : "Missing Keys & Entities"}
                   </button>
                   <button
-                    className="sample-btn"
+                    className={`sample-btn ${demoState.isLoading && demoState.currentSample === "html-entities" ? "loading" : ""}`}
                     onClick={() => loadSampleCode("html-entities")}
+                    disabled={demoState.isLoading}
                   >
-                    HTML Entities
+                    {demoState.isLoading &&
+                    demoState.currentSample === "html-entities"
+                      ? "Analyzing..."
+                      : "HTML Entity Corruption"}
                   </button>
                   <button
-                    className="sample-btn"
+                    className={`sample-btn ${demoState.isLoading && demoState.currentSample === "ssr-issues" ? "loading" : ""}`}
                     onClick={() => loadSampleCode("ssr-issues")}
+                    disabled={demoState.isLoading}
                   >
-                    SSR Issues
+                    {demoState.isLoading &&
+                    demoState.currentSample === "ssr-issues"
+                      ? "Analyzing..."
+                      : "SSR Hydration Issues"}
                   </button>
                   <button
-                    className="sample-btn"
+                    className={`sample-btn ${demoState.isLoading && demoState.currentSample === "accessibility" ? "loading" : ""}`}
                     onClick={() => loadSampleCode("accessibility")}
+                    disabled={demoState.isLoading}
                   >
-                    Accessibility
+                    {demoState.isLoading &&
+                    demoState.currentSample === "accessibility"
+                      ? "Analyzing..."
+                      : "Accessibility & Testing"}
                   </button>
                 </div>
               </div>
             </div>
+
+            {/* Sophisticated Analysis Results Display */}
+            {demoState.showResults && demoState.result && (
+              <div className="demo-results">
+                <h3 className="results-title">
+                  NeuroLint Pro Analysis Results
+                </h3>
+
+                {demoState.result.success ? (
+                  <>
+                    {/* Analysis Summary */}
+                    {demoState.result.analysis && (
+                      <div className="analysis-summary">
+                        <div className="analysis-grid">
+                          <div className="analysis-card">
+                            <div className="analysis-label">
+                              Confidence Score
+                            </div>
+                            <div className="analysis-value">
+                              {(
+                                demoState.result.analysis.confidence * 100
+                              ).toFixed(1)}
+                              %
+                            </div>
+                          </div>
+                          <div className="analysis-card">
+                            <div className="analysis-label">Impact Level</div>
+                            <div className="analysis-value">
+                              {demoState.result.analysis.estimatedImpact.level.toUpperCase()}
+                            </div>
+                          </div>
+                          <div className="analysis-card">
+                            <div className="analysis-label">Issues Found</div>
+                            <div className="analysis-value">
+                              {demoState.result.analysis.detectedIssues.length}
+                            </div>
+                          </div>
+                          <div className="analysis-card">
+                            <div className="analysis-label">
+                              Recommended Layers
+                            </div>
+                            <div className="analysis-value">
+                              {demoState.result.analysis.recommendedLayers.join(
+                                ", ",
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Detected Issues Breakdown */}
+                    {demoState.result.analysis?.detectedIssues &&
+                      demoState.result.analysis.detectedIssues.length > 0 && (
+                        <div className="issues-breakdown">
+                          <h4>Detected Issues by Layer</h4>
+                          <div className="issues-list">
+                            {demoState.result.analysis.detectedIssues.map(
+                              (issue, index) => (
+                                <div
+                                  key={index}
+                                  className={`issue-item severity-${issue.severity}`}
+                                >
+                                  <div className="issue-header">
+                                    <span className="issue-type">
+                                      Layer {issue.fixedByLayer}
+                                    </span>
+                                    <span
+                                      className={`issue-severity ${issue.severity}`}
+                                    >
+                                      {issue.severity.toUpperCase()}
+                                    </span>
+                                  </div>
+                                  <div className="issue-description">
+                                    {issue.description}
+                                  </div>
+                                  <div className="issue-pattern">
+                                    Pattern: {issue.pattern}
+                                  </div>
+                                  {issue.count && (
+                                    <div className="issue-count">
+                                      {issue.count} occurrences
+                                    </div>
+                                  )}
+                                </div>
+                              ),
+                            )}
+                          </div>
+                        </div>
+                      )}
+
+                    {/* Layer Execution Results */}
+                    {demoState.result.layers &&
+                      demoState.result.layers.length > 0 && (
+                        <div className="layer-results">
+                          <h4>Layer Execution Summary</h4>
+                          <div className="layers-grid">
+                            {demoState.result.layers.map((layer) => (
+                              <div
+                                key={layer.layerId}
+                                className={`layer-card ${layer.success ? "success" : "failed"}`}
+                              >
+                                <div className="layer-header">
+                                  <span className="layer-name">
+                                    Layer {layer.layerId}
+                                  </span>
+                                  <span
+                                    className={`layer-status ${layer.success ? "success" : "failed"}`}
+                                  >
+                                    {layer.success ? "✅" : "❌"}
+                                  </span>
+                                </div>
+                                <div className="layer-time">
+                                  {layer.executionTime.toFixed(0)}ms
+                                </div>
+                                {layer.improvements &&
+                                  layer.improvements.length > 0 && (
+                                    <div className="layer-improvements">
+                                      {layer.improvements.map(
+                                        (improvement, index) => (
+                                          <div
+                                            key={index}
+                                            className="improvement-item"
+                                          >
+                                            • {improvement}
+                                          </div>
+                                        ),
+                                      )}
+                                    </div>
+                                  )}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                    {/* Before/After Code Display */}
+                    {demoState.result.originalCode &&
+                      demoState.result.transformed && (
+                        <div className="code-comparison">
+                          <h4>Before & After Comparison</h4>
+                          <div className="code-panels">
+                            <div className="code-panel">
+                              <div className="code-panel-header">
+                                Original Code
+                              </div>
+                              <pre className="code-block original">
+                                <code>{demoState.result.originalCode}</code>
+                              </pre>
+                            </div>
+                            <div className="code-panel">
+                              <div className="code-panel-header">
+                                NeuroLint Pro Fixed
+                              </div>
+                              <pre className="code-block transformed">
+                                <code>{demoState.result.transformed}</code>
+                              </pre>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                  </>
+                ) : (
+                  <div className="error-result">
+                    <h4>Analysis Failed</h4>
+                    <p>
+                      {demoState.result.error ||
+                        "Unknown error occurred during analysis"}
+                    </p>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </section>
 
