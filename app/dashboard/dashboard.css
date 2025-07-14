@@ -110,6 +110,19 @@
   opacity: 0;
   transform: translateX(-20px);
   pointer-events: none;
+  transition:
+    opacity 0.2s ease 0.1s,
+    transform 0.2s ease 0.1s;
+}
+
+.dashboard-sidebar:not(.collapsed) .user-info,
+.dashboard-sidebar:not(.collapsed) .brand-text,
+.dashboard-sidebar:not(.collapsed) .nav-content {
+  opacity: 1;
+  transform: translateX(0);
+  transition:
+    opacity 0.3s ease 0.2s,
+    transform 0.3s ease 0.2s;
 }
 
 .sidebar-header {
