@@ -300,11 +300,36 @@ function ImageGallery({ images }) {
 
     const file = files[0];
 
-    // Validate file type
-    if (!file.name.match(/\.(ts|tsx|js|jsx)$/)) {
-      alert(
-        "Please upload a TypeScript or JavaScript React file (.ts, .tsx, .js, .jsx)",
-      );
+    // Comprehensive file validation
+    if (!file.name.match(/\.(ts|tsx|js|jsx)$/i)) {
+      setDemoState((prev) => ({
+        ...prev,
+        result: {
+          success: false,
+          error:
+            "Please upload a TypeScript or JavaScript React file (.ts, .tsx, .js, .jsx)",
+        },
+        showResults: true,
+      }));
+      return;
+    }
+
+    // File size validation (100KB limit)
+    if (file.size > 100000) {
+      setDemoState((prev) => ({
+        ...prev,
+        result: {
+          success: false,
+          error: "File too large. Maximum size is 100KB.",
+        },
+        showResults: true,
+      }));
+      return;
+    }
+
+    // Prevent multiple simultaneous uploads
+    if (demoState.isLoading) {
+      console.warn("Analysis already in progress, skipping upload");
       return;
     }
 
