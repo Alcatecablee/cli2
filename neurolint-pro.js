@@ -1632,31 +1632,71 @@ async function NeuroLintPro(
     let layersToExecute;
     let analysis;
 
+    console.log(
+      "%c🎯 LAYER SELECTION PROCESS",
+      "color: #9c27b0; font-weight: bold;",
+    );
+
     if (requestedLayers) {
+      console.log("📌 Using Specific Layers:", requestedLayers);
       // Use provided layers but validate dependencies
       const validation =
         LayerDependencyManager.validateAndCorrectLayers(requestedLayers);
       layersToExecute = validation.correctedLayers;
 
+      console.log("✅ Layer Validation Complete:");
+      console.log("   - Original Requested:", requestedLayers);
+      console.log("   - Final Corrected:", layersToExecute);
+
       if (validation.warnings.length > 0) {
-        console.log("⚠️  Layer Dependencies:");
+        console.log(
+          "%c⚠️  DEPENDENCY WARNINGS:",
+          "color: #ff9800; font-weight: bold;",
+        );
         validation.warnings.forEach((warning) => console.log(`   ${warning}`));
       }
     } else {
+      console.log("🔍 Auto-detecting Required Layers...");
       // Auto-detect layers needed
       analysis = SmartLayerSelector.analyzeAndRecommend(code, filePath);
       layersToExecute = analysis.recommendedLayers;
 
-      console.log("🔍 Analysis Results:");
-      console.log(`   Confidence: ${(analysis.confidence * 100).toFixed(1)}%`);
       console.log(
-        `   Impact: ${analysis.estimatedImpact.level} (${analysis.estimatedImpact.description})`,
+        "%c🔍 SMART ANALYSIS RESULTS",
+        "color: #4caf50; font-weight: bold;",
       );
-      console.log(`   Recommended Layers: ${layersToExecute.join(", ")}`);
+      console.log(
+        `   📊 Confidence: ${(analysis.confidence * 100).toFixed(1)}%`,
+      );
+      console.log(`   🎯 Impact Level: ${analysis.estimatedImpact.level}`);
+      console.log(
+        `   📝 Impact Description: ${analysis.estimatedImpact.description}`,
+      );
+      console.log(`   🌟 Recommended Layers: [${layersToExecute.join(", ")}]`);
+      console.log(
+        `   📋 Issues Detected: ${analysis.detectedIssues?.length || 0}`,
+      );
 
       if (analysis.reasoning.length > 0) {
-        console.log("📋 Reasoning:");
-        analysis.reasoning.forEach((reason) => console.log(`   • ${reason}`));
+        console.log(
+          "%c📋 ANALYSIS REASONING:",
+          "color: #2196f3; font-weight: bold;",
+        );
+        analysis.reasoning.forEach((reason, index) =>
+          console.log(`   ${index + 1}. ${reason}`),
+        );
+      }
+
+      if (analysis.detectedIssues?.length > 0) {
+        console.log(
+          "%c🐛 DETECTED ISSUES:",
+          "color: #f44336; font-weight: bold;",
+        );
+        analysis.detectedIssues.forEach((issue, index) =>
+          console.log(
+            `   ${index + 1}. [${issue.layer}] ${issue.type}: ${issue.description}`,
+          ),
+        );
       }
     }
 
