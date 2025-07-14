@@ -783,14 +783,13 @@
 }
 
 .plan-badge {
-  background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%);
+  background: #ffffff;
   color: #000000;
   padding: 4px 8px;
-  border-radius: 6px;
+  border-radius: 4px;
   font-size: 10px;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: 0.5px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 .usage-info {
