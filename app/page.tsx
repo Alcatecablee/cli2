@@ -273,7 +273,7 @@ function ImageGallery({ images }) {
           applyFixes: demoState.applyFixes,
         };
 
-        console.log("🔍 [FRONTEND] Demo controls state:", {
+        console.log("[FRONTEND] Demo controls state:", {
           applyFixes: demoState.applyFixes,
           selectedLayers: demoState.selectedLayers,
           mode: demoState.applyFixes ? "Apply Fixes" : "Dry-Run",
