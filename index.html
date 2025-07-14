@@ -2087,18 +2087,26 @@ function UserProfile({ user, onUpdate }) {
         }
 
         const sample = sampleCodes[sampleType];
-        console.log("Sample data found:", !!sample);
-        console.log("Sample content:", sample);
+        console.log(
+          `🔍 Sample Lookup Result: ${!!sample ? "FOUND" : "NOT FOUND"}`,
+        );
 
         if (sample) {
-          console.log("Calling analyzeCode with real NeuroLint Pro engine");
-          console.log("- filename:", sample.filename);
-          console.log("- code length:", sample.code.length);
-          console.log("- is sample: true");
+          console.log(`📄 Sample Details:`);
+          console.log(`   - Filename: ${sample.filename}`);
+          console.log(`   - Code Length: ${sample.code.length} characters`);
+          console.log(`   - Description: ${sample.description}`);
+          console.log(`   - File Type: ${sample.filename.split(".").pop()}`);
+          console.log(
+            `🚀 Launching NeuroLint Pro analysis with sample code...`,
+          );
+
           analyzeCode(sample.code, sample.filename, true);
         } else {
-          console.error("Sample not found for type:", sampleType);
-          console.error("Available types:", Object.keys(sampleCodes));
+          console.error(`❌ Sample "${sampleType}" not found!`);
+          console.error(
+            `Available samples: [${Object.keys(sampleCodes).join(", ")}]`,
+          );
         }
       }
 
