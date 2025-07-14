@@ -2201,7 +2201,7 @@ legend {
     font-size: 0.8rem;
     min-height: 40px;
   }
-}
+
   .dashboard-content {
     padding: 20px;
     gap: 24px;
@@ -2255,7 +2255,7 @@ legend {
     margin-bottom: 16px;
   }
 
-    .controls-section,
+  .controls-section,
   .demo-controls,
   .analysis-overview,
   .code-comparison,
@@ -2315,7 +2315,7 @@ legend {
     width: 100%;
   }
 
-    .layers-grid {
+  .layers-grid {
     grid-template-columns: 1fr;
   }
 
