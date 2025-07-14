@@ -2225,7 +2225,9 @@ function UserProfile({ user, onUpdate }) {
           .render("#paypal-button-container");
       }
 
-      // Enhanced file upload handler
+      // === File Upload & Validation ===
+      const MAX_FILE_SIZE = 256 * 1024; // 256 KB demo limit
+
       async function handleFileUpload(event) {
         const files = event.target.files;
         if (files.length === 0) return;
@@ -2233,11 +2235,23 @@ function UserProfile({ user, onUpdate }) {
         const results = document.getElementById("results");
         results.classList.add("show");
 
-        // Process files sequentially for better UX
-        for (let i = 0; i < Math.min(files.length, 3); i++) {
+        let processedCount = 0;
+
+        for (let i = 0; i < files.length && processedCount < 3; i++) {
           const file = files[i];
+
+          // Client-side size validation
+          if (file.size > MAX_FILE_SIZE) {
+            displayError(
+              file.name,
+              `File is ${(file.size / 1024).toFixed(1)} KB. Demo limit is ${(MAX_FILE_SIZE / 1024).toFixed(0)} KB per file.`,
+            );
+            continue; // Skip oversized file but continue processing others
+          }
+
           const content = await file.text();
           await analyzeCode(content, file.name, false);
+          processedCount++;
         }
 
         if (files.length > 3) {
