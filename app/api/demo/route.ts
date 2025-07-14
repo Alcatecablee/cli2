@@ -140,13 +140,37 @@ export async function POST(req: Request) {
       );
     }
 
+    console.log("🔍 [DEMO API] Importing NeuroLint Pro engine...");
+
     // Dynamically import the CommonJS engine with interop.
     // The path is relative to <projectRoot>/app/api/demo/route.ts
     // ../../.. brings us back to project root where neurolint-pro.js resides.
-    const NeuroLintPro = await import("../../../neurolint-pro.js");
+    let NeuroLintPro;
+    try {
+      NeuroLintPro = await import("../../../neurolint-pro.js");
+      console.log("🔍 [DEMO API] Engine imported successfully:", {
+        hasDefault: !!NeuroLintPro.default,
+        hasEngine: !!NeuroLintPro,
+        type: typeof (NeuroLintPro.default || NeuroLintPro),
+      });
+    } catch (importError) {
+      console.log("🔍 [DEMO API] ERROR: Engine import failed:", importError);
+      return NextResponse.json(
+        {
+          error: "Failed to load NeuroLint Pro engine: " + importError.message,
+        },
+        { status: 500 },
+      );
+    }
+
     const engine = NeuroLintPro.default || NeuroLintPro;
 
     if (!engine || typeof engine !== "function") {
+      console.log("🔍 [DEMO API] ERROR: Engine not a function:", {
+        hasEngine: !!engine,
+        type: typeof engine,
+        keys: engine ? Object.keys(engine) : "null",
+      });
       return NextResponse.json(
         { error: "NeuroLint Pro engine not available or misconfigured" },
         { status: 500 },
