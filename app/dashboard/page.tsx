@@ -340,7 +340,7 @@ export default function Dashboard() {
 
     return (
       impacts[issueType]?.[severity] ||
-      "Performance and maintainability improvements"
+      "Improves code standards and maintainability"
     );
   };
 
