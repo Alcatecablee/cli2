@@ -210,6 +210,7 @@ export default function Dashboard() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [rateLimitInfo, setRateLimitInfo] = useState<any>(null);
+  const [userExpandedSidebar, setUserExpandedSidebar] = useState(false);
 
   // Save analysis to history
   const saveToHistory = useCallback(
