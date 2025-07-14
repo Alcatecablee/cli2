@@ -457,18 +457,29 @@ function ImageGallery({ images }) {
 
   return (
     <div>
+      {/* Skip to content link for accessibility */}
+      <a href="#main-content" className="skip-to-content">
+        Skip to main content
+      </a>
+
       {/* Header */}
-      <header className="header">
+      <header className="header" role="banner">
         <div className="header-inner">
-          <a href="/" className="logo">
+          <a
+            href="/"
+            className="logo"
+            aria-label="NeuroLint Pro - Go to homepage"
+          >
             NeuroLint Pro
           </a>
           <nav className="nav" role="navigation" aria-label="Main navigation">
-            <a href="#demo">Demo</a>
+            <a href="#demo" aria-describedby="demo-description">
+              Demo
+            </a>
             <button
               className="btn"
               onClick={openDashboard}
-              aria-label="Access dashboard"
+              aria-label="Access NeuroLint Pro dashboard"
             >
               Dashboard
             </button>
@@ -476,26 +487,33 @@ function ImageGallery({ images }) {
         </div>
       </header>
 
-      <main>
+      <main id="main-content" role="main">
         {/* Hero Section */}
-        <section className="hero">
-          <div className="hero-subtitle">Automated Code Fixing Service</div>
-          <h1 className="typewriter" aria-live="polite">
+        <section className="hero" aria-labelledby="hero-title">
+          <div className="hero-subtitle" role="text" aria-label="Service type">
+            Automated Code Fixing Service
+          </div>
+          <h1
+            id="hero-title"
+            className="typewriter"
+            aria-live="polite"
+            aria-atomic="true"
+          >
             {currentText}
           </h1>
-          <p className="hero-desc">
+          <p className="hero-desc" role="text">
             Automated multi-layer code fixing for React and Next.js. Resolves
             common issues—HTML entities, missing keys, SSR safety—using a
             validated 6-layer pipeline with automatic rollback.
           </p>
-          <div className="hero-actions">
-            <a href="#demo" className="btn" aria-label="Try free demo">
+          <div className="hero-actions" role="group" aria-label="Main actions">
+            <a href="#demo" className="btn" aria-describedby="demo-description">
               Try Demo
             </a>
             <button
               className="btn"
               onClick={openDashboard}
-              aria-label="Access dashboard"
+              aria-label="Access NeuroLint Pro dashboard for your projects"
             >
               Dashboard
             </button>
@@ -503,29 +521,44 @@ function ImageGallery({ images }) {
         </section>
 
         {/* Demo Section */}
-        <section id="demo" className="demo-section">
+        <section
+          id="demo"
+          className="demo-section"
+          aria-labelledby="demo-title"
+        >
           <div className="demo-container">
-            <h2 className="section-title">Try NeuroLint Pro Live</h2>
-            <p className="section-subtitle">
+            <h2 id="demo-title" className="section-title">
+              Try NeuroLint Pro Live
+            </h2>
+            <p id="demo-description" className="section-subtitle">
               Upload your React/Next.js files and see real fixes applied using
               our 6-layer system. Dry-run mode perfect for demos returns
               analysis without changes, letting you explore safely.
             </p>
 
             {/* Advanced Demo Controls */}
-            <div className="demo-controls">
-              <h3>Analysis Configuration</h3>
+            <div
+              className="demo-controls"
+              role="region"
+              aria-labelledby="controls-title"
+            >
+              <h3 id="controls-title">Analysis Configuration</h3>
               <div className="controls-grid">
-                <div className="control-group">
-                  <label className="control-label">Mode</label>
-                  <div className="control-options">
+                <fieldset className="control-group">
+                  <legend className="control-label">Mode</legend>
+                  <div
+                    className="control-options"
+                    role="radiogroup"
+                    aria-labelledby="mode-legend"
+                  >
                     <button
                       className={`control-btn ${!demoState.applyFixes ? "active" : ""}`}
                       onClick={() =>
                         setDemoState((prev) => ({ ...prev, applyFixes: false }))
                       }
-                      aria-pressed={!demoState.applyFixes}
-                      aria-label="Enable dry-run mode for analysis only"
+                      role="radio"
+                      aria-checked={!demoState.applyFixes}
+                      aria-describedby="dry-run-description"
                     >
                       Dry-Run (Analysis Only)
                     </button>
@@ -534,17 +567,31 @@ function ImageGallery({ images }) {
                       onClick={() =>
                         setDemoState((prev) => ({ ...prev, applyFixes: true }))
                       }
-                      aria-pressed={demoState.applyFixes}
-                      aria-label="Enable apply fixes mode to modify code"
+                      role="radio"
+                      aria-checked={demoState.applyFixes}
+                      aria-describedby="apply-fixes-description"
                     >
                       Apply Fixes
                     </button>
                   </div>
-                </div>
+                  <div id="dry-run-description" className="sr-only">
+                    Analyze code without making changes
+                  </div>
+                  <div id="apply-fixes-description" className="sr-only">
+                    Analyze and modify your code files
+                  </div>
+                </fieldset>
 
-                <div className="control-group">
-                  <label className="control-label">Layer Selection</label>
-                  <div className="layer-controls">
+                <fieldset className="control-group">
+                  <legend className="control-label">Layer Selection</legend>
+                  <div
+                    className="layer-controls"
+                    role="group"
+                    aria-labelledby="layer-presets"
+                  >
+                    <span id="layer-presets" className="sr-only">
+                      Layer presets
+                    </span>
                     <button
                       className={`control-btn ${demoState.selectedLayers.length === 0 ? "active" : ""}`}
                       onClick={() =>
@@ -553,6 +600,8 @@ function ImageGallery({ images }) {
                           selectedLayers: [],
                         }))
                       }
+                      aria-pressed={demoState.selectedLayers.length === 0}
+                      aria-describedby="auto-detect-description"
                     >
                       Auto-Detect
                     </button>
@@ -564,11 +613,26 @@ function ImageGallery({ images }) {
                           selectedLayers: [1, 2, 3, 4, 5, 6],
                         }))
                       }
+                      aria-pressed={demoState.selectedLayers.length === 6}
+                      aria-describedby="all-layers-description"
                     >
                       All Layers
                     </button>
                   </div>
-                  <div className="layer-checkboxes">
+                  <div id="auto-detect-description" className="sr-only">
+                    Let NeuroLint Pro automatically select appropriate layers
+                  </div>
+                  <div id="all-layers-description" className="sr-only">
+                    Run all 6 layers of analysis and fixes
+                  </div>
+                  <div
+                    className="layer-checkboxes"
+                    role="group"
+                    aria-labelledby="individual-layers"
+                  >
+                    <span id="individual-layers" className="sr-only">
+                      Individual layer selection
+                    </span>
                     {[1, 2, 3, 4, 5, 6].map((layerId) => (
                       <label key={layerId} className="layer-checkbox">
                         <input
@@ -592,12 +656,24 @@ function ImageGallery({ images }) {
                               }));
                             }
                           }}
+                          aria-describedby={`layer-${layerId}-description`}
                         />
                         <span className="layer-label">Layer {layerId}</span>
+                        <span
+                          id={`layer-${layerId}-description`}
+                          className="sr-only"
+                        >
+                          {layerId === 1 && "Configuration fixes"}
+                          {layerId === 2 && "Pattern detection and cleanup"}
+                          {layerId === 3 && "Component improvements"}
+                          {layerId === 4 && "Hydration safety"}
+                          {layerId === 5 && "Next.js optimizations"}
+                          {layerId === 6 && "Testing enhancements"}
+                        </span>
                       </label>
                     ))}
                   </div>
-                </div>
+                </fieldset>
               </div>
             </div>
 
@@ -605,11 +681,21 @@ function ImageGallery({ images }) {
               <div
                 className="upload-area"
                 onClick={() => document.getElementById("fileInput")?.click()}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    document.getElementById("fileInput")?.click();
+                  }
+                }}
                 role="button"
-                aria-label="Upload files for demo analysis"
+                tabIndex={0}
+                aria-label="Upload React or Next.js files for analysis"
+                aria-describedby="upload-instructions"
               >
                 <h3>Upload Your Files</h3>
-                <p>Drop React/Next.js files here or click to browse</p>
+                <p id="upload-instructions">
+                  Drop React/Next.js files here or click to browse
+                </p>
                 <p style={{ fontSize: "0.85rem", opacity: 0.7 }}>
                   Supports .jsx, .tsx, .js, .ts files
                 </p>
@@ -619,12 +705,20 @@ function ImageGallery({ images }) {
                   className="file-input"
                   accept=".jsx,.tsx,.js,.ts"
                   onChange={handleFileUpload}
-                  aria-label="Select files for analysis"
+                  aria-describedby="file-types"
                 />
+                <span id="file-types" className="sr-only">
+                  Accepted file types: JavaScript JSX, TypeScript TSX,
+                  JavaScript, and TypeScript files
+                </span>
               </div>
 
-              <div className="sample-code-section">
-                <h3>Try Sample Code</h3>
+              <div
+                className="sample-code-section"
+                role="region"
+                aria-labelledby="sample-title"
+              >
+                <h3 id="sample-title">Try Sample Code</h3>
                 <p
                   style={{
                     color: "rgba(255, 255, 255, 0.7)",
@@ -633,7 +727,11 @@ function ImageGallery({ images }) {
                 >
                   See real fixes on common React issues
                 </p>
-                <div className="sample-buttons">
+                <div
+                  className="sample-buttons"
+                  role="group"
+                  aria-labelledby="sample-title"
+                >
                   <button
                     className={`sample-btn ${demoState.isLoading && demoState.currentSample === "missing-keys" ? "loading" : ""}`}
                     onClick={() => loadSampleCode("missing-keys")}
