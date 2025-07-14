@@ -256,8 +256,8 @@ function ImageGallery({ images }) {
       }));
 
       try {
-        console.log("🔍 [FRONTEND] Starting sample analysis for:", sampleKey);
-        console.log("🔍 [FRONTEND] Sample code length:", sample.code.length);
+        console.log("[FRONTEND] Starting sample analysis for:", sampleKey);
+        console.log("[FRONTEND] Sample code length:", sample.code.length);
 
         // Add timeout and abort controller for better UX
         const controller = new AbortController();
