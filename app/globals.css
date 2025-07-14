@@ -357,15 +357,10 @@ a {
 }
 
 .sample-code-section {
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.02) 0%,
-    rgba(255, 255, 255, 0.005) 100%
-  );
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #000000;
+  border: 1px solid #4a4a4a;
   border-radius: 16px;
   padding: 2rem;
-  backdrop-filter: blur(10px);
 }
 
 .sample-code-section h3 {
