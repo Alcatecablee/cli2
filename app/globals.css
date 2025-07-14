@@ -1302,23 +1302,27 @@ legend {
 }
 
 .issue-severity.critical {
-  background: rgba(255, 255, 255, 0.1);
-  color: #ffffff;
+  background: var(--error-glow);
+  color: var(--status-error);
+  border: 1px solid rgba(229, 62, 62, 0.3);
 }
 
 .issue-severity.high {
-  background: rgba(255, 255, 255, 0.1);
-  color: #ffffff;
+  background: var(--processing-glow);
+  color: var(--status-processing);
+  border: 1px solid rgba(255, 152, 0, 0.3);
 }
 
 .issue-severity.medium {
-  background: rgba(255, 255, 255, 0.05);
-  color: #666666;
+  background: rgba(255, 215, 0, 0.08);
+  color: var(--status-warning);
+  border: 1px solid rgba(255, 215, 0, 0.3);
 }
 
 .issue-severity.low {
-  background: rgba(255, 255, 255, 0.05);
-  color: #666666;
+  background: var(--info-glow);
+  color: var(--status-info);
+  border: 1px solid rgba(33, 150, 243, 0.3);
 }
 
 .issue-description {
