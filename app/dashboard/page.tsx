@@ -939,21 +939,21 @@ export default function Dashboard() {
                       </button>
                     ))}
                   </div>
-                </div>
+                                </div>
               </div>
 
-                {dashboardState.currentFile && (
-                  <div className="current-file-info">
-                    <h4>Current File</h4>
-                    <div className="file-card">
-                      <span className="file-name">
-                        {dashboardState.currentFile}
-                      </span>
-                      <span className="file-status">Ready for analysis</span>
-                    </div>
+              {dashboardState.currentFile && (
+                <div className="current-file-info">
+                  <h4>Current File</h4>
+                  <div className="file-card">
+                    <span className="file-name">
+                      {dashboardState.currentFile}
+                    </span>
+                    <span className="file-status">Ready for analysis</span>
                   </div>
-                )}
-              </div>
+                </div>
+              )}
+            </div>
             </div>
           )}
 
