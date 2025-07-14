@@ -225,8 +225,8 @@ function ImageGallery({ images }) {
     alert(`Opening payment modal for ${plan} plan`);
   };
 
-  // Sophisticated sample code loading with real engine integration
-  const loadSampleCode = async (sampleKey: string) => {
+    // Sophisticated sample code loading with real engine integration
+  const loadSampleCode = useCallback(async (sampleKey: string) => {
     const sample = sampleCodes[sampleKey as keyof typeof sampleCodes];
     if (!sample) {
       console.error(`Sample code '${sampleKey}' not found`);
@@ -523,7 +523,7 @@ function ImageGallery({ images }) {
                 <div className="control-group">
                   <label className="control-label">Mode</label>
                   <div className="control-options">
-                    <button
+                                        <button
                       className={`control-btn ${!demoState.applyFixes ? "active" : ""}`}
                       onClick={() =>
                         setDemoState((prev) => ({ ...prev, applyFixes: false }))
