@@ -626,7 +626,7 @@ export default function Dashboard() {
                   className="upload-area"
                   onClick={() => fileInputRef.current?.click()}
                 >
-                  <div className="upload-icon">📄</div>
+                  <div className="upload-icon">+</div>
                   <h3>Upload Code Files</h3>
                   <p>Drag and drop files here or click to browse</p>
                   <p className="file-types">
