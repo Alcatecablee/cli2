@@ -698,3 +698,368 @@ a {
     animation: none !important;
   }
 }
+
+/* Sophisticated Demo Results Styling */
+.sample-btn.loading {
+  background: rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.6);
+  cursor: not-allowed;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.sample-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.demo-results {
+  margin-top: 3rem;
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  backdrop-filter: blur(20px);
+}
+
+.results-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+/* Analysis Summary Grid */
+.analysis-summary {
+  margin-bottom: 2rem;
+}
+
+.analysis-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.analysis-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.analysis-label {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+.analysis-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #ffffff;
+  font-family: var(--font-mono);
+}
+
+/* Issues Breakdown */
+.issues-breakdown {
+  margin-bottom: 2rem;
+}
+
+.issues-breakdown h4 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 1rem;
+}
+
+.issues-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.issue-item {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 1rem;
+  border-left-width: 4px;
+}
+
+.issue-item.severity-critical {
+  border-left-color: #ef4444;
+}
+
+.issue-item.severity-high {
+  border-left-color: #f97316;
+}
+
+.issue-item.severity-medium {
+  border-left-color: #eab308;
+}
+
+.issue-item.severity-low {
+  border-left-color: #22c55e;
+}
+
+.issue-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.issue-type {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+}
+
+.issue-severity {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.issue-severity.critical {
+  background: rgba(239, 68, 68, 0.2);
+  color: #fca5a5;
+}
+
+.issue-severity.high {
+  background: rgba(249, 115, 22, 0.2);
+  color: #fdba74;
+}
+
+.issue-severity.medium {
+  background: rgba(234, 179, 8, 0.2);
+  color: #fde047;
+}
+
+.issue-severity.low {
+  background: rgba(34, 197, 94, 0.2);
+  color: #86efac;
+}
+
+.issue-description {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 0.25rem;
+  line-height: 1.5;
+}
+
+.issue-pattern {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.6);
+  font-family: var(--font-mono);
+}
+
+.issue-count {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin-top: 0.25rem;
+}
+
+/* Layer Results */
+.layer-results {
+  margin-bottom: 2rem;
+}
+
+.layer-results h4 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 1rem;
+}
+
+.layers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+.layer-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 1rem;
+  border-left-width: 4px;
+}
+
+.layer-card.success {
+  border-left-color: #22c55e;
+}
+
+.layer-card.failed {
+  border-left-color: #ef4444;
+}
+
+.layer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.layer-name {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #ffffff;
+  font-family: var(--font-mono);
+}
+
+.layer-status.success {
+  color: #22c55e;
+}
+
+.layer-status.failed {
+  color: #ef4444;
+}
+
+.layer-time {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 0.5rem;
+  font-family: var(--font-mono);
+}
+
+.layer-improvements {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.4;
+}
+
+.improvement-item {
+  margin-bottom: 0.25rem;
+}
+
+/* Code Comparison */
+.code-comparison {
+  margin-top: 2rem;
+}
+
+.code-comparison h4 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 1rem;
+}
+
+.code-panels {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.code-panel {
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.code-panel-header {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.code-block {
+  padding: 1rem;
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.9);
+  background: transparent;
+  overflow-x: auto;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.code-block.original {
+  border-left: 3px solid #ef4444;
+}
+
+.code-block.transformed {
+  border-left: 3px solid #22c55e;
+}
+
+/* Error Result */
+.error-result {
+  text-align: center;
+  padding: 2rem;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 8px;
+}
+
+.error-result h4 {
+  color: #fca5a5;
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.error-result p {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.875rem;
+}
+
+/* Responsive Design for Demo Results */
+@media (max-width: 768px) {
+  .analysis-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .layers-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .code-panels {
+    grid-template-columns: 1fr;
+  }
+
+  .demo-results {
+    padding: 1.5rem;
+    margin-top: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .analysis-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .demo-results {
+    padding: 1rem;
+  }
+
+  .code-block {
+    font-size: 0.75rem;
+  }
+}
