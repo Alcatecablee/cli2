@@ -379,7 +379,7 @@ export default function Dashboard() {
 
           {dashboardState.currentFile && (
             <div className="current-file">
-              <span className="file-icon">📄</span>
+              <span className="file-icon">FILE</span>
               <span className="file-name">{dashboardState.currentFile}</span>
             </div>
           )}
