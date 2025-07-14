@@ -1602,8 +1602,28 @@ async function NeuroLintPro(
   requestedLayers = null,
   options = {},
 ) {
-  console.log("🧠 NeuroLint Pro - Premium Debugging Service");
-  console.log("==========================================");
+  console.log(
+    "%c🧠 NEUROLINT PRO ENGINE STARTED",
+    "color: #ff6b35; font-weight: bold; font-size: 18px; background: #000; padding: 4px;",
+  );
+  console.log(
+    "%c==========================================",
+    "color: #ff6b35; font-weight: bold;",
+  );
+  console.log(
+    "%c📋 ENGINE CONFIGURATION",
+    "color: #4fc3f7; font-weight: bold;",
+  );
+  console.log(`   📄 File: ${filePath}`);
+  console.log(
+    `   🔧 Mode: ${dryRun ? "🔍 Analysis Only (Demo)" : "⚡ Full Transform"}`,
+  );
+  console.log(
+    `   🎯 Requested Layers: ${requestedLayers || "🌟 Auto-detect (All 6)"}`,
+  );
+  console.log(`   📊 Code Size: ${code.length} characters`);
+  console.log(`   ⏱️ Start Time: ${new Date().toISOString()}`);
+  console.log(`   ���� Engine Options:`, options);
 
   const startTime = performance.now();
 
