@@ -385,9 +385,7 @@
   line-height: 1.2;
 }
 
-.collapsed .nav-content {
-  display: none;
-}
+/* Removed - handled by transform in sidebar.collapsed rule */
 
 /* Sidebar Footer */
 .sidebar-footer {
