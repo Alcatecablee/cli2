@@ -342,9 +342,16 @@ function ImageGallery({ images }) {
           if (error.name === "AbortError") {
             errorMessage =
               "Analysis timed out. Please try again with a smaller code sample.";
-          } else if (error.message.includes("fetch")) {
+          } else if (
+            error.message.includes("Network error") ||
+            error.message.includes("fetch") ||
+            error.message.includes("Failed to fetch")
+          ) {
             errorMessage =
-              "Network error. Please check your connection and try again.";
+              "Network connection issue. Please check your internet connection and try again.";
+          } else if (error.message.includes("TypeError: Failed to fetch")) {
+            errorMessage =
+              "Unable to connect to the server. Please refresh the page and try again.";
           } else {
             errorMessage = error.message;
           }
