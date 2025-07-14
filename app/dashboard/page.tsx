@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
+import "./dashboard.css";
 
 // Import the same result interfaces from the demo
 interface DemoResult {
