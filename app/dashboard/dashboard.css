@@ -710,19 +710,23 @@
   position: relative;
 }
 
-/* Simple, clean header */
+/* Centered header with rounded corners */
 .dashboard-header {
   padding: 24px 32px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  justify-content: center;
 }
 
 .header-content {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  max-width: 1200px;
-  margin: 0 auto;
-  gap: 40px;
+  gap: 32px;
+  padding: 16px 32px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  width: fit-content;
 }
 
 .header-title h1 {
