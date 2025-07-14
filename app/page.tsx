@@ -773,10 +773,10 @@ function ImageGallery({ images }) {
               {" • "}
               <span style={{ color: "#2196f3" }}>
                 {demoState.selectedLayers.length === 0
-                  ? "🌟 Auto-Detect Layers"
+                  ? "Auto-Detect Layers"
                   : demoState.selectedLayers.length === 6
-                    ? "📋 All 6 Layers"
-                    : `⚙️ Custom Layers [${demoState.selectedLayers.join(",")}]`}
+                    ? "All 6 Layers"
+                    : `Custom Layers [${demoState.selectedLayers.join(",")}]`}
               </span>
             </div>
 
