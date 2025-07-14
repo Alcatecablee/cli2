@@ -1055,7 +1055,7 @@ function ImageGallery({ images }) {
                                   marginBottom: "0.5rem",
                                 }}
                               >
-                                ✨ <strong>No Changes Needed</strong>
+                                <strong>No Changes Needed</strong>
                               </p>
                               <p style={{ fontSize: "0.9rem" }}>
                                 Your code is already in great shape! No fixes
