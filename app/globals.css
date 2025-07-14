@@ -422,8 +422,8 @@ a {
   padding: 0 2rem;
   display: grid;
   grid-template-columns: 1fr;
-  gap: 4rem;
-  margin-top: 2rem;
+  gap: 2rem;
+  margin-top: 0;
 }
 
 .demo-upload-section {
