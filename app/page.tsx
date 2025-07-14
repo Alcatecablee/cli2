@@ -768,9 +768,7 @@ function ImageGallery({ images }) {
               <span
                 style={{ color: demoState.applyFixes ? "#ff9800" : "#4caf50" }}
               >
-                {demoState.applyFixes
-                  ? "🔧 Apply Fixes Mode"
-                  : "🔍 Dry-Run Mode"}
+                {demoState.applyFixes ? "Apply Fixes Mode" : "Dry-Run Mode"}
               </span>
               {" • "}
               <span style={{ color: "#2196f3" }}>
