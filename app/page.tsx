@@ -319,7 +319,7 @@ function ImageGallery({ images }) {
         }));
       } catch (error) {
         console.error("🔍 [FRONTEND] Demo analysis failed:", error);
-        console.error("🔍 [FRONTEND] Error details:", {
+        console.error("���� [FRONTEND] Error details:", {
           name: error?.name,
           message: error?.message,
           stack: error?.stack,
@@ -686,7 +686,11 @@ function ImageGallery({ images }) {
                 <div className="sample-buttons">
                   <button
                     className={`sample-btn ${demoState.isLoading && demoState.currentSample === "missing-keys" ? "loading" : ""}`}
-                    onClick={() => loadSampleCode("missing-keys")}
+                    onClick={() => {
+                      console.log("🔍 [FRONTEND] Button clicked: missing-keys");
+                      alert("Button clicked! Check console for details.");
+                      loadSampleCode("missing-keys");
+                    }}
                     disabled={demoState.isLoading}
                   >
                     {demoState.isLoading &&
