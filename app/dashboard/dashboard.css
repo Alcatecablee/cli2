@@ -12,6 +12,21 @@
   --sidebar-width: 280px;
   --sidebar-collapsed-width: 70px;
   --focus-ring: 0 0 0 3px rgba(255, 255, 255, 0.2);
+
+  /* Unique color system - extending existing palette */
+  --status-active: #4caf50;
+  --status-processing: #ff9800;
+  --status-info: #2196f3;
+  --status-inactive: #666666;
+  --status-error: #e53e3e;
+  --status-warning: #ffd700;
+
+  /* Subtle tinted variants for backgrounds */
+  --active-glow: rgba(76, 175, 80, 0.12);
+  --processing-glow: rgba(255, 152, 0, 0.12);
+  --info-glow: rgba(33, 150, 243, 0.12);
+  --error-glow: rgba(229, 62, 62, 0.12);
+  --inactive-glow: rgba(102, 102, 102, 0.08);
 }
 
 /* Enhanced focus styles for accessibility */
