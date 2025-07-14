@@ -141,6 +141,14 @@
   -webkit-backdrop-filter: blur(15px);
 }
 
+/* Adjust header layout when collapsed */
+.dashboard-sidebar.collapsed .sidebar-header {
+  padding: 16px 8px;
+  justify-content: center;
+  flex-direction: column;
+  gap: 12px;
+}
+
 .brand {
   display: flex;
   align-items: center;
