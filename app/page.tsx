@@ -285,7 +285,7 @@ function ImageGallery({ images }) {
                 : `Custom [${demoState.selectedLayers.join(",")}]`,
         });
 
-        console.log("🔍 [FRONTEND] Request payload:", {
+        console.log("[FRONTEND] Request payload:", {
           codeLength: requestPayload.code.length,
           filename: requestPayload.filename,
           layers: requestPayload.layers,
