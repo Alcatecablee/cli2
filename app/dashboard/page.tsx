@@ -292,13 +292,13 @@ export default function Dashboard() {
     },
     {
       id: "history",
-      icon: "📈",
+      icon: "HI",
       label: "History",
       description: "Previous analyses",
     },
     {
       id: "settings",
-      icon: "⚙️",
+      icon: "SE",
       label: "Settings",
       description: "Configure preferences",
     },
