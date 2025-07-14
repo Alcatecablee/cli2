@@ -1618,7 +1618,7 @@ export default function Dashboard() {
                             <span className="stat-value">
                               {dashboardState.result.analysis.confidence}%
                             </span>
-                            <span className="stat-label">Confidence</span>
+                            <span className="stat-label">Analysis Score</span>
                           </div>
                           <div className="stat">
                             <span className="stat-value">
