@@ -273,6 +273,18 @@ function ImageGallery({ images }) {
           applyFixes: demoState.applyFixes,
         };
 
+        console.log("🔍 [FRONTEND] Demo controls state:", {
+          applyFixes: demoState.applyFixes,
+          selectedLayers: demoState.selectedLayers,
+          mode: demoState.applyFixes ? "Apply Fixes" : "Dry-Run",
+          layerMode:
+            demoState.selectedLayers.length === 0
+              ? "Auto-Detect"
+              : demoState.selectedLayers.length === 6
+                ? "All Layers"
+                : `Custom [${demoState.selectedLayers.join(",")}]`,
+        });
+
         console.log("🔍 [FRONTEND] Request payload:", {
           codeLength: requestPayload.code.length,
           filename: requestPayload.filename,
