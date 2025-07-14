@@ -2457,13 +2457,13 @@ function UserProfile({ user, onUpdate }) {
             "%c📡 SENDING TO NEUROLINT PRO ENGINE",
             "color: #ffa500; font-weight: bold;",
           );
-          console.log("🎯 API Endpoint: /api/analyze-stream");
+          console.log("🎯 API Endpoint: /api/demo");
           console.log("📦 Payload Summary:");
           console.log("  - Filename:", filename);
           console.log("  - Code Size:", code.length, "bytes");
           console.log("⏱️ Request Time:", new Date().toISOString());
 
-          const response = await fetch("/api/analyze-stream", {
+          const response = await fetch("/api/demo", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload),
