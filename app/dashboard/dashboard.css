@@ -387,9 +387,9 @@
 
 /* Removed - handled by transform in sidebar.collapsed rule */
 
-/* Sidebar Footer */
+/* Enhanced Sidebar Footer */
 .sidebar-footer {
-  padding: 24px;
+  padding: 20px;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   background: linear-gradient(
     135deg,
@@ -398,6 +398,13 @@
   );
   backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px);
+  transition: var(--transition-smooth);
+  position: relative;
+  z-index: 1;
+}
+
+.sidebar-footer.collapsed {
+  padding: 16px 8px;
 }
 
 .user-section {
