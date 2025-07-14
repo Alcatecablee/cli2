@@ -27,13 +27,18 @@ function isRateLimited(clientIP: string): boolean {
 // Consumes JSON: { code: string, filename: string, layers?: number[] | "auto" | "all", applyFixes?: boolean }
 // Returns the raw NeuroLintPro response or an error.
 export async function POST(req: Request) {
+  console.log("🔍 [DEMO API] Request received at:", new Date().toISOString());
+
   // Basic rate limiting
   const clientIP =
     req.headers.get("x-forwarded-for") ||
     req.headers.get("x-real-ip") ||
     "unknown";
 
+  console.log("🔍 [DEMO API] Client IP:", clientIP);
+
   if (isRateLimited(clientIP)) {
+    console.log("🔍 [DEMO API] Rate limit exceeded for:", clientIP);
     return NextResponse.json(
       { error: "Rate limit exceeded. Please try again later." },
       { status: 429 },
