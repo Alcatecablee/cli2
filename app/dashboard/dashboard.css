@@ -710,39 +710,19 @@
   position: relative;
 }
 
-/* Header container to center the header */
+/* Simple, clean header */
 .dashboard-header {
-  padding: 20px 24px;
-  display: flex;
-  justify-content: center;
-  position: relative;
+  padding: 24px 32px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* The actual centered header content */
 .header-content {
-  padding: 16px 32px;
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.08) 0%,
-    rgba(255, 255, 255, 0.04) 50%,
-    rgba(255, 255, 255, 0.02) 100%
-  );
   display: flex;
   align-items: center;
   justify-content: space-between;
-  min-height: 70px;
-  backdrop-filter: blur(25px) saturate(1.2);
-  -webkit-backdrop-filter: blur(25px) saturate(1.2);
-  box-shadow:
-    0 4px 24px rgba(0, 0, 0, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  opacity: 0;
-  animation: slideInDown 0.8s ease-out 0.3s both;
-  position: relative;
-  border-radius: 16px;
-  width: fit-content;
+  max-width: 1200px;
+  margin: 0 auto;
   gap: 40px;
-  max-width: 90%;
 }
 
 /* Add fade effect at the bottom of the centered header */
