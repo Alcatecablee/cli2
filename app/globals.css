@@ -741,8 +741,8 @@ a {
 
 @media (max-width: 480px) {
   .logo-img {
-    height: 28px;
-    max-width: 140px;
+    height: 18px;
+    max-width: 90px;
   }
 
   .header-inner {
