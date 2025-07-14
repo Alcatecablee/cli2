@@ -192,6 +192,34 @@
   filter: brightness(1.2) contrast(1.2);
 }
 
+/* Collapsed state for logo */
+.dashboard-sidebar.collapsed .brand-logo {
+  width: 36px;
+  height: 36px;
+}
+
+.dashboard-sidebar.collapsed .brand-logo img {
+  width: 24px;
+  height: 24px;
+}
+
+/* Add visual indicator for collapsed state */
+.dashboard-sidebar.collapsed::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 2px;
+  height: 100%;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.3) 0%,
+    rgba(255, 255, 255, 0.1) 50%,
+    rgba(255, 255, 255, 0.3) 100%
+  );
+  z-index: 1;
+}
+
 .brand-text {
   display: flex;
   flex-direction: column;
