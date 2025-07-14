@@ -269,6 +269,10 @@ export default function Dashboard() {
         if (result.sessionInfo) {
           setSessionId(result.sessionInfo.sessionId);
           setRateLimitInfo(result.sessionInfo.rateLimitInfo);
+          localStorage.setItem(
+            "neurolint-session-id",
+            result.sessionInfo.sessionId,
+          );
         }
 
         // Save to history if settings allow
