@@ -79,7 +79,6 @@
     rgba(255, 255, 255, 0.06) 50%,
     rgba(255, 255, 255, 0.03) 100%
   );
-  border-right: 1px solid rgba(255, 255, 255, 0.15);
   display: flex;
   flex-direction: column;
   transition:
@@ -94,6 +93,25 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
   overflow-x: hidden;
   will-change: width;
+}
+
+/* Add fade effect on the right edge */
+.dashboard-sidebar::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 20px;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.05) 30%,
+    rgba(255, 255, 255, 0.15) 70%,
+    rgba(255, 255, 255, 0.25) 100%
+  );
+  pointer-events: none;
+  z-index: 1;
 }
 
 .dashboard-sidebar.collapsed {
