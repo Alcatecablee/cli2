@@ -422,7 +422,7 @@ a {
   padding: 0 2rem;
   display: grid;
   grid-template-columns: 1fr;
-  gap: 1rem;
+  gap: 0.25rem;
   margin-top: 0;
 }
 
