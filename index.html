@@ -1836,1342 +1836,1342 @@
     </div>
 
     <script>
-      let selectedPlan = null;
+            let selectedPlan = null;
 
-      // Sample code examples for demonstration - MOVED TO TOP TO FIX INITIALIZATION ORDER
-      const sampleCodes = {
-        "missing-keys": {
-          filename: "UserList.jsx",
-          code: `import React from 'react';
+            // Sample code examples for demonstration - MOVED TO TOP TO FIX INITIALIZATION ORDER
+            const sampleCodes = {
+              "missing-keys": {
+                filename: "UserList.jsx",
+                code: `import React from 'react';
 
-export default function UserList({ users }) {
-  return (
-    <div className="user-list">
-      <h2>Active Users</h2>
-      {users.map(user => (
-        <div className="user-card">
-          <img src={user.avatar} />
-          <h3>{user.name}</h3>
-          <p>{user.email}</p>
-        </div>
-      ))}
-    </div>
-  );
-}`,
-          description:
-            "Missing key props in map function and img alt attributes",
-        },
-        "html-entities": {
-          filename: "ProductCard.jsx",
-          code: `import React from 'react';
-
-export default function ProductCard({ product }) {
-  const description = &quot;High-quality product with 5-star rating &amp; fast shipping&quot;;
-
-  console.log('Rendering product:', product.name);
-
-  return (
-    <div className="product-card">
-      <h3>{product.name}</h3>
-      <p className="price">$\{product.price}</p>
-      <p className="description">{description}</p>
-      <button onClick={() => console.log(&quot;Added to cart&quot;)}>
-        Add to Cart
-      </button>
-    </div>
-  );
-}`,
-          description:
-            "HTML entities and console.log statements that need cleanup",
-        },
-        "ssr-issues": {
-          filename: "ThemeProvider.jsx",
-          code: `import React, { useState, useEffect } from 'react';
-
-export default function ThemeProvider({ children }) {
-  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
-
-  useEffect(() => {
-    document.body.className = theme;
-    localStorage.setItem('theme', theme);
-  }, [theme]);
-
-  const toggleTheme = () => {
-    setTheme(current => current === 'light' ? 'dark' : 'light');
-  };
-
-  return (
-    <div className={\`theme-provider \${theme}\`}>
-      <button onClick={toggleTheme}>
-        Switch to {theme === 'light' ? 'dark' : 'light'} mode
-      </button>
-      {children}
-    </div>
-  );
-}`,
-          description:
-            "localStorage usage without SSR guards causing hydration issues",
-        },
-        accessibility: {
-          filename: "ImageGallery.jsx",
-          code: `import React from 'react';
-
-export default function ImageGallery({ images }) {
-  return (
-    <div className="gallery">
-      <h2>Photo Gallery</h2>
-      <div className="gallery-grid">
-        {images.map(image => (
-          <div className="gallery-item">
-            <img src={image.url} onClick={() => openModal(image)} />
-            <div className="overlay">
-              <span>{image.title}</span>
-            </div>
+      export default function UserList({ users }) {
+        return (
+          <div className="user-list">
+            <h2>Active Users</h2>
+            {users.map(user => (
+              <div className="user-card">
+                <img src={user.avatar} />
+                <h3>{user.name}</h3>
+                <p>{user.email}</p>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
-    </div>
-  );
-}`,
-          description:
-            "Missing alt attributes and accessibility improvements needed",
-        },
-        "nextjs-router": {
-          filename: "ClientComponent.tsx",
-          code: `import { useState } from 'react';
-
-import {
-import { Button, Card } from 'components/ui';
-
-'use client';
-
-export default function ClientComponent({ data }) {
-  const [count, setCount] = useState(0);
-
-  return (
-    <Card>
-      <h2>Interactive Component</h2>
-      <Button onClick={() => setCount(count + 1)}>
-        Count: {count}
-      </Button>
-    </Card>
-  );
-}`,
-          description:
-            "Corrupted import statements, misplaced 'use client' directive, and missing React imports for Next.js App Router",
-        },
-        "testing-validation": {
-          filename: "UserProfile.tsx",
-          code: `import React from 'react';
-
-function UserProfile({ user, onUpdate }) {
-  const handleSubmit = async (formData) => {
-    const response = await fetch('/api/users', {
-      method: 'POST',
-      body: JSON.stringify(formData)
-    });
-    const result = await response.json();
-    onUpdate(result);
-  };
-
-  return (
-    <div>
-      <h2>User Profile</h2>
-      <button onClick={handleSubmit}>
-        Update Profile
-      </button>
-      <img src={user.avatar} />
-    </div>
-  );
-}`,
-          description:
-            "Missing export, prop types, error handling, accessibility attributes, and loading states",
-        },
-      };
-
-      // Enhanced demo functionality with detailed analysis - MOVED TO TOP
-      let currentAnalysisResults = [];
-      let currentActiveTab = "overview";
-
-      /* -------------------- TAB ACCESSIBILITY -------------------- */
-      function initTabs() {
-        const tabList = document.querySelector(".analysis-tabs");
-        if (!tabList) return;
-
-        tabList.setAttribute("role", "tablist");
-
-        const tabs = tabList.querySelectorAll(".analysis-tab");
-        tabs.forEach((tab) => {
-          const name = tab.dataset.tab;
-          const panel = document.getElementById(`${name}-content`);
-          if (!panel) return;
-
-          // Tab attributes
-          tab.setAttribute("role", "tab");
-          tab.setAttribute("id", `tab-${name}`);
-          tab.setAttribute("aria-controls", `${name}-content`);
-          tab.setAttribute(
-            "aria-selected",
-            tab.classList.contains("active") ? "true" : "false",
-          );
-          tab.setAttribute(
-            "tabindex",
-            tab.classList.contains("active") ? "0" : "-1",
-          );
-
-          // Panel attributes
-          panel.setAttribute("role", "tabpanel");
-          panel.setAttribute("aria-labelledby", `tab-${name}`);
-          panel.hidden = !panel.classList.contains("active");
-
-          // Keyboard navigation
-          tab.addEventListener("keydown", (e) => {
-            if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
-              e.preventDefault();
-              const dir = e.key === "ArrowRight" ? 1 : -1;
-              const ordered = Array.from(tabs);
-              const idx = ordered.indexOf(tab);
-              let newIdx = (idx + dir + ordered.length) % ordered.length;
-              ordered[newIdx].focus();
-              switchTab(ordered[newIdx].dataset.tab);
-            }
-          });
-        });
-      }
-
-      function switchTab(tabName) {
-        const tabs = document.querySelectorAll(".analysis-tab");
-        const panels = document.querySelectorAll(".analysis-content");
-
-        tabs.forEach((tab) => {
-          const isActive = tab.dataset.tab === tabName;
-          tab.classList.toggle("active", isActive);
-          tab.setAttribute("aria-selected", isActive ? "true" : "false");
-          tab.setAttribute("tabindex", isActive ? "0" : "-1");
-        });
-
-        panels.forEach((panel) => {
-          const isActive = panel.id === `${tabName}-content`;
-          panel.classList.toggle("active", isActive);
-          panel.hidden = !isActive;
-        });
-
-        currentActiveTab = tabName;
-      }
-
-      // Initialize tabs once DOM is ready
-      document.addEventListener("DOMContentLoaded", initTabs);
-
-      function loadSampleCode(sampleType) {
-        console.log(
-          "%c🧪 LOADING SAMPLE CODE",
-          "color: #e91e63; font-weight: bold; font-size: 16px;",
         );
-        console.log(`📋 Sample Information:`);
-        console.log(`   - Type Requested: ${sampleType}`);
-        console.log(
-          `   - Available Types: [${Object.keys(sampleCodes).join(", ")}]`,
+      }`,
+                description:
+                  "Missing key props in map function and img alt attributes",
+              },
+              "html-entities": {
+                filename: "ProductCard.jsx",
+                code: `import React from 'react';
+
+      export default function ProductCard({ product }) {
+        const description = &quot;High-quality product with 5-star rating &amp; fast shipping&quot;;
+
+        console.log('Rendering product:', product.name);
+
+        return (
+          <div className="product-card">
+            <h3>{product.name}</h3>
+            <p className="price">$\{product.price}</p>
+            <p className="description">{description}</p>
+            <button onClick={() => console.log(&quot;Added to cart&quot;)}>
+              Add to Cart
+            </button>
+          </div>
         );
+      }`,
+                description:
+                  "HTML entities and console.log statements that need cleanup",
+              },
+              "ssr-issues": {
+                filename: "ThemeProvider.jsx",
+                code: `import React, { useState, useEffect } from 'react';
 
-        // Update active sample button
-        document.querySelectorAll(".sample-btn").forEach((btn) => {
-          btn.classList.remove("active");
-        });
-        const sampleButton = document.querySelector(
-          `[data-sample="${sampleType}"]`,
-        );
-        console.log("Found sample button:", !!sampleButton);
-        if (sampleButton) {
-          sampleButton.classList.add("active");
-          console.log("Sample button activated");
-        }
+      export default function ThemeProvider({ children }) {
+        const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
 
-        const sample = sampleCodes[sampleType];
-        console.log(
-          `🔍 Sample Lookup Result: ${!!sample ? "FOUND" : "NOT FOUND"}`,
-        );
+        useEffect(() => {
+          document.body.className = theme;
+          localStorage.setItem('theme', theme);
+        }, [theme]);
 
-        if (sample) {
-          console.log(`📄 Sample Details:`);
-          console.log(`   - Filename: ${sample.filename}`);
-          console.log(`   - Code Length: ${sample.code.length} characters`);
-          console.log(`   - Description: ${sample.description}`);
-          console.log(`   - File Type: ${sample.filename.split(".").pop()}`);
-          console.log(
-            `🚀 Launching NeuroLint Pro analysis with sample code...`,
-          );
-
-          analyzeCode(sample.code, sample.filename, true);
-        } else {
-          console.error(`❌ Sample "${sampleType}" not found!`);
-          console.error(
-            `Available samples: [${Object.keys(sampleCodes).join(", ")}]`,
-          );
-        }
-      }
-
-      // Typewriter effect for hero with cursor
-      const words = [
-        "Fix React Code Instantly",
-        "Safe Transformations",
-        "Smart Detection",
-        "6-Layer System",
-        "Error Recovery",
-        "Enterprise Ready",
-      ];
-      let wordIndex = 0;
-      let charIndex = 0;
-      let isDeleting = false;
-      let typewriterEl = document.getElementById("typewriter");
-
-      // Add cursor styling
-      const style = document.createElement("style");
-      style.textContent = `
-        .typewriter::after {
-          content: '|';
-          color: var(--foreground);
-          animation: blink 1s infinite;
-          margin-left: 2px;
-        }
-        @keyframes blink {
-          0%, 50% { opacity: 1; }
-          51%, 100% { opacity: 0; }
-        }
-        .hero {
-          animation: fadeInUp 1s ease-out;
-        }
-        @keyframes fadeInUp {
-          from {
-            opacity: 0;
-            transform: translateY(30px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        .feature-card {
-          animation: fadeInUp 0.8s ease-out forwards;
-          opacity: 0;
-        }
-
-        .feature-card:nth-child(3) { animation-delay: 0.1s; }
-        .feature-card:nth-child(4) { animation-delay: 0.2s; }
-        .feature-card:nth-child(5) { animation-delay: 0.3s; }
-        .feature-card:nth-child(6) { animation-delay: 0.4s; }
-        .feature-card:nth-child(7) { animation-delay: 0.5s; }
-        .feature-card:nth-child(8) { animation-delay: 0.6s; }
-
-        .header {
-          animation: slideDown 0.8s ease-out;
-        }
-
-        @keyframes slideDown {
-          from {
-            opacity: 0;
-            transform: translateY(-20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-      `;
-      document.head.appendChild(style);
-
-      function type() {
-        const word = words[wordIndex];
-        if (isDeleting) {
-          charIndex--;
-        } else {
-          charIndex++;
-        }
-        typewriterEl.textContent = word.substring(0, charIndex);
-        let delay = isDeleting ? 50 : 90;
-        if (!isDeleting && charIndex === word.length) {
-          delay = 1500;
-          isDeleting = true;
-        } else if (isDeleting && charIndex === 0) {
-          isDeleting = false;
-          wordIndex = (wordIndex + 1) % words.length;
-          delay = 300;
-        }
-        setTimeout(type, delay);
-      }
-      type();
-
-      function openPaymentModal(plan) {
-        selectedPlan = plan;
-        const modal = document.getElementById("paymentModal");
-        const title = document.getElementById("paymentTitle");
-        const details = document.getElementById("paymentDetails");
-
-        const plans = {
-          single: {
-            name: "Single Fix",
-            price: 49,
-            description: "One-time codebase fix (up to 50 files)",
-          },
-          professional: {
-            name: "Professional",
-            price: 149,
-            description: "Monthly subscription with unlimited fixes",
-          },
-          enterprise: {
-            name: "Enterprise",
-            price: 499,
-            description: "Enterprise plan with custom features",
-          },
+        const toggleTheme = () => {
+          setTheme(current => current === 'light' ? 'dark' : 'light');
         };
 
-        const planData = plans[plan];
-        title.textContent = `${planData.name} - $${planData.price}`;
-        details.innerHTML = `
-                <p style="margin-bottom: 1rem; color: rgba(255, 255, 255, 0.7);">${planData.description}</p>
-                <p style="color: rgba(255, 255, 255, 0.7); margin-bottom: 1rem;">Secure payment via PayPal (supports all major cards)</p>
-            `;
-
-        // Initialize PayPal
-        initializePayPal(planData.price, planData.name);
-
-        modal.classList.add("show");
-        modal.setAttribute("aria-hidden", "false");
-
-        // Focus management
-        const closeButton = modal.querySelector(".close-modal");
-        closeButton.focus();
-
-        // Trap focus in modal
-        trapFocus(modal);
-      }
-
-      function closePaymentModal() {
-        const modal = document.getElementById("paymentModal");
-        modal.classList.remove("show");
-        modal.setAttribute("aria-hidden", "true");
-      }
-
-      function trapFocus(element) {
-        const focusableElements = element.querySelectorAll(
-          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+        return (
+          <div className={\`theme-provider \${theme}\`}>
+            <button onClick={toggleTheme}>
+              Switch to {theme === 'light' ? 'dark' : 'light'} mode
+            </button>
+            {children}
+          </div>
         );
-        const firstFocusableElement = focusableElements[0];
-        const lastFocusableElement =
-          focusableElements[focusableElements.length - 1];
-
-        element.addEventListener("keydown", function (e) {
-          if (e.key === "Tab") {
-            if (e.shiftKey) {
-              if (document.activeElement === firstFocusableElement) {
-                lastFocusableElement.focus();
-                e.preventDefault();
-              }
-            } else {
-              if (document.activeElement === lastFocusableElement) {
-                firstFocusableElement.focus();
-                e.preventDefault();
-              }
-            }
-          }
-
-          if (e.key === "Escape") {
-            closePaymentModal();
-          }
-        });
-      }
-
-      function initializePayPal(amount, itemName) {
-        // Clear existing PayPal buttons
-        document.getElementById("paypal-button-container").innerHTML = "";
-
-        paypal
-          .Buttons({
-            createOrder: function (data, actions) {
-              return actions.order.create({
-                purchase_units: [
-                  {
-                    amount: {
-                      value: amount.toString(),
-                    },
-                    description: itemName,
-                  },
-                ],
-              });
-            },
-            onApprove: function (data, actions) {
-              return actions.order.capture().then(function (details) {
-                alert("Payment completed! Order ID: " + details.id);
-                closePaymentModal();
-
-                // Redirect to the code fixing interface
-                if (selectedPlan === "single") {
-                  window.location.href = "app.html?session=" + details.id;
-                } else {
-                  window.location.href =
-                    "app.html?subscription=" +
-                    selectedPlan +
-                    "&session=" +
-                    details.id;
-                }
-              });
-            },
-            onError: function (err) {
-              console.error("PayPal error:", err);
-              alert("Payment failed. Please try again.");
-            },
-          })
-          .render("#paypal-button-container");
-      }
-
-      // === File Upload & Validation ===
-      const MAX_FILE_SIZE = 256 * 1024; // 256 KB demo limit
-
-      async function handleFileUpload(event) {
-        const files = event.target.files;
-        console.log(
-          "%c📂 FILE UPLOAD STARTED",
-          "color: #673ab7; font-weight: bold; font-size: 16px;",
-        );
-        console.log(`📊 Upload Summary:`);
-        console.log(`   - Files Selected: ${files.length}`);
-        console.log(`   - Demo Limit: 3 files max`);
-        console.log(
-          `   - Size Limit: ${(MAX_FILE_SIZE / 1024).toFixed(0)}KB per file`,
-        );
-
-        if (files.length === 0) {
-          console.log("❌ No files selected, aborting");
-          return;
-        }
-
-        const results = document.getElementById("results");
-        results.classList.add("show");
-
-        let processedCount = 0;
-        let skippedCount = 0;
-
-        for (let i = 0; i < files.length && processedCount < 3; i++) {
-          const file = files[i];
-
-          console.log(
-            `%c📄 PROCESSING FILE ${i + 1}/${files.length}`,
-            "color: #3f51b5; font-weight: bold;",
-          );
-          console.log(`   - Name: ${file.name}`);
-          console.log(`   - Size: ${(file.size / 1024).toFixed(1)} KB`);
-          console.log(`   - Type: ${file.type || "unknown"}`);
-          console.log(
-            `   - Last Modified: ${new Date(file.lastModified).toISOString()}`,
-          );
-
-          // Client-side size validation
-          if (file.size > MAX_FILE_SIZE) {
-            console.error(`❌ File too large: ${file.name}`);
-            console.error(
-              `   - File Size: ${(file.size / 1024).toFixed(1)} KB`,
-            );
-            console.error(
-              `   - Limit: ${(MAX_FILE_SIZE / 1024).toFixed(0)} KB`,
-            );
-
-            displayError(
-              file.name,
-              `File is ${(file.size / 1024).toFixed(1)} KB. Demo limit is ${(MAX_FILE_SIZE / 1024).toFixed(0)} KB per file.`,
-            );
-            skippedCount++;
-            continue; // Skip oversized file but continue processing others
-          }
-
-          console.log(`📖 Reading file content...`);
-          const content = await file.text();
-          console.log(`✅ File content loaded: ${content.length} characters`);
-
-          await analyzeCode(content, file.name, false);
-          processedCount++;
-          console.log(
-            `✅ File ${file.name} processed successfully (${processedCount}/3)`,
-          );
-        }
-
-        console.log(
-          "%c📊 UPLOAD COMPLETE",
-          "color: #4caf50; font-weight: bold;",
-        );
-        console.log(`   - Files Processed: ${processedCount}`);
-        console.log(`   - Files Skipped: ${skippedCount}`);
-        console.log(
-          `   - Files Remaining: ${Math.max(0, files.length - processedCount - skippedCount)}`,
-        );
-
-        if (files.length > 3) {
-          console.log(
-            "%c💎 UPGRADE PROMPT",
-            "color: #ff9800; font-weight: bold;",
-          );
-          console.log(`   - Total Files: ${files.length}`);
-          console.log(`   - Demo Limit: 3 files`);
-          console.log(
-            `   - Upgrade needed for: ${files.length - 3} additional files`,
-          );
-          showUpgradePrompt(files.length);
-        }
-      }
-
-      // Main analysis function that calls the real engine
-      async function analyzeCode(code, filename, isSample = false) {
-        console.log(
-          "%c=== STARTING NEUROLINT PRO ANALYSIS ===",
-          "color: #00ff00; font-weight: bold; font-size: 14px;",
-        );
-        console.log("📄 File Information:");
-        console.log("  - Filename:", filename);
-        console.log("  - Is Sample Code:", isSample);
-        console.log("  - Code Length:", code.length, "characters");
-        console.log("  - File Type:", filename.split(".").pop());
-        console.log("📝 Code Preview (first 200 chars):");
-        console.log(code.substring(0, 200) + "...");
-        console.log("🚀 Starting transformation pipeline...");
-
-        const results = document.getElementById("results");
-        const progressFill = document.getElementById("progressFill");
-        const progressText = document.getElementById("progressText");
-
-        // Show the results section
-        results.classList.add("show");
-        console.log("✅ Results section displayed");
-
-        try {
-          // Start progress animation
-          progressText.textContent = `Analyzing ${filename}...`;
-          animateProgress(0, 30, 1000);
-          console.log("🔄 Progress animation started (0-30%)");
-
-          // Prepare API payload
-          const payload = {
-            code,
-            filename,
-          };
-
-          console.log(
-            "%c📡 SENDING TO NEUROLINT PRO ENGINE",
-            "color: #ffa500; font-weight: bold;",
-          );
-          console.log("🎯 API Endpoint: /api/demo");
-          console.log("📦 Payload Summary:");
-          console.log("  - Filename:", filename);
-          console.log("  - Code Size:", code.length, "bytes");
-          console.log("⏱️ Request Time:", new Date().toISOString());
-
-          const response = await fetch("/api/demo", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload),
-          });
-
-          console.log("📬 Response received:");
-          console.log("  - Status:", response.status);
-          console.log("  - Status Text:", response.statusText);
-          console.log("  - Headers:", [...response.headers.entries()]);
-
-          if (!response.ok) {
-            const errorData = await response.json().catch(() => ({}));
-            throw new Error(errorData.error || `HTTP ${response.status}`);
-          }
-
-          // Get JSON response from /api/demo
-          const data = await response.json();
-
-          console.log(
-            "%c🎉 TRANSFORMATION COMPLETE!",
-            "color: #00ff00; font-weight: bold; font-size: 16px;",
-          );
-          console.log("📋 Final Results Summary:");
-          console.log(
-            "  - Recommended Layers:",
-            data.recommendedLayers?.length || 0,
-          );
-          console.log("  - Confidence Score:", data.confidence || 0);
-          console.log("  - Issues Detected:", data.detectedIssues?.length || 0);
-          console.log("  - Demo Mode:", data.demo ? "YES" : "NO");
-          console.log("  - Analysis:", data.analysis);
-          console.log("  - Full Response:", data);
-
-          // Update progress to 100%
-          progressFill.style.width = "100%";
-          progressText.textContent = "Analysis complete!";
-
-          // Handle final result
-          try {
-            console.log("Creating analysis data object...");
-            const analysisData = {
-              filename,
-              originalCode: code,
-              result: data,
-              isSample,
-            };
-            console.log("Analysis data created:", analysisData);
-
-            console.log("Adding to currentAnalysisResults...");
-            currentAnalysisResults.push(analysisData);
-            console.log(
-              "Added successfully. Current count:",
-              currentAnalysisResults.length,
-            );
-
-            console.log("Calling displayAnalysisResults...");
-            displayAnalysisResults();
-            console.log("displayAnalysisResults completed successfully");
-          } catch (displayError) {
-            console.error("❌ Error in result processing:", displayError);
-            console.error("Display error stack:", displayError.stack);
-            throw new Error(
-              `Result processing failed: ${displayError.message}`,
-            );
-          }
-
-          // Continue progress
-          animateProgress(30, 70, 800);
-          progressText.textContent = "Processing analysis...";
-          console.log("Progress animation continued (30-70%)");
-
-          // Use REAL NeuroLint Pro analysis results - NO SIMULATION
-          console.log(
-            "Using REAL NeuroLint Pro analysis result (no simulation)",
-          );
-
-          // Complete progress
-          animateProgress(70, 100, 500);
-          progressText.textContent = "Analysis complete!";
-          console.log("Progress animation completed (70-100%)");
-
-          // Store results using REAL analysis from your engine
-          const analysisData = {
-            filename,
-            originalCode: code,
-            result: data, // Use real result from NeuroLint Pro engine - NO SIMULATION
-            isSample,
-          };
-          console.log("Storing analysis data:", analysisData);
-          currentAnalysisResults.push(analysisData);
-          console.log(
-            "Current analysis results array length:",
-            currentAnalysisResults.length,
-          );
-
-          // Display results
-          console.log("Scheduling results display in 300ms");
-          setTimeout(() => {
-            console.log("Calling displayAnalysisResults()");
-            displayAnalysisResults();
-          }, 300);
-        } catch (error) {
-          console.log("=== ERROR CAUGHT ===");
-          console.error("Analysis error:", error);
-          console.log("Error type:", typeof error);
-          console.log("Error isDemoLimit flag:", error.isDemoLimit);
-          console.log("Error message:", error.message);
-          console.log("Error stack:", error.stack);
-
-          // Handle demo limit reached - check both flag and message content
-          const isDemoLimit =
-            error.isDemoLimit ||
-            error.message === "DEMO_LIMIT_REACHED" ||
-            error.message.toLowerCase().includes("demo limit") ||
-            error.message.toLowerCase().includes("rate limit") ||
-            error.message.toLowerCase().includes("too many requests");
-
-          console.log("Final isDemoLimit decision:", isDemoLimit);
-
-          if (isDemoLimit) {
-            console.log("Displaying demo limit reached message");
-            progressText.textContent =
-              "Demo limit reached - Upgrade for unlimited access";
-            progressFill.style.width = "100%";
-            progressFill.style.background = "#666666";
-
-            // Show compelling upgrade message
-            displayDemoLimitReached(filename);
-          } else {
-            console.log("Displaying regular error message");
-            progressText.textContent = `Error analyzing ${filename}: ${error.message}`;
-            progressFill.style.width = "0%";
-
-            // Show regular error
-            displayError(filename, error.message);
-          }
-        }
-      }
-
-      // REMOVED simulateCodeFixes - using REAL NeuroLint Pro analysis only
-      // All analysis data now comes directly from the /api/analyze endpoint
-
-      function animateProgress(from, to, duration) {
-        const progressFill = document.getElementById("progressFill");
-        const startTime = performance.now();
-
-        function update(currentTime) {
-          const elapsed = currentTime - startTime;
-          const progress = Math.min(elapsed / duration, 1);
-          const value = from + (to - from) * progress;
-
-          progressFill.style.width = `${value}%`;
-          progressFill.parentElement.setAttribute(
-            "aria-valuenow",
-            value.toString(),
-          );
-
-          if (progress < 1) {
-            requestAnimationFrame(update);
-          }
-        }
-
-        requestAnimationFrame(update);
-      }
-
-      function displayAnalysisResults() {
-        try {
-          console.log("=== DISPLAYING ANALYSIS RESULTS ===");
-          console.log(
-            "Current analysis results count:",
-            currentAnalysisResults.length,
-          );
-
-          if (currentAnalysisResults.length === 0) {
-            console.log("No analysis results to display");
-            return;
-          }
-
-          console.log("Getting latest analysis data...");
-          const latest =
-            currentAnalysisResults[currentAnalysisResults.length - 1];
-          console.log("Latest analysis data:", latest);
-
-          console.log("Extracting result from latest data...");
-          const result = latest.result;
-          console.log("Latest result:", result);
-
-          // Update overview tab
-          console.log("Updating overview tab...");
-          displayOverview(latest);
-          console.log("Overview tab updated successfully");
-
-          // Update comparison tab
-          console.log("Updating comparison tab...");
-          displayCodeComparison(latest);
-          console.log("Comparison tab updated successfully");
-
-          // Update issues tab
-          console.log("Updating issues tab...");
-          displayIssuesFound(latest);
-          console.log("Issues tab updated successfully");
-
-          // Update layers tab
-          console.log("Updating layers tab...");
-          displayLayersApplied(latest);
-          console.log("Layers tab updated successfully");
-
-          console.log("All tabs updated successfully");
-        } catch (error) {
-          console.error("❌ Error in displayAnalysisResults:", error);
-          console.error("Error stack:", error.stack);
-          throw error;
-        }
-      }
-
-      function displayOverview(analysisData) {
-        console.log("=== DISPLAYING OVERVIEW ===");
-        const { result, filename } = analysisData;
-        console.log("Overview - filename:", filename);
-        console.log("Overview - result:", result);
-        console.log("Overview - detectedIssues:", result.detectedIssues);
-        console.log("Overview - recommendedLayers:", result.recommendedLayers);
-        console.log("Overview - confidence:", result.confidence);
-
-        // Update summary stats using REAL NeuroLint Pro engine data
-        const summaryEl = document.getElementById("analysisSummary");
-        console.log("Found analysisSummary element:", !!summaryEl);
-        summaryEl.innerHTML = `
-          <div class="analysis-stat">
-            <div class="analysis-stat-value">${result.detectedIssues?.length || 0}</div>
-            <div class="analysis-stat-label">Issues Found</div>
-          </div>
-          <div class="analysis-stat">
-            <div class="analysis-stat-value">${result.demo ? "Demo" : "Full"}</div>
-            <div class="analysis-stat-label">Analysis Mode</div>
-          </div>
-          <div class="analysis-stat">
-            <div class="analysis-stat-value">${result.confidence ? (result.confidence * 100).toFixed(0) : 0}%</div>
-            <div class="analysis-stat-label">Confidence</div>
-          </div>
-          <div class="analysis-stat">
-            <div class="analysis-stat-value">${result.recommendedLayers?.length || 0}</div>
-            <div class="analysis-stat-label">Layers Needed</div>
-          </div>
-        `;
-
-        // Update overview content using REAL NeuroLint Pro engine results
-        const overviewEl = document.getElementById("analysisOverview");
-        console.log("Found analysisOverview element:", !!overviewEl);
-        console.log("Setting overview content with real NeuroLint Pro data");
-        overviewEl.innerHTML = `
-          <div style="background: #000000; border: 1px solid #4a4a4a; padding: 2rem; margin-top: 1rem;">
-            <h4 style="color: #ffffff; margin-bottom: 1rem; font-size: 1.2rem;">${filename}</h4>
-            <p style="color: #666666; margin-bottom: 1.5rem; line-height: 1.6;">
-              NeuroLint Pro engine analyzed your code and detected <strong style="color: #ffffff;">${result.detectedIssues?.length || 0} issues</strong>
-              using <strong style="color: #ffffff;">${result.recommendedLayers?.length || 0} recommended layers</strong>.
-            </p>
-            <div style="background: #000000; border: 1px solid #4a4a4a; padding: 1rem; margin-top: 1rem;">
-              <h5 style="color: #ffffff; margin-bottom: 0.5rem; font-size: 1rem;">Detected Issues:</h5>
-              <ul style="color: #666666; margin-left: 1rem; line-height: 1.6;">
-                ${
-                  result.detectedIssues?.length > 0
-                    ? result.detectedIssues
-                        .map(
-                          (issue) =>
-                            `<li>${issue.type || issue.description || "Code issue detected"}</li>`,
-                        )
-                        .join("")
-                    : "<li>No critical issues found in this analysis.</li>"
-                }
-              </ul>
-              ${
-                result.recommendedLayers?.length > 0
-                  ? `
-                <h5 style="color: #ffffff; margin: 1rem 0 0.5rem 0; font-size: 1rem;">Recommended Layers:</h5>
-                <ul style="color: #666666; margin-left: 1rem; line-height: 1.6;">
-                  ${result.recommendedLayers.map((layer) => `<li>Layer ${layer}</li>`).join("")}
-                </ul>
-              `
-                  : ""
-              }
-            </div>
-          </div>
-
-          <div style="background: #000000; border: 1px solid #4a4a4a; padding: 2rem; text-align: center; margin-top: 2rem;">
-            <h4 style="color: #ffffff; margin-bottom: 1rem;">Ready to Fix Your Entire Codebase?</h4>
-            <p style="color: #666666; margin-bottom: 2rem;">This demo shows real analysis from NeuroLint Pro. Get unlimited processing and advanced safety features.</p>
-            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-              <button class="btn" onclick="openPaymentModal('single')">
-                Fix My Code - $49
-              </button>
-              <button class="btn" onclick="openPaymentModal('professional')" style="background: transparent; color: #ffffff; border: 1px solid #4a4a4a;">
-                Go Professional - $149/mo
-              </button>
-            </div>
-          </div>
-        `;
-      }
-
-      function displayCodeComparison(analysisData) {
-        const { originalCode, result, filename } = analysisData;
-        const fixedCode = result.fixedCode || originalCode;
-
-        const comparisonEl = document.getElementById("codeComparison");
-        comparisonEl.innerHTML = `
-          <div class="code-panel">
-            <div class="code-panel-header">
-              <h4 class="code-panel-title">📝 ${filename}</h4>
-              <span class="code-panel-badge before">BEFORE</span>
-            </div>
-            <div class="code-content">
-              <pre>${escapeHtml(originalCode)}</pre>
-            </div>
-          </div>
-          <div class="code-panel">
-            <div class="code-panel-header">
-              <h4 class="code-panel-title">✨ ${filename}</h4>
-              <span class="code-panel-badge after">AFTER</span>
-            </div>
-            <div class="code-content">
-              <pre>${generateDiffHtml(originalCode, fixedCode)}</pre>
-            </div>
-          </div>
-        `;
-      }
-
-      function displayIssuesFound(analysisData) {
-        const { result } = analysisData;
-        const issues = result.detectedIssues || [];
-
-        const issuesEl = document.getElementById("issuesList");
-
-        if (issues.length === 0) {
-          issuesEl.innerHTML = `
-            <div style="text-align: center; padding: 3rem; color: rgba(255, 255, 255, 0.7);">
-              <h4 style="color: #aaffaa; margin-bottom: 1rem;">��� No Critical Issues Found!</h4>
-              <p>Your code looks well-structured. NeuroLint Pro found no major issues to fix.</p>
-            </div>
-          `;
-          return;
-        }
-
-        issuesEl.innerHTML = issues
-          .map(
-            (issue) => `
-          <div class="issue-item">
-            <div class="issue-header">
-              <span class="issue-type ${issue.severity || "info"}">${issue.type || "Code Quality"}</span>
-              <h4 class="issue-title">${issue.title || issue.description}</h4>
-            </div>
-            <p class="issue-description">${issue.description}</p>
-            ${
-              issue.fix
-                ? `
-              <div class="issue-fix">
-                <div class="issue-fix-title">🔧 Automatic Fix:</div>
-                <div class="issue-fix-code">${escapeHtml(issue.fix)}</div>
-              </div>
-            `
-                : ""
-            }
-          </div>
-        `,
-          )
-          .join("");
-      }
-
-      function displayLayersApplied(analysisData) {
-        console.log("=== DISPLAYING LAYERS ===");
-        const { result } = analysisData;
-        console.log("Layers - result:", result);
-        const layers = result.recommendedLayers || [];
-        const fixes = result.appliedFixes || [];
-        console.log("Layers - recommendedLayers:", layers);
-        console.log("Layers - appliedFixes:", fixes);
-        console.log("Layers - number of layers:", layers.length);
-        console.log("Layers - number of fixes:", fixes.length);
-
-        const layersEl = document.getElementById("layersApplied");
-
-        layersEl.innerHTML = `
-          <div style="margin-bottom: 2rem;">
-            <h4 style="color: #ffffff; margin-bottom: 1rem; font-size: 1.3rem;">🔧 Recommended Layers</h4>
-                        <p style="color: rgba(255, 255, 255, 0.7); margin-bottom: 2rem;">NeuroLint Pro's 6-layer system ensures safe, comprehensive fixes:</p>
-          </div>
-
-          <div style="display: grid; gap: 1.5rem;">
-            ${layers
-              .map((layerNum) => {
-                const layerInfo = getLayerInfo(layerNum);
-                return `
-                <div style="background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 1.5rem;">
-                  <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
-                    <div style="width: 40px; height: 40px; background: rgba(255, 255, 255, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #ffffff;">${layerNum}</div>
-                    <div>
-                      <h5 style="color: #ffffff; margin: 0; font-size: 1.1rem;">${layerInfo.name}</h5>
-                      <p style="color: rgba(255, 255, 255, 0.7); margin: 0; font-size: 0.9rem;">${layerInfo.description}</p>
-                    </div>
+      }`,
+                description:
+                  "localStorage usage without SSR guards causing hydration issues",
+              },
+              accessibility: {
+                filename: "ImageGallery.jsx",
+                code: `import React from 'react';
+
+      export default function ImageGallery({ images }) {
+        return (
+          <div className="gallery">
+            <h2>Photo Gallery</h2>
+            <div className="gallery-grid">
+              {images.map(image => (
+                <div className="gallery-item">
+                  <img src={image.url} onClick={() => openModal(image)} />
+                  <div className="overlay">
+                    <span>{image.title}</span>
                   </div>
-                  <div style="margin-left: 3rem;">
-                    <h6 style="color: #aaffaa; margin-bottom: 0.5rem; font-size: 0.9rem;">Fixes Applied:</h6>
-                    <ul style="color: rgba(255, 255, 255, 0.8); margin-left: 1rem; line-height: 1.5;">
-                      ${fixes
-                        .filter((fix) => getFixLayer(fix.type) === layerNum)
-                        .map((fix) => `<li>${fix.description}</li>`)
-                        .join("")}
-                      ${fixes.filter((fix) => getFixLayer(fix.type) === layerNum).length === 0 ? "<li>No fixes needed for this layer</li>" : ""}
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+      }`,
+                description:
+                  "Missing alt attributes and accessibility improvements needed",
+              },
+              "nextjs-router": {
+                filename: "ClientComponent.tsx",
+                code: `import { useState } from 'react';
+
+      import {
+      import { Button, Card } from 'components/ui';
+
+      'use client';
+
+      export default function ClientComponent({ data }) {
+        const [count, setCount] = useState(0);
+
+        return (
+          <Card>
+            <h2>Interactive Component</h2>
+            <Button onClick={() => setCount(count + 1)}>
+              Count: {count}
+            </Button>
+          </Card>
+        );
+      }`,
+                description:
+                  "Corrupted import statements, misplaced 'use client' directive, and missing React imports for Next.js App Router",
+              },
+              "testing-validation": {
+                filename: "UserProfile.tsx",
+                code: `import React from 'react';
+
+      function UserProfile({ user, onUpdate }) {
+        const handleSubmit = async (formData) => {
+          const response = await fetch('/api/users', {
+            method: 'POST',
+            body: JSON.stringify(formData)
+          });
+          const result = await response.json();
+          onUpdate(result);
+        };
+
+        return (
+          <div>
+            <h2>User Profile</h2>
+            <button onClick={handleSubmit}>
+              Update Profile
+            </button>
+            <img src={user.avatar} />
+          </div>
+        );
+      }`,
+                description:
+                  "Missing export, prop types, error handling, accessibility attributes, and loading states",
+              },
+            };
+
+            // Enhanced demo functionality with detailed analysis - MOVED TO TOP
+            let currentAnalysisResults = [];
+            let currentActiveTab = "overview";
+
+            /* -------------------- TAB ACCESSIBILITY -------------------- */
+            function initTabs() {
+              const tabList = document.querySelector(".analysis-tabs");
+              if (!tabList) return;
+
+              tabList.setAttribute("role", "tablist");
+
+              const tabs = tabList.querySelectorAll(".analysis-tab");
+              tabs.forEach((tab) => {
+                const name = tab.dataset.tab;
+                const panel = document.getElementById(`${name}-content`);
+                if (!panel) return;
+
+                // Tab attributes
+                tab.setAttribute("role", "tab");
+                tab.setAttribute("id", `tab-${name}`);
+                tab.setAttribute("aria-controls", `${name}-content`);
+                tab.setAttribute(
+                  "aria-selected",
+                  tab.classList.contains("active") ? "true" : "false",
+                );
+                tab.setAttribute(
+                  "tabindex",
+                  tab.classList.contains("active") ? "0" : "-1",
+                );
+
+                // Panel attributes
+                panel.setAttribute("role", "tabpanel");
+                panel.setAttribute("aria-labelledby", `tab-${name}`);
+                panel.hidden = !panel.classList.contains("active");
+
+                // Keyboard navigation
+                tab.addEventListener("keydown", (e) => {
+                  if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
+                    e.preventDefault();
+                    const dir = e.key === "ArrowRight" ? 1 : -1;
+                    const ordered = Array.from(tabs);
+                    const idx = ordered.indexOf(tab);
+                    let newIdx = (idx + dir + ordered.length) % ordered.length;
+                    ordered[newIdx].focus();
+                    switchTab(ordered[newIdx].dataset.tab);
+                  }
+                });
+              });
+            }
+
+            function switchTab(tabName) {
+              const tabs = document.querySelectorAll(".analysis-tab");
+              const panels = document.querySelectorAll(".analysis-content");
+
+              tabs.forEach((tab) => {
+                const isActive = tab.dataset.tab === tabName;
+                tab.classList.toggle("active", isActive);
+                tab.setAttribute("aria-selected", isActive ? "true" : "false");
+                tab.setAttribute("tabindex", isActive ? "0" : "-1");
+              });
+
+              panels.forEach((panel) => {
+                const isActive = panel.id === `${tabName}-content`;
+                panel.classList.toggle("active", isActive);
+                panel.hidden = !isActive;
+              });
+
+              currentActiveTab = tabName;
+            }
+
+            // Initialize tabs once DOM is ready
+            document.addEventListener("DOMContentLoaded", initTabs);
+
+            function loadSampleCode(sampleType) {
+              console.log(
+                "%c🧪 LOADING SAMPLE CODE",
+                "color: #e91e63; font-weight: bold; font-size: 16px;",
+              );
+              console.log(`📋 Sample Information:`);
+              console.log(`   - Type Requested: ${sampleType}`);
+              console.log(
+                `   - Available Types: [${Object.keys(sampleCodes).join(", ")}]`,
+              );
+
+              // Update active sample button
+              document.querySelectorAll(".sample-btn").forEach((btn) => {
+                btn.classList.remove("active");
+              });
+              const sampleButton = document.querySelector(
+                `[data-sample="${sampleType}"]`,
+              );
+              console.log("Found sample button:", !!sampleButton);
+              if (sampleButton) {
+                sampleButton.classList.add("active");
+                console.log("Sample button activated");
+              }
+
+              const sample = sampleCodes[sampleType];
+              console.log(
+                `🔍 Sample Lookup Result: ${!!sample ? "FOUND" : "NOT FOUND"}`,
+              );
+
+              if (sample) {
+                console.log(`📄 Sample Details:`);
+                console.log(`   - Filename: ${sample.filename}`);
+                console.log(`   - Code Length: ${sample.code.length} characters`);
+                console.log(`   - Description: ${sample.description}`);
+                console.log(`   - File Type: ${sample.filename.split(".").pop()}`);
+                console.log(
+                  `🚀 Launching NeuroLint Pro analysis with sample code...`,
+                );
+
+                analyzeCode(sample.code, sample.filename, true);
+              } else {
+                console.error(`❌ Sample "${sampleType}" not found!`);
+                console.error(
+                  `Available samples: [${Object.keys(sampleCodes).join(", ")}]`,
+                );
+              }
+            }
+
+            // Typewriter effect for hero with cursor
+            const words = [
+              "Fix React Code Instantly",
+              "Safe Transformations",
+              "Smart Detection",
+              "6-Layer System",
+              "Error Recovery",
+              "Enterprise Ready",
+            ];
+            let wordIndex = 0;
+            let charIndex = 0;
+            let isDeleting = false;
+            let typewriterEl = document.getElementById("typewriter");
+
+            // Add cursor styling
+            const style = document.createElement("style");
+            style.textContent = `
+              .typewriter::after {
+                content: '|';
+                color: var(--foreground);
+                animation: blink 1s infinite;
+                margin-left: 2px;
+              }
+              @keyframes blink {
+                0%, 50% { opacity: 1; }
+                51%, 100% { opacity: 0; }
+              }
+              .hero {
+                animation: fadeInUp 1s ease-out;
+              }
+              @keyframes fadeInUp {
+                from {
+                  opacity: 0;
+                  transform: translateY(30px);
+                }
+                to {
+                  opacity: 1;
+                  transform: translateY(0);
+                }
+              }
+
+              .feature-card {
+                animation: fadeInUp 0.8s ease-out forwards;
+                opacity: 0;
+              }
+
+              .feature-card:nth-child(3) { animation-delay: 0.1s; }
+              .feature-card:nth-child(4) { animation-delay: 0.2s; }
+              .feature-card:nth-child(5) { animation-delay: 0.3s; }
+              .feature-card:nth-child(6) { animation-delay: 0.4s; }
+              .feature-card:nth-child(7) { animation-delay: 0.5s; }
+              .feature-card:nth-child(8) { animation-delay: 0.6s; }
+
+              .header {
+                animation: slideDown 0.8s ease-out;
+              }
+
+              @keyframes slideDown {
+                from {
+                  opacity: 0;
+                  transform: translateY(-20px);
+                }
+                to {
+                  opacity: 1;
+                  transform: translateY(0);
+                }
+              }
+            `;
+            document.head.appendChild(style);
+
+            function type() {
+              const word = words[wordIndex];
+              if (isDeleting) {
+                charIndex--;
+              } else {
+                charIndex++;
+              }
+              typewriterEl.textContent = word.substring(0, charIndex);
+              let delay = isDeleting ? 50 : 90;
+              if (!isDeleting && charIndex === word.length) {
+                delay = 1500;
+                isDeleting = true;
+              } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                wordIndex = (wordIndex + 1) % words.length;
+                delay = 300;
+              }
+              setTimeout(type, delay);
+            }
+            type();
+
+            function openPaymentModal(plan) {
+              selectedPlan = plan;
+              const modal = document.getElementById("paymentModal");
+              const title = document.getElementById("paymentTitle");
+              const details = document.getElementById("paymentDetails");
+
+              const plans = {
+                single: {
+                  name: "Single Fix",
+                  price: 49,
+                  description: "One-time codebase fix (up to 50 files)",
+                },
+                professional: {
+                  name: "Professional",
+                  price: 149,
+                  description: "Monthly subscription with unlimited fixes",
+                },
+                enterprise: {
+                  name: "Enterprise",
+                  price: 499,
+                  description: "Enterprise plan with custom features",
+                },
+              };
+
+              const planData = plans[plan];
+              title.textContent = `${planData.name} - $${planData.price}`;
+              details.innerHTML = `
+                      <p style="margin-bottom: 1rem; color: rgba(255, 255, 255, 0.7);">${planData.description}</p>
+                      <p style="color: rgba(255, 255, 255, 0.7); margin-bottom: 1rem;">Secure payment via PayPal (supports all major cards)</p>
+                  `;
+
+              // Initialize PayPal
+              initializePayPal(planData.price, planData.name);
+
+              modal.classList.add("show");
+              modal.setAttribute("aria-hidden", "false");
+
+              // Focus management
+              const closeButton = modal.querySelector(".close-modal");
+              closeButton.focus();
+
+              // Trap focus in modal
+              trapFocus(modal);
+            }
+
+            function closePaymentModal() {
+              const modal = document.getElementById("paymentModal");
+              modal.classList.remove("show");
+              modal.setAttribute("aria-hidden", "true");
+            }
+
+            function trapFocus(element) {
+              const focusableElements = element.querySelectorAll(
+                'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+              );
+              const firstFocusableElement = focusableElements[0];
+              const lastFocusableElement =
+                focusableElements[focusableElements.length - 1];
+
+              element.addEventListener("keydown", function (e) {
+                if (e.key === "Tab") {
+                  if (e.shiftKey) {
+                    if (document.activeElement === firstFocusableElement) {
+                      lastFocusableElement.focus();
+                      e.preventDefault();
+                    }
+                  } else {
+                    if (document.activeElement === lastFocusableElement) {
+                      firstFocusableElement.focus();
+                      e.preventDefault();
+                    }
+                  }
+                }
+
+                if (e.key === "Escape") {
+                  closePaymentModal();
+                }
+              });
+            }
+
+            function initializePayPal(amount, itemName) {
+              // Clear existing PayPal buttons
+              document.getElementById("paypal-button-container").innerHTML = "";
+
+              paypal
+                .Buttons({
+                  createOrder: function (data, actions) {
+                    return actions.order.create({
+                      purchase_units: [
+                        {
+                          amount: {
+                            value: amount.toString(),
+                          },
+                          description: itemName,
+                        },
+                      ],
+                    });
+                  },
+                  onApprove: function (data, actions) {
+                    return actions.order.capture().then(function (details) {
+                      alert("Payment completed! Order ID: " + details.id);
+                      closePaymentModal();
+
+                      // Redirect to the code fixing interface
+                      if (selectedPlan === "single") {
+                        window.location.href = "app.html?session=" + details.id;
+                      } else {
+                        window.location.href =
+                          "app.html?subscription=" +
+                          selectedPlan +
+                          "&session=" +
+                          details.id;
+                      }
+                    });
+                  },
+                  onError: function (err) {
+                    console.error("PayPal error:", err);
+                    alert("Payment failed. Please try again.");
+                  },
+                })
+                .render("#paypal-button-container");
+            }
+
+            // === File Upload & Validation ===
+            const MAX_FILE_SIZE = 256 * 1024; // 256 KB demo limit
+
+            async function handleFileUpload(event) {
+              const files = event.target.files;
+              console.log(
+                "%c📂 FILE UPLOAD STARTED",
+                "color: #673ab7; font-weight: bold; font-size: 16px;",
+              );
+              console.log(`📊 Upload Summary:`);
+              console.log(`   - Files Selected: ${files.length}`);
+              console.log(`   - Demo Limit: 3 files max`);
+              console.log(
+                `   - Size Limit: ${(MAX_FILE_SIZE / 1024).toFixed(0)}KB per file`,
+              );
+
+              if (files.length === 0) {
+                console.log("❌ No files selected, aborting");
+                return;
+              }
+
+              const results = document.getElementById("results");
+              results.classList.add("show");
+
+              let processedCount = 0;
+              let skippedCount = 0;
+
+              for (let i = 0; i < files.length && processedCount < 3; i++) {
+                const file = files[i];
+
+                console.log(
+                  `%c📄 PROCESSING FILE ${i + 1}/${files.length}`,
+                  "color: #3f51b5; font-weight: bold;",
+                );
+                console.log(`   - Name: ${file.name}`);
+                console.log(`   - Size: ${(file.size / 1024).toFixed(1)} KB`);
+                console.log(`   - Type: ${file.type || "unknown"}`);
+                console.log(
+                  `   - Last Modified: ${new Date(file.lastModified).toISOString()}`,
+                );
+
+                // Client-side size validation
+                if (file.size > MAX_FILE_SIZE) {
+                  console.error(`❌ File too large: ${file.name}`);
+                  console.error(
+                    `   - File Size: ${(file.size / 1024).toFixed(1)} KB`,
+                  );
+                  console.error(
+                    `   - Limit: ${(MAX_FILE_SIZE / 1024).toFixed(0)} KB`,
+                  );
+
+                  displayError(
+                    file.name,
+                    `File is ${(file.size / 1024).toFixed(1)} KB. Demo limit is ${(MAX_FILE_SIZE / 1024).toFixed(0)} KB per file.`,
+                  );
+                  skippedCount++;
+                  continue; // Skip oversized file but continue processing others
+                }
+
+                console.log(`📖 Reading file content...`);
+                const content = await file.text();
+                console.log(`✅ File content loaded: ${content.length} characters`);
+
+                await analyzeCode(content, file.name, false);
+                processedCount++;
+                console.log(
+                  `✅ File ${file.name} processed successfully (${processedCount}/3)`,
+                );
+              }
+
+              console.log(
+                "%c📊 UPLOAD COMPLETE",
+                "color: #4caf50; font-weight: bold;",
+              );
+              console.log(`   - Files Processed: ${processedCount}`);
+              console.log(`   - Files Skipped: ${skippedCount}`);
+              console.log(
+                `   - Files Remaining: ${Math.max(0, files.length - processedCount - skippedCount)}`,
+              );
+
+              if (files.length > 3) {
+                console.log(
+                  "%c💎 UPGRADE PROMPT",
+                  "color: #ff9800; font-weight: bold;",
+                );
+                console.log(`   - Total Files: ${files.length}`);
+                console.log(`   - Demo Limit: 3 files`);
+                console.log(
+                  `   - Upgrade needed for: ${files.length - 3} additional files`,
+                );
+                showUpgradePrompt(files.length);
+              }
+            }
+
+            // Main analysis function that calls the real engine
+            async function analyzeCode(code, filename, isSample = false) {
+              console.log(
+                "%c=== STARTING NEUROLINT PRO ANALYSIS ===",
+                "color: #00ff00; font-weight: bold; font-size: 14px;",
+              );
+              console.log("📄 File Information:");
+              console.log("  - Filename:", filename);
+              console.log("  - Is Sample Code:", isSample);
+              console.log("  - Code Length:", code.length, "characters");
+              console.log("  - File Type:", filename.split(".").pop());
+              console.log("📝 Code Preview (first 200 chars):");
+              console.log(code.substring(0, 200) + "...");
+              console.log("🚀 Starting transformation pipeline...");
+
+              const results = document.getElementById("results");
+              const progressFill = document.getElementById("progressFill");
+              const progressText = document.getElementById("progressText");
+
+              // Show the results section
+              results.classList.add("show");
+              console.log("✅ Results section displayed");
+
+              try {
+                // Start progress animation
+                progressText.textContent = `Analyzing ${filename}...`;
+                animateProgress(0, 30, 1000);
+                console.log("🔄 Progress animation started (0-30%)");
+
+                // Prepare API payload
+                const payload = {
+                  code,
+                  filename,
+                };
+
+                console.log(
+                  "%c📡 SENDING TO NEUROLINT PRO ENGINE",
+                  "color: #ffa500; font-weight: bold;",
+                );
+                console.log("🎯 API Endpoint: /api/demo");
+                console.log("📦 Payload Summary:");
+                console.log("  - Filename:", filename);
+                console.log("  - Code Size:", code.length, "bytes");
+                console.log("⏱️ Request Time:", new Date().toISOString());
+
+                const response = await fetch("/api/demo", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify(payload),
+                });
+
+                console.log("📬 Response received:");
+                console.log("  - Status:", response.status);
+                console.log("  - Status Text:", response.statusText);
+                console.log("  - Headers:", [...response.headers.entries()]);
+
+                if (!response.ok) {
+                  const errorData = await response.json().catch(() => ({}));
+                  throw new Error(errorData.error || `HTTP ${response.status}`);
+                }
+
+                // Get JSON response from /api/demo
+                const data = await response.json();
+
+                console.log(
+                  "%c🎉 TRANSFORMATION COMPLETE!",
+                  "color: #00ff00; font-weight: bold; font-size: 16px;",
+                );
+                console.log("📋 Final Results Summary:");
+                console.log(
+                  "  - Recommended Layers:",
+                  data.recommendedLayers?.length || 0,
+                );
+                console.log("  - Confidence Score:", data.confidence || 0);
+                console.log("  - Issues Detected:", data.detectedIssues?.length || 0);
+                console.log("  - Demo Mode:", data.demo ? "YES" : "NO");
+                console.log("  - Analysis:", data.analysis);
+                console.log("  - Full Response:", data);
+
+                // Update progress to 100%
+                progressFill.style.width = "100%";
+                progressText.textContent = "Analysis complete!";
+
+                          // Handle final result
+                try {
+                  console.log("Creating analysis data object...");
+                  const analysisData = {
+                    filename,
+                    originalCode: code,
+                    result: data,
+                    isSample,
+                  };
+                  console.log("Analysis data created:", analysisData);
+
+                  console.log("Adding to currentAnalysisResults...");
+                  currentAnalysisResults.push(analysisData);
+                  console.log("Added successfully. Current count:", currentAnalysisResults.length);
+
+                  console.log("Calling displayAnalysisResults...");
+                  displayAnalysisResults();
+                  console.log("displayAnalysisResults completed successfully");
+
+                } catch (displayError) {
+                  console.error("❌ Error in result processing:", displayError);
+                  console.error("Display error stack:", displayError.stack);
+                  throw new Error(`Result processing failed: ${displayError.message}`);
+                }
+
+                // Continue progress
+                animateProgress(30, 70, 800);
+                progressText.textContent = "Processing analysis...";
+                console.log("Progress animation continued (30-70%)");
+
+                // Use REAL NeuroLint Pro analysis results - NO SIMULATION
+                console.log(
+                  "Using REAL NeuroLint Pro analysis result (no simulation)",
+                );
+
+                // Complete progress
+                animateProgress(70, 100, 500);
+                progressText.textContent = "Analysis complete!";
+                console.log("Progress animation completed (70-100%)");
+
+                // Store results using REAL analysis from your engine
+                const analysisData = {
+                  filename,
+                  originalCode: code,
+                  result: data, // Use real result from NeuroLint Pro engine - NO SIMULATION
+                  isSample,
+                };
+                console.log("Storing analysis data:", analysisData);
+                currentAnalysisResults.push(analysisData);
+                console.log(
+                  "Current analysis results array length:",
+                  currentAnalysisResults.length,
+                );
+
+                // Display results
+                console.log("Scheduling results display in 300ms");
+                setTimeout(() => {
+                  console.log("Calling displayAnalysisResults()");
+                  displayAnalysisResults();
+                }, 300);
+              } catch (error) {
+                console.log("=== ERROR CAUGHT ===");
+                console.error("Analysis error:", error);
+                console.log("Error type:", typeof error);
+                console.log("Error isDemoLimit flag:", error.isDemoLimit);
+                console.log("Error message:", error.message);
+                console.log("Error stack:", error.stack);
+
+                // Handle demo limit reached - check both flag and message content
+                const isDemoLimit =
+                  error.isDemoLimit ||
+                  error.message === "DEMO_LIMIT_REACHED" ||
+                  error.message.toLowerCase().includes("demo limit") ||
+                  error.message.toLowerCase().includes("rate limit") ||
+                  error.message.toLowerCase().includes("too many requests");
+
+                console.log("Final isDemoLimit decision:", isDemoLimit);
+
+                if (isDemoLimit) {
+                  console.log("Displaying demo limit reached message");
+                  progressText.textContent =
+                    "Demo limit reached - Upgrade for unlimited access";
+                  progressFill.style.width = "100%";
+                  progressFill.style.background = "#666666";
+
+                  // Show compelling upgrade message
+                  displayDemoLimitReached(filename);
+                } else {
+                  console.log("Displaying regular error message");
+                  progressText.textContent = `Error analyzing ${filename}: ${error.message}`;
+                  progressFill.style.width = "0%";
+
+                  // Show regular error
+                  displayError(filename, error.message);
+                }
+              }
+            }
+
+            // REMOVED simulateCodeFixes - using REAL NeuroLint Pro analysis only
+            // All analysis data now comes directly from the /api/analyze endpoint
+
+            function animateProgress(from, to, duration) {
+              const progressFill = document.getElementById("progressFill");
+              const startTime = performance.now();
+
+              function update(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const value = from + (to - from) * progress;
+
+                progressFill.style.width = `${value}%`;
+                progressFill.parentElement.setAttribute(
+                  "aria-valuenow",
+                  value.toString(),
+                );
+
+                if (progress < 1) {
+                  requestAnimationFrame(update);
+                }
+              }
+
+              requestAnimationFrame(update);
+            }
+
+                  function displayAnalysisResults() {
+              try {
+                console.log("=== DISPLAYING ANALYSIS RESULTS ===");
+                console.log(
+                  "Current analysis results count:",
+                  currentAnalysisResults.length,
+                );
+
+                if (currentAnalysisResults.length === 0) {
+                  console.log("No analysis results to display");
+                  return;
+                }
+
+                console.log("Getting latest analysis data...");
+                const latest =
+                  currentAnalysisResults[currentAnalysisResults.length - 1];
+                console.log("Latest analysis data:", latest);
+
+                console.log("Extracting result from latest data...");
+                const result = latest.result;
+                console.log("Latest result:", result);
+
+                // Update overview tab
+                console.log("Updating overview tab...");
+                displayOverview(latest);
+                console.log("Overview tab updated successfully");
+
+                // Update comparison tab
+                console.log("Updating comparison tab...");
+                displayCodeComparison(latest);
+                console.log("Comparison tab updated successfully");
+
+                // Update issues tab
+                console.log("Updating issues tab...");
+                displayIssuesFound(latest);
+                console.log("Issues tab updated successfully");
+
+                // Update layers tab
+                console.log("Updating layers tab...");
+                displayLayersApplied(latest);
+                console.log("Layers tab updated successfully");
+
+                console.log("All tabs updated successfully");
+
+              } catch (error) {
+                console.error("❌ Error in displayAnalysisResults:", error);
+                console.error("Error stack:", error.stack);
+                throw error;
+              }
+            }
+
+                  function displayOverview(analysisData) {
+              try {
+                console.log("=== DISPLAYING OVERVIEW ===");
+                console.log("Analysis data received:", analysisData);
+
+                const { result, filename } = analysisData;
+                console.log("Overview - filename:", filename);
+                console.log("Overview - result:", result);
+                console.log("Overview - detectedIssues:", result?.detectedIssues);
+                console.log("Overview - recommendedLayers:", result?.recommendedLayers);
+                console.log("Overview - confidence:", result?.confidence);
+
+              // Update summary stats using REAL NeuroLint Pro engine data
+              const summaryEl = document.getElementById("analysisSummary");
+              console.log("Found analysisSummary element:", !!summaryEl);
+              summaryEl.innerHTML = `
+                <div class="analysis-stat">
+                  <div class="analysis-stat-value">${result.detectedIssues?.length || 0}</div>
+                  <div class="analysis-stat-label">Issues Found</div>
+                </div>
+                <div class="analysis-stat">
+                  <div class="analysis-stat-value">${result.demo ? "Demo" : "Full"}</div>
+                  <div class="analysis-stat-label">Analysis Mode</div>
+                </div>
+                <div class="analysis-stat">
+                  <div class="analysis-stat-value">${result.confidence ? (result.confidence * 100).toFixed(0) : 0}%</div>
+                  <div class="analysis-stat-label">Confidence</div>
+                </div>
+                <div class="analysis-stat">
+                  <div class="analysis-stat-value">${result.recommendedLayers?.length || 0}</div>
+                  <div class="analysis-stat-label">Layers Needed</div>
+                </div>
+              `;
+
+              // Update overview content using REAL NeuroLint Pro engine results
+              const overviewEl = document.getElementById("analysisOverview");
+              console.log("Found analysisOverview element:", !!overviewEl);
+              console.log("Setting overview content with real NeuroLint Pro data");
+              overviewEl.innerHTML = `
+                <div style="background: #000000; border: 1px solid #4a4a4a; padding: 2rem; margin-top: 1rem;">
+                  <h4 style="color: #ffffff; margin-bottom: 1rem; font-size: 1.2rem;">${filename}</h4>
+                  <p style="color: #666666; margin-bottom: 1.5rem; line-height: 1.6;">
+                    NeuroLint Pro engine analyzed your code and detected <strong style="color: #ffffff;">${result.detectedIssues?.length || 0} issues</strong>
+                    using <strong style="color: #ffffff;">${result.recommendedLayers?.length || 0} recommended layers</strong>.
+                  </p>
+                  <div style="background: #000000; border: 1px solid #4a4a4a; padding: 1rem; margin-top: 1rem;">
+                    <h5 style="color: #ffffff; margin-bottom: 0.5rem; font-size: 1rem;">Detected Issues:</h5>
+                    <ul style="color: #666666; margin-left: 1rem; line-height: 1.6;">
+                      ${
+                        result.detectedIssues?.length > 0
+                          ? result.detectedIssues
+                              .map(
+                                (issue) =>
+                                  `<li>${issue.type || issue.description || "Code issue detected"}</li>`,
+                              )
+                              .join("")
+                          : "<li>No critical issues found in this analysis.</li>"
+                      }
                     </ul>
+                    ${
+                      result.recommendedLayers?.length > 0
+                        ? `
+                      <h5 style="color: #ffffff; margin: 1rem 0 0.5rem 0; font-size: 1rem;">Recommended Layers:</h5>
+                      <ul style="color: #666666; margin-left: 1rem; line-height: 1.6;">
+                        ${result.recommendedLayers.map((layer) => `<li>Layer ${layer}</li>`).join("")}
+                      </ul>
+                    `
+                        : ""
+                    }
+                  </div>
+                </div>
+
+                <div style="background: #000000; border: 1px solid #4a4a4a; padding: 2rem; text-align: center; margin-top: 2rem;">
+                  <h4 style="color: #ffffff; margin-bottom: 1rem;">Ready to Fix Your Entire Codebase?</h4>
+                  <p style="color: #666666; margin-bottom: 2rem;">This demo shows real analysis from NeuroLint Pro. Get unlimited processing and advanced safety features.</p>
+                  <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                    <button class="btn" onclick="openPaymentModal('single')">
+                      Fix My Code - $49
+                    </button>
+                    <button class="btn" onclick="openPaymentModal('professional')" style="background: transparent; color: #ffffff; border: 1px solid #4a4a4a;">
+                      Go Professional - $149/mo
+                    </button>
                   </div>
                 </div>
               `;
-              })
-              .join("")}
-          </div>
+            }
 
-          <div style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 12px; padding: 2rem; margin-top: 2rem; text-align: center;">
-            <h4 style="color: #ffffff; margin-bottom: 1rem;">💡 Pro Tip</h4>
-            <p style="color: rgba(255, 255, 255, 0.7); margin-bottom: 1.5rem;">Each layer builds safely on the previous one, with automatic rollback if any transformation fails. This is why NeuroLint Pro never corrupts your code!</p>
-            <button class="demo-upgrade-btn" onclick="openPaymentModal('single')">Get Full Layer Processing - $49</button>
-          </div>
-        `;
-      }
+            function displayCodeComparison(analysisData) {
+              const { originalCode, result, filename } = analysisData;
+              const fixedCode = result.fixedCode || originalCode;
 
-      function getLayerInfo(layerNum) {
-        const layerMap = {
-          1: {
-            name: "Configuration Layer",
-            description: "TypeScript, Next.js, package.json foundation",
-          },
-          2: {
-            name: "Entity Cleanup",
-            description: "HTML entities, imports, console statements",
-          },
-          3: {
-            name: "Component Fixes",
-            description: "React keys, accessibility, component patterns",
-          },
-          4: {
-            name: "Hydration Safety",
-            description: "SSR guards, browser API protection",
-          },
-          5: {
-            name: "Next.js App Router",
-            description:
-              "Use client directives, corrupted imports, Next.js patterns",
-          },
-          6: {
-            name: "Testing & Validation",
-            description:
-              "Prop types, error handling, accessibility, performance",
-          },
-        };
-        return (
-          layerMap[layerNum] || {
-            name: `Layer ${layerNum}`,
-            description: "Advanced fixes",
-          }
-        );
-      }
+              const comparisonEl = document.getElementById("codeComparison");
+              comparisonEl.innerHTML = `
+                <div class="code-panel">
+                  <div class="code-panel-header">
+                    <h4 class="code-panel-title">📝 ${filename}</h4>
+                    <span class="code-panel-badge before">BEFORE</span>
+                  </div>
+                  <div class="code-content">
+                    <pre>${escapeHtml(originalCode)}</pre>
+                  </div>
+                </div>
+                <div class="code-panel">
+                  <div class="code-panel-header">
+                    <h4 class="code-panel-title">✨ ${filename}</h4>
+                    <span class="code-panel-badge after">AFTER</span>
+                  </div>
+                  <div class="code-content">
+                    <pre>${generateDiffHtml(originalCode, fixedCode)}</pre>
+                  </div>
+                </div>
+              `;
+            }
 
-      function getFixLayer(fixType) {
-        const typeMap = {
-          "HTML Entity": 2,
-          "Console Cleanup": 2,
-          "React Keys": 3,
-          Accessibility: 3,
-          "SSR Safety": 4,
-          "Next.js": 5,
-          Testing: 6,
-        };
-        return typeMap[fixType] || 3;
-      }
+            function displayIssuesFound(analysisData) {
+              const { result } = analysisData;
+              const issues = result.detectedIssues || [];
 
-      function generateDiffHtml(original, fixed) {
-        if (original === fixed) {
-          return `<pre><code class="language-jsx">${Prism.highlight(escapeHtml(original), Prism.languages.jsx, "jsx")}</code></pre>`;
-        }
+              const issuesEl = document.getElementById("issuesList");
 
-        const diffParts = Diff.diffLines(original, fixed);
-        let html = "";
+              if (issues.length === 0) {
+                issuesEl.innerHTML = `
+                  <div style="text-align: center; padding: 3rem; color: rgba(255, 255, 255, 0.7);">
+                    <h4 style="color: #aaffaa; margin-bottom: 1rem;">��� No Critical Issues Found!</h4>
+                    <p>Your code looks well-structured. NeuroLint Pro found no major issues to fix.</p>
+                  </div>
+                `;
+                return;
+              }
 
-        diffParts.forEach((part) => {
-          const className = part.added
-            ? "added"
-            : part.removed
-              ? "removed"
-              : "context";
+              issuesEl.innerHTML = issues
+                .map(
+                  (issue) => `
+                <div class="issue-item">
+                  <div class="issue-header">
+                    <span class="issue-type ${issue.severity || "info"}">${issue.type || "Code Quality"}</span>
+                    <h4 class="issue-title">${issue.title || issue.description}</h4>
+                  </div>
+                  <p class="issue-description">${issue.description}</p>
+                  ${
+                    issue.fix
+                      ? `
+                    <div class="issue-fix">
+                      <div class="issue-fix-title">🔧 Automatic Fix:</div>
+                      <div class="issue-fix-code">${escapeHtml(issue.fix)}</div>
+                    </div>
+                  `
+                      : ""
+                  }
+                </div>
+              `,
+                )
+                .join("");
+            }
 
-          // Split part into individual lines to keep original line breaks
-          const lines = part.value.split("\n");
-          lines.forEach((line, idx) => {
-            if (line === "" && idx === lines.length - 1) return; // skip final empty line
+            function displayLayersApplied(analysisData) {
+              console.log("=== DISPLAYING LAYERS ===");
+              const { result } = analysisData;
+              console.log("Layers - result:", result);
+              const layers = result.recommendedLayers || [];
+              const fixes = result.appliedFixes || [];
+              console.log("Layers - recommendedLayers:", layers);
+              console.log("Layers - appliedFixes:", fixes);
+              console.log("Layers - number of layers:", layers.length);
+              console.log("Layers - number of fixes:", fixes.length);
 
-            const highlighted = Prism.highlight(
-              line,
-              Prism.languages.jsx,
-              "jsx",
-            );
-            const prefix = part.added ? "+ " : part.removed ? "- " : "  ";
-            html += `<span class="diff-line ${className}">${prefix}${highlighted}</span>\n`;
-          });
-        });
+              const layersEl = document.getElementById("layersApplied");
 
-        return html;
-      }
+              layersEl.innerHTML = `
+                <div style="margin-bottom: 2rem;">
+                  <h4 style="color: #ffffff; margin-bottom: 1rem; font-size: 1.3rem;">🔧 Recommended Layers</h4>
+                              <p style="color: rgba(255, 255, 255, 0.7); margin-bottom: 2rem;">NeuroLint Pro's 6-layer system ensures safe, comprehensive fixes:</p>
+                </div>
 
-      function escapeHtml(text) {
-        const div = document.createElement("div");
-        div.textContent = text;
-        return div.innerHTML;
-      }
+                <div style="display: grid; gap: 1.5rem;">
+                  ${layers
+                    .map((layerNum) => {
+                      const layerInfo = getLayerInfo(layerNum);
+                      return `
+                      <div style="background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 1.5rem;">
+                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                          <div style="width: 40px; height: 40px; background: rgba(255, 255, 255, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #ffffff;">${layerNum}</div>
+                          <div>
+                            <h5 style="color: #ffffff; margin: 0; font-size: 1.1rem;">${layerInfo.name}</h5>
+                            <p style="color: rgba(255, 255, 255, 0.7); margin: 0; font-size: 0.9rem;">${layerInfo.description}</p>
+                          </div>
+                        </div>
+                        <div style="margin-left: 3rem;">
+                          <h6 style="color: #aaffaa; margin-bottom: 0.5rem; font-size: 0.9rem;">Fixes Applied:</h6>
+                          <ul style="color: rgba(255, 255, 255, 0.8); margin-left: 1rem; line-height: 1.5;">
+                            ${fixes
+                              .filter((fix) => getFixLayer(fix.type) === layerNum)
+                              .map((fix) => `<li>${fix.description}</li>`)
+                              .join("")}
+                            ${fixes.filter((fix) => getFixLayer(fix.type) === layerNum).length === 0 ? "<li>No fixes needed for this layer</li>" : ""}
+                          </ul>
+                        </div>
+                      </div>
+                    `;
+                    })
+                    .join("")}
+                </div>
 
-      function displayDemoLimitReached(filename) {
-        const results = document.getElementById("results");
-        results.classList.add("show");
+                <div style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 12px; padding: 2rem; margin-top: 2rem; text-align: center;">
+                  <h4 style="color: #ffffff; margin-bottom: 1rem;">💡 Pro Tip</h4>
+                  <p style="color: rgba(255, 255, 255, 0.7); margin-bottom: 1.5rem;">Each layer builds safely on the previous one, with automatic rollback if any transformation fails. This is why NeuroLint Pro never corrupts your code!</p>
+                  <button class="demo-upgrade-btn" onclick="openPaymentModal('single')">Get Full Layer Processing - $49</button>
+                </div>
+              `;
+            }
 
-        // Update all tabs to show upgrade message
-        const summaryEl = document.getElementById("analysisSummary");
-        summaryEl.innerHTML = `
-          <div class="analysis-stat">
-            <div class="analysis-stat-value">3/3</div>
-            <div class="analysis-stat-label">Demo Limit</div>
-          </div>
-          <div class="analysis-stat">
-            <div class="analysis-stat-value">Unlimited</div>
-            <div class="analysis-stat-label">Pro Version</div>
-          </div>
-          <div class="analysis-stat">
-            <div class="analysis-stat-value">$49</div>
-            <div class="analysis-stat-label">Single Fix</div>
-          </div>
-          <div class="analysis-stat">
-            <div class="analysis-stat-value">50+</div>
-            <div class="analysis-stat-label">Files Supported</div>
-          </div>
-        `;
+            function getLayerInfo(layerNum) {
+              const layerMap = {
+                1: {
+                  name: "Configuration Layer",
+                  description: "TypeScript, Next.js, package.json foundation",
+                },
+                2: {
+                  name: "Entity Cleanup",
+                  description: "HTML entities, imports, console statements",
+                },
+                3: {
+                  name: "Component Fixes",
+                  description: "React keys, accessibility, component patterns",
+                },
+                4: {
+                  name: "Hydration Safety",
+                  description: "SSR guards, browser API protection",
+                },
+                5: {
+                  name: "Next.js App Router",
+                  description:
+                    "Use client directives, corrupted imports, Next.js patterns",
+                },
+                6: {
+                  name: "Testing & Validation",
+                  description:
+                    "Prop types, error handling, accessibility, performance",
+                },
+              };
+              return (
+                layerMap[layerNum] || {
+                  name: `Layer ${layerNum}`,
+                  description: "Advanced fixes",
+                }
+              );
+            }
 
-        const overviewEl = document.getElementById("analysisOverview");
-        overviewEl.innerHTML = `
-          <div style="background: #000000; border: 1px solid #4a4a4a; padding: 3rem; text-align: center; margin-top: 2rem;">
-            <h4 style="color: #ffffff; margin-bottom: 1rem; font-size: 1.8rem; font-weight: 700;">Demo Limit Reached</h4>
-            <p style="color: #666666; margin-bottom: 2rem; font-size: 1.2rem; line-height: 1.6;">
-              You have reached the 3-file demo limit. <strong style="color: #ffffff;">Upgrade to process unlimited files.</strong>
-            </p>
+            function getFixLayer(fixType) {
+              const typeMap = {
+                "HTML Entity": 2,
+                "Console Cleanup": 2,
+                "React Keys": 3,
+                Accessibility: 3,
+                "SSR Safety": 4,
+                "Next.js": 5,
+                Testing: 6,
+              };
+              return typeMap[fixType] || 3;
+            }
 
-            <div style="background: #000000; border: 1px solid #4a4a4a; padding: 2rem; margin: 2rem 0;">
-              <h5 style="color: #ffffff; margin-bottom: 1rem; font-size: 1.2rem;">Demo Features Experienced:</h5>
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; text-align: left; color: #666666;">
-                <div>• Real code analysis</div>
-                <div>• Before/after comparison</div>
-                <div>• Issue detection</div>
-                <div>• 4-layer fix system</div>
-              </div>
-            </div>
+            function generateDiffHtml(original, fixed) {
+              if (original === fixed) {
+                return `<pre><code class="language-jsx">${Prism.highlight(escapeHtml(original), Prism.languages.jsx, "jsx")}</code></pre>`;
+              }
 
-            <div style="background: #000000; border: 1px solid #4a4a4a; padding: 2rem; margin: 2rem 0;">
-              <h5 style="color: #ffffff; margin-bottom: 1rem; font-size: 1.2rem;">Full Version Features:</h5>
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; text-align: left; color: #666666;">
-                <div>• Unlimited file processing</div>
-                <div>• Zero code corruption guarantee</div>
-                <div>• Advanced safety validation</div>
-                <div>• Comprehensive reporting</div>
-                <div>• All 4 transformation layers</div>
-                <div>• Priority processing</div>
-              </div>
-            </div>
+              const diffParts = Diff.diffLines(original, fixed);
+              let html = "";
 
-            <div style="margin-top: 2rem;">
-              <p style="color: #666666; margin-bottom: 2rem; font-size: 1.1rem;">
-                <strong style="color: #ffffff;">Professional React/Next.js code transformation service.</strong><br>
-                <span style="color: #666666;">Enterprise-grade reliability. Production-ready fixes.</span>
-              </p>
+              diffParts.forEach((part) => {
+                const className = part.added
+                  ? "added"
+                  : part.removed
+                    ? "removed"
+                    : "context";
 
-              <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-                <button class="btn" onclick="openPaymentModal('single')" style="font-size: 1.1rem; padding: 1rem 2rem;">
-                  Fix My Code Now - $49
-                </button>
-                <button class="btn" onclick="openPaymentModal('professional')" style="font-size: 1.1rem; padding: 1rem 2rem; background: transparent; color: #ffffff; border: 1px solid #4a4a4a;">
-                  Professional Plan - $149/mo
-                </button>
-              </div>
+                // Split part into individual lines to keep original line breaks
+                const lines = part.value.split("\n");
+                lines.forEach((line, idx) => {
+                  if (line === "" && idx === lines.length - 1) return; // skip final empty line
 
-              <p style="color: #666666; margin-top: 1.5rem; font-size: 0.95rem;">
-                Secure PayPal checkout • All major cards accepted • Instant access
-              </p>
-            </div>
-          </div>
-        `;
+                  const highlighted = Prism.highlight(
+                    line,
+                    Prism.languages.jsx,
+                    "jsx",
+                  );
+                  const prefix = part.added ? "+ " : part.removed ? "- " : "  ";
+                  html += `<span class="diff-line ${className}">${prefix}${highlighted}</span>\n`;
+                });
+              });
 
-        // Also update the comparison tab to show upgrade message
-        const comparisonEl = document.getElementById("codeComparison");
-        comparisonEl.innerHTML = `
-          <div style="grid-column: 1 / -1; background: #000000; border: 1px solid #4a4a4a; padding: 3rem; text-align: center;">
-            <h4 style="color: #ffffff; margin-bottom: 1rem; font-size: 1.4rem;">Code Comparison Locked</h4>
-            <p style="color: #666666; margin-bottom: 2rem;">Upgrade to view detailed before/after code transformations and diff analysis</p>
-            <button class="btn" onclick="openPaymentModal('single')">Unlock Full Analysis - $49</button>
-          </div>
-        `;
+              return html;
+            }
 
-        // Update issues tab
-        const issuesEl = document.getElementById("issuesList");
-        issuesEl.innerHTML = `
-          <div style="text-align: center; padding: 3rem; background: #000000; border: 1px solid #4a4a4a;">
-            <h4 style="color: #ffffff; margin-bottom: 1rem; font-size: 1.4rem;">Issue Analysis Locked</h4>
-            <p style="color: #666666; margin-bottom: 2rem;">Access comprehensive issue reports with automatic fix recommendations</p>
-            <button class="btn" onclick="openPaymentModal('single')">Get Full Analysis - $49</button>
-          </div>
-        `;
+            function escapeHtml(text) {
+              const div = document.createElement("div");
+              div.textContent = text;
+              return div.innerHTML;
+            }
 
-        // Update layers tab
-        const layersEl = document.getElementById("layersApplied");
-        layersEl.innerHTML = `
-          <div style="text-align: center; padding: 3rem; background: #000000; border: 1px solid #4a4a4a;">
-            <h4 style="color: #ffffff; margin-bottom: 1rem; font-size: 1.4rem;">Layer Processing Locked</h4>
-            <p style="color: #666666; margin-bottom: 2rem;">Experience our complete 4-layer transformation system with safety validation</p>
-            <button class="btn" onclick="openPaymentModal('single')">Unlock All Layers - $49</button>
-          </div>
-        `;
-      }
+            function displayDemoLimitReached(filename) {
+              const results = document.getElementById("results");
+              results.classList.add("show");
 
-      function displayError(filename, errorMessage) {
-        const results = document.getElementById("results");
-        results.classList.add("show");
+              // Update all tabs to show upgrade message
+              const summaryEl = document.getElementById("analysisSummary");
+              summaryEl.innerHTML = `
+                <div class="analysis-stat">
+                  <div class="analysis-stat-value">3/3</div>
+                  <div class="analysis-stat-label">Demo Limit</div>
+                </div>
+                <div class="analysis-stat">
+                  <div class="analysis-stat-value">Unlimited</div>
+                  <div class="analysis-stat-label">Pro Version</div>
+                </div>
+                <div class="analysis-stat">
+                  <div class="analysis-stat-value">$49</div>
+                  <div class="analysis-stat-label">Single Fix</div>
+                </div>
+                <div class="analysis-stat">
+                  <div class="analysis-stat-value">50+</div>
+                  <div class="analysis-stat-label">Files Supported</div>
+                </div>
+              `;
 
-        const overviewEl = document.getElementById("analysisOverview");
-        overviewEl.innerHTML = `
-          <div style="background: rgba(255, 100, 100, 0.1); border: 1px solid rgba(255, 100, 100, 0.3); border-radius: 12px; padding: 2rem; text-align: center;">
-                        <h4 style="color: #ffffff; margin-bottom: 1rem;">Analysis Error</h4>
-            <p style="color: rgba(255, 255, 255, 0.7); margin-bottom: 1rem;">Could not analyze <strong>${filename}</strong>:</p>
-            <p style="color: #ffaaaa; font-family: var(--font-mono); font-size: 0.9rem;">${errorMessage}</p>
-            <p style="color: rgba(255, 255, 255, 0.6); margin-top: 1rem; font-size: 0.9rem;">Try uploading a valid React/Next.js file, or use one of our sample codes above.</p>
-          </div>
-        `;
-      }
+              const overviewEl = document.getElementById("analysisOverview");
+              overviewEl.innerHTML = `
+                <div style="background: #000000; border: 1px solid #4a4a4a; padding: 3rem; text-align: center; margin-top: 2rem;">
+                  <h4 style="color: #ffffff; margin-bottom: 1rem; font-size: 1.8rem; font-weight: 700;">Demo Limit Reached</h4>
+                  <p style="color: #666666; margin-bottom: 2rem; font-size: 1.2rem; line-height: 1.6;">
+                    You have reached the 3-file demo limit. <strong style="color: #ffffff;">Upgrade to process unlimited files.</strong>
+                  </p>
 
-      function showUpgradePrompt(totalFiles) {
-        const overviewEl = document.getElementById("analysisOverview");
-        overviewEl.innerHTML += `
-          <div class="demo-upgrade-prompt" style="margin-top: 2rem;">
-            <h4>📁 You uploaded ${totalFiles} files</h4>
-            <p>Demo is limited to 3 files. Upgrade to NeuroLint Pro to analyze unlimited files with full fixing capability.</p>
-            <div class="demo-upgrade-buttons">
-              <button class="demo-upgrade-btn" onclick="openPaymentModal('single')">
-                🚀 Analyze All ${totalFiles} Files - $49
-              </button>
-              <button class="demo-upgrade-btn secondary" onclick="openPaymentModal('professional')">
-                🔧 Unlimited Analysis - $149/mo
-              </button>
-            </div>
-          </div>
-        `;
-      }
+                  <div style="background: #000000; border: 1px solid #4a4a4a; padding: 2rem; margin: 2rem 0;">
+                    <h5 style="color: #ffffff; margin-bottom: 1rem; font-size: 1.2rem;">Demo Features Experienced:</h5>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; text-align: left; color: #666666;">
+                      <div>• Real code analysis</div>
+                      <div>• Before/after comparison</div>
+                      <div>• Issue detection</div>
+                      <div>• 4-layer fix system</div>
+                    </div>
+                  </div>
 
-      // Drag and drop functionality
-      const uploadArea = document.querySelector(".upload-area");
+                  <div style="background: #000000; border: 1px solid #4a4a4a; padding: 2rem; margin: 2rem 0;">
+                    <h5 style="color: #ffffff; margin-bottom: 1rem; font-size: 1.2rem;">Full Version Features:</h5>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; text-align: left; color: #666666;">
+                      <div>• Unlimited file processing</div>
+                      <div>• Zero code corruption guarantee</div>
+                      <div>• Advanced safety validation</div>
+                      <div>• Comprehensive reporting</div>
+                      <div>• All 4 transformation layers</div>
+                      <div>• Priority processing</div>
+                    </div>
+                  </div>
 
-      uploadArea.addEventListener("dragover", (e) => {
-        e.preventDefault();
-        uploadArea.classList.add("dragover");
-      });
+                  <div style="margin-top: 2rem;">
+                    <p style="color: #666666; margin-bottom: 2rem; font-size: 1.1rem;">
+                      <strong style="color: #ffffff;">Professional React/Next.js code transformation service.</strong><br>
+                      <span style="color: #666666;">Enterprise-grade reliability. Production-ready fixes.</span>
+                    </p>
 
-      uploadArea.addEventListener("dragleave", () => {
-        uploadArea.classList.remove("dragover");
-      });
+                    <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                      <button class="btn" onclick="openPaymentModal('single')" style="font-size: 1.1rem; padding: 1rem 2rem;">
+                        Fix My Code Now - $49
+                      </button>
+                      <button class="btn" onclick="openPaymentModal('professional')" style="font-size: 1.1rem; padding: 1rem 2rem; background: transparent; color: #ffffff; border: 1px solid #4a4a4a;">
+                        Professional Plan - $149/mo
+                      </button>
+                    </div>
 
-      uploadArea.addEventListener("drop", (e) => {
-        e.preventDefault();
-        uploadArea.classList.remove("dragover");
+                    <p style="color: #666666; margin-top: 1.5rem; font-size: 0.95rem;">
+                      Secure PayPal checkout • All major cards accepted • Instant access
+                    </p>
+                  </div>
+                </div>
+              `;
 
-        const files = e.dataTransfer.files;
-        document.getElementById("fileInput").files = files;
-        handleFileUpload({ target: { files } });
-      });
+              // Also update the comparison tab to show upgrade message
+              const comparisonEl = document.getElementById("codeComparison");
+              comparisonEl.innerHTML = `
+                <div style="grid-column: 1 / -1; background: #000000; border: 1px solid #4a4a4a; padding: 3rem; text-align: center;">
+                  <h4 style="color: #ffffff; margin-bottom: 1rem; font-size: 1.4rem;">Code Comparison Locked</h4>
+                  <p style="color: #666666; margin-bottom: 2rem;">Upgrade to view detailed before/after code transformations and diff analysis</p>
+                  <button class="btn" onclick="openPaymentModal('single')">Unlock Full Analysis - $49</button>
+                </div>
+              `;
 
-      // Smooth scrolling for navigation
-      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-        anchor.addEventListener("click", function (e) {
-          e.preventDefault();
-          const target = document.querySelector(this.getAttribute("href"));
-          if (target) {
-            target.scrollIntoView({
-              behavior: "smooth",
-              block: "start",
+              // Update issues tab
+              const issuesEl = document.getElementById("issuesList");
+              issuesEl.innerHTML = `
+                <div style="text-align: center; padding: 3rem; background: #000000; border: 1px solid #4a4a4a;">
+                  <h4 style="color: #ffffff; margin-bottom: 1rem; font-size: 1.4rem;">Issue Analysis Locked</h4>
+                  <p style="color: #666666; margin-bottom: 2rem;">Access comprehensive issue reports with automatic fix recommendations</p>
+                  <button class="btn" onclick="openPaymentModal('single')">Get Full Analysis - $49</button>
+                </div>
+              `;
+
+              // Update layers tab
+              const layersEl = document.getElementById("layersApplied");
+              layersEl.innerHTML = `
+                <div style="text-align: center; padding: 3rem; background: #000000; border: 1px solid #4a4a4a;">
+                  <h4 style="color: #ffffff; margin-bottom: 1rem; font-size: 1.4rem;">Layer Processing Locked</h4>
+                  <p style="color: #666666; margin-bottom: 2rem;">Experience our complete 4-layer transformation system with safety validation</p>
+                  <button class="btn" onclick="openPaymentModal('single')">Unlock All Layers - $49</button>
+                </div>
+              `;
+            }
+
+            function displayError(filename, errorMessage) {
+              const results = document.getElementById("results");
+              results.classList.add("show");
+
+              const overviewEl = document.getElementById("analysisOverview");
+              overviewEl.innerHTML = `
+                <div style="background: rgba(255, 100, 100, 0.1); border: 1px solid rgba(255, 100, 100, 0.3); border-radius: 12px; padding: 2rem; text-align: center;">
+                              <h4 style="color: #ffffff; margin-bottom: 1rem;">Analysis Error</h4>
+                  <p style="color: rgba(255, 255, 255, 0.7); margin-bottom: 1rem;">Could not analyze <strong>${filename}</strong>:</p>
+                  <p style="color: #ffaaaa; font-family: var(--font-mono); font-size: 0.9rem;">${errorMessage}</p>
+                  <p style="color: rgba(255, 255, 255, 0.6); margin-top: 1rem; font-size: 0.9rem;">Try uploading a valid React/Next.js file, or use one of our sample codes above.</p>
+                </div>
+              `;
+            }
+
+            function showUpgradePrompt(totalFiles) {
+              const overviewEl = document.getElementById("analysisOverview");
+              overviewEl.innerHTML += `
+                <div class="demo-upgrade-prompt" style="margin-top: 2rem;">
+                  <h4>📁 You uploaded ${totalFiles} files</h4>
+                  <p>Demo is limited to 3 files. Upgrade to NeuroLint Pro to analyze unlimited files with full fixing capability.</p>
+                  <div class="demo-upgrade-buttons">
+                    <button class="demo-upgrade-btn" onclick="openPaymentModal('single')">
+                      🚀 Analyze All ${totalFiles} Files - $49
+                    </button>
+                    <button class="demo-upgrade-btn secondary" onclick="openPaymentModal('professional')">
+                      🔧 Unlimited Analysis - $149/mo
+                    </button>
+                  </div>
+                </div>
+              `;
+            }
+
+            // Drag and drop functionality
+            const uploadArea = document.querySelector(".upload-area");
+
+            uploadArea.addEventListener("dragover", (e) => {
+              e.preventDefault();
+              uploadArea.classList.add("dragover");
             });
-          }
-        });
-      });
 
-      // Close modal with Escape key
-      document.addEventListener("keydown", function (e) {
-        if (e.key === "Escape") {
-          closePaymentModal();
-        }
-      });
+            uploadArea.addEventListener("dragleave", () => {
+              uploadArea.classList.remove("dragover");
+            });
 
-      // Announce dynamic content changes for screen readers
-      function announceChange(message) {
-        const announcement = document.createElement("div");
-        announcement.setAttribute("aria-live", "polite");
-        announcement.setAttribute("aria-atomic", "true");
-        announcement.className = "sr-only";
-        announcement.textContent = message;
-        document.body.appendChild(announcement);
+            uploadArea.addEventListener("drop", (e) => {
+              e.preventDefault();
+              uploadArea.classList.remove("dragover");
 
-        setTimeout(() => {
-          document.body.removeChild(announcement);
-        }, 1000);
-      }
+              const files = e.dataTransfer.files;
+              document.getElementById("fileInput").files = files;
+              handleFileUpload({ target: { files } });
+            });
+
+            // Smooth scrolling for navigation
+            document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+              anchor.addEventListener("click", function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute("href"));
+                if (target) {
+                  target.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start",
+                  });
+                }
+              });
+            });
+
+            // Close modal with Escape key
+            document.addEventListener("keydown", function (e) {
+              if (e.key === "Escape") {
+                closePaymentModal();
+              }
+            });
+
+            // Announce dynamic content changes for screen readers
+            function announceChange(message) {
+              const announcement = document.createElement("div");
+              announcement.setAttribute("aria-live", "polite");
+              announcement.setAttribute("aria-atomic", "true");
+              announcement.className = "sr-only";
+              announcement.textContent = message;
+              document.body.appendChild(announcement);
+
+              setTimeout(() => {
+                document.body.removeChild(announcement);
+              }, 1000);
+            }
     </script>
   </body>
 </html>
