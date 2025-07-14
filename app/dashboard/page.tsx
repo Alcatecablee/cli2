@@ -208,6 +208,8 @@ export default function Dashboard() {
   });
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [sessionId, setSessionId] = useState<string | null>(null);
+  const [rateLimitInfo, setRateLimitInfo] = useState<any>(null);
 
   const analyzecode = useCallback(
     async (
@@ -232,10 +234,16 @@ export default function Dashboard() {
           uploadProgress: 25,
         }));
 
-        const response = await fetch("/api/demo", {
+        const response = await fetch("/api/dashboard", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ code, filename, layers, applyFixes }),
+          body: JSON.stringify({
+            code,
+            filename,
+            layers,
+            applyFixes,
+            sessionId,
+          }),
         });
 
         setDashboardState((prev) => ({
@@ -256,6 +264,12 @@ export default function Dashboard() {
         };
 
         const executionTime = Date.now() - startTime;
+
+        // Update session info if provided
+        if (result.sessionInfo) {
+          setSessionId(result.sessionInfo.sessionId);
+          setRateLimitInfo(result.sessionInfo.rateLimitInfo);
+        }
 
         // Save to history if settings allow
         if (dashboardState.settings.autoSave && normalizedResult.success) {
