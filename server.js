@@ -13,6 +13,8 @@ const cors = require("cors");
 const crypto = require("crypto");
 const paypal = require("@paypal/checkout-server-sdk");
 const { createClient } = require("@supabase/supabase-js");
+const rateLimit = require("express-rate-limit");
+const helmet = require("helmet");
 require("dotenv").config();
 
 // Import the REAL NeuroLint Pro engine
@@ -35,6 +37,12 @@ const config = {
 
 // Middleware
 app.use(cors());
+// Security headers
+app.use(
+  helmet({
+    contentSecurityPolicy: false,
+  }),
+);
 app.use(express.json({ limit: "10mb" }));
 app.use(express.static(path.join(__dirname, ".")));
 
@@ -44,6 +52,32 @@ const activeSessions = new Map();
 // Rate limiting for demo users
 const demoRequests = new Map();
 const DEMO_LIMIT = 100; // 100 files per demo session for testing
+
+// ------------------ Session Expiration ------------------
+const TTL_SINGLE = 1000 * 60 * 60 * 24 * 30; // 30 days
+const TTL_SUBS = TTL_SINGLE; // can vary
+
+function isExpired(session) {
+  const age = Date.now() - session.created;
+  if (!session.subscription && age > TTL_SINGLE) return true;
+  if (session.subscription && age > TTL_SUBS) {
+    // TODO: optionally re-validate subscription status
+    return true;
+  }
+  return false;
+}
+
+setInterval(() => {
+  for (const [id, sess] of activeSessions.entries()) {
+    if (isExpired(sess)) {
+      activeSessions.delete(id);
+      console.log("🗑️ Expired session removed", id);
+    }
+  }
+}, 1000 * 60 * 60); // hourly cleanup
+
+// Rate limiting for webhook
+const webhookLimiter = rateLimit({ windowMs: 5 * 60 * 1000, max: 20 });
 
 // ------------------ Supabase Client ------------------
 const supabase = createClient(
@@ -121,7 +155,11 @@ async function verifyPayPalWebhookOfficial(req) {
   }
 }
 
-app.post("/api/paypal/webhook", express.raw({ type: "application/json" }), (req, res) => {
+app.post(
+  "/api/paypal/webhook",
+  webhookLimiter,
+  express.raw({ type: "application/json" }),
+  async (req, res) => {
   if (!verifyPayPalWebhookOfficial(req)) {
     console.warn("⚠️  Invalid PayPal webhook signature");
     return res.status(400).send("invalid signature");
@@ -141,12 +179,13 @@ app.post("/api/paypal/webhook", express.raw({ type: "application/json" }), (req,
       created: Date.now(),
     };
     activeSessions.set(orderId, sessionInfo);
-    persistSessions();
+    await persistSessions();
     console.log("✅ Recorded paid session from webhook:", orderId);
   }
 
-  res.sendStatus(200);
-});
+  return res.sendStatus(200);
+},
+);
 
 /**
  * Validate session using PayPal transaction data
@@ -160,6 +199,10 @@ function validateSession(sessionId, subscription) {
   // Check persisted/active sessions first
   if (activeSessions.has(sessionId)) {
     const data = activeSessions.get(sessionId);
+    if (isExpired(data)) {
+      activeSessions.delete(sessionId);
+      return { valid: false, error: "Session expired" };
+    }
     return {
       valid: true,
       unlimited: data.unlimited || false,
