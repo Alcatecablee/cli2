@@ -421,31 +421,31 @@ export default function Dashboard() {
   const sidebarItems = [
     {
       id: "editor",
-      icon: "📝",
+      icon: "<>",
       label: "Code Analysis",
       description: "Upload and analyze files",
     },
     {
       id: "projects",
-      icon: "📁",
+      icon: "[]",
       label: "Projects",
       description: "Organize your work",
     },
     {
       id: "history",
-      icon: "📊",
+      icon: "#",
       label: "Analysis History",
       description: "Previous analyses",
     },
     {
       id: "samples",
-      icon: "🧪",
+      icon: "{ }",
       label: "Sample Files",
       description: "Test with examples",
     },
     {
       id: "settings",
-      icon: "⚙️",
+      icon: "*",
       label: "Settings",
       description: "Configure preferences",
     },
@@ -476,7 +476,7 @@ export default function Dashboard() {
               }))
             }
           >
-            {dashboardState.sidebarCollapsed ? "→" : "��"}
+            {dashboardState.sidebarCollapsed ? "→" : "←"}
           </button>
         </div>
 
