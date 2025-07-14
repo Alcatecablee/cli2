@@ -311,10 +311,16 @@ function ImageGallery({ images }) {
           errorMessage: result?.error,
         });
 
+        // Fix: NeuroLint Pro returns different structure for dry-run mode
+        const normalizedResult = {
+          ...result,
+          success: result?.dryRun ? true : result?.success, // Dry-run is always successful
+        };
+
         setDemoState((prev) => ({
           ...prev,
           isLoading: false,
-          result,
+          result: normalizedResult,
           showResults: true,
         }));
       } catch (error) {
