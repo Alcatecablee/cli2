@@ -230,8 +230,8 @@
 }
 
 .brand-logo img {
-  width: 32px;
-  height: 32px;
+  width: 24px;
+  height: 24px;
   object-fit: contain;
   transition: var(--transition-smooth);
   filter: brightness(1.1) contrast(1.1);
