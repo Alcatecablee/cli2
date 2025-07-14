@@ -710,8 +710,17 @@
   position: relative;
 }
 
+/* Header container to center the header */
 .dashboard-header {
-  padding: 16px 24px;
+  padding: 20px 24px;
+  display: flex;
+  justify-content: center;
+  position: relative;
+}
+
+/* The actual centered header content */
+.dashboard-header > * {
+  padding: 16px 32px;
   background: linear-gradient(
     135deg,
     rgba(255, 255, 255, 0.08) 0%,
@@ -730,6 +739,9 @@
   opacity: 0;
   animation: slideInDown 0.8s ease-out 0.3s both;
   position: relative;
+  border-radius: 16px;
+  width: fit-content;
+  gap: 40px;
 }
 
 /* Add fade effect at the bottom of the header */
