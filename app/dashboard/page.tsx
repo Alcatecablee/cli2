@@ -1467,7 +1467,72 @@ export default function Dashboard() {
                           ) : (
                             <div className="comparison-grid">
                               <div className="code-panel">
-                                <h4>Original Code</h4>
+                                <div className="code-panel-header">
+                                  <h4>Original Code</h4>
+                                  <div className="code-actions">
+                                    <button
+                                      className="code-action-btn"
+                                      onClick={() =>
+                                        copyToClipboard(
+                                          dashboardState.result?.originalCode ||
+                                            "",
+                                          "Original",
+                                        )
+                                      }
+                                      title="Copy original code"
+                                      aria-label="Copy original code to clipboard"
+                                    >
+                                      <svg
+                                        width="16"
+                                        height="16"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                      >
+                                        <rect
+                                          x="9"
+                                          y="9"
+                                          width="13"
+                                          height="13"
+                                          rx="2"
+                                          ry="2"
+                                        ></rect>
+                                        <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"></path>
+                                      </svg>
+                                    </button>
+                                    <button
+                                      className="code-action-btn"
+                                      onClick={() =>
+                                        downloadCode(
+                                          dashboardState.result?.originalCode ||
+                                            "",
+                                          `${dashboardState.currentFile || "original-code"}.backup.tsx`,
+                                        )
+                                      }
+                                      title="Download original code"
+                                      aria-label="Download original code as file"
+                                    >
+                                      <svg
+                                        width="16"
+                                        height="16"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                      >
+                                        <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"></path>
+                                        <polyline points="7,10 12,15 17,10"></polyline>
+                                        <line
+                                          x1="12"
+                                          y1="15"
+                                          x2="12"
+                                          y2="3"
+                                        ></line>
+                                      </svg>
+                                    </button>
+                                  </div>
+                                </div>
                                 <pre className="code-block">
                                   <code>
                                     {dashboardState.result.originalCode}
@@ -1475,11 +1540,76 @@ export default function Dashboard() {
                                 </pre>
                               </div>
                               <div className="code-panel">
-                                <h4>
-                                  {dashboardState.result.dryRun
-                                    ? "Preview Changes"
-                                    : "Fixed Code"}
-                                </h4>
+                                <div className="code-panel-header">
+                                  <h4>
+                                    {dashboardState.result.dryRun
+                                      ? "Preview Changes"
+                                      : "Fixed Code"}
+                                  </h4>
+                                  <div className="code-actions">
+                                    <button
+                                      className="code-action-btn"
+                                      onClick={() =>
+                                        copyToClipboard(
+                                          dashboardState.result?.transformed ||
+                                            "",
+                                          "Fixed",
+                                        )
+                                      }
+                                      title="Copy fixed code"
+                                      aria-label="Copy fixed code to clipboard"
+                                    >
+                                      <svg
+                                        width="16"
+                                        height="16"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                      >
+                                        <rect
+                                          x="9"
+                                          y="9"
+                                          width="13"
+                                          height="13"
+                                          rx="2"
+                                          ry="2"
+                                        ></rect>
+                                        <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"></path>
+                                      </svg>
+                                    </button>
+                                    <button
+                                      className="code-action-btn"
+                                      onClick={() =>
+                                        downloadCode(
+                                          dashboardState.result?.transformed ||
+                                            "",
+                                          `${dashboardState.currentFile || "fixed-code"}.tsx`,
+                                        )
+                                      }
+                                      title="Download fixed code"
+                                      aria-label="Download fixed code as file"
+                                    >
+                                      <svg
+                                        width="16"
+                                        height="16"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                      >
+                                        <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"></path>
+                                        <polyline points="7,10 12,15 17,10"></polyline>
+                                        <line
+                                          x1="12"
+                                          y1="15"
+                                          x2="12"
+                                          y2="3"
+                                        ></line>
+                                      </svg>
+                                    </button>
+                                  </div>
+                                </div>
                                 <pre className="code-block">
                                   <code>
                                     {dashboardState.result.transformed}
