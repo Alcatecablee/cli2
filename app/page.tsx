@@ -1130,7 +1130,7 @@ function ImageGallery({ images }) {
                                 marginBottom: "0.5rem",
                               }}
                             >
-                              📊 <strong>Analysis Complete</strong>
+                              <strong>Analysis Complete</strong>
                             </p>
                             <p style={{ fontSize: "0.9rem" }}>
                               {demoState.result.analysis?.detectedIssues
