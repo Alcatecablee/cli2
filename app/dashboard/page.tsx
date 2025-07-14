@@ -1587,13 +1587,14 @@ export default function Dashboard() {
                             </div>
                           </div>
                           <div className="insight-card">
-                            <div className="insight-label">Maintainability</div>
+                            <div className="insight-label">
+                              Standards Compliance
+                            </div>
                             <div className="insight-value">
-                              +
                               {Math.round(
                                 dashboardState.result.analysis.confidence * 100,
                               )}
-                              % code quality
+                              % best practices
                             </div>
                           </div>
                         </div>
