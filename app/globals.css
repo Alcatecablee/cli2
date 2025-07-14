@@ -250,7 +250,7 @@ a {
   gap: 2rem;
   justify-content: center;
   flex-wrap: wrap;
-  margin-bottom: 6rem;
+  margin-bottom: 2rem;
   /* Add entrance animation */
   animation: fadeInUp 0.8s ease-out 0.8s both;
 }
