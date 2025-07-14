@@ -361,14 +361,22 @@ async function executeLayers(code, enabledLayers, options = {}) {
       );
 
       if (validation.shouldRevert) {
-        console.warn(`⚠️  Reverting Layer ${layerId}: ${validation.reason}`);
+        const executionTime = performance.now() - startTime;
+        console.warn(
+          `%c⚠️  LAYER ${layerId} REVERTED`,
+          "color: #ff9800; font-weight: bold;",
+        );
+        console.warn(`   🚫 Revert Reason: ${validation.reason}`);
+        console.warn(`   ⏱️  Execution Time: ${executionTime.toFixed(0)}ms`);
+        console.warn(`   🔄 Rolling back to previous safe state`);
+
         current = previous; // Rollback to safe state
 
         results.push({
           layerId,
           success: false,
           code: previous,
-          executionTime: performance.now() - startTime,
+          executionTime,
           changeCount: 0,
           revertReason: validation.reason,
         });
@@ -384,6 +392,30 @@ async function executeLayers(code, enabledLayers, options = {}) {
           });
         }
       } else {
+        const executionTime = performance.now() - startTime;
+        const changeCount = calculateChanges(previous, transformed);
+        const improvements = detectImprovements(previous, transformed);
+
+        console.log(
+          `%c✅ LAYER ${layerId} SUCCESS`,
+          "color: #4caf50; font-weight: bold;",
+        );
+        console.log(`   ⏱️  Execution Time: ${executionTime.toFixed(0)}ms`);
+        console.log(`   🔧 Changes Made: ${changeCount}`);
+        console.log(
+          `   📏 Code Size: ${previous.length} → ${transformed.length} characters`,
+        );
+        console.log(
+          `   📈 Size Change: ${transformed.length - previous.length > 0 ? "+" : ""}${transformed.length - previous.length}`,
+        );
+
+        if (improvements.length > 0) {
+          console.log(`   ✨ Improvements:`);
+          improvements.forEach((improvement) =>
+            console.log(`      • ${improvement}`),
+          );
+        }
+
         current = transformed; // Accept changes
         states.push(current);
 
@@ -393,9 +425,9 @@ async function executeLayers(code, enabledLayers, options = {}) {
           layerId,
           success: true,
           code: current,
-          executionTime: performance.now() - startTime,
-          changeCount: calculateChanges(previous, transformed),
-          improvements: detectImprovements(previous, transformed),
+          executionTime,
+          changeCount,
+          improvements,
         });
 
         if (typeof options.onProgress === "function") {
