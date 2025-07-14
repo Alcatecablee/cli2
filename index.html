@@ -11,7 +11,10 @@
     <link rel="icon" type="image/png" href="/favico.png" />
     <script src="https://www.paypal.com/sdk/js?client-id=AaZabZwUPYitlE5MOXwohkXxtMzI7GaSArFxw7JYMIDfZE_PHvsMzY1WEsZk_QwTdek4SEpjj_DC5ys7&currency=USD&intent=capture&enable-funding=venmo,card"></script>
     <!-- Diff & Syntax Highlighting -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css"
+      rel="stylesheet"
+    />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-jsx.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/diff/5.1.0/diff.min.js"></script>
@@ -1323,26 +1326,55 @@
       }
 
       /* Enterprise dark overrides */
-      body, .hero, .feature-card, .sample-code-section, .pricing-card, .upload-area {
+      body,
+      .hero,
+      .feature-card,
+      .sample-code-section,
+      .pricing-card,
+      .upload-area {
         background: var(--background) !important;
       }
-      .feature-card, .sample-code-section, .pricing-card {
+      .feature-card,
+      .sample-code-section,
+      .pricing-card {
         border: 1px solid var(--border) !important;
       }
-      .features::before { background: var(--border); }
-      .hero, .feature-card:hover { box-shadow: none !important; transform: none !important; }
-      .hero-actions .btn:hover, .nav .btn:hover { box-shadow: none !important; }
-      .section-subtitle { color: var(--muted) !important; }
+      .features::before {
+        background: var(--border);
+      }
+      .hero,
+      .feature-card:hover {
+        box-shadow: none !important;
+        transform: none !important;
+      }
+      .hero-actions .btn:hover,
+      .nav .btn:hover {
+        box-shadow: none !important;
+      }
+      .section-subtitle {
+        color: var(--muted) !important;
+      }
 
       /* Dark theme overrides – remove gradients */
-      body, .hero, .feature-card, .sample-code-section, .pricing-card, .upload-area {
+      body,
+      .hero,
+      .feature-card,
+      .sample-code-section,
+      .pricing-card,
+      .upload-area {
         background: var(--background) !important;
       }
-      .feature-card, .sample-code-section, .pricing-card, .upload-area {
+      .feature-card,
+      .sample-code-section,
+      .pricing-card,
+      .upload-area {
         background-image: none !important;
         border: 1px solid var(--border);
       }
-      .features::before, .hero::before { display:none; }
+      .features::before,
+      .hero::before {
+        display: none;
+      }
     </style>
   </head>
   <body>
@@ -2314,11 +2346,18 @@ function UserProfile({ user, onUpdate }) {
 
       // Main analysis function that calls the real engine
       async function analyzeCode(code, filename, isSample = false) {
-        console.log("=== STARTING ANALYSIS ===");
-        console.log("Filename:", filename);
-        console.log("Is Sample:", isSample);
-        console.log("Code length:", code.length);
-        console.log("Code preview:", code.substring(0, 200) + "...");
+        console.log(
+          "%c=== STARTING NEUROLINT PRO ANALYSIS ===",
+          "color: #00ff00; font-weight: bold; font-size: 14px;",
+        );
+        console.log("📄 File Information:");
+        console.log("  - Filename:", filename);
+        console.log("  - Is Sample Code:", isSample);
+        console.log("  - Code Length:", code.length, "characters");
+        console.log("  - File Type:", filename.split(".").pop());
+        console.log("📝 Code Preview (first 200 chars):");
+        console.log(code.substring(0, 200) + "...");
+        console.log("🚀 Starting transformation pipeline...");
 
         const results = document.getElementById("results");
         const progressFill = document.getElementById("progressFill");
@@ -2326,7 +2365,7 @@ function UserProfile({ user, onUpdate }) {
 
         // Show the results section
         results.classList.add("show");
-        console.log("Results section shown");
+        console.log("✅ Results section displayed");
 
         try {
           // Start progress animation
@@ -2796,21 +2835,29 @@ function UserProfile({ user, onUpdate }) {
 
       function generateDiffHtml(original, fixed) {
         if (original === fixed) {
-          return `<pre><code class="language-jsx">${Prism.highlight(escapeHtml(original), Prism.languages.jsx, 'jsx')}</code></pre>`;
+          return `<pre><code class="language-jsx">${Prism.highlight(escapeHtml(original), Prism.languages.jsx, "jsx")}</code></pre>`;
         }
 
         const diffParts = Diff.diffLines(original, fixed);
         let html = "";
 
         diffParts.forEach((part) => {
-          const className = part.added ? "added" : part.removed ? "removed" : "context";
+          const className = part.added
+            ? "added"
+            : part.removed
+              ? "removed"
+              : "context";
 
           // Split part into individual lines to keep original line breaks
           const lines = part.value.split("\n");
           lines.forEach((line, idx) => {
             if (line === "" && idx === lines.length - 1) return; // skip final empty line
 
-            const highlighted = Prism.highlight(line, Prism.languages.jsx, 'jsx');
+            const highlighted = Prism.highlight(
+              line,
+              Prism.languages.jsx,
+              "jsx",
+            );
             const prefix = part.added ? "+ " : part.removed ? "- " : "  ";
             html += `<span class="diff-line ${className}">${prefix}${highlighted}</span>\n`;
           });
