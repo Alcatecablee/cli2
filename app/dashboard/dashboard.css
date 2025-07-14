@@ -746,7 +746,7 @@
 }
 
 /* Add fade effect at the bottom of the centered header */
-.dashboard-header > *::after {
+.header-content::after {
   content: "";
   position: absolute;
   bottom: -8px;
