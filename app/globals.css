@@ -787,10 +787,75 @@ a {
   }
 }
 
-/* Focus styles */
+/* Enhanced Focus and Accessibility Styles */
 *:focus {
   outline: 2px solid #ffffff;
   outline-offset: 2px;
+  outline-style: solid;
+}
+
+/* Focus visible for better keyboard navigation */
+*:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.1);
+}
+
+/* Remove outline for mouse users */
+*:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Skip to content link for screen readers */
+.skip-to-content {
+  position: absolute;
+  top: -40px;
+  left: 6px;
+  background: #ffffff;
+  color: #000000;
+  padding: 8px;
+  text-decoration: none;
+  border-radius: 4px;
+  z-index: 100;
+  font-weight: 600;
+}
+
+.skip-to-content:focus {
+  top: 6px;
+}
+
+/* Improve keyboard navigation for interactive elements */
+button,
+.btn,
+a,
+input,
+select,
+textarea {
+  position: relative;
+}
+
+button:focus-visible,
+.btn:focus-visible,
+a:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+  z-index: 1;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  :root {
+    --border: #ffffff;
+    --border-subtle: #ffffff;
+  }
+
+  .hero-subtitle,
+  .hero-desc,
+  .upload-area,
+  .sample-code-section,
+  .demo-controls {
+    border-color: #ffffff;
+  }
 }
 
 /* Reduced motion */
