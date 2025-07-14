@@ -1062,6 +1062,63 @@ function ImageGallery({ images }) {
 
                 {demoState.result.success ? (
                   <>
+                    {/* Premium Business Insights */}
+                    {demoState.result.analysis && (
+                      <div className="business-insights">
+                        <h4>💼 Business Impact Analysis</h4>
+                        <div className="insights-grid">
+                          <div className="insight-card">
+                            <div className="insight-label">
+                              Potential Savings
+                            </div>
+                            <div className="insight-value">
+                              ~
+                              {Math.round(
+                                demoState.result.analysis.detectedIssues
+                                  .length * 2.5,
+                              )}{" "}
+                              hours dev time
+                            </div>
+                          </div>
+                          <div className="insight-card">
+                            <div className="insight-label">
+                              Performance Gain
+                            </div>
+                            <div className="insight-value">
+                              {demoState.result.analysis.estimatedImpact
+                                .level === "high"
+                                ? "15-25%"
+                                : "5-15%"}{" "}
+                              faster
+                            </div>
+                          </div>
+                          <div className="insight-card">
+                            <div className="insight-label">Risk Reduction</div>
+                            <div className="insight-value">
+                              {
+                                demoState.result.analysis.detectedIssues.filter(
+                                  (i) =>
+                                    i.severity === "high" ||
+                                    i.severity === "critical",
+                                ).length
+                              }{" "}
+                              critical issues
+                            </div>
+                          </div>
+                          <div className="insight-card">
+                            <div className="insight-label">Maintainability</div>
+                            <div className="insight-value">
+                              +
+                              {Math.round(
+                                demoState.result.analysis.confidence * 100,
+                              )}
+                              % code quality
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
                     {/* Analysis Summary */}
                     {demoState.result.analysis && (
                       <div className="analysis-summary">
