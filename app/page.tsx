@@ -453,10 +453,16 @@ function ImageGallery({ images }) {
 
       const result = await response.json();
 
+      // Fix: NeuroLint Pro returns different structure for dry-run mode
+      const normalizedResult = {
+        ...result,
+        success: result?.dryRun ? true : result?.success, // Dry-run is always successful
+      };
+
       setDemoState((prev) => ({
         ...prev,
         isLoading: false,
-        result,
+        result: normalizedResult,
         showResults: true,
       }));
     } catch (error) {
