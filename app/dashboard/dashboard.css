@@ -514,13 +514,9 @@
 }
 
 .user-avatar {
-  width: 36px;
-  height: 36px;
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.15) 0%,
-    rgba(255, 255, 255, 0.08) 100%
-  );
+  width: 32px;
+  height: 32px;
+  background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 50%;
   display: flex;
@@ -530,12 +526,7 @@
   flex-shrink: 0;
   color: rgba(255, 255, 255, 0.9);
   font-weight: 600;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  box-shadow: var(--shadow-subtle);
-  transition: var(--transition-spring);
-  position: relative;
-  overflow: hidden;
+  transition: var(--transition-smooth);
 }
 
 .user-avatar::before {
