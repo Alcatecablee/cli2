@@ -675,6 +675,14 @@ async function executeLayer(layerId, code, options = {}) {
   const layerName = getLayerName(layerId);
   console.log(`🔧 [LAYER ${layerId}] Layer name: ${layerName}`);
 
+  // For demo/single file processing, skip script execution and use fallback directly
+  if (options.isDemoMode || options.singleFile || !code.includes("src/")) {
+    console.log(
+      `🔧 [LAYER ${layerId}] Demo mode detected - using fallback transformations`,
+    );
+    return applyLayerTransformations(layerId, code, options);
+  }
+
   // Create a temporary file for the specific code to be transformed
   const tempFile = path.join(
     process.cwd(),
@@ -795,7 +803,7 @@ function applyLayerTransformations(layerId, code, options = {}) {
       if (transformedCode.includes("&quot;")) {
         transformedCode = transformedCode.replace(/&quot;/g, '"');
         appliedFixes.push("HTML Entity: Converted &quot; to quotes");
-        console.log(`🛠️  [FALLBACK] Fixed HTML entities: &quot;`);
+        console.log(`🛠���  [FALLBACK] Fixed HTML entities: &quot;`);
       }
       if (transformedCode.includes("&amp;")) {
         transformedCode = transformedCode.replace(/&amp;/g, "&");
@@ -859,7 +867,7 @@ function applyLayerTransformations(layerId, code, options = {}) {
           '<img src={$1} alt="" onClick',
         );
         appliedFixes.push("Accessibility: Added alt attributes to images");
-        console.log(`🛠️  [FALLBACK] Added missing alt attributes`);
+        console.log(`���️  [FALLBACK] Added missing alt attributes`);
       }
       break;
 
@@ -1750,7 +1758,7 @@ async function NeuroLintPro(
         "🔍 [DRY RUN] Would execute layers:",
         layersToExecute.join(", "),
       );
-      console.log("🔍 [DRY RUN] Analysis object:", analysis);
+      console.log("�� [DRY RUN] Analysis object:", analysis);
       console.log(
         "🔍 [DRY RUN] Detected issues:",
         analysis ? analysis.detectedIssues : "none",
