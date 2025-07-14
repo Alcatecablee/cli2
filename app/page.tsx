@@ -49,6 +49,16 @@ interface DemoState {
   applyFixes: boolean;
 }
 
+// Helper function to clear demo state
+const clearDemoState = () => ({
+  isLoading: false,
+  currentSample: null,
+  result: null,
+  showResults: false,
+  selectedLayers: [],
+  applyFixes: false,
+});
+
 export default function HomePage() {
   const [currentText, setCurrentText] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
