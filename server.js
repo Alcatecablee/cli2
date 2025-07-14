@@ -67,14 +67,17 @@ function isExpired(session) {
   return false;
 }
 
-setInterval(() => {
-  for (const [id, sess] of activeSessions.entries()) {
-    if (isExpired(sess)) {
-      activeSessions.delete(id);
-      console.log("🗑️ Expired session removed", id);
+setInterval(
+  () => {
+    for (const [id, sess] of activeSessions.entries()) {
+      if (isExpired(sess)) {
+        activeSessions.delete(id);
+        console.log("🗑️ Expired session removed", id);
+      }
     }
-  }
-}, 1000 * 60 * 60); // hourly cleanup
+  },
+  1000 * 60 * 60,
+); // hourly cleanup
 
 // Rate limiting for webhook
 const webhookLimiter = rateLimit({ windowMs: 5 * 60 * 1000, max: 20 });
@@ -90,7 +93,10 @@ const supabase = createClient(
 
 async function loadSessionsFromSupabase() {
   try {
-    const { data, error } = await supabase.from("sessions").select("sessionId, unlimited, subscription, created").eq("active", true);
+    const { data, error } = await supabase
+      .from("sessions")
+      .select("sessionId, unlimited, subscription, created")
+      .eq("active", true);
     if (error) throw error;
     data.forEach((row) => activeSessions.set(row.sessionId, row));
     console.log(`💾 Supabase: hydrated ${data.length} sessions`);
@@ -125,9 +131,16 @@ async function persistSessions() {
 loadSessionsFromSupabase();
 
 // ------------------ PayPal SDK ------------------
-const environment = process.env.NODE_ENV === "production"
-  ? new paypal.core.LiveEnvironment(process.env.PAYPAL_CLIENT_ID, process.env.PAYPAL_SECRET)
-  : new paypal.core.SandboxEnvironment(process.env.PAYPAL_CLIENT_ID, process.env.PAYPAL_SECRET);
+const environment =
+  process.env.NODE_ENV === "production"
+    ? new paypal.core.LiveEnvironment(
+        process.env.PAYPAL_CLIENT_ID,
+        process.env.PAYPAL_SECRET,
+      )
+    : new paypal.core.SandboxEnvironment(
+        process.env.PAYPAL_CLIENT_ID,
+        process.env.PAYPAL_SECRET,
+      );
 
 const paypalClient = new paypal.core.PayPalHttpClient(environment);
 
@@ -160,31 +173,31 @@ app.post(
   webhookLimiter,
   express.raw({ type: "application/json" }),
   async (req, res) => {
-  if (!verifyPayPalWebhookOfficial(req)) {
-    console.warn("⚠️  Invalid PayPal webhook signature");
-    return res.status(400).send("invalid signature");
-  }
+    if (!verifyPayPalWebhookOfficial(req)) {
+      console.warn("⚠️  Invalid PayPal webhook signature");
+      return res.status(400).send("invalid signature");
+    }
 
-  const event = JSON.parse(req.body.toString());
+    const event = JSON.parse(req.body.toString());
 
-  if (
-    event.event_type === "CHECKOUT.ORDER.APPROVED" ||
-    event.event_type === "PAYMENT.CAPTURE.COMPLETED"
-  ) {
-    const orderId = event.resource.id;
-    const sessionInfo = {
-      sessionId: orderId,
-      unlimited: true,
-      subscription: false,
-      created: Date.now(),
-    };
-    activeSessions.set(orderId, sessionInfo);
-    await persistSessions();
-    console.log("✅ Recorded paid session from webhook:", orderId);
-  }
+    if (
+      event.event_type === "CHECKOUT.ORDER.APPROVED" ||
+      event.event_type === "PAYMENT.CAPTURE.COMPLETED"
+    ) {
+      const orderId = event.resource.id;
+      const sessionInfo = {
+        sessionId: orderId,
+        unlimited: true,
+        subscription: false,
+        created: Date.now(),
+      };
+      activeSessions.set(orderId, sessionInfo);
+      await persistSessions();
+      console.log("✅ Recorded paid session from webhook:", orderId);
+    }
 
-  return res.sendStatus(200);
-},
+    return res.sendStatus(200);
+  },
 );
 
 /**
@@ -311,7 +324,9 @@ app.post("/api/analyze-stream", async (req, res) => {
   try {
     const { code, filename } = req.body;
     if (!code || !filename) {
-      res.write(`event: error\ndata: ${JSON.stringify({ error: "code and filename required" })}\n\n`);
+      res.write(
+        `event: error\ndata: ${JSON.stringify({ error: "code and filename required" })}\n\n`,
+      );
       return res.end();
     }
 
@@ -322,7 +337,7 @@ app.post("/api/analyze-stream", async (req, res) => {
       res.write(`event: progress\ndata: ${JSON.stringify(payload)}\n\n`);
     };
 
-    const engineResult = await NeuroLintPro(code, filename, false, null, {
+    const engineResult = await NeuroLintPro(code, filename, true, null, {
       onProgress,
     });
 
@@ -339,7 +354,9 @@ app.post("/api/analyze-stream", async (req, res) => {
     res.end();
   } catch (error) {
     console.error("SSE analyze error:", error);
-    res.write(`event: error\ndata: ${JSON.stringify({ error: error.message })}\n\n`);
+    res.write(
+      `event: error\ndata: ${JSON.stringify({ error: error.message })}\n\n`,
+    );
     res.end();
   }
 });
