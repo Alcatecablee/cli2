@@ -10,6 +10,11 @@
     />
     <link rel="icon" type="image/png" href="/favico.png" />
     <script src="https://www.paypal.com/sdk/js?client-id=AaZabZwUPYitlE5MOXwohkXxtMzI7GaSArFxw7JYMIDfZE_PHvsMzY1WEsZk_QwTdek4SEpjj_DC5ys7&currency=USD&intent=capture&enable-funding=venmo,card"></script>
+    <!-- Diff & Syntax Highlighting -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-jsx.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/diff/5.1.0/diff.min.js"></script>
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -2736,30 +2741,27 @@ function UserProfile({ user, onUpdate }) {
 
       function generateDiffHtml(original, fixed) {
         if (original === fixed) {
-          return escapeHtml(original);
+          return `<pre><code class="language-jsx">${Prism.highlight(escapeHtml(original), Prism.languages.jsx, 'jsx')}</code></pre>`;
         }
 
-        // Simple diff highlighting
-        const originalLines = original.split("\n");
-        const fixedLines = fixed.split("\n");
+        const diffParts = Diff.diffLines(original, fixed);
+        let html = "";
 
-        let result = "";
-        const maxLines = Math.max(originalLines.length, fixedLines.length);
+        diffParts.forEach((part) => {
+          const className = part.added ? "added" : part.removed ? "removed" : "context";
 
-        for (let i = 0; i < maxLines; i++) {
-          const origLine = originalLines[i] || "";
-          const fixedLine = fixedLines[i] || "";
+          // Split part into individual lines to keep original line breaks
+          const lines = part.value.split("\n");
+          lines.forEach((line, idx) => {
+            if (line === "" && idx === lines.length - 1) return; // skip final empty line
 
-          if (origLine !== fixedLine) {
-            if (fixedLine) {
-              result += `<span class="diff-line added">+ ${escapeHtml(fixedLine)}</span>\n`;
-            }
-          } else {
-            result += `<span class="diff-line context">  ${escapeHtml(fixedLine)}</span>\n`;
-          }
-        }
+            const highlighted = Prism.highlight(line, Prism.languages.jsx, 'jsx');
+            const prefix = part.added ? "+ " : part.removed ? "- " : "  ";
+            html += `<span class="diff-line ${className}">${prefix}${highlighted}</span>\n`;
+          });
+        });
 
-        return result;
+        return html;
       }
 
       function escapeHtml(text) {
