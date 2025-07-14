@@ -242,7 +242,7 @@ function ImageGallery({ images }) {
       // Prevent multiple simultaneous requests
       if (demoState.isLoading) {
         console.warn(
-          "🔍 [FRONTEND] Analysis already in progress, skipping request",
+          "[FRONTEND] Analysis already in progress, skipping request",
         );
         return;
       }
