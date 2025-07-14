@@ -2044,6 +2044,17 @@ legend {
   box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
+/* Dashboard code panel differentiation */
+.code-panel:first-child .code-block {
+  border-left: 3px solid var(--status-inactive);
+  background: linear-gradient(135deg, var(--inactive-glow), rgba(0, 0, 0, 0.6));
+}
+
+.code-panel:last-child .code-block {
+  border-left: 3px solid var(--status-active);
+  background: linear-gradient(135deg, var(--active-glow), rgba(0, 0, 0, 0.6));
+}
+
 /* Issues and Layers styling */
 .issues-list,
 .layers-list {
