@@ -702,75 +702,190 @@ export default function Dashboard() {
         </header>
 
         <div className="dashboard-content">
-          {/* Global Controls - Always Visible */}
+          {/* Global Controls - Always Visible - Demo Style */}
           {(dashboardState.activeSection === "editor" ||
             dashboardState.activeSection === "samples") && (
-            <div className="controls-section">
-              <div className="control-group">
-                <h3>Analysis Configuration</h3>
-                <div className="controls-row">
-                  <div className="mode-toggle">
-                    <label className="toggle-label">Mode:</label>
+            <div
+              className="demo-controls"
+              role="region"
+              aria-labelledby="controls-title"
+            >
+              <h3 id="controls-title">Analysis Configuration</h3>
+              <div className="controls-grid">
+                <fieldset className="control-group">
+                  <legend className="control-label">MODE</legend>
+                  <div
+                    className="control-options"
+                    role="radiogroup"
+                    aria-labelledby="mode-legend"
+                  >
                     <button
-                      className={`mode-btn ${!dashboardState.applyFixes ? "active" : ""}`}
+                      className={`control-btn ${!dashboardState.applyFixes ? "active" : ""}`}
                       onClick={() =>
                         setDashboardState((prev) => ({
                           ...prev,
                           applyFixes: false,
                         }))
                       }
+                      role="radio"
+                      aria-checked={!dashboardState.applyFixes}
+                      aria-describedby="dry-run-description"
                     >
-                      Analysis Only
+                      Dry Run (Analysis Only)
                     </button>
                     <button
-                      className={`mode-btn ${dashboardState.applyFixes ? "active" : ""}`}
+                      className={`control-btn ${dashboardState.applyFixes ? "active" : ""}`}
                       onClick={() =>
                         setDashboardState((prev) => ({
                           ...prev,
                           applyFixes: true,
                         }))
                       }
+                      role="radio"
+                      aria-checked={dashboardState.applyFixes}
+                      aria-describedby="apply-fixes-description"
                     >
                       Apply Fixes
                     </button>
                   </div>
-
-                  <div className="layers-control">
-                    <label className="toggle-label">Layers:</label>
-                    <div className="layers-grid">
-                      {[1, 2, 3, 4, 5, 6].map((layerId) => (
-                        <button
-                          key={layerId}
-                          className={`layer-btn ${dashboardState.selectedLayers.includes(layerId) ? "selected" : ""}`}
-                          onClick={() => toggleLayerSelection(layerId)}
-                          title={`Layer ${layerId}: ${
-                            layerId === 1
-                              ? "Configuration"
-                              : layerId === 2
-                                ? "Patterns"
-                                : layerId === 3
-                                  ? "Components"
-                                  : layerId === 4
-                                    ? "Hydration"
-                                    : layerId === 5
-                                      ? "Next.js"
-                                      : "Testing"
-                          }`}
-                        >
-                          {layerId}
-                        </button>
-                      ))}
-                    </div>
-                    <span className="layers-hint">
-                      {dashboardState.selectedLayers.length === 0
-                        ? "Auto-detect"
-                        : dashboardState.selectedLayers.length === 6
-                          ? "All layers"
-                          : `${dashboardState.selectedLayers.length} selected`}
-                    </span>
+                  <div id="dry-run-description" className="sr-only">
+                    Analyze code without making changes
                   </div>
-                </div>
+                  <div id="apply-fixes-description" className="sr-only">
+                    Analyze and modify your code files
+                  </div>
+                </fieldset>
+
+                <fieldset className="control-group">
+                  <legend className="control-label">LAYER SELECTION</legend>
+                  <div
+                    className="layer-controls"
+                    role="group"
+                    aria-labelledby="layer-presets"
+                  >
+                    <span id="layer-presets" className="sr-only">
+                      Layer presets
+                    </span>
+                    <button
+                      className={`control-btn ${dashboardState.selectedLayers.length === 0 ? "active" : ""}`}
+                      onClick={() =>
+                        setDashboardState((prev) => ({
+                          ...prev,
+                          selectedLayers: [],
+                        }))
+                      }
+                      aria-pressed={dashboardState.selectedLayers.length === 0}
+                      aria-describedby="auto-detect-description"
+                    >
+                      Auto-Detect
+                    </button>
+                    <button
+                      className={`control-btn ${dashboardState.selectedLayers.length === 6 ? "active" : ""}`}
+                      onClick={() =>
+                        setDashboardState((prev) => ({
+                          ...prev,
+                          selectedLayers: [1, 2, 3, 4, 5, 6],
+                        }))
+                      }
+                      aria-pressed={dashboardState.selectedLayers.length === 6}
+                      aria-describedby="all-layers-description"
+                    >
+                      All Layers
+                    </button>
+                  </div>
+                  <div id="auto-detect-description" className="sr-only">
+                    Let NeuroLint Pro automatically select appropriate layers
+                  </div>
+                  <div id="all-layers-description" className="sr-only">
+                    Run all 6 layers of analysis and fixes
+                  </div>
+                  <div
+                    className="layer-checkboxes"
+                    role="group"
+                    aria-labelledby="individual-layers"
+                  >
+                    <span id="individual-layers" className="sr-only">
+                      Individual layer selection
+                    </span>
+                    {[1, 2, 3, 4, 5, 6].map((layerId) => (
+                      <label key={layerId} className="layer-checkbox">
+                        <input
+                          type="checkbox"
+                          checked={dashboardState.selectedLayers.includes(
+                            layerId,
+                          )}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setDashboardState((prev) => ({
+                                ...prev,
+                                selectedLayers: [
+                                  ...prev.selectedLayers,
+                                  layerId,
+                                ].sort(),
+                              }));
+                            } else {
+                              setDashboardState((prev) => ({
+                                ...prev,
+                                selectedLayers: prev.selectedLayers.filter(
+                                  (id) => id !== layerId,
+                                ),
+                              }));
+                            }
+                          }}
+                          aria-describedby={`layer-${layerId}-description`}
+                        />
+                        <span className="layer-label">Layer {layerId}</span>
+                        <span
+                          id={`layer-${layerId}-description`}
+                          className="sr-only"
+                        >
+                          {layerId === 1 && "Configuration fixes"}
+                          {layerId === 2 && "Pattern detection and cleanup"}
+                          {layerId === 3 && "Component improvements"}
+                          {layerId === 4 && "Hydration safety"}
+                          {layerId === 5 && "Next.js optimizations"}
+                          {layerId === 6 && "Testing enhancements"}
+                        </span>
+                      </label>
+                    ))}
+                  </div>
+                </fieldset>
               </div>
+            </div>
+          )}
+
+          {/* Demo Settings Status */}
+          {(dashboardState.activeSection === "editor" ||
+            dashboardState.activeSection === "samples") && (
+            <div
+              style={{
+                textAlign: "center",
+                marginBottom: "1rem",
+                padding: "0.75rem",
+                background: "rgba(255, 255, 255, 0.05)",
+                borderRadius: "8px",
+                fontSize: "0.9rem",
+                color: "rgba(255, 255, 255, 0.8)",
+              }}
+            >
+              <strong>Current Settings:</strong>{" "}
+              <span
+                style={{
+                  color: dashboardState.applyFixes ? "#ff9800" : "#4caf50",
+                }}
+              >
+                {dashboardState.applyFixes
+                  ? "Apply Fixes Mode"
+                  : "Dry-Run Mode"}
+              </span>
+              {" • "}
+              <span style={{ color: "#2196f3" }}>
+                {dashboardState.selectedLayers.length === 0
+                  ? "Auto-Detect Layers"
+                  : dashboardState.selectedLayers.length === 6
+                    ? "All 6 Layers"
+                    : `Custom Layers [${dashboardState.selectedLayers.join(",")}]`}
+              </span>
             </div>
           )}
 
