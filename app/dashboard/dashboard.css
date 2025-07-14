@@ -1964,20 +1964,30 @@
 
 @media (max-width: 768px) {
   .dashboard-content {
-    padding: 24px;
+    padding: 20px;
+    gap: 24px;
   }
 
   .dashboard-header {
-    padding: 24px;
+    padding: 20px;
     flex-direction: column;
     align-items: flex-start;
-    gap: 20px;
+    gap: 16px;
+    min-height: auto;
   }
 
-  .samples-grid {
-    grid-template-columns: 1fr;
+  .header-title h1 {
+    font-size: 24px;
   }
 
+  .header-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    width: 100%;
+  }
+
+  .samples-grid,
   .projects-grid {
     grid-template-columns: 1fr;
   }
@@ -1988,20 +1998,76 @@
 
   .layers-grid {
     grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
   }
 
-  .controls-row {
-    grid-template-columns: 1fr;
-    gap: 20px;
+  .layer-btn {
+    min-height: 44px;
+    font-size: 12px;
   }
 
   .upload-area {
-    padding: 40px 20px;
-    min-height: 200px;
+    padding: 32px 20px;
+    min-height: 180px;
   }
 
   .upload-icon {
-    font-size: 48px;
+    font-size: 40px;
     margin-bottom: 16px;
+  }
+
+  .controls-section,
+  .analysis-overview,
+  .code-comparison,
+  .issues-section,
+  .layers-section,
+  .settings-section {
+    padding: 20px;
+  }
+
+  /* Improved mobile scrolling */
+  .dashboard-content {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Better mobile card spacing */
+  .project-card,
+  .sample-card,
+  .history-item {
+    padding: 20px;
+    margin-bottom: 4px;
+  }
+}
+
+/* Ultra-small screens */
+@media (max-width: 480px) {
+  .dashboard-sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    z-index: 100;
+    transform: translateX(-100%);
+    transition: transform var(--transition-spring);
+  }
+
+  .dashboard-sidebar.show {
+    transform: translateX(0);
+  }
+
+  .dashboard-main {
+    width: 100%;
+  }
+
+  .layers-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .mode-toggle {
+    flex-direction: column;
+  }
+
+  .header-title h1 {
+    font-size: 20px;
   }
 }
