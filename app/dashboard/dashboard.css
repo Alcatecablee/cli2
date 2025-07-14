@@ -353,23 +353,19 @@
   display: flex;
   align-items: center;
   gap: 16px;
-  padding: 14px 20px;
+  padding: 12px 20px;
   background: none;
   border: none;
   color: rgba(255, 255, 255, 0.7);
   cursor: pointer;
-  transition: var(--transition-spring);
+  transition: var(--transition-smooth);
   text-align: left;
-  border-radius: 12px;
+  border-radius: 8px;
   position: relative;
   width: calc(100% - 16px);
   margin: 2px 8px;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  opacity: 0;
-  animation: slideInLeft 0.4s ease-out calc(var(--delay, 0) * 0.1s + 0.4s) both;
   overflow: hidden;
-  min-height: 50px;
+  min-height: 44px;
 }
 
 .nav-item::before {
