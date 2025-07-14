@@ -2630,40 +2630,53 @@ function UserProfile({ user, onUpdate }) {
       }
 
       function displayAnalysisResults() {
-        console.log("=== DISPLAYING ANALYSIS RESULTS ===");
-        console.log(
-          "Current analysis results count:",
-          currentAnalysisResults.length,
-        );
+        try {
+          console.log("=== DISPLAYING ANALYSIS RESULTS ===");
+          console.log(
+            "Current analysis results count:",
+            currentAnalysisResults.length,
+          );
 
-        if (currentAnalysisResults.length === 0) {
-          console.log("No analysis results to display");
-          return;
+          if (currentAnalysisResults.length === 0) {
+            console.log("No analysis results to display");
+            return;
+          }
+
+          console.log("Getting latest analysis data...");
+          const latest =
+            currentAnalysisResults[currentAnalysisResults.length - 1];
+          console.log("Latest analysis data:", latest);
+
+          console.log("Extracting result from latest data...");
+          const result = latest.result;
+          console.log("Latest result:", result);
+
+          // Update overview tab
+          console.log("Updating overview tab...");
+          displayOverview(latest);
+          console.log("Overview tab updated successfully");
+
+          // Update comparison tab
+          console.log("Updating comparison tab...");
+          displayCodeComparison(latest);
+          console.log("Comparison tab updated successfully");
+
+          // Update issues tab
+          console.log("Updating issues tab...");
+          displayIssuesFound(latest);
+          console.log("Issues tab updated successfully");
+
+          // Update layers tab
+          console.log("Updating layers tab...");
+          displayLayersApplied(latest);
+          console.log("Layers tab updated successfully");
+
+          console.log("All tabs updated successfully");
+        } catch (error) {
+          console.error("❌ Error in displayAnalysisResults:", error);
+          console.error("Error stack:", error.stack);
+          throw error;
         }
-
-        const latest =
-          currentAnalysisResults[currentAnalysisResults.length - 1];
-        console.log("Latest analysis data:", latest);
-        const result = latest.result;
-        console.log("Latest result:", result);
-
-        // Update overview tab
-        console.log("Updating overview tab");
-        displayOverview(latest);
-
-        // Update comparison tab
-        console.log("Updating comparison tab");
-        displayCodeComparison(latest);
-
-        // Update issues tab
-        console.log("Updating issues tab");
-        displayIssuesFound(latest);
-
-        // Update layers tab
-        console.log("Updating layers tab");
-        displayLayersApplied(latest);
-
-        console.log("All tabs updated successfully");
       }
 
       function displayOverview(analysisData) {
