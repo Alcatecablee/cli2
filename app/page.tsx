@@ -441,6 +441,18 @@ function ImageGallery({ images }) {
     try {
       const code = await file.text();
 
+      console.log("🔍 [FRONTEND] Upload controls state:", {
+        applyFixes: demoState.applyFixes,
+        selectedLayers: demoState.selectedLayers,
+        mode: demoState.applyFixes ? "Apply Fixes" : "Dry-Run",
+        layerMode:
+          demoState.selectedLayers.length === 0
+            ? "Auto-Detect"
+            : demoState.selectedLayers.length === 6
+              ? "All Layers"
+              : `Custom [${demoState.selectedLayers.join(",")}]`,
+      });
+
       const response = await fetch("/api/demo", {
         method: "POST",
         headers: {
