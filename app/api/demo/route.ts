@@ -224,11 +224,17 @@ export async function POST(req: Request) {
     console.log("🔍 [DEMO API] Returning successful result");
     return NextResponse.json(result);
   } catch (error) {
-    console.error("Demo API error:", error);
+    console.error("🔍 [DEMO API] CRITICAL ERROR:", error);
+    console.error("🔍 [DEMO API] Error stack:", error.stack);
+    console.error("🔍 [DEMO API] Error name:", error.name);
+    console.error("🔍 [DEMO API] Error message:", error.message);
+
     return NextResponse.json(
       {
         error: "Internal server error processing code",
         message: error.message,
+        name: error.name,
+        stack: process.env.NODE_ENV === "development" ? error.stack : undefined,
       },
       { status: 500 },
     );
