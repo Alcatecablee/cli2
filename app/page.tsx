@@ -766,7 +766,7 @@ function ImageGallery({ images }) {
               {" • "}
               <span style={{ color: "#2196f3" }}>
                 {demoState.selectedLayers.length === 0
-                  ? "��� Auto-Detect Layers"
+                  ? "🌟 Auto-Detect Layers"
                   : demoState.selectedLayers.length === 6
                     ? "📋 All 6 Layers"
                     : `⚙️ Custom Layers [${demoState.selectedLayers.join(",")}]`}
@@ -1099,6 +1099,39 @@ function ImageGallery({ images }) {
                               </div>
                             </>
                           )}
+                        </div>
+                      )}
+
+                    {/* Fallback when code comparison is not available */}
+                    {(!demoState.result.originalCode ||
+                      !demoState.result.transformed) &&
+                      demoState.result.success && (
+                        <div className="code-comparison">
+                          <h4>Code Analysis Complete</h4>
+                          <div
+                            style={{
+                              textAlign: "center",
+                              padding: "2rem",
+                              background: "rgba(255, 255, 255, 0.05)",
+                              borderRadius: "8px",
+                              color: "rgba(255, 255, 255, 0.7)",
+                            }}
+                          >
+                            <p
+                              style={{
+                                fontSize: "1.1rem",
+                                marginBottom: "0.5rem",
+                              }}
+                            >
+                              📊 <strong>Analysis Complete</strong>
+                            </p>
+                            <p style={{ fontSize: "0.9rem" }}>
+                              {demoState.result.analysis?.detectedIssues
+                                ?.length > 0
+                                ? `Found ${demoState.result.analysis.detectedIssues.length} issues that can be fixed. Switch to "Apply Fixes" mode to see the transformed code.`
+                                : "No issues detected in your code. Great job!"}
+                            </p>
+                          </div>
                         </div>
                       )}
                   </>
