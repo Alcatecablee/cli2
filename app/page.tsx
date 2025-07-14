@@ -2,9 +2,10 @@
 
 import React, { useState, useEffect } from "react";
 
-// Demo state interface for sophisticated analysis results
+// Demo state interface for sophisticated analysis results - matches NeuroLint Pro output
 interface DemoResult {
-  success: boolean;
+  success?: boolean;
+  dryRun?: boolean;
   analysis?: {
     recommendedLayers: number[];
     detectedIssues: Array<{
@@ -15,6 +16,7 @@ interface DemoResult {
       pattern: string;
       count?: number;
     }>;
+    reasoning?: string[];
     confidence: number;
     estimatedImpact: {
       level: string;
@@ -29,7 +31,12 @@ interface DemoResult {
     success: boolean;
     improvements?: string[];
     executionTime: number;
+    changeCount?: number;
+    revertReason?: string;
   }>;
+  states?: string[];
+  totalExecutionTime?: number;
+  successfulLayers?: number;
   error?: string;
 }
 
