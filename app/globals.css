@@ -1395,11 +1395,15 @@ legend {
 }
 
 .layer-status.success {
-  color: #ffffff;
+  color: var(--status-active);
+  background: var(--active-glow);
+  border: 1px solid rgba(76, 175, 80, 0.3);
 }
 
 .layer-status.failed {
-  color: #666666;
+  color: var(--status-error);
+  background: var(--error-glow);
+  border: 1px solid rgba(229, 62, 62, 0.3);
 }
 
 .layer-time {
