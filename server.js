@@ -10,6 +10,7 @@ const express = require("express");
 const path = require("path");
 const fs = require("fs");
 const cors = require("cors");
+const crypto = require("crypto");
 require("dotenv").config();
 
 // Import the REAL NeuroLint Pro engine
@@ -42,6 +43,90 @@ const activeSessions = new Map();
 const demoRequests = new Map();
 const DEMO_LIMIT = 100; // 100 files per demo session for testing
 
+// ------------------ Persistent Session Storage ------------------
+const SESSIONS_FILE = path.join(__dirname, "sessions.json");
+
+function loadPersistedSessions() {
+  try {
+    if (fs.existsSync(SESSIONS_FILE)) {
+      const data = JSON.parse(fs.readFileSync(SESSIONS_FILE, "utf8"));
+      data.forEach((v) => activeSessions.set(v.sessionId, v));
+      console.log(`💾 Restored ${activeSessions.size} paid sessions from disk`);
+    }
+  } catch (e) {
+    console.error("Failed to load sessions.json:", e);
+  }
+}
+
+function persistSessionsToDisk() {
+  try {
+    const arr = Array.from(activeSessions.values());
+    fs.writeFileSync(SESSIONS_FILE, JSON.stringify(arr, null, 2));
+    console.log("💾 Sessions persisted to disk");
+  } catch (e) {
+    console.error("Failed to write sessions.json:", e);
+  }
+}
+
+process.on("SIGINT", () => {
+  persistSessionsToDisk();
+  process.exit(0);
+});
+
+// Load sessions on startup
+loadPersistedSessions();
+
+// ------------------ PayPal Webhook Verification ------------------
+// Minimal verification using transmission-id & sig; full SDK integration recommended in production
+function verifyPayPalWebhook(req) {
+  try {
+    const transmissionId = req.headers["paypal-transmission-id"];
+    const timestamp = req.headers["paypal-transmission-time"];
+    const webhookId = process.env.PAYPAL_WEBHOOK_ID;
+    const transmissionSig = req.headers["paypal-transmission-sig"];
+    const certUrl = req.headers["paypal-cert-url"];
+    const authAlgo = req.headers["paypal-auth-algo"];
+
+    // Simplified: Recreate expected signature using webhookId + body hash
+    const expected = crypto
+      .createHmac("sha256", webhookId)
+      .update(req.rawBody)
+      .digest("base64");
+
+    return expected === transmissionSig;
+  } catch (e) {
+    console.error("Webhook verify error", e);
+    return false;
+  }
+}
+
+app.post("/api/paypal/webhook", express.raw({ type: "application/json" }), (req, res) => {
+  if (!verifyPayPalWebhook(req)) {
+    console.warn("⚠️  Invalid PayPal webhook signature");
+    return res.status(400).send("invalid signature");
+  }
+
+  const event = JSON.parse(req.body.toString());
+
+  if (
+    event.event_type === "CHECKOUT.ORDER.APPROVED" ||
+    event.event_type === "PAYMENT.CAPTURE.COMPLETED"
+  ) {
+    const orderId = event.resource.id;
+    const sessionInfo = {
+      sessionId: orderId,
+      unlimited: true,
+      subscription: false,
+      created: Date.now(),
+    };
+    activeSessions.set(orderId, sessionInfo);
+    persistSessionsToDisk();
+    console.log("✅ Recorded paid session from webhook:", orderId);
+  }
+
+  res.sendStatus(200);
+});
+
 /**
  * Validate session using PayPal transaction data
  * In production, this validates against actual PayPal payments
@@ -49,6 +134,16 @@ const DEMO_LIMIT = 100; // 100 files per demo session for testing
 function validateSession(sessionId, subscription) {
   if (!sessionId) {
     return { valid: false, error: "No session provided" };
+  }
+
+  // Check persisted/active sessions first
+  if (activeSessions.has(sessionId)) {
+    const data = activeSessions.get(sessionId);
+    return {
+      valid: true,
+      unlimited: data.unlimited || false,
+      subscription: data.subscription || false,
+    };
   }
 
   console.log(
