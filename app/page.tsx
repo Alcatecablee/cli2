@@ -112,8 +112,9 @@ export default function HomePage() {
           <div className="feature-card">
             <div className="feature-title">Smart Detection</div>
             <div className="feature-desc">
-              Automatically detects HTML entities, missing key props, SSR
-              issues, and accessibility problems.
+              Detects 50+ types of issues across 6 layers with smart confidence
+              scoring and impact estimation. Advanced pattern recognition for
+              comprehensive code analysis.
             </div>
           </div>
           <div className="feature-card">
