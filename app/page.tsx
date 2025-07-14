@@ -228,8 +228,8 @@ function ImageGallery({ images }) {
   // Sophisticated sample code loading with real engine integration
   const loadSampleCode = useCallback(
     async (sampleKey: string) => {
-      console.log("🔍 [FRONTEND] loadSampleCode called with:", sampleKey);
-      console.log("🔍 [FRONTEND] Available samples:", Object.keys(sampleCodes));
+      console.log("[FRONTEND] loadSampleCode called with:", sampleKey);
+      console.log("[FRONTEND] Available samples:", Object.keys(sampleCodes));
 
       const sample = sampleCodes[sampleKey as keyof typeof sampleCodes];
       if (!sample) {
