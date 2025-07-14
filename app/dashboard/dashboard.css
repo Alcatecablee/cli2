@@ -158,14 +158,14 @@
 }
 
 .brand-logo {
-  width: 40px;
-  height: 40px;
+  width: 50px;
+  height: 50px;
   background: linear-gradient(
     135deg,
     rgba(255, 255, 255, 0.1) 0%,
     rgba(255, 255, 255, 0.05) 100%
   );
-  border-radius: 10px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -188,8 +188,8 @@
 }
 
 .brand-logo img {
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   object-fit: contain;
   transition: var(--transition-smooth);
   filter: brightness(1.1) contrast(1.1);
@@ -202,14 +202,14 @@
 
 /* Collapsed state for logo */
 .dashboard-sidebar.collapsed .brand-logo {
-  width: 36px;
-  height: 36px;
+  width: 50px;
+  height: 50px;
   margin: 0 auto;
 }
 
 .dashboard-sidebar.collapsed .brand-logo img {
-  width: 24px;
-  height: 24px;
+  width: 28px;
+  height: 28px;
 }
 
 /* Center the brand section when collapsed */
@@ -279,14 +279,14 @@
   color: rgba(255, 255, 255, 0.8);
   cursor: pointer;
   padding: 8px;
-  border-radius: 8px;
+  border-radius: 12px;
   transition: var(--transition-spring);
   font-size: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  width: 50px;
+  height: 50px;
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   box-shadow: var(--shadow-subtle);
@@ -327,6 +327,8 @@
 }
 
 .sidebar-toggle svg {
+  width: 20px;
+  height: 20px;
   transition: var(--transition-smooth);
   stroke: currentColor;
   fill: none;
