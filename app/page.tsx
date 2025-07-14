@@ -172,6 +172,60 @@ export default function HomePage() {
     URL.revokeObjectURL(url);
   };
 
+  const getBusinessImpact = (issueType: string, severity: string) => {
+    const impacts: Record<string, Record<string, string>> = {
+      "missing-key": {
+        high: "Poor user experience, React warnings in console, potential performance issues during updates",
+        medium:
+          "Console warnings, slight performance degradation in list rendering",
+        low: "Minor console warnings with minimal impact",
+      },
+      "html-entities": {
+        high: "Broken text display, poor SEO, accessibility issues for screen readers",
+        medium: "Text display issues, potential SEO impact",
+        low: "Minor text encoding issues",
+      },
+      "ssr-hydration": {
+        critical:
+          "App crashes, hydration mismatches, poor Core Web Vitals, SEO penalties",
+        high: "Hydration warnings, potential layout shifts, poor user experience",
+        medium: "Minor hydration issues, slight performance impact",
+      },
+      accessibility: {
+        high: "Legal compliance risk, excludes users with disabilities, poor lighthouse scores",
+        medium: "Reduced accessibility, potential compliance issues",
+        low: "Minor accessibility improvements needed",
+      },
+    };
+
+    return (
+      impacts[issueType]?.[severity] ||
+      "Performance and maintainability improvements"
+    );
+  };
+
+  const getSolutionDescription = (issueType: string) => {
+    const solutions: Record<string, string> = {
+      "missing-key":
+        "Add unique key props to list items for optimal React reconciliation and performance",
+      "html-entities":
+        "Convert HTML entities to proper Unicode characters for correct text display",
+      "ssr-hydration":
+        "Add client-side guards and useEffect hooks to prevent server/client mismatches",
+      accessibility:
+        "Add ARIA labels, alt attributes, and semantic HTML for screen reader compatibility",
+      "console-usage":
+        "Remove or guard console statements for production optimization",
+      "error-handling":
+        "Add try-catch blocks and error boundaries for robust error handling",
+    };
+
+    return (
+      solutions[issueType] ||
+      "Apply best practices and performance optimizations"
+    );
+  };
+
   // Sophisticated demo state management
   const [demoState, setDemoState] = useState<DemoState>({
     isLoading: false,
