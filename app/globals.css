@@ -1471,11 +1471,13 @@ legend {
 }
 
 .code-block.original {
-  border-left: 3px solid #4a4a4a;
+  border-left: 3px solid var(--status-inactive);
+  background: var(--inactive-glow);
 }
 
 .code-block.transformed {
-  border-left: 3px solid #666666;
+  border-left: 3px solid var(--status-active);
+  background: var(--active-glow);
 }
 
 /* Error Result */
