@@ -1106,13 +1106,14 @@ function ImageGallery({ images }) {
                             </div>
                           </div>
                           <div className="insight-card">
-                            <div className="insight-label">Maintainability</div>
+                            <div className="insight-label">
+                              Standards Compliance
+                            </div>
                             <div className="insight-value">
-                              +
                               {Math.round(
                                 demoState.result.analysis.confidence * 100,
                               )}
-                              % code quality
+                              % best practices
                             </div>
                           </div>
                         </div>
