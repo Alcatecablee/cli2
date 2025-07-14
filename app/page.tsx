@@ -265,14 +265,28 @@ function ImageGallery({ images }) {
       }));
     } catch (error) {
       console.error("Demo analysis failed:", error);
+
+      let errorMessage = "Unknown error occurred";
+      if (error instanceof Error) {
+        if (error.name === "AbortError") {
+          errorMessage =
+            "Analysis timed out. Please try again with a smaller code sample.";
+        } else if (error.message.includes("fetch")) {
+          errorMessage =
+            "Network error. Please check your connection and try again.";
+        } else {
+          errorMessage = error.message;
+        }
+      }
+
       setDemoState((prev) => ({
         ...prev,
         isLoading: false,
         result: {
           success: false,
-          error:
-            error instanceof Error ? error.message : "Unknown error occurred",
+          error: errorMessage,
         },
+        showResults: true,
       }));
     }
   };
