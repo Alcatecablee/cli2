@@ -336,14 +336,14 @@
   transform: translateX(6px);
 }
 
-.nav-item.active::before {
+.nav-item.active::after {
   content: "";
   position: absolute;
   left: -8px;
   top: 50%;
   transform: translateY(-50%);
   width: 4px;
-  height: 24px;
+  height: 28px;
   background: linear-gradient(
     135deg,
     #ffffff 0%,
@@ -351,6 +351,7 @@
   );
   border-radius: 2px;
   box-shadow: 0 2px 8px rgba(255, 255, 255, 0.3);
+  animation: slideInRight 0.3s ease-out;
 }
 
 .nav-icon {
