@@ -196,6 +196,7 @@
 .dashboard-sidebar.collapsed .brand-logo {
   width: 36px;
   height: 36px;
+  margin: 0 auto;
 }
 
 .dashboard-sidebar.collapsed .brand-logo img {
