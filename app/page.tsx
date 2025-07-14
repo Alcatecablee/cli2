@@ -228,15 +228,22 @@ function ImageGallery({ images }) {
   // Sophisticated sample code loading with real engine integration
   const loadSampleCode = useCallback(
     async (sampleKey: string) => {
+      console.log("🔍 [FRONTEND] loadSampleCode called with:", sampleKey);
+      console.log("🔍 [FRONTEND] Available samples:", Object.keys(sampleCodes));
+
       const sample = sampleCodes[sampleKey as keyof typeof sampleCodes];
       if (!sample) {
-        console.error(`Sample code '${sampleKey}' not found`);
+        console.error(`🔍 [FRONTEND] Sample code '${sampleKey}' not found`);
         return;
       }
 
+      console.log("🔍 [FRONTEND] Found sample:", sample.name);
+
       // Prevent multiple simultaneous requests
       if (demoState.isLoading) {
-        console.warn("Analysis already in progress, skipping request");
+        console.warn(
+          "🔍 [FRONTEND] Analysis already in progress, skipping request",
+        );
         return;
       }
 
