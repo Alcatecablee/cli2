@@ -2422,11 +2422,44 @@ function UserProfile({ user, onUpdate }) {
               const event = eventLine.replace("event: ", "").trim();
               const data = JSON.parse(dataLine.replace("data: ", ""));
 
+              console.log(`📨 SSE Event Received: ${event}`);
+              console.log("📊 Event Data:", data);
+
               if (event === "progress") {
                 const { percent, status, layerId } = data;
+                console.log(
+                  `%c🔧 LAYER ${layerId || "?"} PROCESSING`,
+                  "color: #00bfff; font-weight: bold;",
+                );
+                console.log(`  - Status: ${status}`);
+                console.log(`  - Progress: ${percent}%`);
+                console.log(
+                  `  - Layer: ${layerId ? `Layer ${layerId}` : "Unknown"}`,
+                );
+
                 progressFill.style.width = `${percent}%`;
                 progressText.textContent = `Layer ${layerId || "-"}: ${status} (${percent}%)`;
               } else if (event === "done") {
+                console.log(
+                  "%c🎉 TRANSFORMATION COMPLETE!",
+                  "color: #00ff00; font-weight: bold; font-size: 16px;",
+                );
+                console.log("📋 Final Results Summary:");
+                console.log(
+                  "  - Recommended Layers:",
+                  data.recommendedLayers?.length || 0,
+                );
+                console.log("  - Confidence Score:", data.confidence || 0);
+                console.log(
+                  "  - Issues Detected:",
+                  data.detectedIssues?.length || 0,
+                );
+                console.log(
+                  "  - Code Transformed:",
+                  data.fixedCode ? "YES" : "NO",
+                );
+                console.log("  - Demo Mode:", data.demo ? "YES" : "NO");
+
                 progressFill.style.width = "100%";
                 progressText.textContent = "Analysis complete!";
 
@@ -2441,6 +2474,10 @@ function UserProfile({ user, onUpdate }) {
                 currentAnalysisResults.push(analysisData);
                 displayAnalysisResults();
               } else if (event === "error") {
+                console.error(
+                  "❌ Analysis Error:",
+                  data.error || "Unknown error",
+                );
                 displayError(filename, data.error || "Unknown error");
               }
             }
