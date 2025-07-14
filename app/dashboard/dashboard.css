@@ -823,13 +823,14 @@
 }
 
 .control-btn.active {
-  background: rgba(255, 255, 255, 0.15);
-  border-color: #666666;
-  color: #ffffff;
+  background: var(--info-glow);
+  border-color: rgba(33, 150, 243, 0.4);
+  color: var(--status-info);
   box-shadow:
-    0 0 0 2px rgba(255, 255, 255, 0.2),
-    var(--shadow-subtle);
+    0 0 0 1px rgba(33, 150, 243, 0.3),
+    0 4px 12px rgba(33, 150, 243, 0.15);
   transform: translateY(-1px);
+  font-weight: 600;
 }
 
 .control-btn:focus {
