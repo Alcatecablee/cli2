@@ -2380,7 +2380,26 @@ function UserProfile({ user, onUpdate }) {
           );
         }
 
+        console.log(
+          "%c📊 UPLOAD COMPLETE",
+          "color: #4caf50; font-weight: bold;",
+        );
+        console.log(`   - Files Processed: ${processedCount}`);
+        console.log(`   - Files Skipped: ${skippedCount}`);
+        console.log(
+          `   - Files Remaining: ${Math.max(0, files.length - processedCount - skippedCount)}`,
+        );
+
         if (files.length > 3) {
+          console.log(
+            "%c💎 UPGRADE PROMPT",
+            "color: #ff9800; font-weight: bold;",
+          );
+          console.log(`   - Total Files: ${files.length}`);
+          console.log(`   - Demo Limit: 3 files`);
+          console.log(
+            `   - Upgrade needed for: ${files.length - 3} additional files`,
+          );
           showUpgradePrompt(files.length);
         }
       }
@@ -2786,7 +2805,7 @@ function UserProfile({ user, onUpdate }) {
         if (issues.length === 0) {
           issuesEl.innerHTML = `
             <div style="text-align: center; padding: 3rem; color: rgba(255, 255, 255, 0.7);">
-              <h4 style="color: #aaffaa; margin-bottom: 1rem;">���� No Critical Issues Found!</h4>
+              <h4 style="color: #aaffaa; margin-bottom: 1rem;">��� No Critical Issues Found!</h4>
               <p>Your code looks well-structured. NeuroLint Pro found no major issues to fix.</p>
             </div>
           `;
