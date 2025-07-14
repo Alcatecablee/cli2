@@ -1455,6 +1455,52 @@ legend {
   font-weight: 600;
   color: rgba(255, 255, 255, 0.9);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.code-actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.code-action-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+  padding: 0.375rem;
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  min-height: 32px;
+}
+
+.code-action-btn:hover {
+  background: var(--info-glow);
+  border-color: rgba(33, 150, 243, 0.3);
+  color: var(--status-info);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(33, 150, 243, 0.2);
+}
+
+.code-action-btn:focus {
+  outline: 2px solid var(--status-info);
+  outline-offset: 2px;
+}
+
+.code-action-btn:active {
+  transform: translateY(0);
+  transition: var(--transition-fast);
+}
+
+.code-action-btn svg {
+  transition: var(--transition-smooth);
 }
 
 .code-block {
