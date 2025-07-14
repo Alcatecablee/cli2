@@ -233,11 +233,11 @@ function ImageGallery({ images }) {
 
       const sample = sampleCodes[sampleKey as keyof typeof sampleCodes];
       if (!sample) {
-        console.error(`🔍 [FRONTEND] Sample code '${sampleKey}' not found`);
+        console.error(`[FRONTEND] Sample code '${sampleKey}' not found`);
         return;
       }
 
-      console.log("🔍 [FRONTEND] Found sample:", sample.name);
+      console.log("[FRONTEND] Found sample:", sample.name);
 
       // Prevent multiple simultaneous requests
       if (demoState.isLoading) {
