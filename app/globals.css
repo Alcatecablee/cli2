@@ -220,17 +220,17 @@ a {
 }
 
 .hero-desc {
-  font-size: 1.4rem;
+  font-size: 1.2rem;
   color: var(--foreground);
-  margin-bottom: 4rem;
-  max-width: 800px;
+  margin-bottom: 2rem;
+  max-width: 700px;
   margin-left: auto;
   margin-right: auto;
-  line-height: 1.7;
+  line-height: 1.6;
   font-weight: 400;
   border: 1px solid #4a4a4a;
   border-radius: 12px;
-  padding: 2.5rem 3rem;
+  padding: 1.5rem 2rem;
   background: rgba(255, 255, 255, 0.02);
   transition: var(--transition-smooth);
   /* Add entrance animation */
