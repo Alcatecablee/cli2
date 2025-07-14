@@ -2371,7 +2371,7 @@ function UserProfile({ user, onUpdate }) {
           // Start progress animation
           progressText.textContent = `Analyzing ${filename}...`;
           animateProgress(0, 30, 1000);
-          console.log("Progress animation started (0-30%)");
+          console.log("🔄 Progress animation started (0-30%)");
 
           // Prepare API payload
           const payload = {
@@ -2379,13 +2379,26 @@ function UserProfile({ user, onUpdate }) {
             filename,
           };
 
-          console.log("Streaming analysis via /api/analyze-stream");
+          console.log(
+            "%c📡 SENDING TO NEUROLINT PRO ENGINE",
+            "color: #ffa500; font-weight: bold;",
+          );
+          console.log("🎯 API Endpoint: /api/analyze-stream");
+          console.log("📦 Payload Summary:");
+          console.log("  - Filename:", filename);
+          console.log("  - Code Size:", code.length, "bytes");
+          console.log("⏱️ Request Time:", new Date().toISOString());
 
           const response = await fetch("/api/analyze-stream", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload),
           });
+
+          console.log("📬 Response received:");
+          console.log("  - Status:", response.status);
+          console.log("  - Status Text:", response.statusText);
+          console.log("  - Headers:", [...response.headers.entries()]);
 
           if (!response.ok) {
             throw new Error(`HTTP ${response.status}`);
