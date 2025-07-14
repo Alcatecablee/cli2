@@ -289,10 +289,20 @@ function ImageGallery({ images }) {
         });
 
         if (!response.ok) {
-          throw new Error(`API error: ${response.status}`);
+          const errorText = await response.text();
+          console.log("🔍 [FRONTEND] API error response:", errorText);
+          throw new Error(`API error: ${response.status} - ${errorText}`);
         }
 
         const result = await response.json();
+        console.log("🔍 [FRONTEND] API result received:", {
+          hasResult: !!result,
+          success: result?.success,
+          dryRun: result?.dryRun,
+          hasAnalysis: !!result?.analysis,
+          hasError: !!result?.error,
+          errorMessage: result?.error,
+        });
 
         setDemoState((prev) => ({
           ...prev,
@@ -301,7 +311,7 @@ function ImageGallery({ images }) {
           showResults: true,
         }));
       } catch (error) {
-        console.error("Demo analysis failed:", error);
+        console.error("🔍 [FRONTEND] Demo analysis failed:", error);
 
         let errorMessage = "Unknown error occurred";
         if (error instanceof Error) {
