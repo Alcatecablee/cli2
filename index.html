@@ -2688,9 +2688,16 @@
                 console.log("Overview - recommendedLayers:", result?.recommendedLayers);
                 console.log("Overview - confidence:", result?.confidence);
 
-              // Update summary stats using REAL NeuroLint Pro engine data
+                            // Update summary stats using REAL NeuroLint Pro engine data
+              console.log("Looking for analysisSummary element...");
               const summaryEl = document.getElementById("analysisSummary");
               console.log("Found analysisSummary element:", !!summaryEl);
+
+              if (!summaryEl) {
+                throw new Error("Could not find analysisSummary element in DOM");
+              }
+
+              console.log("Setting innerHTML for analysisSummary...");
               summaryEl.innerHTML = `
                 <div class="analysis-stat">
                   <div class="analysis-stat-value">${result.detectedIssues?.length || 0}</div>
