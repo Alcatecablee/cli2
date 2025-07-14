@@ -550,7 +550,7 @@ export default function Dashboard() {
     <div className="dashboard-container">
       {/* Sidebar */}
       <aside
-        className={`dashboard-sidebar ${dashboardState.sidebarCollapsed ? "collapsed" : ""}`}
+        className={`dashboard-sidebar ${dashboardState.sidebarCollapsed ? "collapsed" : ""} ${userExpandedSidebar ? "user-expanded" : ""}`}
         aria-label="Main navigation"
         role="navigation"
       >
