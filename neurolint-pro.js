@@ -869,10 +869,12 @@ function applyLayerTransformations(layerId, code, options = {}) {
         );
 
         hasChanges = beforeFix !== transformedCode;
-        appliedFixes.push(
-          "React Keys: Added missing key props to mapped elements",
-        );
-        console.log(`🛠️  [FALLBACK] Added missing key props`);
+        if (hasChanges) {
+          appliedFixes.push(
+            "React Keys: Added missing key props to mapped elements",
+          );
+          console.log(`🛠️  [FALLBACK] Added missing key props`);
+        }
       }
 
       // Fix missing alt attributes
