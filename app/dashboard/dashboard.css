@@ -2255,13 +2255,30 @@ legend {
     margin-bottom: 16px;
   }
 
-  .controls-section,
+    .controls-section,
+  .demo-controls,
   .analysis-overview,
   .code-comparison,
   .issues-section,
   .layers-section,
   .settings-section {
     padding: 20px;
+  }
+
+  /* Demo controls mobile adjustments */
+  .controls-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .layer-checkboxes {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .control-btn {
+    padding: 0.75rem 1rem;
+    font-size: 0.8rem;
+    min-height: 40px;
   }
 
   /* Improved mobile scrolling */
