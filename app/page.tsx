@@ -225,88 +225,91 @@ function ImageGallery({ images }) {
     alert(`Opening payment modal for ${plan} plan`);
   };
 
-    // Sophisticated sample code loading with real engine integration
-  const loadSampleCode = useCallback(async (sampleKey: string) => {
-    const sample = sampleCodes[sampleKey as keyof typeof sampleCodes];
-    if (!sample) {
-      console.error(`Sample code '${sampleKey}' not found`);
-      return;
-    }
-
-    // Prevent multiple simultaneous requests
-    if (demoState.isLoading) {
-      console.warn("Analysis already in progress, skipping request");
-      return;
-    }
-
-    setDemoState((prev) => ({
-      ...prev,
-      isLoading: true,
-      currentSample: sampleKey,
-      showResults: false,
-      result: null,
-    }));
-
-    try {
-      // Add timeout and abort controller for better UX
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
-
-      const response = await fetch("/api/demo", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          code: sample.code,
-          filename: `${sample.name.toLowerCase().replace(/\s+/g, "-")}.tsx`,
-          layers: "auto", // Let engine auto-detect
-          applyFixes: false, // Dry-run mode for demo
-        }),
-        signal: controller.signal,
-      });
-
-      clearTimeout(timeoutId);
-
-      if (!response.ok) {
-        throw new Error(`API error: ${response.status}`);
+  // Sophisticated sample code loading with real engine integration
+  const loadSampleCode = useCallback(
+    async (sampleKey: string) => {
+      const sample = sampleCodes[sampleKey as keyof typeof sampleCodes];
+      if (!sample) {
+        console.error(`Sample code '${sampleKey}' not found`);
+        return;
       }
 
-      const result = await response.json();
+      // Prevent multiple simultaneous requests
+      if (demoState.isLoading) {
+        console.warn("Analysis already in progress, skipping request");
+        return;
+      }
 
       setDemoState((prev) => ({
         ...prev,
-        isLoading: false,
-        result,
-        showResults: true,
+        isLoading: true,
+        currentSample: sampleKey,
+        showResults: false,
+        result: null,
       }));
-    } catch (error) {
-      console.error("Demo analysis failed:", error);
 
-      let errorMessage = "Unknown error occurred";
-      if (error instanceof Error) {
-        if (error.name === "AbortError") {
-          errorMessage =
-            "Analysis timed out. Please try again with a smaller code sample.";
-        } else if (error.message.includes("fetch")) {
-          errorMessage =
-            "Network error. Please check your connection and try again.";
-        } else {
-          errorMessage = error.message;
+      try {
+        // Add timeout and abort controller for better UX
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+
+        const response = await fetch("/api/demo", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            code: sample.code,
+            filename: `${sample.name.toLowerCase().replace(/\s+/g, "-")}.tsx`,
+            layers: "auto", // Let engine auto-detect
+            applyFixes: false, // Dry-run mode for demo
+          }),
+          signal: controller.signal,
+        });
+
+        clearTimeout(timeoutId);
+
+        if (!response.ok) {
+          throw new Error(`API error: ${response.status}`);
         }
-      }
 
-      setDemoState((prev) => ({
-        ...prev,
-        isLoading: false,
-        result: {
-          success: false,
-          error: errorMessage,
-        },
-        showResults: true,
-      }));
-    }
-  };
+        const result = await response.json();
+
+        setDemoState((prev) => ({
+          ...prev,
+          isLoading: false,
+          result,
+          showResults: true,
+        }));
+      } catch (error) {
+        console.error("Demo analysis failed:", error);
+
+        let errorMessage = "Unknown error occurred";
+        if (error instanceof Error) {
+          if (error.name === "AbortError") {
+            errorMessage =
+              "Analysis timed out. Please try again with a smaller code sample.";
+          } else if (error.message.includes("fetch")) {
+            errorMessage =
+              "Network error. Please check your connection and try again.";
+          } else {
+            errorMessage = error.message;
+          }
+        }
+
+        setDemoState((prev) => ({
+          ...prev,
+          isLoading: false,
+          result: {
+            success: false,
+            error: errorMessage,
+          },
+          showResults: true,
+        }));
+      }
+    },
+    [demoState.isLoading],
+  );
 
   // Sophisticated file upload with real engine integration
   const handleFileUpload = async (
@@ -523,7 +526,7 @@ function ImageGallery({ images }) {
                 <div className="control-group">
                   <label className="control-label">Mode</label>
                   <div className="control-options">
-                                        <button
+                    <button
                       className={`control-btn ${!demoState.applyFixes ? "active" : ""}`}
                       onClick={() =>
                         setDemoState((prev) => ({ ...prev, applyFixes: false }))
