@@ -116,14 +116,15 @@ app.post("/api/analyze", async (req, res) => {
 
     console.log(`🔍 Demo analysis request for ${filename}`);
 
-    // Use REAL NeuroLint Pro engine in dry-run mode
-    const result = await NeuroLintPro(code, filename, true); // dry-run = true
+    // Run REAL NeuroLint Pro engine **with full transformations** (dryRun = false)
+    const engineResult = await NeuroLintPro(code, filename, false);
 
-    // Limit demo results
+    // Prepare trimmed demo-friendly payload
     const demoResult = {
-      recommendedLayers: result.recommendedLayers || [],
-      confidence: result.analysis?.confidence || 0,
-      detectedIssues: (result.analysis?.detectedIssues || []).slice(0, 2), // Limit to 2 issues
+      recommendedLayers: engineResult.analysis?.recommendedLayers || [],
+      confidence: engineResult.analysis?.confidence || 0,
+      detectedIssues: (engineResult.analysis?.detectedIssues || []).slice(0, 2), // Limit to 2 issues
+      fixedCode: engineResult.transformed || code, // Provide transformed code for diff viewer
       demo: true,
       demoLimit: currentRequests + 1 >= DEMO_LIMIT,
     };
