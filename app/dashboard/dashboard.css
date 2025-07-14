@@ -283,11 +283,9 @@
 }
 
 .sidebar-toggle:hover {
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.08);
   border-color: rgba(255, 255, 255, 0.25);
   color: #ffffff;
-  transform: translateY(-1px) scale(1.05);
-  box-shadow: var(--shadow-medium);
 }
 
 .sidebar-toggle:focus-visible {
