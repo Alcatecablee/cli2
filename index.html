@@ -2502,15 +2502,33 @@ function UserProfile({ user, onUpdate }) {
           progressText.textContent = "Analysis complete!";
 
           // Handle final result
-          const analysisData = {
-            filename,
-            originalCode: code,
-            result: data,
-            isSample,
-          };
+          try {
+            console.log("Creating analysis data object...");
+            const analysisData = {
+              filename,
+              originalCode: code,
+              result: data,
+              isSample,
+            };
+            console.log("Analysis data created:", analysisData);
 
-          currentAnalysisResults.push(analysisData);
-          displayAnalysisResults();
+            console.log("Adding to currentAnalysisResults...");
+            currentAnalysisResults.push(analysisData);
+            console.log(
+              "Added successfully. Current count:",
+              currentAnalysisResults.length,
+            );
+
+            console.log("Calling displayAnalysisResults...");
+            displayAnalysisResults();
+            console.log("displayAnalysisResults completed successfully");
+          } catch (displayError) {
+            console.error("❌ Error in result processing:", displayError);
+            console.error("Display error stack:", displayError.stack);
+            throw new Error(
+              `Result processing failed: ${displayError.message}`,
+            );
+          }
 
           // Continue progress
           animateProgress(30, 70, 800);
