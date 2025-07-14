@@ -1045,6 +1045,23 @@ function ImageGallery({ images }) {
                               )}
                             </div>
                           </div>
+                          <div className="analysis-card">
+                            <div className="analysis-label">Est. Fix Time</div>
+                            <div className="analysis-value">
+                              {
+                                demoState.result.analysis.estimatedImpact
+                                  .estimatedFixTime
+                              }
+                            </div>
+                          </div>
+                          <div className="analysis-card">
+                            <div className="analysis-label">
+                              Processing Time
+                            </div>
+                            <div className="analysis-value">
+                              {demoState.result.totalExecutionTime || 0}ms
+                            </div>
+                          </div>
                         </div>
                       </div>
                     )}
