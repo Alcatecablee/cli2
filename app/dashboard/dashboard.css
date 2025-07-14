@@ -1941,20 +1941,25 @@
 }
 
 /* Enhanced Responsive Design */
-@media (max-width: 1200px) {
-  .dashboard-sidebar {
+@media (max-width: 900px) {
+  .dashboard-sidebar:not(.user-expanded) {
     width: var(--sidebar-collapsed-width);
   }
 
-  .dashboard-sidebar .nav-content,
-  .dashboard-sidebar .brand-text {
+  .dashboard-sidebar:not(.user-expanded) .nav-content,
+  .dashboard-sidebar:not(.user-expanded) .brand-text {
     opacity: 0;
     transform: translateX(-20px);
     pointer-events: none;
   }
 
-  .dashboard-sidebar .sidebar-footer {
+  .dashboard-sidebar:not(.user-expanded) .sidebar-footer {
     padding: 16px 8px;
+  }
+
+  /* Allow manual expansion even on smaller screens */
+  .dashboard-sidebar.user-expanded {
+    width: var(--sidebar-width);
   }
 }
 
