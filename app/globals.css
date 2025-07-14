@@ -1082,8 +1082,8 @@ a {
 .error-result {
   text-align: center;
   padding: 2rem;
-  background: rgba(239, 68, 68, 0.1);
-  border: 1px solid rgba(239, 68, 68, 0.3);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid #4a4a4a;
   border-radius: 8px;
 }
 
