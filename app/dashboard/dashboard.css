@@ -2181,7 +2181,27 @@ legend {
   }
 }
 
+/* Mobile responsive for demo controls */
 @media (max-width: 768px) {
+  .controls-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .layer-checkboxes {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .demo-controls {
+    padding: 2rem;
+  }
+
+  .control-btn {
+    padding: 0.75rem 1rem;
+    font-size: 0.8rem;
+    min-height: 40px;
+  }
+}
   .dashboard-content {
     padding: 20px;
     gap: 24px;
