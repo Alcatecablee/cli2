@@ -332,9 +332,10 @@ a {
 
 /* Demo Section */
 .demo-section {
-  padding: 6rem 0 8rem 0;
+  padding: 8rem 0 10rem 0;
   background: #000000;
   min-height: 100vh;
+  animation: fadeInUp 1s ease-out 1s both;
 }
 
 .demo-container {
@@ -343,38 +344,47 @@ a {
   padding: 0 2rem;
   display: grid;
   grid-template-columns: 1fr;
-  gap: 3rem;
-  margin-top: 3rem;
+  gap: 4rem;
+  margin-top: 2rem;
 }
 
 .demo-upload-section {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-  margin-bottom: 2rem;
+  gap: 3rem;
+  margin-bottom: 3rem;
+  animation: slideInLeft 0.8s ease-out 1.2s both;
 }
 
 .upload-area {
-  border: 1px dashed rgba(255, 255, 255, 0.2);
+  border: 2px dashed #4a4a4a;
   padding: 3rem;
   text-align: center;
   background: rgba(255, 255, 255, 0.02);
   cursor: pointer;
-  min-height: 200px;
+  min-height: 240px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   border-radius: 16px;
   backdrop-filter: blur(10px);
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: var(--transition-smooth);
+  position: relative;
+  overflow: hidden;
 }
 
 .upload-area:hover,
 .upload-area:focus-within {
-  border-color: rgba(255, 255, 255, 0.4);
+  border-color: #666666;
   background: rgba(255, 255, 255, 0.05);
-  transform: translateY(-2px);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-medium);
+}
+
+.upload-area:focus-within {
+  outline: 2px solid #ffffff;
+  outline-offset: 4px;
 }
 
 .upload-area h3 {
@@ -390,10 +400,13 @@ a {
 }
 
 .sample-code-section {
-  background: #000000;
+  background: rgba(255, 255, 255, 0.02);
   border: 1px solid #4a4a4a;
   border-radius: 16px;
-  padding: 2rem;
+  padding: 2.5rem;
+  backdrop-filter: blur(10px);
+  transition: var(--transition-smooth);
+  animation: slideInRight 0.8s ease-out 1.2s both;
 }
 
 .sample-code-section h3 {
@@ -404,29 +417,48 @@ a {
 }
 
 .sample-buttons {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 1rem;
-  flex-wrap: wrap;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
 }
 
 .sample-btn {
-  padding: 0.5rem 1rem;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 0.875rem 1.25rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid #4a4a4a;
   border-radius: 8px;
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(255, 255, 255, 0.9);
   cursor: pointer;
   font-size: 0.9rem;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-weight: 500;
+  transition: var(--transition-smooth);
+  position: relative;
+  overflow: hidden;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: manipulation;
 }
 
 .sample-btn:hover,
 .sample-btn.active {
-  background: rgba(255, 255, 255, 0.2);
-  border-color: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.1);
+  border-color: #666666;
   color: #ffffff;
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-subtle);
+}
+
+.sample-btn:focus {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+}
+
+.sample-btn:active {
+  transform: translateY(0);
+  transition: var(--transition-fast);
 }
 
 .file-input {
@@ -436,10 +468,12 @@ a {
 /* Sophisticated Demo Controls */
 .demo-controls {
   background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid #4a4a4a;
   border-radius: 12px;
-  padding: 2rem;
-  margin-bottom: 2rem;
+  padding: 2.5rem;
+  margin-bottom: 3rem;
+  backdrop-filter: blur(10px);
+  animation: fadeInScale 0.8s ease-out 1.4s both;
 }
 
 .demo-controls h3 {
@@ -477,29 +511,49 @@ a {
 
 .control-btn {
   flex: 1;
-  padding: 0.75rem 1rem;
+  padding: 0.875rem 1.25rem;
   background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid #4a4a4a;
   border-radius: 8px;
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(255, 255, 255, 0.9);
   cursor: pointer;
   font-size: 0.875rem;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-weight: 500;
+  transition: var(--transition-smooth);
   text-align: center;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: manipulation;
 }
 
 .control-btn:hover {
   background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.3);
+  border-color: #666666;
   color: #ffffff;
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-subtle);
 }
 
 .control-btn.active {
   background: rgba(255, 255, 255, 0.15);
-  border-color: rgba(255, 255, 255, 0.4);
+  border-color: #666666;
   color: #ffffff;
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1);
+  box-shadow:
+    0 0 0 2px rgba(255, 255, 255, 0.2),
+    var(--shadow-subtle);
+  transform: translateY(-1px);
+}
+
+.control-btn:focus {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+}
+
+.control-btn:active {
+  transform: translateY(0);
+  transition: var(--transition-fast);
 }
 
 .layer-controls {
