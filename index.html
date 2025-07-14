@@ -2336,81 +2336,69 @@ function UserProfile({ user, onUpdate }) {
 
           // Prepare API payload
           const payload = {
-            code: code,
-            filename: filename,
-            demo: true,
+            code,
+            filename,
           };
-          console.log("API Payload:", payload);
 
-          // Call the real NeuroLint Pro API
-          console.log("Calling NeuroLint Pro API at /api/analyze");
-          const response = await fetch("/api/analyze", {
+          console.log("Streaming analysis via /api/analyze-stream");
+
+          const response = await fetch("/api/analyze-stream", {
             method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload),
           });
-          console.log("API Response status:", response.status);
-          console.log("API Response ok:", response.ok);
-          console.log(
-            "API Response headers:",
-            Object.fromEntries(response.headers),
-          );
 
           if (!response.ok) {
-            console.log(`API Error: Status ${response.status}`);
-
-            // Handle specific error cases
-            if (response.status === 429) {
-              // Parse the 429 response to get the proper error message
-              const errorData = await response.json().catch(() => ({}));
-              console.log("429 Error Data:", errorData);
-
-              // Handle demo limit without throwing error to reduce console noise
-              console.log("Demo limit reached - showing upgrade UI");
-              progressText.textContent =
-                "Demo limit reached - Upgrade for unlimited access";
-              progressFill.style.width = "100%";
-              progressFill.style.background = "#666666";
-              displayDemoLimitReached(filename);
-              return; // Exit function early
-            }
-
-            // For other error status codes, try to parse the response
-            const errorData = await response.json().catch(() => ({}));
-            const errorMessage =
-              errorData.error ||
-              `HTTP ${response.status}: ${response.statusText}`;
-
-            // Check if it's a demo limit error even if not 429
-            if (
-              errorMessage.toLowerCase().includes("demo limit") ||
-              errorMessage.toLowerCase().includes("rate limit") ||
-              errorData.demoLimit
-            ) {
-              // Handle demo limit without throwing error to reduce console noise
-              console.log("Demo limit reached (non-429) - showing upgrade UI");
-              progressText.textContent =
-                "Demo limit reached - Upgrade for unlimited access";
-              progressFill.style.width = "100%";
-              progressFill.style.background = "#666666";
-              displayDemoLimitReached(filename);
-              return; // Exit function early
-            }
-
-            throw new Error(errorMessage);
+            throw new Error(`HTTP ${response.status}`);
           }
 
-          const result = await response.json();
-          console.log("=== RAW API RESPONSE ===");
-          console.log("Full result object:", result);
-          console.log("Result type:", typeof result);
-          console.log("Result keys:", Object.keys(result));
-          console.log("Result detectedIssues:", result.detectedIssues);
-          console.log("Result recommendedLayers:", result.recommendedLayers);
-          console.log("Result confidence:", result.confidence);
-          console.log("Result fixedCode:", result.fixedCode);
+          // Stream SSE-like chunks from fetch body
+          const reader = response.body.getReader();
+          const decoder = new TextDecoder("utf-8");
+          let buffer = "";
+
+          const processChunk = (chunk) => {
+            buffer += chunk;
+            let boundary;
+            while ((boundary = buffer.indexOf("\n\n")) !== -1) {
+              const rawEvent = buffer.slice(0, boundary).trim();
+              buffer = buffer.slice(boundary + 2);
+
+              const [eventLine, dataLine] = rawEvent.split("\n");
+              if (!eventLine || !dataLine) continue;
+
+              const event = eventLine.replace("event: ", "").trim();
+              const data = JSON.parse(dataLine.replace("data: ", ""));
+
+              if (event === "progress") {
+                const { percent, status, layerId } = data;
+                progressFill.style.width = `${percent}%`;
+                progressText.textContent = `Layer ${layerId || "-"}: ${status} (${percent}%)`;
+              } else if (event === "done") {
+                progressFill.style.width = "100%";
+                progressText.textContent = "Analysis complete!";
+
+                // Handle final result similar to old flow
+                const analysisData = {
+                  filename,
+                  originalCode: code,
+                  result: data,
+                  isSample,
+                };
+
+                currentAnalysisResults.push(analysisData);
+                displayAnalysisResults();
+              } else if (event === "error") {
+                displayError(filename, data.error || "Unknown error");
+              }
+            }
+          };
+
+          while (true) {
+            const { value, done } = await reader.read();
+            if (done) break;
+            processChunk(decoder.decode(value));
+          }
 
           // Continue progress
           animateProgress(30, 70, 800);
@@ -2431,7 +2419,7 @@ function UserProfile({ user, onUpdate }) {
           const analysisData = {
             filename,
             originalCode: code,
-            result: result, // Use real result from NeuroLint Pro engine - NO SIMULATION
+            result: data, // Use real result from NeuroLint Pro engine - NO SIMULATION
             isSample,
           };
           console.log("Storing analysis data:", analysisData);

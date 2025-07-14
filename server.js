@@ -140,6 +140,52 @@ app.post("/api/analyze", async (req, res) => {
 });
 
 /**
+ * SSE endpoint for demo analysis with real-time progress events
+ */
+app.post("/api/analyze-stream", async (req, res) => {
+  // Set SSE headers
+  res.setHeader("Content-Type", "text/event-stream");
+  res.setHeader("Cache-Control", "no-cache");
+  res.setHeader("Connection", "keep-alive");
+  res.flushHeaders();
+
+  try {
+    const { code, filename } = req.body;
+    if (!code || !filename) {
+      res.write(`event: error\ndata: ${JSON.stringify({ error: "code and filename required" })}\n\n`);
+      return res.end();
+    }
+
+    console.log(`📡 SSE analyze request for ${filename}`);
+
+    // Hook progress events to SSE stream
+    const onProgress = (payload) => {
+      res.write(`event: progress\ndata: ${JSON.stringify(payload)}\n\n`);
+    };
+
+    const engineResult = await NeuroLintPro(code, filename, false, null, {
+      onProgress,
+    });
+
+    const demoResult = {
+      recommendedLayers: engineResult.analysis?.recommendedLayers || [],
+      confidence: engineResult.analysis?.confidence || 0,
+      detectedIssues: (engineResult.analysis?.detectedIssues || []).slice(0, 2),
+      fixedCode: engineResult.transformed || code,
+      demo: true,
+    };
+
+    // Send final done event
+    res.write(`event: done\ndata: ${JSON.stringify(demoResult)}\n\n`);
+    res.end();
+  } catch (error) {
+    console.error("SSE analyze error:", error);
+    res.write(`event: error\ndata: ${JSON.stringify({ error: error.message })}\n\n`);
+    res.end();
+  }
+});
+
+/**
  * API endpoint for full code processing (paid users only)
  */
 app.post("/api/process", async (req, res) => {
