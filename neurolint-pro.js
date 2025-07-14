@@ -842,11 +842,33 @@ function applyLayerTransformations(layerId, code, options = {}) {
         transformedCode.includes(".map(") &&
         !transformedCode.includes("key=")
       ) {
-        // Add key prop to div elements in map functions
+        // More comprehensive key prop fixing for various JSX patterns
+        let hasChanges = false;
+        const beforeFix = transformedCode;
+
+        // Pattern 1: items.map(item => <element>...)
         transformedCode = transformedCode.replace(
-          /(\w+)\.map\((\w+)\s*=>\s*\(\s*<div\s+className="([^"]+)">/g,
-          '$1.map($2 => (<div key={$2.id || $2.name || Math.random()} className="$3">',
+          /(\w+)\.map\((\w+)\s*=>\s*<(\w+)([^>]*?)>/g,
+          (match, array, item, tag, props) => {
+            if (!props.includes("key=")) {
+              return `${array}.map(${item} => <${tag} key={${item}.id || ${item}.name || \`${tag}-\${Math.random().toString(36).substr(2, 9)}\`}${props}>`;
+            }
+            return match;
+          },
         );
+
+        // Pattern 2: items.map(item => ( <element>...))
+        transformedCode = transformedCode.replace(
+          /(\w+)\.map\((\w+)\s*=>\s*\(\s*<(\w+)([^>]*?)>/g,
+          (match, array, item, tag, props) => {
+            if (!props.includes("key=")) {
+              return `${array}.map(${item} => ( <${tag} key={${item}.id || ${item}.name || \`${tag}-\${Math.random().toString(36).substr(2, 9)}\`}${props}>`;
+            }
+            return match;
+          },
+        );
+
+        hasChanges = beforeFix !== transformedCode;
         appliedFixes.push(
           "React Keys: Added missing key props to mapped elements",
         );
