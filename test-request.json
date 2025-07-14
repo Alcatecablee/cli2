@@ -1,0 +1,6 @@
+{
+  "code": "import React, { useState } from 'react';\n\nconst items = [\n  { id: 1, name: &quot;Test Item&quot; },\n  { id: 2, name: &quot;Another Item&quot; }\n];\n\nfunction TestComponent() {\n  const [count, setCount] = useState(0);\n\n  return (\n    <div>\n      <h1>Test Component</h1>\n      <p>Count: {count}</p>\n      <ul>\n        {items.map(item => \n          <li>{item.name}</li>\n        )}\n      </ul>\n      <button onClick={() => setCount(count + 1)}>\n        Increment\n      </button>\n    </div>\n  );\n}\n\nexport default TestComponent;",
+  "filename": "TestComponent.tsx",
+  "layers": "auto",
+  "applyFixes": false
+}
