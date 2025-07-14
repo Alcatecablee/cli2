@@ -1124,9 +1124,7 @@ function ImageGallery({ images }) {
                       <div className="analysis-summary">
                         <div className="analysis-grid">
                           <div className="analysis-card">
-                            <div className="analysis-label">
-                              Confidence Score
-                            </div>
+                            <div className="analysis-label">Analysis Score</div>
                             <div className="analysis-value">
                               {(
                                 demoState.result.analysis.confidence * 100
