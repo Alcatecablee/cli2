@@ -692,11 +692,7 @@ function ImageGallery({ images }) {
                 <div className="sample-buttons">
                   <button
                     className={`sample-btn ${demoState.isLoading && demoState.currentSample === "missing-keys" ? "loading" : ""}`}
-                    onClick={() => {
-                      console.log("🔍 [FRONTEND] Button clicked: missing-keys");
-                      alert("Button clicked! Check console for details.");
-                      loadSampleCode("missing-keys");
-                    }}
+                    onClick={() => loadSampleCode("missing-keys")}
                     disabled={demoState.isLoading}
                   >
                     {demoState.isLoading &&
