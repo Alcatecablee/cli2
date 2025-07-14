@@ -1074,13 +1074,13 @@ function ImageGallery({ images }) {
                               >
                                 {demoState.result.dryRun ? (
                                   <span style={{ color: "#4caf50" }}>
-                                    🔍 <strong>Preview:</strong> This shows what
+                                    <strong>Preview:</strong> This shows what
                                     would be fixed in Apply Fixes mode
                                   </span>
                                 ) : (
                                   <span style={{ color: "#ff9800" }}>
-                                    🔧 <strong>Applied:</strong> Your code has
-                                    been transformed
+                                    <strong>Applied:</strong> Your code has been
+                                    transformed
                                   </span>
                                 )}
                               </div>
