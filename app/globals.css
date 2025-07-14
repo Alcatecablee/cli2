@@ -1560,6 +1560,16 @@ legend {
     grid-template-columns: 1fr;
   }
 
+  .code-panel-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .code-actions {
+    align-self: flex-end;
+  }
+
   .demo-results {
     padding: 1.5rem;
     margin-top: 2rem;
