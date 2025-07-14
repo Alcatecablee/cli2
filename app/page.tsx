@@ -457,7 +457,7 @@ function ImageGallery({ images }) {
                         setDemoState((prev) => ({ ...prev, applyFixes: false }))
                       }
                     >
-                      🔍 Dry-Run (Analysis Only)
+                      Dry-Run (Analysis Only)
                     </button>
                     <button
                       className={`control-btn ${demoState.applyFixes ? "active" : ""}`}
@@ -465,7 +465,7 @@ function ImageGallery({ images }) {
                         setDemoState((prev) => ({ ...prev, applyFixes: true }))
                       }
                     >
-                      🔧 Apply Fixes
+                      Apply Fixes
                     </button>
                   </div>
                 </div>
