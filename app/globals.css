@@ -842,6 +842,19 @@ a:focus-visible {
   z-index: 1;
 }
 
+/* Screen reader only content */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 /* High contrast mode support */
 @media (prefers-contrast: high) {
   :root {
@@ -856,6 +869,27 @@ a:focus-visible {
   .demo-controls {
     border-color: #ffffff;
   }
+}
+
+/* Fix fieldset styling */
+fieldset {
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+legend {
+  padding: 0;
+}
+
+/* Improve layer checkbox accessibility */
+.layer-checkbox {
+  position: relative;
+}
+
+.layer-checkbox input[type="checkbox"]:focus {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
 }
 
 /* Reduced motion */
