@@ -1,0 +1,38 @@
+import React from "react";
+import Script from "next/script";
+import "./globals.css";
+
+export const metadata = {
+  title: "NeuroLint Pro - Premium React/Next.js Code Fixing Service",
+  description:
+    "Professional automated debugging service that safely fixes React/Next.js code. Never corrupts your code.",
+  icons: {
+    icon: "/favico.png",
+  },
+};
+
+export default function RootLayout({ children }) {
+  return (
+    <html lang="en">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin=""
+        />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet"
+        />
+      </head>
+      <body>
+        {children}
+        <Script
+          src="https://www.paypal.com/sdk/js?client-id=AaZabZwUPYitlE5MOXwohkXxtMzI7GaSArFxw7JYMIDfZE_PHvsMzY1WEsZk_QwTdek4SEpjj_DC5ys7&currency=USD&intent=capture&enable-funding=venmo,card"
+          strategy="lazyOnload"
+        />
+      </body>
+    </html>
+  );
+}
