@@ -1087,7 +1087,7 @@ function ImageGallery({ images }) {
                               <div className="code-panels">
                                 <div className="code-panel">
                                   <div className="code-panel-header">
-                                    📄 Original Code
+                                    Original Code
                                   </div>
                                   <pre className="code-block original">
                                     <code>{demoState.result.originalCode}</code>
