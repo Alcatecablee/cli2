@@ -1355,7 +1355,7 @@
         color: var(--muted) !important;
       }
 
-      /* Dark theme overrides – remove gradients */
+      /* Dark theme overrides �� remove gradients */
       body,
       .hero,
       .feature-card,
@@ -2475,93 +2475,42 @@ function UserProfile({ user, onUpdate }) {
           console.log("  - Headers:", [...response.headers.entries()]);
 
           if (!response.ok) {
-            throw new Error(`HTTP ${response.status}`);
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(errorData.error || `HTTP ${response.status}`);
           }
 
-          // Stream SSE-like chunks from fetch body
-          const reader = response.body.getReader();
-          const decoder = new TextDecoder("utf-8");
-          let buffer = "";
+          // Get JSON response from /api/demo
+          const data = await response.json();
 
-          const processChunk = (chunk) => {
-            buffer += chunk;
-            let boundary;
-            while ((boundary = buffer.indexOf("\n\n")) !== -1) {
-              const rawEvent = buffer.slice(0, boundary).trim();
-              buffer = buffer.slice(boundary + 2);
+          console.log(
+            "%c🎉 TRANSFORMATION COMPLETE!",
+            "color: #00ff00; font-weight: bold; font-size: 16px;",
+          );
+          console.log("📋 Final Results Summary:");
+          console.log(
+            "  - Recommended Layers:",
+            data.recommendedLayers?.length || 0,
+          );
+          console.log("  - Confidence Score:", data.confidence || 0);
+          console.log("  - Issues Detected:", data.detectedIssues?.length || 0);
+          console.log("  - Demo Mode:", data.demo ? "YES" : "NO");
+          console.log("  - Analysis:", data.analysis);
+          console.log("  - Full Response:", data);
 
-              const [eventLine, dataLine] = rawEvent.split("\n");
-              if (!eventLine || !dataLine) continue;
+          // Update progress to 100%
+          progressFill.style.width = "100%";
+          progressText.textContent = "Analysis complete!";
 
-              const event = eventLine.replace("event: ", "").trim();
-              const data = JSON.parse(dataLine.replace("data: ", ""));
-
-              console.log(`📨 SSE Event Received: ${event}`);
-              console.log("📊 Event Data:", data);
-
-              if (event === "progress") {
-                const { percent, status, layerId } = data;
-                console.log(
-                  `%c🔧 LAYER ${layerId || "?"} PROCESSING`,
-                  "color: #00bfff; font-weight: bold;",
-                );
-                console.log(`  - Status: ${status}`);
-                console.log(`  - Progress: ${percent}%`);
-                console.log(
-                  `  - Layer: ${layerId ? `Layer ${layerId}` : "Unknown"}`,
-                );
-
-                progressFill.style.width = `${percent}%`;
-                progressText.textContent = `Layer ${layerId || "-"}: ${status} (${percent}%)`;
-              } else if (event === "done") {
-                console.log(
-                  "%c🎉 TRANSFORMATION COMPLETE!",
-                  "color: #00ff00; font-weight: bold; font-size: 16px;",
-                );
-                console.log("📋 Final Results Summary:");
-                console.log(
-                  "  - Recommended Layers:",
-                  data.recommendedLayers?.length || 0,
-                );
-                console.log("  - Confidence Score:", data.confidence || 0);
-                console.log(
-                  "  - Issues Detected:",
-                  data.detectedIssues?.length || 0,
-                );
-                console.log(
-                  "  - Code Transformed:",
-                  data.fixedCode ? "YES" : "NO",
-                );
-                console.log("  - Demo Mode:", data.demo ? "YES" : "NO");
-
-                progressFill.style.width = "100%";
-                progressText.textContent = "Analysis complete!";
-
-                // Handle final result similar to old flow
-                const analysisData = {
-                  filename,
-                  originalCode: code,
-                  result: data,
-                  isSample,
-                };
-
-                currentAnalysisResults.push(analysisData);
-                displayAnalysisResults();
-              } else if (event === "error") {
-                console.error(
-                  "❌ Analysis Error:",
-                  data.error || "Unknown error",
-                );
-                displayError(filename, data.error || "Unknown error");
-              }
-            }
+          // Handle final result
+          const analysisData = {
+            filename,
+            originalCode: code,
+            result: data,
+            isSample,
           };
 
-          while (true) {
-            const { value, done } = await reader.read();
-            if (done) break;
-            processChunk(decoder.decode(value));
-          }
+          currentAnalysisResults.push(analysisData);
+          displayAnalysisResults();
 
           // Continue progress
           animateProgress(30, 70, 800);
