@@ -766,7 +766,7 @@ function ImageGallery({ images }) {
               {" • "}
               <span style={{ color: "#2196f3" }}>
                 {demoState.selectedLayers.length === 0
-                  ? "🌟 Auto-Detect Layers"
+                  ? "��� Auto-Detect Layers"
                   : demoState.selectedLayers.length === 6
                     ? "📋 All 6 Layers"
                     : `⚙️ Custom Layers [${demoState.selectedLayers.join(",")}]`}
@@ -1031,24 +1031,74 @@ function ImageGallery({ images }) {
                       demoState.result.transformed && (
                         <div className="code-comparison">
                           <h4>Before & After Comparison</h4>
-                          <div className="code-panels">
-                            <div className="code-panel">
-                              <div className="code-panel-header">
-                                Original Code
-                              </div>
-                              <pre className="code-block original">
-                                <code>{demoState.result.originalCode}</code>
-                              </pre>
+                          {demoState.result.originalCode ===
+                          demoState.result.transformed ? (
+                            <div
+                              style={{
+                                textAlign: "center",
+                                padding: "2rem",
+                                background: "rgba(255, 255, 255, 0.05)",
+                                borderRadius: "8px",
+                                color: "rgba(255, 255, 255, 0.7)",
+                              }}
+                            >
+                              <p
+                                style={{
+                                  fontSize: "1.1rem",
+                                  marginBottom: "0.5rem",
+                                }}
+                              >
+                                ✨ <strong>No Changes Needed</strong>
+                              </p>
+                              <p style={{ fontSize: "0.9rem" }}>
+                                Your code is already in great shape! No fixes
+                                were required.
+                              </p>
                             </div>
-                            <div className="code-panel">
-                              <div className="code-panel-header">
-                                NeuroLint Pro Fixed
+                          ) : (
+                            <>
+                              <div
+                                style={{
+                                  textAlign: "center",
+                                  marginBottom: "1rem",
+                                  fontSize: "0.9rem",
+                                  color: "rgba(255, 255, 255, 0.7)",
+                                }}
+                              >
+                                {demoState.result.dryRun ? (
+                                  <span style={{ color: "#4caf50" }}>
+                                    🔍 <strong>Preview:</strong> This shows what
+                                    would be fixed in Apply Fixes mode
+                                  </span>
+                                ) : (
+                                  <span style={{ color: "#ff9800" }}>
+                                    🔧 <strong>Applied:</strong> Your code has
+                                    been transformed
+                                  </span>
+                                )}
                               </div>
-                              <pre className="code-block transformed">
-                                <code>{demoState.result.transformed}</code>
-                              </pre>
-                            </div>
-                          </div>
+                              <div className="code-panels">
+                                <div className="code-panel">
+                                  <div className="code-panel-header">
+                                    📄 Original Code
+                                  </div>
+                                  <pre className="code-block original">
+                                    <code>{demoState.result.originalCode}</code>
+                                  </pre>
+                                </div>
+                                <div className="code-panel">
+                                  <div className="code-panel-header">
+                                    {demoState.result.dryRun
+                                      ? "🔍 Preview Fixed"
+                                      : "✅ NeuroLint Pro Fixed"}
+                                  </div>
+                                  <pre className="code-block transformed">
+                                    <code>{demoState.result.transformed}</code>
+                                  </pre>
+                                </div>
+                              </div>
+                            </>
+                          )}
                         </div>
                       )}
                   </>
