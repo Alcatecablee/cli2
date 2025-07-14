@@ -755,10 +755,12 @@ function ImageGallery({ images }) {
                 textAlign: "center",
                 marginBottom: "1rem",
                 padding: "0.75rem",
-                background: "rgba(255, 255, 255, 0.05)",
+                background: "rgba(33, 150, 243, 0.08)",
+                border: "1px solid rgba(33, 150, 243, 0.2)",
                 borderRadius: "8px",
                 fontSize: "0.9rem",
-                color: "rgba(255, 255, 255, 0.8)",
+                color: "rgba(255, 255, 255, 0.9)",
+                boxShadow: "0 2px 8px rgba(33, 150, 243, 0.1)",
               }}
             >
               <strong>Current Settings:</strong>{" "}
