@@ -503,29 +503,6 @@ a {
   transform: translateY(0);
 }
 
-/* Footer */
-.footer {
-  width: 100%;
-  padding: 4rem 2rem 2rem 2rem;
-  background: #000000;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 1rem;
-  margin-top: 6rem;
-  position: relative;
-}
-
-.footer-inner {
-  max-width: 1400px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-}
-
 /* Mobile Responsive */
 @media (max-width: 768px) {
   .header-inner {
