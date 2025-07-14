@@ -535,9 +535,12 @@ function ImageGallery({ images }) {
               Try NeuroLint Pro Live
             </h2>
             <p id="demo-description" className="section-subtitle">
-              Upload your React/Next.js files and see real fixes applied using
-              our 6-layer system. Dry-run mode perfect for demos returns
-              analysis without changes, letting you explore safely.
+              Upload your <strong>React/Next.js files</strong> and see{" "}
+              <strong>real fixes applied</strong> using our{" "}
+              <strong>6-layer system</strong>. <strong>Dry-run mode</strong>{" "}
+              perfect for demos returns
+              <strong>analysis without changes</strong>, letting you{" "}
+              <strong>explore safely</strong>.
             </p>
 
             {/* Advanced Demo Controls */}
