@@ -485,13 +485,22 @@ a {
 }
 
 .sample-code-section {
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid #4a4a4a;
-  border-radius: 16px;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.08) 0%,
+    rgba(255, 255, 255, 0.04) 50%,
+    rgba(255, 255, 255, 0.02) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
   padding: 2.5rem;
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(20px) saturate(1.2);
+  -webkit-backdrop-filter: blur(20px) saturate(1.2);
   transition: var(--transition-smooth);
   animation: slideInRight 0.8s ease-out 1.2s both;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .sample-code-section h3 {
