@@ -207,6 +207,28 @@ export default function Dashboard() {
     uploadProgress: 0,
   });
 
+  // Copy and download functions
+  const copyToClipboard = async (text: string, type: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      console.log(`${type} code copied to clipboard`);
+    } catch (err) {
+      console.error("Failed to copy text: ", err);
+    }
+  };
+
+  const downloadCode = (code: string, filename: string) => {
+    const blob = new Blob([code], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [rateLimitInfo, setRateLimitInfo] = useState<any>(null);
