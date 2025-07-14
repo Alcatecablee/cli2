@@ -10,6 +10,11 @@
     />
     <link rel="icon" type="image/png" href="/favico.png" />
     <script src="https://www.paypal.com/sdk/js?client-id=AaZabZwUPYitlE5MOXwohkXxtMzI7GaSArFxw7JYMIDfZE_PHvsMzY1WEsZk_QwTdek4SEpjj_DC5ys7&currency=USD&intent=capture&enable-funding=venmo,card"></script>
+    <!-- Diff & Syntax Highlighting -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-jsx.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/diff/5.1.0/diff.min.js"></script>
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -1956,21 +1961,74 @@ function UserProfile({ user, onUpdate }) {
       let currentAnalysisResults = [];
       let currentActiveTab = "overview";
 
-      function switchTab(tabName) {
-        // Update active tab
-        document.querySelectorAll(".analysis-tab").forEach((tab) => {
-          tab.classList.remove("active");
+      /* -------------------- TAB ACCESSIBILITY -------------------- */
+      function initTabs() {
+        const tabList = document.querySelector(".analysis-tabs");
+        if (!tabList) return;
+
+        tabList.setAttribute("role", "tablist");
+
+        const tabs = tabList.querySelectorAll(".analysis-tab");
+        tabs.forEach((tab) => {
+          const name = tab.dataset.tab;
+          const panel = document.getElementById(`${name}-content`);
+          if (!panel) return;
+
+          // Tab attributes
+          tab.setAttribute("role", "tab");
+          tab.setAttribute("id", `tab-${name}`);
+          tab.setAttribute("aria-controls", `${name}-content`);
+          tab.setAttribute(
+            "aria-selected",
+            tab.classList.contains("active") ? "true" : "false",
+          );
+          tab.setAttribute(
+            "tabindex",
+            tab.classList.contains("active") ? "0" : "-1",
+          );
+
+          // Panel attributes
+          panel.setAttribute("role", "tabpanel");
+          panel.setAttribute("aria-labelledby", `tab-${name}`);
+          panel.hidden = !panel.classList.contains("active");
+
+          // Keyboard navigation
+          tab.addEventListener("keydown", (e) => {
+            if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
+              e.preventDefault();
+              const dir = e.key === "ArrowRight" ? 1 : -1;
+              const ordered = Array.from(tabs);
+              const idx = ordered.indexOf(tab);
+              let newIdx = (idx + dir + ordered.length) % ordered.length;
+              ordered[newIdx].focus();
+              switchTab(ordered[newIdx].dataset.tab);
+            }
+          });
         });
-        document.querySelectorAll(".analysis-content").forEach((content) => {
-          content.classList.remove("active");
+      }
+
+      function switchTab(tabName) {
+        const tabs = document.querySelectorAll(".analysis-tab");
+        const panels = document.querySelectorAll(".analysis-content");
+
+        tabs.forEach((tab) => {
+          const isActive = tab.dataset.tab === tabName;
+          tab.classList.toggle("active", isActive);
+          tab.setAttribute("aria-selected", isActive ? "true" : "false");
+          tab.setAttribute("tabindex", isActive ? "0" : "-1");
         });
 
-        document
-          .querySelector(`[data-tab="${tabName}"]`)
-          .classList.add("active");
-        document.getElementById(`${tabName}-content`).classList.add("active");
+        panels.forEach((panel) => {
+          const isActive = panel.id === `${tabName}-content`;
+          panel.classList.toggle("active", isActive);
+          panel.hidden = !isActive;
+        });
+
         currentActiveTab = tabName;
       }
+
+      // Initialize tabs once DOM is ready
+      document.addEventListener("DOMContentLoaded", initTabs);
 
       function loadSampleCode(sampleType) {
         console.log("=== LOADING SAMPLE CODE ===");
@@ -2220,7 +2278,9 @@ function UserProfile({ user, onUpdate }) {
           .render("#paypal-button-container");
       }
 
-      // Enhanced file upload handler
+      // === File Upload & Validation ===
+      const MAX_FILE_SIZE = 256 * 1024; // 256 KB demo limit
+
       async function handleFileUpload(event) {
         const files = event.target.files;
         if (files.length === 0) return;
@@ -2228,11 +2288,23 @@ function UserProfile({ user, onUpdate }) {
         const results = document.getElementById("results");
         results.classList.add("show");
 
-        // Process files sequentially for better UX
-        for (let i = 0; i < Math.min(files.length, 3); i++) {
+        let processedCount = 0;
+
+        for (let i = 0; i < files.length && processedCount < 3; i++) {
           const file = files[i];
+
+          // Client-side size validation
+          if (file.size > MAX_FILE_SIZE) {
+            displayError(
+              file.name,
+              `File is ${(file.size / 1024).toFixed(1)} KB. Demo limit is ${(MAX_FILE_SIZE / 1024).toFixed(0)} KB per file.`,
+            );
+            continue; // Skip oversized file but continue processing others
+          }
+
           const content = await file.text();
           await analyzeCode(content, file.name, false);
+          processedCount++;
         }
 
         if (files.length > 3) {
@@ -2264,81 +2336,69 @@ function UserProfile({ user, onUpdate }) {
 
           // Prepare API payload
           const payload = {
-            code: code,
-            filename: filename,
-            demo: true,
+            code,
+            filename,
           };
-          console.log("API Payload:", payload);
 
-          // Call the real NeuroLint Pro API
-          console.log("Calling NeuroLint Pro API at /api/analyze");
-          const response = await fetch("/api/analyze", {
+          console.log("Streaming analysis via /api/analyze-stream");
+
+          const response = await fetch("/api/analyze-stream", {
             method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload),
           });
-          console.log("API Response status:", response.status);
-          console.log("API Response ok:", response.ok);
-          console.log(
-            "API Response headers:",
-            Object.fromEntries(response.headers),
-          );
 
           if (!response.ok) {
-            console.log(`API Error: Status ${response.status}`);
-
-            // Handle specific error cases
-            if (response.status === 429) {
-              // Parse the 429 response to get the proper error message
-              const errorData = await response.json().catch(() => ({}));
-              console.log("429 Error Data:", errorData);
-
-              // Handle demo limit without throwing error to reduce console noise
-              console.log("Demo limit reached - showing upgrade UI");
-              progressText.textContent =
-                "Demo limit reached - Upgrade for unlimited access";
-              progressFill.style.width = "100%";
-              progressFill.style.background = "#666666";
-              displayDemoLimitReached(filename);
-              return; // Exit function early
-            }
-
-            // For other error status codes, try to parse the response
-            const errorData = await response.json().catch(() => ({}));
-            const errorMessage =
-              errorData.error ||
-              `HTTP ${response.status}: ${response.statusText}`;
-
-            // Check if it's a demo limit error even if not 429
-            if (
-              errorMessage.toLowerCase().includes("demo limit") ||
-              errorMessage.toLowerCase().includes("rate limit") ||
-              errorData.demoLimit
-            ) {
-              // Handle demo limit without throwing error to reduce console noise
-              console.log("Demo limit reached (non-429) - showing upgrade UI");
-              progressText.textContent =
-                "Demo limit reached - Upgrade for unlimited access";
-              progressFill.style.width = "100%";
-              progressFill.style.background = "#666666";
-              displayDemoLimitReached(filename);
-              return; // Exit function early
-            }
-
-            throw new Error(errorMessage);
+            throw new Error(`HTTP ${response.status}`);
           }
 
-          const result = await response.json();
-          console.log("=== RAW API RESPONSE ===");
-          console.log("Full result object:", result);
-          console.log("Result type:", typeof result);
-          console.log("Result keys:", Object.keys(result));
-          console.log("Result detectedIssues:", result.detectedIssues);
-          console.log("Result recommendedLayers:", result.recommendedLayers);
-          console.log("Result confidence:", result.confidence);
-          console.log("Result fixedCode:", result.fixedCode);
+          // Stream SSE-like chunks from fetch body
+          const reader = response.body.getReader();
+          const decoder = new TextDecoder("utf-8");
+          let buffer = "";
+
+          const processChunk = (chunk) => {
+            buffer += chunk;
+            let boundary;
+            while ((boundary = buffer.indexOf("\n\n")) !== -1) {
+              const rawEvent = buffer.slice(0, boundary).trim();
+              buffer = buffer.slice(boundary + 2);
+
+              const [eventLine, dataLine] = rawEvent.split("\n");
+              if (!eventLine || !dataLine) continue;
+
+              const event = eventLine.replace("event: ", "").trim();
+              const data = JSON.parse(dataLine.replace("data: ", ""));
+
+              if (event === "progress") {
+                const { percent, status, layerId } = data;
+                progressFill.style.width = `${percent}%`;
+                progressText.textContent = `Layer ${layerId || "-"}: ${status} (${percent}%)`;
+              } else if (event === "done") {
+                progressFill.style.width = "100%";
+                progressText.textContent = "Analysis complete!";
+
+                // Handle final result similar to old flow
+                const analysisData = {
+                  filename,
+                  originalCode: code,
+                  result: data,
+                  isSample,
+                };
+
+                currentAnalysisResults.push(analysisData);
+                displayAnalysisResults();
+              } else if (event === "error") {
+                displayError(filename, data.error || "Unknown error");
+              }
+            }
+          };
+
+          while (true) {
+            const { value, done } = await reader.read();
+            if (done) break;
+            processChunk(decoder.decode(value));
+          }
 
           // Continue progress
           animateProgress(30, 70, 800);
@@ -2359,7 +2419,7 @@ function UserProfile({ user, onUpdate }) {
           const analysisData = {
             filename,
             originalCode: code,
-            result: result, // Use real result from NeuroLint Pro engine - NO SIMULATION
+            result: data, // Use real result from NeuroLint Pro engine - NO SIMULATION
             isSample,
           };
           console.log("Storing analysis data:", analysisData);
@@ -2736,30 +2796,27 @@ function UserProfile({ user, onUpdate }) {
 
       function generateDiffHtml(original, fixed) {
         if (original === fixed) {
-          return escapeHtml(original);
+          return `<pre><code class="language-jsx">${Prism.highlight(escapeHtml(original), Prism.languages.jsx, 'jsx')}</code></pre>`;
         }
 
-        // Simple diff highlighting
-        const originalLines = original.split("\n");
-        const fixedLines = fixed.split("\n");
+        const diffParts = Diff.diffLines(original, fixed);
+        let html = "";
 
-        let result = "";
-        const maxLines = Math.max(originalLines.length, fixedLines.length);
+        diffParts.forEach((part) => {
+          const className = part.added ? "added" : part.removed ? "removed" : "context";
 
-        for (let i = 0; i < maxLines; i++) {
-          const origLine = originalLines[i] || "";
-          const fixedLine = fixedLines[i] || "";
+          // Split part into individual lines to keep original line breaks
+          const lines = part.value.split("\n");
+          lines.forEach((line, idx) => {
+            if (line === "" && idx === lines.length - 1) return; // skip final empty line
 
-          if (origLine !== fixedLine) {
-            if (fixedLine) {
-              result += `<span class="diff-line added">+ ${escapeHtml(fixedLine)}</span>\n`;
-            }
-          } else {
-            result += `<span class="diff-line context">  ${escapeHtml(fixedLine)}</span>\n`;
-          }
-        }
+            const highlighted = Prism.highlight(line, Prism.languages.jsx, 'jsx');
+            const prefix = part.added ? "+ " : part.removed ? "- " : "  ";
+            html += `<span class="diff-line ${className}">${prefix}${highlighted}</span>\n`;
+          });
+        });
 
-        return result;
+        return html;
       }
 
       function escapeHtml(text) {
