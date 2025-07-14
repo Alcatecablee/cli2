@@ -528,6 +528,8 @@ function ImageGallery({ images }) {
                       onClick={() =>
                         setDemoState((prev) => ({ ...prev, applyFixes: false }))
                       }
+                      aria-pressed={!demoState.applyFixes}
+                      aria-label="Enable dry-run mode for analysis only"
                     >
                       Dry-Run (Analysis Only)
                     </button>
@@ -536,6 +538,8 @@ function ImageGallery({ images }) {
                       onClick={() =>
                         setDemoState((prev) => ({ ...prev, applyFixes: true }))
                       }
+                      aria-pressed={demoState.applyFixes}
+                      aria-label="Enable apply fixes mode to modify code"
                     >
                       Apply Fixes
                     </button>
