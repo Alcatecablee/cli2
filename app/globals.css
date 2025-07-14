@@ -977,11 +977,11 @@ a {
 }
 
 .layer-card.success {
-  border-left-color: #22c55e;
+  border-left-color: #666666;
 }
 
 .layer-card.failed {
-  border-left-color: #ef4444;
+  border-left-color: #4a4a4a;
 }
 
 .layer-header {
