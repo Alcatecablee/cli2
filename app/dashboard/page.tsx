@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import "./dashboard.css";
 
 // Import the same result interfaces from the demo
@@ -47,6 +47,32 @@ interface DemoResult {
   };
 }
 
+interface AnalysisHistory {
+  id: string;
+  filename: string;
+  timestamp: Date;
+  result: DemoResult;
+  layers: number[];
+  executionTime: number;
+}
+
+interface Project {
+  id: string;
+  name: string;
+  description: string;
+  files: string[];
+  createdAt: Date;
+  lastAnalyzed?: Date;
+}
+
+interface UserSettings {
+  defaultLayers: number[];
+  autoSave: boolean;
+  notifications: boolean;
+  theme: "dark" | "light";
+  apiKey?: string;
+}
+
 interface DashboardState {
   isLoading: boolean;
   currentFile: string | null;
@@ -56,6 +82,11 @@ interface DashboardState {
   applyFixes: boolean;
   sidebarCollapsed: boolean;
   activeSection: string;
+  analysisHistory: AnalysisHistory[];
+  projects: Project[];
+  settings: UserSettings;
+  progressStatus: string;
+  uploadProgress: number;
 }
 
 const sampleFiles = {
@@ -164,7 +195,19 @@ export default function Dashboard() {
     applyFixes: false,
     sidebarCollapsed: false,
     activeSection: "editor",
+    analysisHistory: [],
+    projects: [],
+    settings: {
+      defaultLayers: [],
+      autoSave: true,
+      notifications: true,
+      theme: "dark",
+    },
+    progressStatus: "",
+    uploadProgress: 0,
   });
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const analyzecode = useCallback(
     async (
@@ -277,28 +320,97 @@ export default function Dashboard() {
     }));
   }, []);
 
+  // Load saved data on component mount
+  useEffect(() => {
+    const savedHistory = localStorage.getItem("neurolint-history");
+    const savedProjects = localStorage.getItem("neurolint-projects");
+    const savedSettings = localStorage.getItem("neurolint-settings");
+
+    if (savedHistory) {
+      try {
+        const history = JSON.parse(savedHistory);
+        setDashboardState((prev) => ({ ...prev, analysisHistory: history }));
+      } catch (e) {
+        console.error("Failed to load analysis history:", e);
+      }
+    }
+
+    if (savedProjects) {
+      try {
+        const projects = JSON.parse(savedProjects);
+        setDashboardState((prev) => ({ ...prev, projects: projects }));
+      } catch (e) {
+        console.error("Failed to load projects:", e);
+      }
+    }
+
+    if (savedSettings) {
+      try {
+        const settings = JSON.parse(savedSettings);
+        setDashboardState((prev) => ({
+          ...prev,
+          settings: { ...prev.settings, ...settings },
+        }));
+      } catch (e) {
+        console.error("Failed to load settings:", e);
+      }
+    }
+  }, []);
+
+  // Save analysis to history
+  const saveToHistory = useCallback(
+    (
+      filename: string,
+      result: DemoResult,
+      layers: number[],
+      executionTime: number,
+    ) => {
+      const historyItem: AnalysisHistory = {
+        id: Date.now().toString(),
+        filename,
+        timestamp: new Date(),
+        result,
+        layers,
+        executionTime,
+      };
+
+      setDashboardState((prev) => {
+        const newHistory = [historyItem, ...prev.analysisHistory].slice(0, 50); // Keep last 50
+        localStorage.setItem("neurolint-history", JSON.stringify(newHistory));
+        return { ...prev, analysisHistory: newHistory };
+      });
+    },
+    [],
+  );
+
   const sidebarItems = [
     {
       id: "editor",
-      icon: "ED",
-      label: "Code Editor",
-      description: "Upload and analyze code",
+      icon: "📝",
+      label: "Code Analysis",
+      description: "Upload and analyze files",
     },
     {
-      id: "samples",
-      icon: "SA",
-      label: "Sample Files",
-      description: "Test with example files",
+      id: "projects",
+      icon: "📁",
+      label: "Projects",
+      description: "Organize your work",
     },
     {
       id: "history",
-      icon: "HI",
-      label: "History",
+      icon: "📊",
+      label: "Analysis History",
       description: "Previous analyses",
     },
     {
+      id: "samples",
+      icon: "🧪",
+      label: "Sample Files",
+      description: "Test with examples",
+    },
+    {
       id: "settings",
-      icon: "SE",
+      icon: "⚙️",
       label: "Settings",
       description: "Configure preferences",
     },
