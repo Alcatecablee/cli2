@@ -212,6 +212,25 @@
   height: 24px;
 }
 
+/* Center the brand section when collapsed */
+.dashboard-sidebar.collapsed .brand {
+  justify-content: center;
+}
+
+/* Center nav items when collapsed */
+.dashboard-sidebar.collapsed .nav-item {
+  justify-content: center;
+  padding: 14px 12px;
+  margin: 2px 4px;
+  width: calc(100% - 8px);
+}
+
+/* Center user avatar when collapsed */
+.dashboard-sidebar.collapsed .user-section {
+  justify-content: center;
+  padding: 8px 4px;
+}
+
 /* Add visual indicator for collapsed state */
 .dashboard-sidebar.collapsed::before {
   content: "";
