@@ -374,7 +374,7 @@ function ImageGallery({ images }) {
           }
         }
 
-        console.log("🔍 [FRONTEND] Setting error state:", errorMessage);
+        console.log("[FRONTEND] Setting error state:", errorMessage);
 
         setDemoState((prev) => ({
           ...prev,
