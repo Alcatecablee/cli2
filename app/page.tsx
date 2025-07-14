@@ -249,25 +249,44 @@ function ImageGallery({ images }) {
       }));
 
       try {
+        console.log("🔍 [FRONTEND] Starting sample analysis for:", sampleKey);
+        console.log("🔍 [FRONTEND] Sample code length:", sample.code.length);
+
         // Add timeout and abort controller for better UX
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+
+        const requestPayload = {
+          code: sample.code,
+          filename: `${sample.name.toLowerCase().replace(/\s+/g, "-")}.tsx`,
+          layers: "auto", // Let engine auto-detect
+          applyFixes: false, // Dry-run mode for demo
+        };
+
+        console.log("🔍 [FRONTEND] Request payload:", {
+          codeLength: requestPayload.code.length,
+          filename: requestPayload.filename,
+          layers: requestPayload.layers,
+          applyFixes: requestPayload.applyFixes,
+        });
 
         const response = await fetch("/api/demo", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({
-            code: sample.code,
-            filename: `${sample.name.toLowerCase().replace(/\s+/g, "-")}.tsx`,
-            layers: "auto", // Let engine auto-detect
-            applyFixes: false, // Dry-run mode for demo
-          }),
+          body: JSON.stringify(requestPayload),
           signal: controller.signal,
         });
 
         clearTimeout(timeoutId);
+
+        console.log("🔍 [FRONTEND] Response received:", {
+          status: response.status,
+          ok: response.ok,
+          statusText: response.statusText,
+          headers: Object.fromEntries(response.headers.entries()),
+        });
 
         if (!response.ok) {
           throw new Error(`API error: ${response.status}`);
