@@ -216,14 +216,33 @@ export default function Dashboard() {
       layers: number[] | "auto" | "all",
       applyFixes: boolean,
     ) => {
-      setDashboardState((prev) => ({ ...prev, isLoading: true, result: null }));
+      const startTime = Date.now();
+      setDashboardState((prev) => ({
+        ...prev,
+        isLoading: true,
+        result: null,
+        progressStatus: "Initializing analysis...",
+        uploadProgress: 0,
+      }));
 
       try {
+        setDashboardState((prev) => ({
+          ...prev,
+          progressStatus: "Sending request...",
+          uploadProgress: 25,
+        }));
+
         const response = await fetch("/api/demo", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ code, filename, layers, applyFixes }),
         });
+
+        setDashboardState((prev) => ({
+          ...prev,
+          progressStatus: "Processing response...",
+          uploadProgress: 75,
+        }));
 
         const result = await response.json();
 
@@ -236,11 +255,25 @@ export default function Dashboard() {
           success: result?.dryRun ? true : result?.success,
         };
 
+        const executionTime = Date.now() - startTime;
+
+        // Save to history if settings allow
+        if (dashboardState.settings.autoSave && normalizedResult.success) {
+          saveToHistory(
+            filename,
+            normalizedResult,
+            Array.isArray(layers) ? layers : [],
+            executionTime,
+          );
+        }
+
         setDashboardState((prev) => ({
           ...prev,
           result: normalizedResult,
           showResults: true,
           isLoading: false,
+          progressStatus: "Analysis complete",
+          uploadProgress: 100,
         }));
       } catch (error) {
         console.error("[DASHBOARD] Analysis failed:", error);
@@ -255,10 +288,12 @@ export default function Dashboard() {
           },
           showResults: true,
           isLoading: false,
+          progressStatus: "Analysis failed",
+          uploadProgress: 0,
         }));
       }
     },
-    [],
+    [dashboardState.settings.autoSave, saveToHistory],
   );
 
   const loadSampleFile = useCallback(
