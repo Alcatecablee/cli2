@@ -187,14 +187,41 @@ export async function POST(req: Request) {
       layersToUse = layers; // Use provided layers
     }
 
-    // Call the engine with correct signature: (code, filePath, dryRun, requestedLayers)
-    const result = await engine(
-      code,
+    console.log("🔍 [DEMO API] Calling engine with parameters:", {
+      codeLength: code.length,
       filename,
-      !applyFixes, // dryRun = true when applyFixes = false (demo mode)
+      dryRun: !applyFixes,
       layersToUse,
-    );
+    });
 
+    // Call the engine with correct signature: (code, filePath, dryRun, requestedLayers)
+    let result;
+    try {
+      result = await engine(
+        code,
+        filename,
+        !applyFixes, // dryRun = true when applyFixes = false (demo mode)
+        layersToUse,
+      );
+      console.log("🔍 [DEMO API] Engine execution completed:", {
+        hasResult: !!result,
+        resultType: typeof result,
+        success: result?.success,
+        hasAnalysis: !!result?.analysis,
+        hasError: !!result?.error,
+      });
+    } catch (engineError) {
+      console.log("🔍 [DEMO API] ERROR: Engine execution failed:", engineError);
+      return NextResponse.json(
+        {
+          error: "Engine execution failed: " + engineError.message,
+          stack: engineError.stack,
+        },
+        { status: 500 },
+      );
+    }
+
+    console.log("🔍 [DEMO API] Returning successful result");
     return NextResponse.json(result);
   } catch (error) {
     console.error("Demo API error:", error);
