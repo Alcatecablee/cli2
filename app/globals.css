@@ -571,8 +571,8 @@ a {
   );
   border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 16px;
-  padding: 2.5rem;
-  margin-bottom: 3rem;
+  padding: 2rem;
+  margin-bottom: 1.5rem;
   backdrop-filter: blur(20px) saturate(1.2);
   -webkit-backdrop-filter: blur(20px) saturate(1.2);
   box-shadow:
