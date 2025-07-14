@@ -143,11 +143,7 @@ a {
   text-align: center;
   padding: 4rem 1rem 3rem 1rem;
   position: relative;
-  background: radial-gradient(
-    ellipse at center,
-    rgba(255, 255, 255, 0.03) 0%,
-    transparent 70%
-  );
+  background: #000000;
 }
 
 .hero-subtitle {
