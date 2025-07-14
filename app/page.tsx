@@ -1091,14 +1091,28 @@ function ImageGallery({ images }) {
                                   <div className="issue-description">
                                     {issue.description}
                                   </div>
-                                  <div className="issue-pattern">
-                                    Pattern: {issue.pattern}
-                                  </div>
-                                  {issue.count && (
-                                    <div className="issue-count">
-                                      {issue.count} occurrences
+                                  <div className="issue-details">
+                                    <div className="issue-pattern">
+                                      <strong>Pattern:</strong> {issue.pattern}
                                     </div>
-                                  )}
+                                    {issue.count && (
+                                      <div className="issue-count">
+                                        <strong>Occurrences:</strong>{" "}
+                                        {issue.count}
+                                      </div>
+                                    )}
+                                    <div className="issue-impact">
+                                      <strong>Business Impact:</strong>{" "}
+                                      {getBusinessImpact(
+                                        issue.type,
+                                        issue.severity,
+                                      )}
+                                    </div>
+                                    <div className="issue-solution">
+                                      <strong>Solution:</strong>{" "}
+                                      {getSolutionDescription(issue.type)}
+                                    </div>
+                                  </div>
                                 </div>
                               ),
                             )}
