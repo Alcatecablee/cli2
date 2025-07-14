@@ -1071,11 +1071,11 @@ a {
 }
 
 .code-block.original {
-  border-left: 3px solid #ef4444;
+  border-left: 3px solid #4a4a4a;
 }
 
 .code-block.transformed {
-  border-left: 3px solid #22c55e;
+  border-left: 3px solid #666666;
 }
 
 /* Error Result */
