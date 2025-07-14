@@ -1371,11 +1371,13 @@ legend {
 }
 
 .layer-card.success {
-  border-left-color: #666666;
+  border-left-color: var(--status-active);
+  background: var(--active-glow);
 }
 
 .layer-card.failed {
-  border-left-color: #4a4a4a;
+  border-left-color: var(--status-error);
+  background: var(--error-glow);
 }
 
 .layer-header {
