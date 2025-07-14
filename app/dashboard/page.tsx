@@ -369,11 +369,12 @@ export default function Dashboard() {
     }));
   }, []);
 
-  // Load saved data on component mount
+  // Load saved data and session on component mount
   useEffect(() => {
     const savedHistory = localStorage.getItem("neurolint-history");
     const savedProjects = localStorage.getItem("neurolint-projects");
     const savedSettings = localStorage.getItem("neurolint-settings");
+    const savedSessionId = localStorage.getItem("neurolint-session-id");
 
     if (savedHistory) {
       try {
@@ -403,6 +404,19 @@ export default function Dashboard() {
       } catch (e) {
         console.error("Failed to load settings:", e);
       }
+    }
+
+    if (savedSessionId) {
+      setSessionId(savedSessionId);
+      // Load session info from API
+      fetch(`/api/dashboard?sessionId=${savedSessionId}`)
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.rateLimitInfo) {
+            setRateLimitInfo(data.rateLimitInfo);
+          }
+        })
+        .catch((e) => console.error("Failed to load session info:", e));
     }
   }, []);
 
