@@ -446,7 +446,7 @@ function ImageGallery({ images }) {
     try {
       const code = await file.text();
 
-      console.log("🔍 [FRONTEND] Upload controls state:", {
+      console.log("[FRONTEND] Upload controls state:", {
         applyFixes: demoState.applyFixes,
         selectedLayers: demoState.selectedLayers,
         mode: demoState.applyFixes ? "Apply Fixes" : "Dry-Run",
