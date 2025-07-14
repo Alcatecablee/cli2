@@ -1096,8 +1096,8 @@ function ImageGallery({ images }) {
                                 <div className="code-panel">
                                   <div className="code-panel-header">
                                     {demoState.result.dryRun
-                                      ? "🔍 Preview Fixed"
-                                      : "✅ NeuroLint Pro Fixed"}
+                                      ? "Preview Fixed"
+                                      : "NeuroLint Pro Fixed"}
                                   </div>
                                   <pre className="code-block transformed">
                                     <code>{demoState.result.transformed}</code>
