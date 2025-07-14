@@ -309,7 +309,7 @@ function ImageGallery({ images }) {
 
         clearTimeout(timeoutId);
 
-        console.log("🔍 [FRONTEND] Response received:", {
+        console.log("[FRONTEND] Response received:", {
           status: response.status,
           ok: response.ok,
           statusText: response.statusText,
