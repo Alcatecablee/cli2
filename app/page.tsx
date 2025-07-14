@@ -312,6 +312,11 @@ function ImageGallery({ images }) {
         }));
       } catch (error) {
         console.error("🔍 [FRONTEND] Demo analysis failed:", error);
+        console.error("🔍 [FRONTEND] Error details:", {
+          name: error?.name,
+          message: error?.message,
+          stack: error?.stack,
+        });
 
         let errorMessage = "Unknown error occurred";
         if (error instanceof Error) {
@@ -325,6 +330,8 @@ function ImageGallery({ images }) {
             errorMessage = error.message;
           }
         }
+
+        console.log("🔍 [FRONTEND] Setting error state:", errorMessage);
 
         setDemoState((prev) => ({
           ...prev,
