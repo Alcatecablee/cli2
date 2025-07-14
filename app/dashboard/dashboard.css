@@ -170,9 +170,12 @@
   color: inherit;
 }
 
-.brand-logo:hover {
+.brand-logo:hover,
+.brand-logo:focus {
   background: rgba(255, 255, 255, 0.08);
   border-color: rgba(255, 255, 255, 0.25);
+  outline: 2px solid rgba(255, 255, 255, 0.3);
+  outline-offset: 2px;
 }
 
 .brand-logo img {
