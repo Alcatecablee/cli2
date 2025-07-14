@@ -2330,6 +2330,21 @@ legend {
     min-height: 40px;
   }
 
+  /* Demo upload section mobile */
+  .demo-upload-section {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .sample-code-section {
+    padding: 2rem;
+  }
+
+  .sample-buttons {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
   .dashboard-content {
     padding: 20px;
     gap: 24px;
