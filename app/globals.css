@@ -870,19 +870,19 @@ a {
 }
 
 .issue-item.severity-critical {
-  border-left-color: #ef4444;
+  border-left-color: #666666;
 }
 
 .issue-item.severity-high {
-  border-left-color: #f97316;
+  border-left-color: #666666;
 }
 
 .issue-item.severity-medium {
-  border-left-color: #eab308;
+  border-left-color: #4a4a4a;
 }
 
 .issue-item.severity-low {
-  border-left-color: #22c55e;
+  border-left-color: #4a4a4a;
 }
 
 .issue-header {
