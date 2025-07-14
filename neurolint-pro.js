@@ -803,7 +803,7 @@ function applyLayerTransformations(layerId, code, options = {}) {
       if (transformedCode.includes("&quot;")) {
         transformedCode = transformedCode.replace(/&quot;/g, '"');
         appliedFixes.push("HTML Entity: Converted &quot; to quotes");
-        console.log(`🛠���  [FALLBACK] Fixed HTML entities: &quot;`);
+        console.log(`🛠️  [FALLBACK] Fixed HTML entities: &quot;`);
       }
       if (transformedCode.includes("&amp;")) {
         transformedCode = transformedCode.replace(/&amp;/g, "&");
@@ -867,7 +867,7 @@ function applyLayerTransformations(layerId, code, options = {}) {
           '<img src={$1} alt="" onClick',
         );
         appliedFixes.push("Accessibility: Added alt attributes to images");
-        console.log(`���️  [FALLBACK] Added missing alt attributes`);
+        console.log(`🛠️  [FALLBACK] Added missing alt attributes`);
       }
       break;
 
@@ -1758,7 +1758,7 @@ async function NeuroLintPro(
         "🔍 [DRY RUN] Would execute layers:",
         layersToExecute.join(", "),
       );
-      console.log("�� [DRY RUN] Analysis object:", analysis);
+      console.log("🔍 [DRY RUN] Analysis object:", analysis);
       console.log(
         "🔍 [DRY RUN] Detected issues:",
         analysis ? analysis.detectedIssues : "none",
@@ -1798,8 +1798,10 @@ async function NeuroLintPro(
     console.log(`🔧 Layer Execution Order: [${layersToExecute.join(" → ")}]`);
 
     const result = await executeLayers(code, layersToExecute, {
-      verbose: true,
+      verbose: options.verbose !== undefined ? options.verbose : true,
       onProgress: options.onProgress,
+      isDemoMode: options.isDemoMode,
+      singleFile: options.singleFile,
     });
 
     // Step 3: Generate Results
@@ -1903,7 +1905,7 @@ if (require.main === module) {
       }
     })
     .catch((error) => {
-      console.error("❌ Execution failed:", error.message);
+      console.error("�� Execution failed:", error.message);
       process.exit(1);
     });
 }
