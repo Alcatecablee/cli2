@@ -362,7 +362,7 @@ export default function Dashboard() {
 
     return (
       solutions[issueType] ||
-      "Apply best practices and performance optimizations"
+      "Apply established coding standards and performance optimizations"
     );
   };
 
