@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import type { ChangeEvent } from "react";
 
 export default function HomePage() {
   const [currentText, setCurrentText] = useState("");
@@ -97,7 +98,7 @@ export default function HomePage() {
     }
   };
 
-  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async (event: ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (!files || files.length === 0) return;
 
