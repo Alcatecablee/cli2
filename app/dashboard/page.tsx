@@ -476,7 +476,7 @@ export default function Dashboard() {
               }))
             }
           >
-            {dashboardState.sidebarCollapsed ? "→" : "←"}
+            {dashboardState.sidebarCollapsed ? "→" : "��"}
           </button>
         </div>
 
@@ -533,94 +533,473 @@ export default function Dashboard() {
         </header>
 
         <div className="dashboard-content">
-          {/* Controls Section */}
-          <div className="controls-section">
-            <div className="control-group">
-              <h3>Analysis Mode</h3>
-              <div className="mode-toggle">
-                <button
-                  className={`mode-btn ${!dashboardState.applyFixes ? "active" : ""}`}
-                  onClick={() =>
-                    setDashboardState((prev) => ({
-                      ...prev,
-                      applyFixes: false,
-                    }))
-                  }
-                >
-                  Dry Run (Preview)
-                </button>
-                <button
-                  className={`mode-btn ${dashboardState.applyFixes ? "active" : ""}`}
-                  onClick={() =>
-                    setDashboardState((prev) => ({ ...prev, applyFixes: true }))
-                  }
-                >
-                  Apply Fixes
-                </button>
-              </div>
-            </div>
+          {/* Global Controls - Always Visible */}
+          {(dashboardState.activeSection === "editor" ||
+            dashboardState.activeSection === "samples") && (
+            <div className="controls-section">
+              <div className="control-group">
+                <h3>Analysis Configuration</h3>
+                <div className="controls-row">
+                  <div className="mode-toggle">
+                    <label className="toggle-label">Mode:</label>
+                    <button
+                      className={`mode-btn ${!dashboardState.applyFixes ? "active" : ""}`}
+                      onClick={() =>
+                        setDashboardState((prev) => ({
+                          ...prev,
+                          applyFixes: false,
+                        }))
+                      }
+                    >
+                      Analysis Only
+                    </button>
+                    <button
+                      className={`mode-btn ${dashboardState.applyFixes ? "active" : ""}`}
+                      onClick={() =>
+                        setDashboardState((prev) => ({
+                          ...prev,
+                          applyFixes: true,
+                        }))
+                      }
+                    >
+                      Apply Fixes
+                    </button>
+                  </div>
 
-            <div className="control-group">
-              <h3>Layers Selection</h3>
-              <div className="layers-grid">
-                {[1, 2, 3, 4, 5, 6].map((layerId) => (
-                  <button
-                    key={layerId}
-                    className={`layer-btn ${dashboardState.selectedLayers.includes(layerId) ? "selected" : ""}`}
-                    onClick={() => toggleLayerSelection(layerId)}
-                  >
-                    Layer {layerId}
-                  </button>
-                ))}
-              </div>
-              <p className="layers-hint">
-                {dashboardState.selectedLayers.length === 0
-                  ? "Auto-select layers"
-                  : `Selected: ${dashboardState.selectedLayers.join(", ")}`}
-              </p>
-            </div>
-          </div>
-
-          {/* Action Section */}
-          {dashboardState.activeSection === "editor" && (
-            <div className="action-section">
-              <div className="upload-area">
-                <h3>Upload Code File</h3>
-                <label className="upload-btn">
-                  <input
-                    type="file"
-                    accept=".ts,.tsx,.js,.jsx"
-                    onChange={handleFileUpload}
-                    style={{ display: "none" }}
-                  />
-                  Choose File
-                </label>
-                <p className="upload-hint">
-                  Supports .ts, .tsx, .js, .jsx files
-                </p>
+                  <div className="layers-control">
+                    <label className="toggle-label">Layers:</label>
+                    <div className="layers-grid">
+                      {[1, 2, 3, 4, 5, 6].map((layerId) => (
+                        <button
+                          key={layerId}
+                          className={`layer-btn ${dashboardState.selectedLayers.includes(layerId) ? "selected" : ""}`}
+                          onClick={() => toggleLayerSelection(layerId)}
+                          title={`Layer ${layerId}: ${
+                            layerId === 1
+                              ? "Configuration"
+                              : layerId === 2
+                                ? "Patterns"
+                                : layerId === 3
+                                  ? "Components"
+                                  : layerId === 4
+                                    ? "Hydration"
+                                    : layerId === 5
+                                      ? "Next.js"
+                                      : "Testing"
+                          }`}
+                        >
+                          {layerId}
+                        </button>
+                      ))}
+                    </div>
+                    <span className="layers-hint">
+                      {dashboardState.selectedLayers.length === 0
+                        ? "Auto-detect"
+                        : dashboardState.selectedLayers.length === 6
+                          ? "All layers"
+                          : `${dashboardState.selectedLayers.length} selected`}
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
           )}
 
+          {/* Progress Indicator */}
+          {dashboardState.isLoading && (
+            <div className="progress-section">
+              <div className="progress-bar">
+                <div
+                  className="progress-fill"
+                  style={{ width: `${dashboardState.uploadProgress}%` }}
+                ></div>
+              </div>
+              <p className="progress-status">{dashboardState.progressStatus}</p>
+            </div>
+          )}
+
+          {/* Code Analysis Tab */}
+          {dashboardState.activeSection === "editor" && (
+            <div className="tab-content">
+              <div className="upload-section">
+                <div
+                  className="upload-area"
+                  onClick={() => fileInputRef.current?.click()}
+                >
+                  <div className="upload-icon">📄</div>
+                  <h3>Upload Code Files</h3>
+                  <p>Drag and drop files here or click to browse</p>
+                  <p className="file-types">
+                    Supports .ts, .tsx, .js, .jsx files
+                  </p>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept=".ts,.tsx,.js,.jsx"
+                    onChange={handleFileUpload}
+                    style={{ display: "none" }}
+                    multiple
+                  />
+                </div>
+
+                {dashboardState.currentFile && (
+                  <div className="current-file-info">
+                    <h4>Current File</h4>
+                    <div className="file-card">
+                      <span className="file-name">
+                        {dashboardState.currentFile}
+                      </span>
+                      <span className="file-status">Ready for analysis</span>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Projects Tab */}
+          {dashboardState.activeSection === "projects" && (
+            <div className="tab-content">
+              <div className="projects-header">
+                <h3>Your Projects</h3>
+                <button
+                  className="btn btn-primary"
+                  onClick={() => {
+                    const name = prompt("Project name:");
+                    if (name) {
+                      const newProject: Project = {
+                        id: Date.now().toString(),
+                        name,
+                        description: "",
+                        files: [],
+                        createdAt: new Date(),
+                      };
+                      setDashboardState((prev) => {
+                        const projects = [...prev.projects, newProject];
+                        localStorage.setItem(
+                          "neurolint-projects",
+                          JSON.stringify(projects),
+                        );
+                        return { ...prev, projects };
+                      });
+                    }
+                  }}
+                >
+                  New Project
+                </button>
+              </div>
+
+              {dashboardState.projects.length === 0 ? (
+                <div className="empty-state">
+                  <p>
+                    No projects yet. Create your first project to organize your
+                    code analysis.
+                  </p>
+                </div>
+              ) : (
+                <div className="projects-grid">
+                  {dashboardState.projects.map((project) => (
+                    <div key={project.id} className="project-card">
+                      <h4>{project.name}</h4>
+                      <p className="project-meta">
+                        Created {project.createdAt.toLocaleDateString()}
+                      </p>
+                      <p className="project-stats">
+                        {project.files.length} files
+                      </p>
+                      <div className="project-actions">
+                        <button className="btn btn-sm">Open</button>
+                        <button
+                          className="btn btn-sm btn-danger"
+                          onClick={() => {
+                            if (confirm("Delete this project?")) {
+                              setDashboardState((prev) => {
+                                const projects = prev.projects.filter(
+                                  (p) => p.id !== project.id,
+                                );
+                                localStorage.setItem(
+                                  "neurolint-projects",
+                                  JSON.stringify(projects),
+                                );
+                                return { ...prev, projects };
+                              });
+                            }
+                          }}
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Analysis History Tab */}
+          {dashboardState.activeSection === "history" && (
+            <div className="tab-content">
+              <div className="history-header">
+                <h3>Analysis History</h3>
+                <button
+                  className="btn btn-secondary"
+                  onClick={() => {
+                    if (confirm("Clear all analysis history?")) {
+                      localStorage.removeItem("neurolint-history");
+                      setDashboardState((prev) => ({
+                        ...prev,
+                        analysisHistory: [],
+                      }));
+                    }
+                  }}
+                >
+                  Clear History
+                </button>
+              </div>
+
+              {dashboardState.analysisHistory.length === 0 ? (
+                <div className="empty-state">
+                  <p>
+                    No analysis history yet. Your completed analyses will appear
+                    here.
+                  </p>
+                </div>
+              ) : (
+                <div className="history-list">
+                  {dashboardState.analysisHistory.map((item) => (
+                    <div key={item.id} className="history-item">
+                      <div className="history-main">
+                        <h4>{item.filename}</h4>
+                        <div className="history-meta">
+                          <span className="timestamp">
+                            {new Date(item.timestamp).toLocaleString()}
+                          </span>
+                          <span className="execution-time">
+                            {item.executionTime}ms
+                          </span>
+                          <span
+                            className={`status ${item.result.success ? "success" : "error"}`}
+                          >
+                            {item.result.success ? "Success" : "Failed"}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="history-summary">
+                        {item.result.analysis && (
+                          <>
+                            <span className="issues-count">
+                              {item.result.analysis.detectedIssues?.length || 0}{" "}
+                              issues
+                            </span>
+                            <span className="confidence">
+                              {(
+                                (item.result.analysis.confidence || 0) * 100
+                              ).toFixed(0)}
+                              % confidence
+                            </span>
+                            <span className="layers">
+                              Layers:{" "}
+                              {item.layers.length
+                                ? item.layers.join(", ")
+                                : "Auto"}
+                            </span>
+                          </>
+                        )}
+                      </div>
+                      <button
+                        className="btn btn-sm"
+                        onClick={() => {
+                          setDashboardState((prev) => ({
+                            ...prev,
+                            result: item.result,
+                            showResults: true,
+                            currentFile: item.filename,
+                          }));
+                        }}
+                      >
+                        View Details
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Sample Files Tab */}
           {dashboardState.activeSection === "samples" && (
-            <div className="action-section">
-              <h3>Sample Files</h3>
+            <div className="tab-content">
+              <h3>Sample Code Files</h3>
+              <p className="tab-description">
+                Test NeuroLint Pro with these curated examples showcasing
+                different types of issues.
+              </p>
+
               <div className="samples-grid">
                 {Object.entries(sampleFiles).map(([key, sample]) => (
-                  <button
-                    key={key}
-                    className="sample-btn"
-                    onClick={() => loadSampleFile(key)}
-                  >
-                    <span className="sample-name">{sample.filename}</span>
-                    <span className="sample-description">
+                  <div key={key} className="sample-card">
+                    <div className="sample-header">
+                      <h4>{sample.filename}</h4>
+                      <span className="sample-type">
+                        {key === "component-issues" && "React Components"}
+                        {key === "ssr-hydration" && "SSR/Hydration"}
+                        {key === "nextjs-patterns" && "Next.js Patterns"}
+                      </span>
+                    </div>
+                    <p className="sample-description">
                       {key === "component-issues" &&
-                        "React component with common issues"}
-                      {key === "ssr-hydration" && "SSR/hydration problems"}
-                      {key === "nextjs-patterns" && "Next.js specific patterns"}
-                    </span>
-                  </button>
+                        "Missing key props, type issues"}
+                      {key === "ssr-hydration" && "localStorage and SSR safety"}
+                      {key === "nextjs-patterns" &&
+                        "Next.js specific optimizations"}
+                    </p>
+                    <button
+                      className="btn btn-primary"
+                      onClick={() => loadSampleFile(key)}
+                      disabled={dashboardState.isLoading}
+                    >
+                      {dashboardState.isLoading
+                        ? "Analyzing..."
+                        : "Analyze Sample"}
+                    </button>
+                  </div>
                 ))}
+              </div>
+            </div>
+          )}
+
+          {/* Settings Tab */}
+          {dashboardState.activeSection === "settings" && (
+            <div className="tab-content">
+              <h3>Settings</h3>
+
+              <div className="settings-sections">
+                <div className="settings-section">
+                  <h4>Analysis Defaults</h4>
+                  <div className="setting-item">
+                    <label>
+                      <input
+                        type="checkbox"
+                        checked={dashboardState.settings.autoSave}
+                        onChange={(e) => {
+                          const newSettings = {
+                            ...dashboardState.settings,
+                            autoSave: e.target.checked,
+                          };
+                          localStorage.setItem(
+                            "neurolint-settings",
+                            JSON.stringify(newSettings),
+                          );
+                          setDashboardState((prev) => ({
+                            ...prev,
+                            settings: newSettings,
+                          }));
+                        }}
+                      />
+                      Auto-save analysis results to history
+                    </label>
+                  </div>
+                  <div className="setting-item">
+                    <label>
+                      <input
+                        type="checkbox"
+                        checked={dashboardState.settings.notifications}
+                        onChange={(e) => {
+                          const newSettings = {
+                            ...dashboardState.settings,
+                            notifications: e.target.checked,
+                          };
+                          localStorage.setItem(
+                            "neurolint-settings",
+                            JSON.stringify(newSettings),
+                          );
+                          setDashboardState((prev) => ({
+                            ...prev,
+                            settings: newSettings,
+                          }));
+                        }}
+                      />
+                      Show notifications for completed analyses
+                    </label>
+                  </div>
+                </div>
+
+                <div className="settings-section">
+                  <h4>API Configuration</h4>
+                  <div className="setting-item">
+                    <label>API Endpoint</label>
+                    <input
+                      type="text"
+                      className="form-input"
+                      value="/api/demo"
+                      disabled
+                      placeholder="Default API endpoint"
+                    />
+                  </div>
+                  <div className="setting-item">
+                    <label>Request Timeout</label>
+                    <input
+                      type="number"
+                      className="form-input"
+                      defaultValue={30000}
+                      placeholder="Timeout in milliseconds"
+                    />
+                  </div>
+                </div>
+
+                <div className="settings-section">
+                  <h4>Data Management</h4>
+                  <div className="setting-actions">
+                    <button
+                      className="btn btn-secondary"
+                      onClick={() => {
+                        const data = {
+                          history: dashboardState.analysisHistory,
+                          projects: dashboardState.projects,
+                          settings: dashboardState.settings,
+                        };
+                        const blob = new Blob([JSON.stringify(data, null, 2)], {
+                          type: "application/json",
+                        });
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement("a");
+                        a.href = url;
+                        a.download = "neurolint-data.json";
+                        a.click();
+                        URL.revokeObjectURL(url);
+                      }}
+                    >
+                      Export Data
+                    </button>
+                    <button
+                      className="btn btn-danger"
+                      onClick={() => {
+                        if (
+                          confirm(
+                            "This will clear all your data. Are you sure?",
+                          )
+                        ) {
+                          localStorage.removeItem("neurolint-history");
+                          localStorage.removeItem("neurolint-projects");
+                          localStorage.removeItem("neurolint-settings");
+                          setDashboardState((prev) => ({
+                            ...prev,
+                            analysisHistory: [],
+                            projects: [],
+                            settings: {
+                              defaultLayers: [],
+                              autoSave: true,
+                              notifications: true,
+                              theme: "dark",
+                            },
+                          }));
+                        }
+                      }}
+                    >
+                      Clear All Data
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           )}
