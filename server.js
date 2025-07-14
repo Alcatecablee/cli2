@@ -10,6 +10,11 @@ const express = require("express");
 const path = require("path");
 const fs = require("fs");
 const cors = require("cors");
+const crypto = require("crypto");
+const paypal = require("@paypal/checkout-server-sdk");
+const { createClient } = require("@supabase/supabase-js");
+const rateLimit = require("express-rate-limit");
+const helmet = require("helmet");
 require("dotenv").config();
 
 // Import the REAL NeuroLint Pro engine
@@ -32,6 +37,12 @@ const config = {
 
 // Middleware
 app.use(cors());
+// Security headers
+app.use(
+  helmet({
+    contentSecurityPolicy: false,
+  }),
+);
 app.use(express.json({ limit: "10mb" }));
 app.use(express.static(path.join(__dirname, ".")));
 
@@ -42,6 +53,140 @@ const activeSessions = new Map();
 const demoRequests = new Map();
 const DEMO_LIMIT = 100; // 100 files per demo session for testing
 
+// ------------------ Session Expiration ------------------
+const TTL_SINGLE = 1000 * 60 * 60 * 24 * 30; // 30 days
+const TTL_SUBS = TTL_SINGLE; // can vary
+
+function isExpired(session) {
+  const age = Date.now() - session.created;
+  if (!session.subscription && age > TTL_SINGLE) return true;
+  if (session.subscription && age > TTL_SUBS) {
+    // TODO: optionally re-validate subscription status
+    return true;
+  }
+  return false;
+}
+
+setInterval(() => {
+  for (const [id, sess] of activeSessions.entries()) {
+    if (isExpired(sess)) {
+      activeSessions.delete(id);
+      console.log("🗑️ Expired session removed", id);
+    }
+  }
+}, 1000 * 60 * 60); // hourly cleanup
+
+// Rate limiting for webhook
+const webhookLimiter = rateLimit({ windowMs: 5 * 60 * 1000, max: 20 });
+
+// ------------------ Supabase Client ------------------
+const supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE,
+  {
+    auth: { persistSession: false },
+  },
+);
+
+async function loadSessionsFromSupabase() {
+  try {
+    const { data, error } = await supabase.from("sessions").select("sessionId, unlimited, subscription, created").eq("active", true);
+    if (error) throw error;
+    data.forEach((row) => activeSessions.set(row.sessionId, row));
+    console.log(`💾 Supabase: hydrated ${data.length} sessions`);
+  } catch (e) {
+    console.error("Supabase load error:", e);
+  }
+}
+
+async function upsertSessionToSupabase(session) {
+  try {
+    const { error } = await supabase.from("sessions").upsert({
+      sessionId: session.sessionId,
+      unlimited: session.unlimited,
+      subscription: session.subscription,
+      created: session.created,
+      active: true,
+    });
+    if (error) throw error;
+  } catch (e) {
+    console.error("Supabase upsert error:", e);
+  }
+}
+
+// Replace disk-based persistence with Supabase but keep fallback
+async function persistSessions() {
+  for (const session of activeSessions.values()) {
+    await upsertSessionToSupabase(session);
+  }
+}
+
+// Load sessions on startup
+loadSessionsFromSupabase();
+
+// ------------------ PayPal SDK ------------------
+const environment = process.env.NODE_ENV === "production"
+  ? new paypal.core.LiveEnvironment(process.env.PAYPAL_CLIENT_ID, process.env.PAYPAL_SECRET)
+  : new paypal.core.SandboxEnvironment(process.env.PAYPAL_CLIENT_ID, process.env.PAYPAL_SECRET);
+
+const paypalClient = new paypal.core.PayPalHttpClient(environment);
+
+async function verifyPayPalWebhookOfficial(req) {
+  try {
+    const webhookId = process.env.PAYPAL_WEBHOOK_ID;
+    const body = req.body; // already in JSON
+
+    const verifyReq = new paypal.notifications.VerifyWebhookSignatureRequest();
+    verifyReq.requestBody({
+      auth_algo: req.headers["paypal-auth-algo"],
+      cert_url: req.headers["paypal-cert-url"],
+      transmission_id: req.headers["paypal-transmission-id"],
+      transmission_sig: req.headers["paypal-transmission-sig"],
+      transmission_time: req.headers["paypal-transmission-time"],
+      webhook_id: webhookId,
+      webhook_event: body,
+    });
+
+    const response = await paypalClient.execute(verifyReq);
+    return response.result && response.result.verification_status === "SUCCESS";
+  } catch (e) {
+    console.error("PayPal verify error", e);
+    return false;
+  }
+}
+
+app.post(
+  "/api/paypal/webhook",
+  webhookLimiter,
+  express.raw({ type: "application/json" }),
+  async (req, res) => {
+  if (!verifyPayPalWebhookOfficial(req)) {
+    console.warn("⚠️  Invalid PayPal webhook signature");
+    return res.status(400).send("invalid signature");
+  }
+
+  const event = JSON.parse(req.body.toString());
+
+  if (
+    event.event_type === "CHECKOUT.ORDER.APPROVED" ||
+    event.event_type === "PAYMENT.CAPTURE.COMPLETED"
+  ) {
+    const orderId = event.resource.id;
+    const sessionInfo = {
+      sessionId: orderId,
+      unlimited: true,
+      subscription: false,
+      created: Date.now(),
+    };
+    activeSessions.set(orderId, sessionInfo);
+    await persistSessions();
+    console.log("✅ Recorded paid session from webhook:", orderId);
+  }
+
+  return res.sendStatus(200);
+},
+);
+
 /**
  * Validate session using PayPal transaction data
  * In production, this validates against actual PayPal payments
@@ -49,6 +194,20 @@ const DEMO_LIMIT = 100; // 100 files per demo session for testing
 function validateSession(sessionId, subscription) {
   if (!sessionId) {
     return { valid: false, error: "No session provided" };
+  }
+
+  // Check persisted/active sessions first
+  if (activeSessions.has(sessionId)) {
+    const data = activeSessions.get(sessionId);
+    if (isExpired(data)) {
+      activeSessions.delete(sessionId);
+      return { valid: false, error: "Session expired" };
+    }
+    return {
+      valid: true,
+      unlimited: data.unlimited || false,
+      subscription: data.subscription || false,
+    };
   }
 
   console.log(
@@ -116,14 +275,15 @@ app.post("/api/analyze", async (req, res) => {
 
     console.log(`🔍 Demo analysis request for ${filename}`);
 
-    // Use REAL NeuroLint Pro engine in dry-run mode
-    const result = await NeuroLintPro(code, filename, true); // dry-run = true
+    // Run REAL NeuroLint Pro engine **with full transformations** (dryRun = false)
+    const engineResult = await NeuroLintPro(code, filename, false);
 
-    // Limit demo results
+    // Prepare trimmed demo-friendly payload
     const demoResult = {
-      recommendedLayers: result.recommendedLayers || [],
-      confidence: result.analysis?.confidence || 0,
-      detectedIssues: (result.analysis?.detectedIssues || []).slice(0, 2), // Limit to 2 issues
+      recommendedLayers: engineResult.analysis?.recommendedLayers || [],
+      confidence: engineResult.analysis?.confidence || 0,
+      detectedIssues: (engineResult.analysis?.detectedIssues || []).slice(0, 2), // Limit to 2 issues
+      fixedCode: engineResult.transformed || code, // Provide transformed code for diff viewer
       demo: true,
       demoLimit: currentRequests + 1 >= DEMO_LIMIT,
     };
@@ -135,6 +295,52 @@ app.post("/api/analyze", async (req, res) => {
       error: "Analysis failed: " + error.message,
       demo: true,
     });
+  }
+});
+
+/**
+ * SSE endpoint for demo analysis with real-time progress events
+ */
+app.post("/api/analyze-stream", async (req, res) => {
+  // Set SSE headers
+  res.setHeader("Content-Type", "text/event-stream");
+  res.setHeader("Cache-Control", "no-cache");
+  res.setHeader("Connection", "keep-alive");
+  res.flushHeaders();
+
+  try {
+    const { code, filename } = req.body;
+    if (!code || !filename) {
+      res.write(`event: error\ndata: ${JSON.stringify({ error: "code and filename required" })}\n\n`);
+      return res.end();
+    }
+
+    console.log(`📡 SSE analyze request for ${filename}`);
+
+    // Hook progress events to SSE stream
+    const onProgress = (payload) => {
+      res.write(`event: progress\ndata: ${JSON.stringify(payload)}\n\n`);
+    };
+
+    const engineResult = await NeuroLintPro(code, filename, false, null, {
+      onProgress,
+    });
+
+    const demoResult = {
+      recommendedLayers: engineResult.analysis?.recommendedLayers || [],
+      confidence: engineResult.analysis?.confidence || 0,
+      detectedIssues: (engineResult.analysis?.detectedIssues || []).slice(0, 2),
+      fixedCode: engineResult.transformed || code,
+      demo: true,
+    };
+
+    // Send final done event
+    res.write(`event: done\ndata: ${JSON.stringify(demoResult)}\n\n`);
+    res.end();
+  } catch (error) {
+    console.error("SSE analyze error:", error);
+    res.write(`event: error\ndata: ${JSON.stringify({ error: error.message })}\n\n`);
+    res.end();
   }
 });
 

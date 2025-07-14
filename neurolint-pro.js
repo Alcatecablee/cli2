@@ -293,12 +293,26 @@ async function executeLayers(code, enabledLayers, options = {}) {
   const results = [];
   const states = [code]; // Track all intermediate states
 
+  const totalLayers = enabledLayers.length;
+  let completed = 0;
+
   for (const layerId of enabledLayers) {
     const previous = current;
     const startTime = performance.now();
 
     if (options.verbose) {
       console.log(`🔧 Executing Layer ${layerId}...`);
+    }
+
+    // Emit progress event: layer start
+    if (typeof options.onProgress === "function") {
+      options.onProgress({
+        layerId,
+        status: "start",
+        completed,
+        total: totalLayers,
+        percent: Math.round((completed / totalLayers) * 100),
+      });
     }
 
     try {
@@ -312,6 +326,17 @@ async function executeLayers(code, enabledLayers, options = {}) {
       if (!layerResult.success) {
         // Handle layer execution failure
         results.push(layerResult);
+
+        if (typeof options.onProgress === "function") {
+          options.onProgress({
+            layerId,
+            status: "failed",
+            completed,
+            total: totalLayers,
+            percent: Math.round((completed / totalLayers) * 100),
+            error: layerResult.error || layerResult.revertReason,
+          });
+        }
         continue; // Skip to next layer
       }
 
@@ -335,9 +360,22 @@ async function executeLayers(code, enabledLayers, options = {}) {
           changeCount: 0,
           revertReason: validation.reason,
         });
+
+        if (typeof options.onProgress === "function") {
+          options.onProgress({
+            layerId,
+            status: "reverted",
+            completed,
+            total: totalLayers,
+            percent: Math.round((completed / totalLayers) * 100),
+            error: validation.reason,
+          });
+        }
       } else {
         current = transformed; // Accept changes
         states.push(current);
+
+        completed++;
 
         results.push({
           layerId,
@@ -347,6 +385,16 @@ async function executeLayers(code, enabledLayers, options = {}) {
           changeCount: calculateChanges(previous, transformed),
           improvements: detectImprovements(previous, transformed),
         });
+
+        if (typeof options.onProgress === "function") {
+          options.onProgress({
+            layerId,
+            status: "complete",
+            completed,
+            total: totalLayers,
+            percent: Math.round((completed / totalLayers) * 100),
+          });
+        }
       }
     } catch (error) {
       console.error(`❌ Layer ${layerId} failed:`, error.message);
@@ -359,7 +407,28 @@ async function executeLayers(code, enabledLayers, options = {}) {
         changeCount: 0,
         error: error.message,
       });
+
+      if (typeof options.onProgress === "function") {
+        options.onProgress({
+          layerId,
+          status: "error",
+          completed,
+          total: totalLayers,
+          percent: Math.round((completed / totalLayers) * 100),
+          error: error.message,
+        });
+      }
     }
+  }
+
+  // Emit final progress 100%
+  if (typeof options.onProgress === "function") {
+    options.onProgress({
+      status: "done",
+      completed: totalLayers,
+      total: totalLayers,
+      percent: 100,
+    });
   }
 
   return {
@@ -1531,6 +1600,7 @@ async function NeuroLintPro(
   filePath,
   dryRun = false,
   requestedLayers = null,
+  options = {},
 ) {
   console.log("🧠 NeuroLint Pro - Premium Debugging Service");
   console.log("==========================================");
@@ -1612,6 +1682,7 @@ async function NeuroLintPro(
 
     const result = await executeLayers(code, layersToExecute, {
       verbose: true,
+      onProgress: options.onProgress,
     });
 
     // Step 3: Generate Results
