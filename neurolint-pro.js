@@ -974,7 +974,7 @@ function applyLayerTransformations(layerId, code, options = {}) {
       break;
 
     case 6: // Testing & Validation
-      console.log(`🛠��  [FALLBACK] Layer 6: Testing and validation`);
+      console.log(`🛠️  [FALLBACK] Layer 6: Testing and validation`);
 
       // Add missing prop types for TypeScript
       if (
@@ -1665,6 +1665,87 @@ class SmartLayerSelector {
       estimatedFixTime: Math.max(30, totalIssues * 10) + " seconds",
     };
   }
+}
+
+/**
+ * Generate simulated fixes for demo preview
+ * Shows what would be fixed without actually running the layers
+ */
+function generateSimulatedFixes(code, detectedIssues) {
+  let previewCode = code;
+
+  // Apply quick fixes based on detected issues for demo preview
+  detectedIssues.forEach((issue) => {
+    switch (issue.pattern) {
+      case "HTML quote entities":
+        previewCode = previewCode.replace(/&quot;/g, '"');
+        break;
+      case "HTML ampersand entities":
+        previewCode = previewCode.replace(/&amp;/g, "&");
+        break;
+      case "HTML bracket entities":
+        previewCode = previewCode.replace(/&lt;/g, "<").replace(/&gt;/g, ">");
+        break;
+      case "Console.log usage":
+        previewCode = previewCode.replace(/console\.log\(/g, "console.debug(");
+        break;
+      case "Missing key props":
+        // Add key props to simple map patterns
+        previewCode = previewCode.replace(
+          /(\w+)\.map\((\w+)\s*=>\s*<(\w+)([^>]*?)>/g,
+          (match, array, item, tag, props) => {
+            if (!props.includes("key=")) {
+              return `${array}.map(${item} => <${tag} key={${item}.id || ${item}.name || \`${tag}-\${Math.random().toString(36).substr(2, 9)}\`}${props}>`;
+            }
+            return match;
+          },
+        );
+        break;
+      case "Accessibility issues":
+        // Add basic alt attributes
+        previewCode = previewCode.replace(
+          /<img\s+src={([^}]+)}([^>]*?)>/g,
+          (match, src, props) => {
+            if (!props.includes("alt=")) {
+              return `<img src={${src}} alt=""${props}>`;
+            }
+            return match;
+          },
+        );
+        break;
+      case "SSR safety":
+        // Add SSR guards
+        previewCode = previewCode.replace(
+          /localStorage\.getItem\(/g,
+          'typeof window !== "undefined" && localStorage.getItem(',
+        );
+        previewCode = previewCode.replace(
+          /document\.(\w+)/g,
+          'typeof document !== "undefined" && document.$1',
+        );
+        break;
+      case "Missing use client for hooks":
+        // Add use client directive if not present
+        if (!previewCode.includes("'use client'")) {
+          previewCode = "'use client';\n\n" + previewCode;
+        }
+        break;
+      case "Missing accessibility attributes":
+        // Add aria-label to buttons
+        previewCode = previewCode.replace(
+          /<button([^>]*?)>/g,
+          (match, attributes) => {
+            if (!attributes.includes("aria-label")) {
+              return `<button${attributes} aria-label="Button">`;
+            }
+            return match;
+          },
+        );
+        break;
+    }
+  });
+
+  return previewCode;
 }
 
 /**
