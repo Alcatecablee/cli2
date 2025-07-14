@@ -705,8 +705,20 @@ a {
 .layer-checkbox input[type="checkbox"] {
   width: 16px;
   height: 16px;
-  accent-color: #ffffff;
+  accent-color: var(--status-info);
   cursor: pointer;
+}
+
+/* Unique layer checkbox states */
+.layer-checkbox:has(input:checked) {
+  background: var(--info-glow);
+  border-color: rgba(33, 150, 243, 0.3);
+  transform: translateY(-0.5px);
+}
+
+.layer-checkbox:has(input:checked) .layer-label {
+  color: var(--status-info);
+  font-weight: 600;
 }
 
 .layer-label {
