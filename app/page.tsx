@@ -452,6 +452,14 @@ function ImageGallery({ images }) {
       }
 
       const result = await response.json();
+      console.log("🔍 [FRONTEND] Upload API result received:", {
+        hasResult: !!result,
+        success: result?.success,
+        dryRun: result?.dryRun,
+        hasAnalysis: !!result?.analysis,
+        hasError: !!result?.error,
+        errorMessage: result?.error,
+      });
 
       // Fix: NeuroLint Pro returns different structure for dry-run mode
       const normalizedResult = {
