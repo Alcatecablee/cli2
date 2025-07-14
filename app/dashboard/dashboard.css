@@ -2129,15 +2129,15 @@ legend {
 }
 
 .layer-status.success {
-  background: rgba(74, 222, 128, 0.2);
-  color: #4ade80;
-  border-color: rgba(74, 222, 128, 0.3);
+  background: var(--active-glow);
+  color: var(--status-active);
+  border-color: rgba(76, 175, 80, 0.3);
 }
 
 .layer-status.failed {
-  background: rgba(248, 113, 113, 0.2);
-  color: #f87171;
-  border-color: rgba(248, 113, 113, 0.3);
+  background: var(--error-glow);
+  color: var(--status-error);
+  border-color: rgba(229, 62, 62, 0.3);
 }
 
 .issue-description {
