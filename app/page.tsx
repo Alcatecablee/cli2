@@ -154,8 +154,8 @@ export default function HomePage() {
             <h2 className="section-title">Try NeuroLint Pro Live</h2>
             <p className="section-subtitle">
               Upload your React/Next.js files and see real fixes applied using
-              our 6-layer system. Watch as your code transforms before your
-              eyes.
+              our 6-layer system. Dry-run mode perfect for demos returns
+              analysis without changes, letting you explore safely.
             </p>
 
             <div className="demo-upload-section">
