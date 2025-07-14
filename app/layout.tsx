@@ -1,8 +1,9 @@
 import React from "react";
+import type { Metadata } from "next";
 import Script from "next/script";
 import "./globals.css";
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "NeuroLint Pro - Premium React/Next.js Code Fixing Service",
   description:
     "Professional automated debugging service that safely fixes React/Next.js code. Never corrupts your code.",
@@ -11,7 +12,11 @@ export const metadata = {
   },
 };
 
-export default function RootLayout({ children }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en">
       <head>
