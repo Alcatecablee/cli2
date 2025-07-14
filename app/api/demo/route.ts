@@ -6,12 +6,25 @@ import { NextResponse } from "next/server";
 // Returns the raw NeuroLintPro response or an error.
 export async function POST(req: Request) {
   try {
-    const {
-      code,
-      filename,
-      layers = "auto",
-      applyFixes = false,
-    } = await req.json();
+    // Validate request has body
+    if (!req.body) {
+      return NextResponse.json(
+        { error: "Request body is required" },
+        { status: 400 },
+      );
+    }
+
+    let requestData;
+    try {
+      requestData = await req.json();
+    } catch (parseError) {
+      return NextResponse.json(
+        { error: "Invalid JSON in request body" },
+        { status: 400 },
+      );
+    }
+
+    const { code, filename, layers = "auto", applyFixes = false } = requestData;
 
     if (typeof code !== "string" || code.length === 0) {
       return NextResponse.json(
