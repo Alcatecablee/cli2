@@ -212,8 +212,14 @@ export async function POST(req: Request) {
         hasResult: !!result,
         resultType: typeof result,
         success: result?.success,
+        dryRun: result?.dryRun,
         hasAnalysis: !!result?.analysis,
+        hasLayers: !!result?.layers,
         hasError: !!result?.error,
+        layerCount: result?.layers?.length || 0,
+        analysisIssues: result?.analysis?.detectedIssues?.length || 0,
+        recommendedLayers: result?.analysis?.recommendedLayers || [],
+        errorMessage: result?.error,
       });
     } catch (engineError) {
       console.log("🔍 [DEMO API] ERROR: Engine execution failed:", engineError);
