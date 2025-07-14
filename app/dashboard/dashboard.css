@@ -253,6 +253,12 @@
   line-height: 1.4;
 }
 
+.header-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
 .current-file {
   display: flex;
   align-items: center;
@@ -269,6 +275,41 @@
 .file-icon {
   font-size: 12px;
   font-weight: 600;
+}
+
+.rate-limit-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.plan-badge {
+  background: #ffffff;
+  color: #000000;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.usage-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.remaining {
+  font-size: 12px;
+  color: #ffffff;
+  font-weight: 500;
+}
+
+.reset-time {
+  font-size: 11px;
+  color: #666666;
 }
 
 /* Dashboard Content */
