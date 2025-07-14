@@ -974,7 +974,7 @@ function applyLayerTransformations(layerId, code, options = {}) {
       break;
 
     case 6: // Testing & Validation
-      console.log(`🛠️  [FALLBACK] Layer 6: Testing and validation`);
+      console.log(`🛠��  [FALLBACK] Layer 6: Testing and validation`);
 
       // Add missing prop types for TypeScript
       if (
@@ -1793,6 +1793,20 @@ async function NeuroLintPro(
         analysis ? analysis.confidence : "no analysis",
       );
 
+      // Generate a simulated transformation preview for demo purposes
+      let simulatedTransformed = code;
+      if (analysis && analysis.detectedIssues.length > 0) {
+        console.log(
+          "🔍 [DRY RUN] Generating simulated transformation preview...",
+        );
+
+        // Apply basic transformations to show what would be fixed
+        simulatedTransformed = generateSimulatedFixes(
+          code,
+          analysis.detectedIssues,
+        );
+      }
+
       const dryRunResult = {
         dryRun: true,
         recommendedLayers: layersToExecute,
@@ -1802,6 +1816,9 @@ async function NeuroLintPro(
         detectedIssues: analysis ? analysis.detectedIssues : [],
         confidence: analysis ? analysis.confidence : 0,
         demo: true,
+        // Add before/after code for demo visualization
+        originalCode: code,
+        transformed: simulatedTransformed,
       };
 
       console.log(
