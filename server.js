@@ -11,6 +11,8 @@ const path = require("path");
 const fs = require("fs");
 const cors = require("cors");
 const crypto = require("crypto");
+const paypal = require("@paypal/checkout-server-sdk");
+const { createClient } = require("@supabase/supabase-js");
 require("dotenv").config();
 
 // Import the REAL NeuroLint Pro engine
@@ -43,65 +45,84 @@ const activeSessions = new Map();
 const demoRequests = new Map();
 const DEMO_LIMIT = 100; // 100 files per demo session for testing
 
-// ------------------ Persistent Session Storage ------------------
-const SESSIONS_FILE = path.join(__dirname, "sessions.json");
+// ------------------ Supabase Client ------------------
+const supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE,
+  {
+    auth: { persistSession: false },
+  },
+);
 
-function loadPersistedSessions() {
+async function loadSessionsFromSupabase() {
   try {
-    if (fs.existsSync(SESSIONS_FILE)) {
-      const data = JSON.parse(fs.readFileSync(SESSIONS_FILE, "utf8"));
-      data.forEach((v) => activeSessions.set(v.sessionId, v));
-      console.log(`💾 Restored ${activeSessions.size} paid sessions from disk`);
-    }
+    const { data, error } = await supabase.from("sessions").select("sessionId, unlimited, subscription, created").eq("active", true);
+    if (error) throw error;
+    data.forEach((row) => activeSessions.set(row.sessionId, row));
+    console.log(`💾 Supabase: hydrated ${data.length} sessions`);
   } catch (e) {
-    console.error("Failed to load sessions.json:", e);
+    console.error("Supabase load error:", e);
   }
 }
 
-function persistSessionsToDisk() {
+async function upsertSessionToSupabase(session) {
   try {
-    const arr = Array.from(activeSessions.values());
-    fs.writeFileSync(SESSIONS_FILE, JSON.stringify(arr, null, 2));
-    console.log("💾 Sessions persisted to disk");
+    const { error } = await supabase.from("sessions").upsert({
+      sessionId: session.sessionId,
+      unlimited: session.unlimited,
+      subscription: session.subscription,
+      created: session.created,
+      active: true,
+    });
+    if (error) throw error;
   } catch (e) {
-    console.error("Failed to write sessions.json:", e);
+    console.error("Supabase upsert error:", e);
   }
 }
 
-process.on("SIGINT", () => {
-  persistSessionsToDisk();
-  process.exit(0);
-});
+// Replace disk-based persistence with Supabase but keep fallback
+async function persistSessions() {
+  for (const session of activeSessions.values()) {
+    await upsertSessionToSupabase(session);
+  }
+}
 
 // Load sessions on startup
-loadPersistedSessions();
+loadSessionsFromSupabase();
 
-// ------------------ PayPal Webhook Verification ------------------
-// Minimal verification using transmission-id & sig; full SDK integration recommended in production
-function verifyPayPalWebhook(req) {
+// ------------------ PayPal SDK ------------------
+const environment = process.env.NODE_ENV === "production"
+  ? new paypal.core.LiveEnvironment(process.env.PAYPAL_CLIENT_ID, process.env.PAYPAL_SECRET)
+  : new paypal.core.SandboxEnvironment(process.env.PAYPAL_CLIENT_ID, process.env.PAYPAL_SECRET);
+
+const paypalClient = new paypal.core.PayPalHttpClient(environment);
+
+async function verifyPayPalWebhookOfficial(req) {
   try {
-    const transmissionId = req.headers["paypal-transmission-id"];
-    const timestamp = req.headers["paypal-transmission-time"];
     const webhookId = process.env.PAYPAL_WEBHOOK_ID;
-    const transmissionSig = req.headers["paypal-transmission-sig"];
-    const certUrl = req.headers["paypal-cert-url"];
-    const authAlgo = req.headers["paypal-auth-algo"];
+    const body = req.body; // already in JSON
 
-    // Simplified: Recreate expected signature using webhookId + body hash
-    const expected = crypto
-      .createHmac("sha256", webhookId)
-      .update(req.rawBody)
-      .digest("base64");
+    const verifyReq = new paypal.notifications.VerifyWebhookSignatureRequest();
+    verifyReq.requestBody({
+      auth_algo: req.headers["paypal-auth-algo"],
+      cert_url: req.headers["paypal-cert-url"],
+      transmission_id: req.headers["paypal-transmission-id"],
+      transmission_sig: req.headers["paypal-transmission-sig"],
+      transmission_time: req.headers["paypal-transmission-time"],
+      webhook_id: webhookId,
+      webhook_event: body,
+    });
 
-    return expected === transmissionSig;
+    const response = await paypalClient.execute(verifyReq);
+    return response.result && response.result.verification_status === "SUCCESS";
   } catch (e) {
-    console.error("Webhook verify error", e);
+    console.error("PayPal verify error", e);
     return false;
   }
 }
 
 app.post("/api/paypal/webhook", express.raw({ type: "application/json" }), (req, res) => {
-  if (!verifyPayPalWebhook(req)) {
+  if (!verifyPayPalWebhookOfficial(req)) {
     console.warn("⚠️  Invalid PayPal webhook signature");
     return res.status(400).send("invalid signature");
   }
@@ -120,7 +141,7 @@ app.post("/api/paypal/webhook", express.raw({ type: "application/json" }), (req,
       created: Date.now(),
     };
     activeSessions.set(orderId, sessionInfo);
-    persistSessionsToDisk();
+    persistSessions();
     console.log("✅ Recorded paid session from webhook:", orderId);
   }
 

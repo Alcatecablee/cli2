@@ -45,7 +45,8 @@
     "glob": "^8.0.3",
     "dotenv": "^16.3.1",
     "@paypal/checkout-server-sdk": "^1.0.4",
-    "express-rate-limit": "^6.7.0"
+    "express-rate-limit": "^6.7.0",
+    "@supabase/supabase-js": "^2.39.3"
   },
   "devDependencies": {
     "typescript": "^5.2.2",
