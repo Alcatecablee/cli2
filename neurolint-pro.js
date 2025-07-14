@@ -1738,7 +1738,12 @@ async function NeuroLintPro(
     }
 
     // Step 2: Execute Layers with Safe Pattern
-    console.log(`🚀 Executing ${layersToExecute.length} layers...`);
+    console.log(
+      "%c🚀 LAYER EXECUTION PIPELINE",
+      "color: #ff5722; font-weight: bold; font-size: 16px;",
+    );
+    console.log(`📋 Executing ${layersToExecute.length} layers in sequence...`);
+    console.log(`🔧 Layer Execution Order: [${layersToExecute.join(" → ")}]`);
 
     const result = await executeLayers(code, layersToExecute, {
       verbose: true,
@@ -1748,13 +1753,22 @@ async function NeuroLintPro(
     // Step 3: Generate Results
     const totalTime = performance.now() - startTime;
 
-    console.log("📊 Execution Results:");
-    console.log(`   Total Time: ${totalTime.toFixed(0)}ms`);
     console.log(
-      `   Successful Layers: ${result.successfulLayers}/${layersToExecute.length}`,
+      "%c📊 TRANSFORMATION RESULTS",
+      "color: #4caf50; font-weight: bold; font-size: 16px;",
+    );
+    console.log(`   ⏱️  Total Execution Time: ${totalTime.toFixed(0)}ms`);
+    console.log(
+      `   ✅ Successful Layers: ${result.successfulLayers}/${layersToExecute.length}`,
     );
     console.log(
-      `   Total Changes: ${result.results.reduce((sum, r) => sum + r.changeCount, 0)}`,
+      `   🔧 Total Changes Applied: ${result.results.reduce((sum, r) => sum + r.changeCount, 0)}`,
+    );
+    console.log(
+      `   📏 Final Code Size: ${result.finalCode?.length || 0} characters`,
+    );
+    console.log(
+      `   📈 Size Change: ${result.finalCode ? (result.finalCode.length - code.length > 0 ? "+" : "") + (result.finalCode.length - code.length) : 0} characters`,
     );
 
     // Show improvements
