@@ -702,15 +702,23 @@ export default function Dashboard() {
         </header>
 
         <div className="dashboard-content">
-                    {/* Global Controls - Always Visible - Demo Style */}
+          {/* Global Controls - Always Visible - Demo Style */}
           {(dashboardState.activeSection === "editor" ||
             dashboardState.activeSection === "samples") && (
-            <div className="demo-controls" role="region" aria-labelledby="controls-title">
+            <div
+              className="demo-controls"
+              role="region"
+              aria-labelledby="controls-title"
+            >
               <h3 id="controls-title">Analysis Configuration</h3>
               <div className="controls-grid">
                 <fieldset className="control-group">
                   <legend className="control-label">MODE</legend>
-                  <div className="control-options" role="radiogroup" aria-labelledby="mode-legend">
+                  <div
+                    className="control-options"
+                    role="radiogroup"
+                    aria-labelledby="mode-legend"
+                  >
                     <button
                       className={`control-btn ${!dashboardState.applyFixes ? "active" : ""}`}
                       onClick={() =>
@@ -750,8 +758,14 @@ export default function Dashboard() {
 
                 <fieldset className="control-group">
                   <legend className="control-label">LAYER SELECTION</legend>
-                  <div className="layer-controls" role="group" aria-labelledby="layer-presets">
-                    <span id="layer-presets" className="sr-only">Layer presets</span>
+                  <div
+                    className="layer-controls"
+                    role="group"
+                    aria-labelledby="layer-presets"
+                  >
+                    <span id="layer-presets" className="sr-only">
+                      Layer presets
+                    </span>
                     <button
                       className={`control-btn ${dashboardState.selectedLayers.length === 0 ? "active" : ""}`}
                       onClick={() =>
@@ -785,13 +799,21 @@ export default function Dashboard() {
                   <div id="all-layers-description" className="sr-only">
                     Run all 6 layers of analysis and fixes
                   </div>
-                  <div className="layer-checkboxes" role="group" aria-labelledby="individual-layers">
-                    <span id="individual-layers" className="sr-only">Individual layer selection</span>
+                  <div
+                    className="layer-checkboxes"
+                    role="group"
+                    aria-labelledby="individual-layers"
+                  >
+                    <span id="individual-layers" className="sr-only">
+                      Individual layer selection
+                    </span>
                     {[1, 2, 3, 4, 5, 6].map((layerId) => (
                       <label key={layerId} className="layer-checkbox">
                         <input
                           type="checkbox"
-                          checked={dashboardState.selectedLayers.includes(layerId)}
+                          checked={dashboardState.selectedLayers.includes(
+                            layerId,
+                          )}
                           onChange={(e) => {
                             if (e.target.checked) {
                               setDashboardState((prev) => ({
@@ -813,7 +835,10 @@ export default function Dashboard() {
                           aria-describedby={`layer-${layerId}-description`}
                         />
                         <span className="layer-label">Layer {layerId}</span>
-                        <span id={`layer-${layerId}-description`} className="sr-only">
+                        <span
+                          id={`layer-${layerId}-description`}
+                          className="sr-only"
+                        >
                           {layerId === 1 && "Configuration fixes"}
                           {layerId === 2 && "Pattern detection and cleanup"}
                           {layerId === 3 && "Component improvements"}
@@ -845,9 +870,13 @@ export default function Dashboard() {
             >
               <strong>Current Settings:</strong>{" "}
               <span
-                style={{ color: dashboardState.applyFixes ? "#ff9800" : "#4caf50" }}
+                style={{
+                  color: dashboardState.applyFixes ? "#ff9800" : "#4caf50",
+                }}
               >
-                {dashboardState.applyFixes ? "Apply Fixes Mode" : "Dry-Run Mode"}
+                {dashboardState.applyFixes
+                  ? "Apply Fixes Mode"
+                  : "Dry-Run Mode"}
               </span>
               {" • "}
               <span style={{ color: "#2196f3" }}>
@@ -875,9 +904,10 @@ export default function Dashboard() {
 
           {/* Code Analysis Tab */}
           {dashboardState.activeSection === "editor" && (
-                        <div className="tab-content">
+            <div className="tab-content">
               <div className="demo-upload-section">
-                <div className="upload-area"
+                <div
+                  className="upload-area"
                   onClick={() => fileInputRef.current?.click()}
                   onKeyDown={(e) => {
                     if (e.key === "Enter" || e.key === " ") {
@@ -911,7 +941,11 @@ export default function Dashboard() {
                   </span>
                 </div>
 
-                <div className="sample-code-section" role="region" aria-labelledby="sample-title">
+                <div
+                  className="sample-code-section"
+                  role="region"
+                  aria-labelledby="sample-title"
+                >
                   <h3 id="sample-title">Try Sample Code</h3>
                   <p
                     style={{
@@ -921,25 +955,31 @@ export default function Dashboard() {
                   >
                     See real fixes on common React issues
                   </p>
-                  <div className="sample-buttons" role="group" aria-labelledby="sample-title">
+                  <div
+                    className="sample-buttons"
+                    role="group"
+                    aria-labelledby="sample-title"
+                  >
                     {Object.entries(sampleFiles).map(([key, sample]) => (
                       <button
                         key={key}
                         className={`sample-btn ${
-                          dashboardState.isLoading && dashboardState.currentFile === sample.filename
+                          dashboardState.isLoading &&
+                          dashboardState.currentFile === sample.filename
                             ? "loading"
                             : ""
                         }`}
                         onClick={() => loadSampleFile(key)}
                         disabled={dashboardState.isLoading}
                       >
-                        {dashboardState.isLoading && dashboardState.currentFile === sample.filename
+                        {dashboardState.isLoading &&
+                        dashboardState.currentFile === sample.filename
                           ? "Analyzing..."
                           : sample.filename}
                       </button>
                     ))}
                   </div>
-                                </div>
+                </div>
               </div>
 
               {dashboardState.currentFile && (
@@ -953,7 +993,6 @@ export default function Dashboard() {
                   </div>
                 </div>
               )}
-            </div>
             </div>
           )}
 
