@@ -709,10 +709,10 @@
 }
 
 .header-title h1 {
-  font-size: 32px;
+  font-size: 24px;
   font-weight: 700;
   color: #ffffff;
-  margin: 0 0 8px 0;
+  margin: 0 0 4px 0;
   line-height: 1.2;
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
   background: linear-gradient(
@@ -726,7 +726,7 @@
 }
 
 .header-title p {
-  font-size: 16px;
+  font-size: 14px;
   color: rgba(255, 255, 255, 0.8);
   margin: 0;
   line-height: 1.4;
