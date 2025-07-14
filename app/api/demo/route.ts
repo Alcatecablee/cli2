@@ -6,43 +6,54 @@ import { NextResponse } from "next/server";
 // Returns the raw NeuroLintPro response or an error.
 export async function POST(req: Request) {
   try {
-    const { code, filename, layers = "auto", applyFixes = false } = await req.json();
+    const {
+      code,
+      filename,
+      layers = "auto",
+      applyFixes = false,
+    } = await req.json();
 
     if (typeof code !== "string" || code.length === 0) {
-      return NextResponse.json({ error: "Parameter 'code' must be a non-empty string" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Parameter 'code' must be a non-empty string" },
+        { status: 400 },
+      );
     }
     if (typeof filename !== "string" || filename.length === 0) {
-      return NextResponse.json({ error: "Parameter 'filename' must be provided" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Parameter 'filename' must be provided" },
+        { status: 400 },
+      );
     }
 
     // Dynamically import the CommonJS engine with interop.
     // The path is relative to <projectRoot>/app/api/demo/route.ts
     // ../../.. brings us back to project root where neurolint-pro.js resides.
-    // Using dynamic import sidesteps Next.js ESM ↔ CJS mismatch.
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore - Node will handle CommonJS default export
-    const neuroLintModule = await import("../../../neurolint-pro.js");
-    // Handle both `module.exports = fn` and `{ default: fn }` patterns.
-    const NeuroLintPro = neuroLintModule.default || neuroLintModule;
+    const NeuroLintPro = await import("../../../neurolint-pro.js");
+    const engine = NeuroLintPro.default || NeuroLintPro;
 
-    // Determine layer argument for the engine
-    let layerArg: number[] | null = null;
-    if (Array.isArray(layers)) {
-      layerArg = layers.map((n) => parseInt(String(n), 10)).filter((n) => !Number.isNaN(n));
-    } else if (layers !== "auto" && layers !== "all") {
-      // Accept comma-separated string e.g. "1,2,3"
-      layerArg = layers
-        .split(",")
-        .map((n: string) => parseInt(n.trim(), 10))
-        .filter((n: number) => !Number.isNaN(n));
+    if (!engine || typeof engine.processCode !== "function") {
+      return NextResponse.json(
+        { error: "NeuroLint Pro engine not available or misconfigured" },
+        { status: 500 },
+      );
     }
 
-    // Run the real NeuroLint engine
-    const result = await NeuroLintPro(code, filename, !applyFixes, layerArg);
+    // Call the engine with the provided parameters
+    const result = await engine.processCode(code, filename, {
+      layers,
+      applyFixes,
+    });
 
-    return NextResponse.json(result, { status: 200 });
+    return NextResponse.json(result);
   } catch (error) {
-    console.error("[NeuroLint Demo API]", error);
-    return NextResponse.json({ error: (error as Error).message || "Internal server error" }, { status: 500 });
+    console.error("Demo API error:", error);
+    return NextResponse.json(
+      {
+        error: "Internal server error processing code",
+        message: error.message,
+      },
+      { status: 500 },
+    );
   }
 }

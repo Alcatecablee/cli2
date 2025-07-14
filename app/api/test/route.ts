@@ -19,44 +19,26 @@ export async function GET() {
 
     const testCode = fs.readFileSync(testFilePath, "utf8");
 
-    // Mock analysis result for testing
-    const mockResult = {
-      success: true,
-      analysis: {
-        confidence: 0.85,
-        recommendedLayers: [1, 2, 3, 4],
-        detectedIssues: [
-          {
-            type: "missing-keys",
-            description: "Missing key props in map function",
-            severity: "medium",
-          },
-          {
-            type: "html-entities",
-            description: "HTML entity corruption detected",
-            severity: "high",
-          },
-        ],
-        estimatedImpact: {
-          level: "medium",
-          description: "4 total issues, 2 critical",
-        },
-      },
-      totalExecutionTime: 1250,
-    };
+    // Import and run NeuroLint Pro
+    const NeuroLintPro = await import("../../../neurolint-pro.js");
+    const engine = NeuroLintPro.default || NeuroLintPro;
+
+    const result = await engine.processCode(testCode, testFilePath, {
+      layers: ["layer-1", "layer-2", "layer-3"],
+      applyFixes: false,
+    });
 
     return NextResponse.json({
-      message: "NeuroLint Pro Next.js API test successful",
-      testFile: "test-sample.jsx",
-      result: mockResult,
-      engineStatus: "operational",
+      success: true,
+      filename: "test-sample.jsx",
+      result,
     });
   } catch (error) {
-    console.error("Test endpoint error:", error);
+    console.error("Test API error:", error);
     return NextResponse.json(
       {
-        error: "Test failed: " + (error as Error).message,
-        engineStatus: "error",
+        error: "Internal server error",
+        message: error.message,
       },
       { status: 500 },
     );
