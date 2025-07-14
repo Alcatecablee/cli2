@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 const items = [
-  { id: 1, name: &quot;Test Item One&quot; },
-  { id: 2, name: &quot;Test Item Two&quot; },
-  { id: 3, name: &quot;Test Item Three&quot; }
+  { id: 1, name: "Test Item One" },
+  { id: 2, name: "Test Item Two" },
+  { id: 3, name: "Test Item Three" },
 ];
 
 function TestComponent() {
@@ -14,13 +14,11 @@ function TestComponent() {
       <h1>Test Component</h1>
       <p>Count: {count}</p>
       <ul>
-        {items.map(item => 
+        {items.map((item) => (
           <li>{item.name}</li>
-        )}
+        ))}
       </ul>
-      <button onClick={() => setCount(count + 1)}>
-        Increment
-      </button>
+      <button onClick={() => setCount(count + 1)}>Increment</button>
     </div>
   );
 }
