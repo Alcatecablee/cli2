@@ -885,11 +885,70 @@ legend {
 /* Improve layer checkbox accessibility */
 .layer-checkbox {
   position: relative;
+  transition: var(--transition-smooth);
+}
+
+.layer-checkbox:hover {
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateY(-1px);
 }
 
 .layer-checkbox input[type="checkbox"]:focus {
   outline: 2px solid #ffffff;
   outline-offset: 2px;
+}
+
+/* Fix spacing inconsistencies and improve touch targets */
+.section-title {
+  margin-bottom: 1.5rem;
+}
+
+.section-subtitle {
+  margin-bottom: 3rem;
+  line-height: 1.6;
+}
+
+/* Ensure consistent spacing in demo results */
+.demo-results {
+  margin-top: 3rem;
+  padding: 2.5rem;
+  animation: fadeInUp 0.6s ease-out both;
+}
+
+/* Improve touch targets for mobile */
+@media (hover: none) and (pointer: coarse) {
+  .nav a,
+  .control-btn,
+  .sample-btn,
+  .hero-actions .btn {
+    min-height: 48px;
+    padding: 0.875rem 1.25rem;
+  }
+
+  .layer-checkbox {
+    min-height: 48px;
+    padding: 0.75rem;
+  }
+
+  .upload-area {
+    padding: 3rem 2rem;
+  }
+}
+
+/* Reduce spacing on very small screens */
+@media (max-width: 320px) {
+  .hero {
+    padding: 3rem 0.75rem 2rem 0.75rem;
+  }
+
+  .hero-desc {
+    padding: 1.25rem 1.5rem;
+    font-size: 1rem;
+  }
+
+  .demo-container {
+    padding: 0 0.75rem;
+  }
 }
 
 /* Reduced motion */
