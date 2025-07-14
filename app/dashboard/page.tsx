@@ -211,6 +211,32 @@ export default function Dashboard() {
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [rateLimitInfo, setRateLimitInfo] = useState<any>(null);
 
+  // Save analysis to history
+  const saveToHistory = useCallback(
+    (
+      filename: string,
+      result: DemoResult,
+      layers: number[],
+      executionTime: number,
+    ) => {
+      const historyItem: AnalysisHistory = {
+        id: Date.now().toString(),
+        filename,
+        timestamp: new Date(),
+        result,
+        layers,
+        executionTime,
+      };
+
+      setDashboardState((prev) => {
+        const newHistory = [historyItem, ...prev.analysisHistory].slice(0, 50); // Keep last 50
+        localStorage.setItem("neurolint-history", JSON.stringify(newHistory));
+        return { ...prev, analysisHistory: newHistory };
+      });
+    },
+    [],
+  );
+
   const analyzecode = useCallback(
     async (
       code: string,
