@@ -211,7 +211,16 @@ function ImageGallery({ images }) {
   // Sophisticated sample code loading with real engine integration
   const loadSampleCode = async (sampleKey: string) => {
     const sample = sampleCodes[sampleKey as keyof typeof sampleCodes];
-    if (!sample) return;
+    if (!sample) {
+      console.error(`Sample code '${sampleKey}' not found`);
+      return;
+    }
+
+    // Prevent multiple simultaneous requests
+    if (demoState.isLoading) {
+      console.warn("Analysis already in progress, skipping request");
+      return;
+    }
 
     setDemoState((prev) => ({
       ...prev,
