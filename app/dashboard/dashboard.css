@@ -315,8 +315,13 @@
 .nav-item:hover {
   background: rgba(255, 255, 255, 0.08);
   color: #ffffff;
-  transform: translateX(4px);
+  transform: translateX(6px) scale(1.02);
   box-shadow: var(--shadow-subtle);
+}
+
+.nav-item:focus-visible {
+  box-shadow: var(--focus-ring), var(--shadow-subtle);
+  background: rgba(255, 255, 255, 0.06);
 }
 
 .nav-item.active {
