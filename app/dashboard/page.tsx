@@ -573,12 +573,14 @@ export default function Dashboard() {
           </div>
           <button
             className="sidebar-toggle"
-            onClick={() =>
+            onClick={() => {
+              const newCollapsed = !dashboardState.sidebarCollapsed;
               setDashboardState((prev) => ({
                 ...prev,
-                sidebarCollapsed: !prev.sidebarCollapsed,
-              }))
-            }
+                sidebarCollapsed: newCollapsed,
+              }));
+              setUserExpandedSidebar(!newCollapsed);
+            }}
             aria-label={
               dashboardState.sidebarCollapsed
                 ? "Expand sidebar"
