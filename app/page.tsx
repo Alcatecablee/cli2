@@ -300,10 +300,7 @@ function ImageGallery({ images }) {
           body: JSON.stringify(requestPayload),
           signal: controller.signal,
         }).catch((fetchError) => {
-          console.error(
-            "🔍 [FRONTEND] Network error during fetch:",
-            fetchError,
-          );
+          console.error("[FRONTEND] Network error during fetch:", fetchError);
           throw new Error(`Network error: ${fetchError.message}`);
         });
 
