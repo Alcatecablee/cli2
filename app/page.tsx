@@ -266,8 +266,11 @@ function ImageGallery({ images }) {
         const requestPayload = {
           code: sample.code,
           filename: `${sample.name.toLowerCase().replace(/\s+/g, "-")}.tsx`,
-          layers: "auto", // Let engine auto-detect
-          applyFixes: false, // Dry-run mode for demo
+          layers:
+            demoState.selectedLayers.length > 0
+              ? demoState.selectedLayers
+              : "auto",
+          applyFixes: demoState.applyFixes,
         };
 
         console.log("🔍 [FRONTEND] Request payload:", {
