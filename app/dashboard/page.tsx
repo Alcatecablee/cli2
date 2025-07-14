@@ -359,7 +359,7 @@ export default function Dashboard() {
         {!dashboardState.sidebarCollapsed && (
           <div className="sidebar-footer">
             <div className="user-section">
-              <div className="user-avatar">👤</div>
+              <div className="user-avatar">U</div>
               <div className="user-info">
                 <span className="user-name">Free User</span>
                 <span className="user-plan">Unlimited Access</span>
