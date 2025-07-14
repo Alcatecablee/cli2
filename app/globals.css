@@ -647,6 +647,11 @@ a {
 
 /* Enhanced Mobile Responsive */
 @media (max-width: 768px) {
+  .logo-img {
+    height: 32px;
+    max-width: 160px;
+  }
+
   .header-inner {
     flex-direction: row;
     gap: 1rem;
