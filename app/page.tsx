@@ -70,6 +70,29 @@ export default function HomePage() {
     "Professional Code Quality",
   ];
 
+  // Copy and download functions
+  const copyToClipboard = async (text: string, type: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      // Could add a toast notification here
+      console.log(`${type} code copied to clipboard`);
+    } catch (err) {
+      console.error("Failed to copy text: ", err);
+    }
+  };
+
+  const downloadCode = (code: string, filename: string) => {
+    const blob = new Blob([code], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
   // Sophisticated demo state management
   const [demoState, setDemoState] = useState<DemoState>({
     isLoading: false,
