@@ -473,7 +473,7 @@ function ImageGallery({ images }) {
           applyFixes: demoState.applyFixes,
         }),
       }).catch((fetchError) => {
-        console.error("🔍 [FRONTEND] File upload network error:", fetchError);
+        console.error("[FRONTEND] File upload network error:", fetchError);
         throw new Error(
           `Network error during file upload: ${fetchError.message}`,
         );
