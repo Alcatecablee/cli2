@@ -407,7 +407,7 @@ a {
 
 /* Demo Section */
 .demo-section {
-  padding: 0 0 1rem 0;
+  padding: 4rem 0 4rem 0;
   background: #000000;
   min-height: 100vh;
   animation: fadeInUp 1s ease-out 1s both;
