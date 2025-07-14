@@ -1961,21 +1961,74 @@ function UserProfile({ user, onUpdate }) {
       let currentAnalysisResults = [];
       let currentActiveTab = "overview";
 
-      function switchTab(tabName) {
-        // Update active tab
-        document.querySelectorAll(".analysis-tab").forEach((tab) => {
-          tab.classList.remove("active");
+      /* -------------------- TAB ACCESSIBILITY -------------------- */
+      function initTabs() {
+        const tabList = document.querySelector(".analysis-tabs");
+        if (!tabList) return;
+
+        tabList.setAttribute("role", "tablist");
+
+        const tabs = tabList.querySelectorAll(".analysis-tab");
+        tabs.forEach((tab) => {
+          const name = tab.dataset.tab;
+          const panel = document.getElementById(`${name}-content`);
+          if (!panel) return;
+
+          // Tab attributes
+          tab.setAttribute("role", "tab");
+          tab.setAttribute("id", `tab-${name}`);
+          tab.setAttribute("aria-controls", `${name}-content`);
+          tab.setAttribute(
+            "aria-selected",
+            tab.classList.contains("active") ? "true" : "false",
+          );
+          tab.setAttribute(
+            "tabindex",
+            tab.classList.contains("active") ? "0" : "-1",
+          );
+
+          // Panel attributes
+          panel.setAttribute("role", "tabpanel");
+          panel.setAttribute("aria-labelledby", `tab-${name}`);
+          panel.hidden = !panel.classList.contains("active");
+
+          // Keyboard navigation
+          tab.addEventListener("keydown", (e) => {
+            if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
+              e.preventDefault();
+              const dir = e.key === "ArrowRight" ? 1 : -1;
+              const ordered = Array.from(tabs);
+              const idx = ordered.indexOf(tab);
+              let newIdx = (idx + dir + ordered.length) % ordered.length;
+              ordered[newIdx].focus();
+              switchTab(ordered[newIdx].dataset.tab);
+            }
+          });
         });
-        document.querySelectorAll(".analysis-content").forEach((content) => {
-          content.classList.remove("active");
+      }
+
+      function switchTab(tabName) {
+        const tabs = document.querySelectorAll(".analysis-tab");
+        const panels = document.querySelectorAll(".analysis-content");
+
+        tabs.forEach((tab) => {
+          const isActive = tab.dataset.tab === tabName;
+          tab.classList.toggle("active", isActive);
+          tab.setAttribute("aria-selected", isActive ? "true" : "false");
+          tab.setAttribute("tabindex", isActive ? "0" : "-1");
         });
 
-        document
-          .querySelector(`[data-tab="${tabName}"]`)
-          .classList.add("active");
-        document.getElementById(`${tabName}-content`).classList.add("active");
+        panels.forEach((panel) => {
+          const isActive = panel.id === `${tabName}-content`;
+          panel.classList.toggle("active", isActive);
+          panel.hidden = !isActive;
+        });
+
         currentActiveTab = tabName;
       }
+
+      // Initialize tabs once DOM is ready
+      document.addEventListener("DOMContentLoaded", initTabs);
 
       function loadSampleCode(sampleType) {
         console.log("=== LOADING SAMPLE CODE ===");
