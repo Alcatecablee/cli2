@@ -231,6 +231,10 @@ function ImageGallery({ images }) {
     }));
 
     try {
+      // Add timeout and abort controller for better UX
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+
       const response = await fetch("/api/demo", {
         method: "POST",
         headers: {
@@ -242,7 +246,10 @@ function ImageGallery({ images }) {
           layers: "auto", // Let engine auto-detect
           applyFixes: false, // Dry-run mode for demo
         }),
+        signal: controller.signal,
       });
+
+      clearTimeout(timeoutId);
 
       if (!response.ok) {
         throw new Error(`API error: ${response.status}`);
