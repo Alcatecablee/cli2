@@ -1065,7 +1065,7 @@ function ImageGallery({ images }) {
                     {/* Premium Business Insights */}
                     {demoState.result.analysis && (
                       <div className="business-insights">
-                        <h4>💼 Business Impact Analysis</h4>
+                        <h4>💼 Technical Impact Analysis</h4>
                         <div className="insights-grid">
                           <div className="insight-card">
                             <div className="insight-label">
