@@ -1256,19 +1256,23 @@ legend {
 }
 
 .issue-item.severity-critical {
-  border-left-color: #666666;
+  border-left-color: var(--status-error);
+  background: var(--error-glow);
 }
 
 .issue-item.severity-high {
-  border-left-color: #666666;
+  border-left-color: var(--status-processing);
+  background: var(--processing-glow);
 }
 
 .issue-item.severity-medium {
-  border-left-color: #4a4a4a;
+  border-left-color: var(--status-warning);
+  background: rgba(255, 215, 0, 0.08);
 }
 
 .issue-item.severity-low {
-  border-left-color: #4a4a4a;
+  border-left-color: var(--status-info);
+  background: var(--info-glow);
 }
 
 .issue-header {
