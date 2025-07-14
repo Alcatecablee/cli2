@@ -299,16 +299,28 @@ async function executeLayers(code, enabledLayers, options = {}) {
   for (const layerId of enabledLayers) {
     const previous = current;
     const startTime = performance.now();
+    const layerInfo = LAYER_EXECUTION_ORDER.find((l) => l.id === layerId);
 
     if (options.verbose) {
-      console.log(`🔧 Executing Layer ${layerId}...`);
+      console.log(
+        `%c🔧 LAYER ${layerId} STARTING`,
+        "color: #2196f3; font-weight: bold;",
+      );
+      console.log(`   📛 Name: ${layerInfo?.name || "Unknown"}`);
+      console.log(
+        `   📝 Description: ${layerInfo?.description || "No description"}`,
+      );
+      console.log(
+        `   📊 Progress: ${completed}/${totalLayers} (${Math.round((completed / totalLayers) * 100)}%)`,
+      );
+      console.log(`   📏 Input Code Size: ${current.length} characters`);
     }
 
     // Emit progress event: layer start
     if (typeof options.onProgress === "function") {
       options.onProgress({
         layerId,
-        status: "start",
+        status: `Processing ${layerInfo?.name || `Layer ${layerId}`}`,
         completed,
         total: totalLayers,
         percent: Math.round((completed / totalLayers) * 100),
