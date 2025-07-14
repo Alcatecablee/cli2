@@ -137,8 +137,8 @@
 }
 
 .brand-icon {
-  width: 44px;
-  height: 44px;
+  width: 40px;
+  height: 40px;
   background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%);
   color: #000000;
   border-radius: 10px;
@@ -151,14 +151,19 @@
   box-shadow:
     0 4px 16px rgba(0, 0, 0, 0.15),
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  transition: var(--transition-smooth);
+  transition: var(--transition-spring);
+  cursor: pointer;
 }
 
 .brand-icon:hover {
-  transform: translateY(-2px);
+  transform: translateY(-2px) scale(1.05);
   box-shadow:
     0 6px 20px rgba(0, 0, 0, 0.2),
     inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.brand-icon svg {
+  transition: var(--transition-smooth);
 }
 
 .brand-text {
