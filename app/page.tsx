@@ -2,6 +2,46 @@
 
 import React, { useState, useEffect } from "react";
 
+// Demo state interface for sophisticated analysis results
+interface DemoResult {
+  success: boolean;
+  analysis?: {
+    recommendedLayers: number[];
+    detectedIssues: Array<{
+      type: string;
+      severity: string;
+      description: string;
+      fixedByLayer: number;
+      pattern: string;
+      count?: number;
+    }>;
+    confidence: number;
+    estimatedImpact: {
+      level: string;
+      description: string;
+      estimatedFixTime: string;
+    };
+  };
+  transformed?: string;
+  originalCode?: string;
+  layers?: Array<{
+    layerId: number;
+    success: boolean;
+    improvements?: string[];
+    executionTime: number;
+  }>;
+  error?: string;
+}
+
+interface DemoState {
+  isLoading: boolean;
+  currentSample: string | null;
+  result: DemoResult | null;
+  showResults: boolean;
+  selectedLayers: number[];
+  applyFixes: boolean;
+}
+
 export default function HomePage() {
   const [currentText, setCurrentText] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -12,6 +52,140 @@ export default function HomePage() {
     "Secure SSR Hydration",
     "Professional Code Quality",
   ];
+
+  // Sophisticated demo state management
+  const [demoState, setDemoState] = useState<DemoState>({
+    isLoading: false,
+    currentSample: null,
+    result: null,
+    showResults: false,
+    selectedLayers: [],
+    applyFixes: false,
+  });
+
+  // Sophisticated sample code examples that showcase different layer capabilities
+  const sampleCodes = {
+    "missing-keys": {
+      name: "Missing Keys & HTML Entities",
+      description: "Showcases Layer 2 (Patterns) and Layer 3 (Components)",
+      code: `const items = [
+  { id: 1, name: &quot;React Component&quot; },
+  { id: 2, name: &quot;Next.js App&quot; },
+  { id: 3, name: &quot;TypeScript Fix&quot; }
+];
+
+function ItemList() {
+  return (
+    <ul>
+      {items.map(item =>
+        <li>{item.name}</li>
+      )}
+    </ul>
+  );
+}
+
+export default ItemList;`,
+      expectedLayers: [1, 2, 3],
+      expectedIssues: ["HTML entities", "Missing key props"],
+    },
+    "html-entities": {
+      name: "HTML Entity Corruption",
+      description:
+        "Showcases Layer 2 (Entity Cleanup) sophisticated pattern detection",
+      code: `const message = &quot;Welcome to NeuroLint Pro&quot;;
+const description = &quot;Detects &amp; fixes 50+ issues&quot;;
+const note = &quot;Smart confidence scoring &amp; impact estimation&quot;;
+
+console.log(&quot;Processing HTML entities...&quot;);
+
+function Display() {
+  return (
+    <div>
+      <h1>{message}</h1>
+      <p>{description}</p>
+      <small>{note}</small>
+    </div>
+  );
+}`,
+      expectedLayers: [1, 2],
+      expectedIssues: [
+        "HTML quote entities",
+        "HTML ampersand entities",
+        "Console.log usage",
+      ],
+    },
+    "ssr-issues": {
+      name: "SSR Hydration Issues",
+      description: "Showcases Layer 4 (Hydration) SSR safety guards",
+      code: `import { useState, useEffect } from 'react';
+
+function ThemeToggle() {
+  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
+
+  const toggleTheme = () => {
+    const newTheme = theme === 'light' ? 'dark' : 'light';
+    setTheme(newTheme);
+    localStorage.setItem('theme', newTheme);
+    document.body.className = newTheme;
+  };
+
+  return (
+    <button onClick={toggleTheme}>
+      Current theme: {theme}
+    </button>
+  );
+}
+
+export default ThemeToggle;`,
+      expectedLayers: [1, 4],
+      expectedIssues: [
+        "Unguarded localStorage usage",
+        "Document access without SSR guards",
+      ],
+    },
+    accessibility: {
+      name: "Accessibility & Testing Issues",
+      description:
+        "Showcases Layer 3 (Components) and Layer 6 (Testing) comprehensive validation",
+      code: `import { useState } from 'react';
+
+function ImageGallery({ images }) {
+  const [loading, setLoading] = useState(false);
+
+  const handleUpload = async (file) => {
+    setLoading(true);
+    const formData = new FormData();
+    formData.append('file', file);
+    const response = await fetch('/api/upload', {
+      method: 'POST',
+      body: formData
+    });
+    setLoading(false);
+  };
+
+  return (
+    <div>
+      <button onClick={() => document.getElementById('fileInput').click()}>
+        Upload Image
+      </button>
+      <input type="file" id="fileInput" onChange={(e) => handleUpload(e.target.files[0])} />
+      <div>
+        {images.map(image =>
+          <img src={image.url} />
+        )}
+      </div>
+    </div>
+  );
+}`,
+      expectedLayers: [1, 3, 6],
+      expectedIssues: [
+        "Missing key props",
+        "Missing alt attributes",
+        "Missing error handling",
+        "Missing prop types",
+      ],
+    },
+  };
 
   useEffect(() => {
     const typewriterEffect = () => {
@@ -34,14 +208,126 @@ export default function HomePage() {
     alert(`Opening payment modal for ${plan} plan`);
   };
 
-  const loadSampleCode = (sample: string) => {
-    alert(`Loading sample code: ${sample}`);
+  // Sophisticated sample code loading with real engine integration
+  const loadSampleCode = async (sampleKey: string) => {
+    const sample = sampleCodes[sampleKey as keyof typeof sampleCodes];
+    if (!sample) return;
+
+    setDemoState((prev) => ({
+      ...prev,
+      isLoading: true,
+      currentSample: sampleKey,
+      showResults: false,
+      result: null,
+    }));
+
+    try {
+      const response = await fetch("/api/demo", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          code: sample.code,
+          filename: `${sample.name.toLowerCase().replace(/\s+/g, "-")}.tsx`,
+          layers: "auto", // Let engine auto-detect
+          applyFixes: false, // Dry-run mode for demo
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`API error: ${response.status}`);
+      }
+
+      const result = await response.json();
+
+      setDemoState((prev) => ({
+        ...prev,
+        isLoading: false,
+        result,
+        showResults: true,
+      }));
+    } catch (error) {
+      console.error("Demo analysis failed:", error);
+      setDemoState((prev) => ({
+        ...prev,
+        isLoading: false,
+        result: {
+          success: false,
+          error:
+            error instanceof Error ? error.message : "Unknown error occurred",
+        },
+      }));
+    }
   };
 
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  // Sophisticated file upload with real engine integration
+  const handleFileUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const files = event.target.files;
-    if (files) {
-      alert(`Uploaded ${files.length} files`);
+    if (!files || files.length === 0) return;
+
+    const file = files[0];
+
+    // Validate file type
+    if (!file.name.match(/\.(ts|tsx|js|jsx)$/)) {
+      alert(
+        "Please upload a TypeScript or JavaScript React file (.ts, .tsx, .js, .jsx)",
+      );
+      return;
+    }
+
+    setDemoState((prev) => ({
+      ...prev,
+      isLoading: true,
+      currentSample: "uploaded-file",
+      showResults: false,
+      result: null,
+    }));
+
+    try {
+      const code = await file.text();
+
+      const response = await fetch("/api/demo", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          code,
+          filename: file.name,
+          layers:
+            demoState.selectedLayers.length > 0
+              ? demoState.selectedLayers
+              : "auto",
+          applyFixes: demoState.applyFixes,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`API error: ${response.status}`);
+      }
+
+      const result = await response.json();
+
+      setDemoState((prev) => ({
+        ...prev,
+        isLoading: false,
+        result,
+        showResults: true,
+      }));
+    } catch (error) {
+      console.error("File upload analysis failed:", error);
+      setDemoState((prev) => ({
+        ...prev,
+        isLoading: false,
+        result: {
+          success: false,
+          error:
+            error instanceof Error ? error.message : "File processing failed",
+        },
+      }));
     }
   };
 
