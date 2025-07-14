@@ -194,7 +194,7 @@ export async function POST(req: Request) {
       layersToUse,
     });
 
-    // Call the engine with correct signature: (code, filePath, dryRun, requestedLayers)
+    // Call the engine with correct signature: (code, filePath, dryRun, requestedLayers, options)
     let result;
     try {
       result = await engine(
@@ -202,6 +202,11 @@ export async function POST(req: Request) {
         filename,
         !applyFixes, // dryRun = true when applyFixes = false (demo mode)
         layersToUse,
+        {
+          isDemoMode: true,
+          singleFile: true,
+          verbose: false,
+        },
       );
       console.log("🔍 [DEMO API] Engine execution completed:", {
         hasResult: !!result,
