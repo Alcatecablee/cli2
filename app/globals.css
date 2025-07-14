@@ -850,8 +850,8 @@ a {
     order: unset;
   }
   .hero {
-    padding: 4rem 1rem 2rem 1rem;
-    min-height: 80vh;
+    padding: 2.5rem 1rem 3rem 1rem;
+    min-height: 70vh;
   }
   .hero-subtitle {
     font-size: 0.75rem;
