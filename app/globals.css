@@ -1728,8 +1728,9 @@ legend {
 
 .progress-fill {
   height: 100%;
-  background: #ffffff;
+  background: linear-gradient(90deg, #2196f3 0%, rgba(33, 150, 243, 0.8) 100%);
   transition: width 0.3s ease;
+  box-shadow: 0 0 8px rgba(33, 150, 243, 0.3);
 }
 
 .progress-text {
