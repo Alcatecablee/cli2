@@ -477,8 +477,8 @@ a {
 .demo-upload-section {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
-  margin-bottom: 0;
+  gap: 2.5rem;
+  margin-bottom: 2rem;
   animation: slideInLeft 0.8s ease-out 1.2s both;
 }
 
