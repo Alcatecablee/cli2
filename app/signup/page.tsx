@@ -94,7 +94,7 @@ export default function SignupPage() {
       } else {
         // Show success message for email confirmation
         setSuccess(
-          result?.message ||
+          (result as any)?.message ||
             "Account created! Please check your email to confirm your account.",
         );
       }
