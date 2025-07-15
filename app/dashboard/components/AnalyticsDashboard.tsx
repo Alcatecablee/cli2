@@ -520,11 +520,11 @@ export default function AnalyticsDashboard({
         }
 
         .trend-bar.analyses {
-          background: #2196f3;
+          background: rgba(33, 150, 243, 0.6);
         }
 
         .trend-bar.issues {
-          background: #ff9800;
+          background: rgba(255, 152, 0, 0.6);
         }
 
         .trend-label {
