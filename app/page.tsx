@@ -884,9 +884,9 @@ function ImageGallery({ images }) {
                     <div className="onboarding-welcome">
                       <div className="feature-highlights">
                         <div className="highlight-item">
-                          <div className="highlight-icon">AI-SYS</div>
+                          <div className="highlight-icon">6-LAYER</div>
                           <div className="highlight-text">
-                            6-Layer AI System
+                            6-Layer Fixing System
                           </div>
                         </div>
                         <div className="highlight-item">
