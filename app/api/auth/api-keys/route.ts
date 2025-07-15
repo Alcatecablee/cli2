@@ -209,17 +209,3 @@ export async function DELETE(request: NextRequest) {
     );
   }
 }
-
-// Utility function to validate API key (for use in other routes)
-export const validateApiKey = (key: string): ApiKey | null => {
-  for (const apiKey of apiKeys.values()) {
-    if (apiKey.key === key && apiKey.isActive) {
-      // Check expiration
-      if (apiKey.expiresAt && new Date(apiKey.expiresAt) < new Date()) {
-        return null;
-      }
-      return apiKey;
-    }
-  }
-  return null;
-};
