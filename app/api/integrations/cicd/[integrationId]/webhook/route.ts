@@ -448,7 +448,10 @@ const processIntegrationRun = async (
     }
   } catch (error) {
     console.error("Integration run processing error:", error);
-    addLog(run.id, `Processing failed: ${error.message}`);
+    addLog(
+      run.id,
+      `Processing failed: ${error instanceof Error ? error.message : "Unknown error"}`,
+    );
     updateRunStatus(run.id, "failed");
   }
 };
