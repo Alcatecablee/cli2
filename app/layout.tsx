@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   description:
     "Professional automated debugging service that safely fixes React/Next.js code. Never corrupts your code.",
   icons: {
-    icon: "/favico.png",
+    icon: "https://cdn.builder.io/api/v1/image/assets%2F4b35a64a4a2c446c91402681adcf734e%2F485afb87468542eeba91d45b141bab95?format=webp&width=32",
   },
 };
 
