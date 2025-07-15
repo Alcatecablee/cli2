@@ -293,7 +293,7 @@ export default function SystemStatus() {
           width: 32px;
           height: 32px;
           border: 3px solid rgba(255, 255, 255, 0.1);
-          border-top: 3px solid #2196f3;
+          border-top: 3px solid rgba(33, 150, 243, 0.6);
           border-radius: 50%;
           animation: spin 1s linear infinite;
           margin-bottom: 12px;
