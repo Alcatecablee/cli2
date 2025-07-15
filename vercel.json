@@ -1,28 +1,18 @@
 {
   "version": 2,
   "name": "neurolint-pro",
-  "builds": [
-    {
-      "src": "server.js",
-      "use": "@vercel/node"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "/server.js"
+  "buildCommand": "npm run build",
+  "outputDirectory": ".next",
+  "framework": "nextjs",
+  "functions": {
+    "app/api/*/route.ts": {
+      "maxDuration": 30
     },
-    {
-      "src": "/(.*)",
-      "dest": "/server.js"
+    "app/api/demo/route.ts": {
+      "maxDuration": 60
     }
-  ],
+  },
   "env": {
     "NODE_ENV": "production"
-  },
-  "functions": {
-    "server.js": {
-      "maxDuration": 30
-    }
   }
 }
