@@ -2387,3 +2387,255 @@ legend {
     padding: 1rem;
   }
 }
+
+/* Demo Guidance Styles */
+.demo-guidance {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 2rem;
+  margin: 2rem 0;
+  backdrop-filter: blur(20px);
+}
+
+.guidance-intro {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.guidance-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 0.75rem;
+}
+
+.guidance-text {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.6;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.guidance-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.guidance-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 1.5rem;
+  transition: var(--transition-smooth);
+}
+
+.guidance-card:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.guidance-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.guidance-icon {
+  font-size: 1.25rem;
+}
+
+.guidance-card-header h4 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0;
+}
+
+.guidance-card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.guidance-option {
+  padding-left: 0.5rem;
+}
+
+.guidance-option strong {
+  display: block;
+  color: rgba(33, 150, 243, 0.9);
+  font-size: 0.9rem;
+  margin-bottom: 0.25rem;
+}
+
+.guidance-option p {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.guidance-layers {
+  margin-bottom: 2rem;
+}
+
+.layers-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.layers-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.layer-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  transition: var(--transition-smooth);
+}
+
+.layer-info:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(33, 150, 243, 0.3);
+}
+
+.layer-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: linear-gradient(
+    135deg,
+    rgba(33, 150, 243, 0.2),
+    rgba(33, 150, 243, 0.1)
+  );
+  border: 1px solid rgba(33, 150, 243, 0.3);
+  border-radius: 50%;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: rgba(33, 150, 243, 0.9);
+  flex-shrink: 0;
+}
+
+.layer-details {
+  flex: 1;
+}
+
+.layer-details strong {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 0.25rem;
+}
+
+.layer-details p {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.4;
+  margin: 0;
+}
+
+.guidance-tips {
+  background: rgba(33, 150, 243, 0.05);
+  border: 1px solid rgba(33, 150, 243, 0.2);
+  border-radius: 8px;
+  padding: 1.5rem;
+}
+
+.tips-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: rgba(33, 150, 243, 0.9);
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.tips-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.tips-list li {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.5;
+  position: relative;
+  padding-left: 1rem;
+}
+
+.tips-list li::before {
+  content: "→";
+  position: absolute;
+  left: 0;
+  color: rgba(33, 150, 243, 0.7);
+  font-weight: 600;
+}
+
+.tips-list strong {
+  color: rgba(33, 150, 243, 0.9);
+}
+
+/* Responsive Design for Guidance */
+@media (max-width: 768px) {
+  .guidance-cards {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .layers-grid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .demo-guidance {
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+  }
+
+  .guidance-card {
+    padding: 1rem;
+  }
+
+  .layer-info {
+    padding: 0.5rem;
+  }
+
+  .guidance-tips {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .layers-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .guidance-title {
+    font-size: 1.25rem;
+  }
+
+  .demo-guidance {
+    padding: 1rem;
+  }
+}
