@@ -329,8 +329,8 @@ a {
 .hero-desc {
   font-size: 1.2rem;
   color: var(--foreground);
-  margin-bottom: 2rem;
-  margin-top: 1.5rem;
+  margin-bottom: 4rem;
+  margin-top: 2rem;
   max-width: 750px;
   margin-left: auto;
   margin-right: auto;
@@ -338,7 +338,7 @@ a {
   font-weight: 400;
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 16px;
-  padding: 2rem 2.5rem;
+  padding: 2.5rem 3rem;
   background: linear-gradient(
     135deg,
     rgba(255, 255, 255, 0.1) 0%,
