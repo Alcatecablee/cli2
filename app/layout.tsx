@@ -38,6 +38,33 @@ export default function RootLayout({
           src="https://www.paypal.com/sdk/js?client-id=AaZabZwUPYitlE5MOXwohkXxtMzI7GaSArFxw7JYMIDfZE_PHvsMzY1WEsZk_QwTdek4SEpjj_DC5ys7&currency=USD&intent=capture&enable-funding=venmo,card"
           strategy="lazyOnload"
         />
+        <Script id="error-handler" strategy="beforeInteractive">
+          {`
+            // Global error handler for external services
+            window.addEventListener('error', function(event) {
+              if (event.error && event.error.message &&
+                  (event.error.message.includes('Failed to fetch') ||
+                   event.error.message.includes('fullstory') ||
+                   event.error.message.includes('webpack'))) {
+                console.warn('External service error caught:', event.error.message);
+                event.preventDefault();
+                return false;
+              }
+            });
+
+            // Handle unhandled promise rejections from external services
+            window.addEventListener('unhandledrejection', function(event) {
+              if (event.reason && event.reason.message &&
+                  (event.reason.message.includes('Failed to fetch') ||
+                   event.reason.message.includes('fullstory') ||
+                   event.reason.message.includes('webpack'))) {
+                console.warn('External service promise rejection caught:', event.reason.message);
+                event.preventDefault();
+                return false;
+              }
+            });
+          `}
+        </Script>
       </body>
     </html>
   );
