@@ -195,7 +195,7 @@ export default function CheckoutPage() {
               </div>
 
               <div className="plan-features-summary">
-                <h4>What's included:</h4>
+                <h4>What&apos;s included:</h4>
                 <ul>
                   {selectedPlan.features.slice(0, 4).map((feature, index) => (
                     <li key={index}>✓ {feature}</li>
