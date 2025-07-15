@@ -1170,19 +1170,12 @@ legend {
 }
 
 .tab-content h3 {
-  font-size: 24px;
+  font-size: 32px;
   font-weight: 600;
-  color: #ffffff;
-  margin: 0 0 12px 0;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  background: linear-gradient(
-    135deg,
-    #ffffff 0%,
-    rgba(255, 255, 255, 0.9) 100%
-  );
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: rgb(255, 255, 255);
+  margin: 0 0 16px 0;
+  font-family: var(--font-sans);
+  line-height: 1.2;
 }
 
 .tab-description {
