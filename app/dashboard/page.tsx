@@ -1886,93 +1886,141 @@ export default function Dashboard() {
 
                 <div className="account-section">
                   <h4>Usage & Billing</h4>
-                  {rateLimitInfo && (
-                    <div className="usage-info">
-                      <div className="usage-row">
-                        <label>Current Plan</label>
-                        <div className="usage-value">
-                          <span className="plan-badge">
-                            {rateLimitInfo.plan.toUpperCase()}
-                          </span>
-                        </div>
-                      </div>
-                      <div className="usage-row">
-                        <label>Analyses Used</label>
-                        <div className="usage-value">
-                          {rateLimitInfo.used || 0} /{" "}
-                          {rateLimitInfo.limit || "∞"}
-                        </div>
-                      </div>
-                      <div className="usage-row">
-                        <label>Remaining</label>
-                        <div className="usage-value">
-                          {rateLimitInfo.remaining} analyses
-                        </div>
-                      </div>
-                      <div className="usage-row">
-                        <label>Resets</label>
-                        <div className="usage-value">
-                          {new Date(rateLimitInfo.resetTime).toLocaleString()}
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                  <div className="billing-actions">
-                    <Link href="/pricing" className="btn btn-primary">
-                      Upgrade Plan
-                    </Link>
-                    <button
-                      className="btn btn-secondary"
-                      onClick={async () => {
-                        try {
-                          const response = await fetch("/api/subscriptions", {
-                            headers: {
-                              ...(session?.access_token && {
-                                Authorization: `Bearer ${session.access_token}`,
-                              }),
-                            },
-                          });
-                          const data = await response.json();
-
-                          if (data.subscriptions?.length > 0) {
-                            // Show billing history
-                            const historyData = {
-                              subscriptions: data.subscriptions,
-                              currentPlan: data.currentPlan,
-                              exportedAt: new Date().toISOString(),
-                            };
-
-                            const blob = new Blob(
-                              [JSON.stringify(historyData, null, 2)],
-                              {
-                                type: "application/json",
-                              },
-                            );
-                            const url = URL.createObjectURL(blob);
-                            const a = document.createElement("a");
-                            a.href = url;
-                            a.download = `billing-history-${new Date().toISOString().split("T")[0]}.json`;
-                            a.click();
-                            URL.revokeObjectURL(url);
-                          } else {
-                            alert(
-                              "No billing history found. You're on the free plan.",
-                            );
-                          }
-                        } catch (error) {
-                          console.error(
-                            "Failed to fetch billing history:",
-                            error,
-                          );
-                          alert(
-                            "Failed to fetch billing history. Please try again.",
-                          );
-                        }
-                      }}
+                  {dashboardState.subscriptionData.loading ? (
+                    <div
+                      className="loading-state"
+                      style={{ padding: "20px", textAlign: "center" }}
                     >
-                      Billing History
-                    </button>
-                  </div>
+                      <div
+                        className="loading-spinner"
+                        style={{ width: "24px", height: "24px" }}
+                      ></div>
+                      <p style={{ fontSize: "14px", margin: "8px 0 0 0" }}>
+                        Loading billing information...
+                      </p>
+                    </div>
+                  ) : dashboardState.subscriptionData.error ? (
+                    <div
+                      className="error-state"
+                      style={{ padding: "16px", fontSize: "14px" }}
+                    >
+                      <p>
+                        Failed to load billing information:{" "}
+                        {dashboardState.subscriptionData.error}
+                      </p>
+                      <button
+                        className="btn btn-sm"
+                        onClick={loadSubscriptionData}
+                        style={{ marginTop: "8px" }}
+                      >
+                        Retry
+                      </button>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="usage-info">
+                        <div className="usage-row">
+                          <label>Current Plan</label>
+                          <div className="usage-value">
+                            <span className="plan-badge">
+                              {dashboardState.subscriptionData.currentPlan.toUpperCase()}
+                            </span>
+                          </div>
+                        </div>
+                        {rateLimitInfo && (
+                          <>
+                            <div className="usage-row">
+                              <label>Analyses Used</label>
+                              <div className="usage-value">
+                                {rateLimitInfo.used || 0} /{" "}
+                                {rateLimitInfo.limit || "∞"}
+                              </div>
+                            </div>
+                            <div className="usage-row">
+                              <label>Remaining</label>
+                              <div className="usage-value">
+                                {rateLimitInfo.remaining} analyses
+                              </div>
+                            </div>
+                            <div className="usage-row">
+                              <label>Resets</label>
+                              <div className="usage-value">
+                                {new Date(
+                                  rateLimitInfo.resetTime,
+                                ).toLocaleString()}
+                              </div>
+                            </div>
+                          </>
+                        )}
+                        {dashboardState.subscriptionData.subscriptions.length >
+                          0 && (
+                          <div className="usage-row">
+                            <label>Active Subscriptions</label>
+                            <div className="usage-value">
+                              {
+                                dashboardState.subscriptionData.subscriptions.filter(
+                                  (s) => s.status === "active",
+                                ).length
+                              }
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                      <div className="billing-actions">
+                        <Link href="/pricing" className="btn btn-primary">
+                          Upgrade Plan
+                        </Link>
+                        <button
+                          className="btn btn-secondary"
+                          onClick={async () => {
+                            try {
+                              if (
+                                dashboardState.subscriptionData.subscriptions
+                                  .length > 0
+                              ) {
+                                // Export billing history from state
+                                const historyData = {
+                                  subscriptions:
+                                    dashboardState.subscriptionData
+                                      .subscriptions,
+                                  currentPlan:
+                                    dashboardState.subscriptionData.currentPlan,
+                                  exportedAt: new Date().toISOString(),
+                                };
+
+                                const blob = new Blob(
+                                  [JSON.stringify(historyData, null, 2)],
+                                  {
+                                    type: "application/json",
+                                  },
+                                );
+                                const url = URL.createObjectURL(blob);
+                                const a = document.createElement("a");
+                                a.href = url;
+                                a.download = `billing-history-${new Date().toISOString().split("T")[0]}.json`;
+                                a.click();
+                                URL.revokeObjectURL(url);
+                              } else {
+                                alert(
+                                  "No billing history found. You're on the free plan.",
+                                );
+                              }
+                            } catch (error) {
+                              console.error(
+                                "Failed to export billing history:",
+                                error,
+                              );
+                              alert(
+                                "Failed to export billing history. Please try again.",
+                              );
+                            }
+                          }}
+                        >
+                          Export Billing History
+                        </button>
+                      </div>
+                    </>
+                  )}
                 </div>
 
                 <div className="account-section">
