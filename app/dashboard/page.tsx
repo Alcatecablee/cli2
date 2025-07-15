@@ -82,6 +82,13 @@ interface UserSettings {
   apiKey?: string;
 }
 
+interface SubscriptionData {
+  subscriptions: any[];
+  currentPlan: string;
+  loading: boolean;
+  error: string | null;
+}
+
 interface DashboardState {
   isLoading: boolean;
   currentFile: string | null;
@@ -96,6 +103,7 @@ interface DashboardState {
   settings: UserSettings;
   progressStatus: string;
   uploadProgress: number;
+  subscriptionData: SubscriptionData;
 }
 
 const sampleFiles = {
