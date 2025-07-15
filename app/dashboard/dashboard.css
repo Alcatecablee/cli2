@@ -413,7 +413,7 @@
 
 .nav-item:hover {
   background: rgba(33, 150, 243, 0.08);
-  color: #ffffff;
+  color: rgb(255, 255, 255);
   border-left: 3px solid rgba(33, 150, 243, 0.4);
 }
 
@@ -424,8 +424,8 @@
 
 .nav-item.active {
   background: rgba(33, 150, 243, 0.12);
-  color: #ffffff;
-  border-left: 3px solid #2196f3;
+  color: rgb(255, 255, 255);
+  border-left: 3px solid rgb(33, 150, 243);
   box-shadow: 0 0 12px rgba(33, 150, 243, 0.2);
 }
 
