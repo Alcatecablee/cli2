@@ -94,8 +94,13 @@ export default function HomePage() {
     {
       id: 0,
       title: "Welcome to NeuroLint Pro",
-      subtitle:
-        "Ready to experience the most sophisticated React/Next.js fixing system ever built?",
+      subtitle: (
+        <>
+          Ready to experience the{" "}
+          <strong style={{ color: "#ffffff" }}>most sophisticated</strong>{" "}
+          React/Next.js fixing system ever built?
+        </>
+      ),
       description: (
         <>
           Experience advanced code analysis with our{" "}
