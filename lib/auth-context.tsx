@@ -63,7 +63,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     checkSession();
   }, []);
 
-    const checkSession = useCallback(async () => {
+  const checkSession = useCallback(async () => {
     try {
       // Check if we're in a browser environment
       if (
@@ -194,7 +194,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } finally {
       setLoading(false);
     }
-  };
+  }, []); // Empty dependency array since checkSession doesn't depend on any props/state
 
   const clearSession = () => {
     try {
