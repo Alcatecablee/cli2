@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NeuroLint Pro – Documentation</title>
+    <meta
+      name="description"
+      content="Official user documentation for NeuroLint Pro – the automated React/Next.js code-fixing engine."
+    />
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Prism for code blocks -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      /* ---------- THEME ---------- */
+      :root {
+        --background: #000000;
+        --foreground: #ffffff;
+        --primary: #ffffff;
+        --primary-foreground: #000000;
+        --card: #000000;
+        --border: #4a4a4a;
+        --muted: #666666;
+        --font-sans: "Inter", system-ui, sans-serif;
+        --font-mono: "JetBrains Mono", "Fira Code", monospace;
+      }
+      html,
+      body {
+        background: radial-gradient(ellipse at top, rgba(0, 0, 0, 0.9) 0%, #000 100%);
+        color: var(--foreground);
+        font-family: var(--font-sans);
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        scroll-behavior: smooth;
+        overflow-x: hidden;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      /* ---------- HEADER ---------- */
+      .header {
+        position: sticky;
+        top: 0;
+        width: 100%;
+        z-index: 50;
+        background: rgba(0, 0, 0, 0.95);
+        backdrop-filter: blur(20px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .header-inner {
+        max-width: 1400px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.75rem 2rem;
+      }
+      .logo {
+        font-weight: 900;
+        font-size: 1.5rem;
+        letter-spacing: -0.02em;
+      }
+      .nav {
+        display: flex;
+        gap: 1.25rem;
+      }
+      .nav a {
+        color: var(--muted);
+        font-weight: 500;
+        padding: 0.5rem 1rem;
+        border: 1px solid transparent;
+        border-radius: 6px;
+        transition: all 0.25s ease;
+      }
+      .nav a:hover,
+      .nav a:focus,
+      .nav a.active {
+        color: var(--foreground);
+        border-color: var(--border);
+        background: rgba(255, 255, 255, 0.05);
+        outline: none;
+      }
+
+      /* ---------- LAYOUT ---------- */
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 3rem 2rem;
+      }
+      section {
+        margin-bottom: 4rem;
+        border: 1px solid var(--border);
+        background: var(--card);
+        padding: 2.5rem 2rem;
+        border-radius: 16px;
+      }
+      section h2 {
+        margin-top: 0;
+        font-size: 2rem;
+        font-weight: 800;
+        letter-spacing: -0.01em;
+      }
+      section h3 {
+        font-size: 1.25rem;
+        margin-top: 2rem;
+        font-weight: 700;
+      }
+      p,
+      li {
+        font-size: 1rem;
+        line-height: 1.65;
+        color: rgba(255, 255, 255, 0.9);
+      }
+      code {
+        font-family: var(--font-mono);
+        background: rgba(255, 255, 255, 0.1);
+        padding: 0.15rem 0.35rem;
+        border-radius: 4px;
+        font-size: 0.95rem;
+      }
+      pre {
+        border: 1px solid var(--border);
+        background: #0d0d0d;
+        padding: 1rem 1.25rem;
+        border-radius: 12px;
+        overflow-x: auto;
+      }
+      /* Table of contents */
+      .toc ul {
+        list-style: none;
+        padding-left: 1rem;
+      }
+      .toc li {
+        margin: 0.35rem 0;
+      }
+      .toc a {
+        color: var(--muted);
+      }
+      .toc a:hover {
+        color: var(--foreground);
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ===== HEADER ===== -->
+    <header class="header">
+      <div class="header-inner">
+        <a href="/" class="logo">NeuroLint Pro</a>
+        <nav class="nav">
+          <a href="/">Home</a>
+          <a href="/app">App</a>
+          <a href="/docs" class="active">Docs</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container">
+      <!-- ===== HERO ===== -->
+      <section id="intro" style="text-align:center;background:transparent;border:none;padding-bottom:0;margin-bottom:0;">
+        <h1 style="font-size:3rem;font-weight:900;letter-spacing:-0.03em;margin-bottom:0.5rem;">NeuroLint Pro Documentation</h1>
+        <p style="max-width:700px;margin:0.5rem auto 2rem auto;font-size:1.25rem;color:rgba(255,255,255,0.85);">
+          Everything you need to install, integrate and master NeuroLint Pro – the 6-layer automated code-fixing engine for React & Next.js.
+        </p>
+        <a href="#quick-start" class="nav btn" style="background:var(--primary);color:var(--primary-foreground);padding:0.75rem 1.5rem;border-radius:8px;font-weight:700;">Skip to Quick Start ↓</a>
+      </section>
+
+      <!-- ===== TABLE OF CONTENTS ===== -->
+      <section class="toc" id="toc">
+        <h2>Table of Contents</h2>
+        <ul>
+          <li><a href="#quick-start">1. Quick Start</a></li>
+          <li><a href="#ui-dashboard">2. Using the Web Dashboard</a></li>
+          <li><a href="#cli-usage">3. CLI / NPM Scripts</a></li>
+          <li><a href="#api-reference">4. REST API Reference</a></li>
+          <li><a href="#sessions-auth">5. Sessions & Authentication</a></li>
+          <li><a href="#layers-overview">6. Layer Overview</a></li>
+          <li><a href="#safety">7. Safety Mechanisms</a></li>
+          <li><a href="#troubleshooting">8. Troubleshooting</a></li>
+          <li><a href="#faq">9. FAQ</a></li>
+        </ul>
+      </section>
+
+      <!-- ===== QUICK START ===== -->
+      <section id="quick-start">
+        <h2>1. Quick Start</h2>
+        <p>NeuroLint Pro ships as a self-hosted <code>Node.js</code> service. Clone the repo, install dependencies and start the server:</p>
+        <pre><code class="language-bash">git clone https://github.com/your-org/neurolint-pro.git
+cd neurolint-pro
+npm install
+npm run fix-all            # optional demo run on repo itself
+NODE_ENV=development node server.js
+</code></pre>
+        <p>Visit <code>http://localhost:3000</code> for the marketing site or <code>/app</code> for the interactive dashboard.</p>
+        <h3>Demo Mode</h3>
+        <p>Without a PayPal session you can analyze up to <strong>100 files</strong> per IP via the web UI or <code>/api/analyze</code>.</p>
+        <h3>Production Deploy</h3>
+        <ol>
+          <li>Set environment variables (<code>.env</code>) for PayPal, Supabase and deployment URL.</li>
+          <li>Run <code>NODE_ENV=production node server.js</code>.</li>
+          <li>Configure HTTPS & reverse proxy (e.g. Nginx) for <code>/api/*</code> and static assets.</li>
+        </ol>
+      </section>
+
+      <!-- ===== UI DASHBOARD ===== -->
+      <section id="ui-dashboard">
+        <h2>2. Using the Web Dashboard</h2>
+        <p>The dashboard (<code>/app</code>) provides a drag-and-drop interface for single-file or multi-file analysis and fixing.</p>
+        <ul>
+          <li><strong>Upload Zone</strong> – drag sources or click to pick files (.js, .jsx, .ts, .tsx).</li>
+          <li><strong>Layer Selector</strong> – choose <em>Auto</em>, <em>All</em> or individual layers 1-6.</li>
+          <li><strong>Dry-Run Toggle</strong> – preview changes without applying them (default).</li>
+          <li><strong>Progress Stream</strong> – real-time Server-Sent Events updates per layer.</li>
+          <li><strong>Diff Viewer</strong> – side-by-side before/after with Prism highlight.</li>
+        </ul>
+        <h3>Keyboard Shortcuts</h3>
+        <ul>
+          <li><kbd>⌘/Ctrl + U</kbd> – open file dialog</li>
+          <li><kbd>⌘/Ctrl + Enter</kbd> – start analysis</li>
+          <li><kbd>Esc</kbd> – cancel current run</li>
+        </ul>
+      </section>
+
+      <!-- ===== CLI USAGE ===== -->
+      <section id="cli-usage">
+        <h2>3. CLI / NPM Scripts</h2>
+        <p>Run NeuroLint directly against your codebase:</p>
+        <pre><code class="language-bash"># Run every layer sequentially with safety validation
+npm run fix-all
+
+# Dry-run (no files modified)
+npm run fix-dry-run
+
+# Verbose logging
+npm run fix-verbose
+
+# Run only specific layers (1,3 & 4)
+node scripts/fix-master.js --layers 1,3,4
+</code></pre>
+        <p>Each <code>fix-layer-*.js</code> script can also be invoked standalone:</p>
+        <pre><code class="language-bash">node fix-layer-2-patterns.js   # bulk pattern fixes only</code></pre>
+      </section>
+
+      <!-- ===== API REFERENCE ===== -->
+      <section id="api-reference">
+        <h2>4. REST API Reference</h2>
+        <h3>Base URL</h3>
+        <p><code>https://&lt;your-domain&gt;/api</code></p>
+        <h3>Endpoints</h3>
+        <ul>
+          <li><strong>GET /health</strong> – service heartbeat.</li>
+          <li><strong>POST /analyze</strong> – demo mode (limited).<br />
+            <em>Body</em>: <code>{ code, filename, demo: true }</code></li>
+          <li><strong>POST /analyze-stream</strong> – SSE version of <em>analyze</em>.<br />
+            <em>Body</em>: <code>{ code, filename }</code></li>
+          <li><strong>POST /process</strong> – full fixing (paid).<br />
+            <em>Headers</em>: <code>Authorization: Bearer &lt;sessionId&gt;</code><br />
+            <em>Body</em>: <code>{ code, filename, layers: "auto"|"all"|"1,3", applyFixes: true }</code></li>
+          <li><strong>GET /session/:sessionId</strong> – check credits/unlimited flag.</li>
+          <li><strong>POST /paypal/webhook</strong> – PayPal IPN (internal).</li>
+        </ul>
+        <h3>Response Payload (example)</h3>
+        <pre><code class="language-json">{
+  "success": true,
+  "analysis": {
+    "recommendedLayers": [1,2,3],
+    "confidence": 0.92,
+    "detectedIssues": ["HTML entities", "Missing key props"]
+  },
+  "layers": [1,2,3],
+  "totalExecutionTime": 7423,
+  "transformed": "/* fixed code */"
+}
+</code></pre>
+      </section>
+
+      <!-- ===== SESSIONS & AUTH ===== -->
+      <section id="sessions-auth">
+        <h2>5. Sessions & Authentication</h2>
+        <p>Paid usage requires a <strong>session ID</strong> generated upon successful PayPal checkout:</p>
+        <ol>
+          <li>User completes PayPal payment.</li>
+          <li>PayPal Webhook hits <code>/api/paypal/webhook</code>.</li>
+          <li>Server stores session in Supabase and returns <code>sessionId</code>.</li>
+          <li>Client passes the ID in <code>Authorization</code> header or JSON body.</li>
+        </ol>
+        <p>Sessions expire after 30 days (single-purchase) or rollover with active subscriptions.</p>
+      </section>
+
+      <!-- ===== LAYERS OVERVIEW ===== -->
+      <section id="layers-overview">
+        <h2>6. Layer Overview</h2>
+        <table style="width:100%;border-collapse:collapse;font-size:0.95rem;">
+          <thead>
+            <tr style="text-align:left;border-bottom:1px solid var(--border);">
+              <th>#</th><th>Name</th><th>Purpose</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>1</td><td>Configuration</td><td>Modernize <code>tsconfig.json</code>, <code>next.config.js</code>, dependencies.</td></tr>
+            <tr><td>2</td><td>Pattern Fixes</td><td>HTML entities, unused imports, console.log → debug.</td></tr>
+            <tr><td>3</td><td>Components</td><td>Missing key props, prop interfaces, icon sizing.</td></tr>
+            <tr><td>4</td><td>Hydration</td><td>Add SSR guards, ThemeProvider mounted-state pattern.</td></tr>
+            <tr><td>5</td><td>Next.js App Router</td><td>'use client' placement, import healing.</td></tr>
+            <tr><td>6</td><td>Testing & Validation</td><td>Error boundaries, ARIA, jest scaffolding.</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ===== SAFETY ===== -->
+      <section id="safety">
+        <h2>7. Safety Mechanisms</h2>
+        <ul>
+          <li><strong>Dry-Run</strong> – preview all changes, no write.</li>
+          <li><strong>Incremental Validation</strong> – syntax + corruption checks each step.</li>
+          <li><strong>Automatic Rollback</strong> – revert layer if validation fails.</li>
+          <li><strong>Backups</strong> – original files saved with <code>.bak</code> suffix.</li>
+          <li><strong>Rate-Limiter</strong> – demo mode capped; webhook routes limited.</li>
+        </ul>
+      </section>
+
+      <!-- ===== TROUBLESHOOTING ===== -->
+      <section id="troubleshooting">
+        <h2>8. Troubleshooting</h2>
+        <h3>Common Errors</h3>
+        <ul>
+          <li><code>glob not found</code> – <em>Fix</em>: run <code>npm install</code> or ensure network.</li>
+          <li><code>Session expired</code> – session older than 30 days; purchase new license.</li>
+          <li><code>Syntax error: mismatched braces</code> – fix source syntax then rerun.</li>
+        </ul>
+        <h3>Rollback Steps</h3>
+        <ol>
+          <li><code>git checkout .</code> to discard local changes.</li>
+          <li>Re-run with <code>--dry-run</code> to inspect differences.</li>
+          <li>Enable layers incrementally to isolate offending transformation.</li>
+        </ol>
+      </section>
+
+      <!-- ===== FAQ ===== -->
+      <section id="faq">
+        <h2>9. FAQ</h2>
+        <h3>Is my code sent to any external service?</h3>
+        <p>No. All processing happens on your self-hosted instance.</p>
+        <h3>Does NeuroLint support Vue/Svelte?</h3>
+        <p>Not yet. The engine is optimized for React & Next.js.</p>
+        <h3>How do I restore original files?</h3>
+        <p>Use <code>git checkout .</code> or rename <code>*.bak</code> files back to their original names.</p>
+        <h3>Can I run layers in parallel?</h3>
+        <p>Current orchestrator enforces sequential order to guarantee safety. Parallel execution is on the roadmap.</p>
+      </section>
+    </main>
+  </body>
+</html>
