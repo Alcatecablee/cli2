@@ -332,6 +332,3 @@ const getSetupInstructions = (type: string, integration: CICDIntegration) => {
       };
   }
 };
-
-// Export utility functions for webhook handling
-export { integrations, integrationRuns, generateWebhookUrl };
