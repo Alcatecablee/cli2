@@ -879,6 +879,15 @@ function ImageGallery({ images }) {
 
               <div className="onboarding-content">
                 <div className="onboarding-card">
+                  {onboardingSteps[onboardingStep].type === "welcome" && (
+                    <div className="onboarding-logo">
+                      <img
+                        src="https://cdn.builder.io/api/v1/image/assets%2F775243cef9ec4db4986833c202dce575%2F3a12bc03448a46bab23669df45aa5fd8?format=webp&width=800"
+                        alt="NeuroLint Pro Logo"
+                        className="modal-logo"
+                      />
+                    </div>
+                  )}
                   <h1 id="onboarding-title" className="onboarding-title">
                     {onboardingSteps[onboardingStep].title}
                   </h1>
