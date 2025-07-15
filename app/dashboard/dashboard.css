@@ -1810,11 +1810,13 @@ legend {
 .btn.btn-primary:hover {
   background: linear-gradient(
     135deg,
-    rgba(255, 255, 255, 0.25) 0%,
-    rgba(255, 255, 255, 0.2) 100%
+    rgba(33, 150, 243, 0.3) 0%,
+    rgba(33, 150, 243, 0.22) 100%
   );
-  border-color: rgba(255, 255, 255, 0.4);
-  box-shadow: var(--shadow-large);
+  border-color: rgba(33, 150, 243, 0.5);
+  box-shadow:
+    var(--shadow-large),
+    0 0 16px rgba(33, 150, 243, 0.3);
 }
 
 .btn.btn-secondary {
