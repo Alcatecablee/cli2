@@ -1846,6 +1846,23 @@ export default function Dashboard() {
                       Export Data
                     </button>
                     <button
+                      className="btn btn-warning"
+                      onClick={() => {
+                        if (
+                          confirm(
+                            "This will reset the onboarding experience so it shows again on your next visit to the homepage. Continue?",
+                          )
+                        ) {
+                          localStorage.removeItem("neurolint-onboarding");
+                          alert(
+                            "Onboarding has been reset. Visit the homepage to see it again.",
+                          );
+                        }
+                      }}
+                    >
+                      Reset Onboarding
+                    </button>
+                    <button
                       className="btn btn-danger"
                       onClick={() => {
                         if (
@@ -1856,6 +1873,7 @@ export default function Dashboard() {
                           localStorage.removeItem("neurolint-history");
                           localStorage.removeItem("neurolint-projects");
                           localStorage.removeItem("neurolint-settings");
+                          localStorage.removeItem("neurolint-onboarding");
                           setDashboardState((prev) => ({
                             ...prev,
                             analysisHistory: [],
