@@ -257,7 +257,7 @@ export async function POST(request: NextRequest) {
         );
         const avgConfidence =
           analyses.reduce(
-            (sum, analysis) =>
+            (sum: number, analysis: any) =>
               sum + (analysis.result.analysis?.confidence || 0),
             0,
           ) / analyses.length;
