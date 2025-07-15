@@ -1405,89 +1405,87 @@ function ImageGallery({ images }) {
                       role="group"
                       aria-labelledby="sample-title"
                     >
-                                            {!isHydrated ? (
+                      {!isHydrated ? (
                         <button className="sample-btn" disabled>
                           Loading samples...
                         </button>
                       ) : onboardingData.projectType ? (
-                          <>
-                            <div className="recommended-label">
-                              <span>
-                                Recommended for{" "}
-                                {
-                                  onboardingSteps[1].options?.find(
-                                    (o) =>
-                                      o.value === onboardingData.projectType,
-                                  )?.label
-                                }
-                                :
-                              </span>
-                            </div>
-                            {getRecommendedSamples().map((sampleKey) => {
-                              const sample =
-                                sampleCodes[
-                                  sampleKey as keyof typeof sampleCodes
-                                ];
-                              return (
-                                <button
-                                  key={sampleKey}
-                                  className={`sample-btn ${demoState.isLoading && demoState.currentSample === sampleKey ? "loading" : ""} ${getRecommendedSamples()[0] === sampleKey ? "recommended" : ""}`}
-                                  onClick={() => loadSampleCode(sampleKey)}
-                                  disabled={demoState.isLoading}
-                                >
-                                  {demoState.isLoading &&
-                                  demoState.currentSample === sampleKey
-                                    ? "Analyzing..."
-                                    : sample.name}
-                                </button>
-                              );
-                            })}
-                          </>
-                        ) : (
-                          <>
-                            <button
-                              className={`sample-btn ${demoState.isLoading && demoState.currentSample === "missing-keys" ? "loading" : ""}`}
-                              onClick={() => loadSampleCode("missing-keys")}
-                              disabled={demoState.isLoading}
-                            >
-                              {demoState.isLoading &&
-                              demoState.currentSample === "missing-keys"
-                                ? "Analyzing..."
-                                : "Missing Keys & Entities"}
-                            </button>
-                            <button
-                              className={`sample-btn ${demoState.isLoading && demoState.currentSample === "html-entities" ? "loading" : ""}`}
-                              onClick={() => loadSampleCode("html-entities")}
-                              disabled={demoState.isLoading}
-                            >
-                              {demoState.isLoading &&
-                              demoState.currentSample === "html-entities"
-                                ? "Analyzing..."
-                                : "HTML Entity Corruption"}
-                            </button>
-                            <button
-                              className={`sample-btn ${demoState.isLoading && demoState.currentSample === "ssr-issues" ? "loading" : ""}`}
-                              onClick={() => loadSampleCode("ssr-issues")}
-                              disabled={demoState.isLoading}
-                            >
-                              {demoState.isLoading &&
-                              demoState.currentSample === "ssr-issues"
-                                ? "Analyzing..."
-                                : "SSR Hydration Issues"}
-                            </button>
-                            <button
-                              className={`sample-btn ${demoState.isLoading && demoState.currentSample === "accessibility" ? "loading" : ""}`}
-                              onClick={() => loadSampleCode("accessibility")}
-                              disabled={demoState.isLoading}
-                            >
-                              {demoState.isLoading &&
-                              demoState.currentSample === "accessibility"
-                                ? "Analyzing..."
-                                : "Accessibility & Testing"}
-                            </button>
-                          </>
-                        )}
-                      </NoSSR>
+                        <>
+                          <div className="recommended-label">
+                            <span>
+                              Recommended for{" "}
+                              {
+                                onboardingSteps[1].options?.find(
+                                  (o) => o.value === onboardingData.projectType,
+                                )?.label
+                              }
+                              :
+                            </span>
+                          </div>
+                          {getRecommendedSamples().map((sampleKey) => {
+                            const sample =
+                              sampleCodes[
+                                sampleKey as keyof typeof sampleCodes
+                              ];
+                            return (
+                              <button
+                                key={sampleKey}
+                                className={`sample-btn ${demoState.isLoading && demoState.currentSample === sampleKey ? "loading" : ""} ${getRecommendedSamples()[0] === sampleKey ? "recommended" : ""}`}
+                                onClick={() => loadSampleCode(sampleKey)}
+                                disabled={demoState.isLoading}
+                              >
+                                {demoState.isLoading &&
+                                demoState.currentSample === sampleKey
+                                  ? "Analyzing..."
+                                  : sample.name}
+                              </button>
+                            );
+                          })}
+                        </>
+                      ) : (
+                        <>
+                          <button
+                            className={`sample-btn ${demoState.isLoading && demoState.currentSample === "missing-keys" ? "loading" : ""}`}
+                            onClick={() => loadSampleCode("missing-keys")}
+                            disabled={demoState.isLoading}
+                          >
+                            {demoState.isLoading &&
+                            demoState.currentSample === "missing-keys"
+                              ? "Analyzing..."
+                              : "Missing Keys & Entities"}
+                          </button>
+                          <button
+                            className={`sample-btn ${demoState.isLoading && demoState.currentSample === "html-entities" ? "loading" : ""}`}
+                            onClick={() => loadSampleCode("html-entities")}
+                            disabled={demoState.isLoading}
+                          >
+                            {demoState.isLoading &&
+                            demoState.currentSample === "html-entities"
+                              ? "Analyzing..."
+                              : "HTML Entity Corruption"}
+                          </button>
+                          <button
+                            className={`sample-btn ${demoState.isLoading && demoState.currentSample === "ssr-issues" ? "loading" : ""}`}
+                            onClick={() => loadSampleCode("ssr-issues")}
+                            disabled={demoState.isLoading}
+                          >
+                            {demoState.isLoading &&
+                            demoState.currentSample === "ssr-issues"
+                              ? "Analyzing..."
+                              : "SSR Hydration Issues"}
+                          </button>
+                          <button
+                            className={`sample-btn ${demoState.isLoading && demoState.currentSample === "accessibility" ? "loading" : ""}`}
+                            onClick={() => loadSampleCode("accessibility")}
+                            disabled={demoState.isLoading}
+                          >
+                            {demoState.isLoading &&
+                            demoState.currentSample === "accessibility"
+                              ? "Analyzing..."
+                              : "Accessibility & Testing"}
+                          </button>
+                        </>
+                      )}
                     </div>
                   </div>
                 </div>
