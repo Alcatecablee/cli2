@@ -1,57 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
-import crypto from "crypto";
-
-// In-memory storage for demo purposes
-const webhooks = new Map();
-const userWebhooks = new Map();
-const webhookEvents = new Map();
-
-interface Webhook {
-  id: string;
-  url: string;
-  name: string;
-  userId: string;
-  events: string[];
-  secret: string;
-  isActive: boolean;
-  createdAt: string;
-  lastTriggered: string | null;
-  totalCalls: number;
-  failureCount: number;
-  headers?: Record<string, string>;
-}
-
-interface WebhookEvent {
-  id: string;
-  webhookId: string;
-  event: string;
-  payload: any;
-  timestamp: string;
-  status: "success" | "failed" | "pending";
-  response?: string;
-  retryCount: number;
-}
-
-const generateSecret = (): string => {
-  return crypto.randomBytes(32).toString("hex");
-};
-
-const signPayload = (payload: string, secret: string): string => {
-  return crypto.createHmac("sha256", secret).update(payload).digest("hex");
-};
-
-const availableEvents = [
-  "analysis.completed",
-  "analysis.failed",
-  "project.created",
-  "project.updated",
-  "project.deleted",
-  "file.uploaded",
-  "file.analyzed",
-  "bulk.completed",
-  "user.subscribed",
-  "user.upgraded",
-];
+import {
+  webhooks,
+  userWebhooks,
+  webhookEvents,
+  generateSecret,
+  availableEvents,
+  type Webhook,
+  type WebhookEvent,
+} from "../../../lib/webhook-utils";
 
 export async function GET(request: NextRequest) {
   try {
