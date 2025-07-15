@@ -112,11 +112,10 @@ export async function POST(request: NextRequest) {
         event_type,
         data: logData,
         created_at: new Date().toISOString(),
-      })
-      .then(() => {})
-      .catch((err) => {
-        console.warn("Failed to log webhook event:", err.message);
-      });
+            });
+    } catch (webhookLogError) {
+      console.warn("Failed to log webhook event:", webhookLogError instanceof Error ? webhookLogError.message : 'Unknown error');
+    }
 
     switch (event_type) {
       case "BILLING.SUBSCRIPTION.ACTIVATED":
