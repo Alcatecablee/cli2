@@ -1791,9 +1791,9 @@ function ImageGallery({ images }) {
                           )}
 
                         {/* Fallback when code comparison is not available */}
-                        {(!demoState.result.originalCode ||
-                          !demoState.result.transformed) &&
-                          demoState.result.success && (
+                        {(!demoState.result?.originalCode ||
+                          !demoState.result?.transformed) &&
+                          demoState.result?.success && (
                             <div className="code-comparison">
                               <h4>Code Analysis Complete</h4>
                               <div
