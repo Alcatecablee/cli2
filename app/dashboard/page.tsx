@@ -1265,7 +1265,7 @@ export default function Dashboard() {
           {dashboardState.activeSection === "api-keys" && (
             <div className="tab-content">
               <ErrorBoundary>
-                <ApiKeysManager userId="demo-user" />
+                <ApiKeysManager userId={user.id} />
               </ErrorBoundary>
             </div>
           )}
