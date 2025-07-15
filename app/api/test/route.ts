@@ -23,9 +23,8 @@ export async function GET() {
     const NeuroLintPro = await import("../../../neurolint-pro.js");
     const engine = NeuroLintPro.default || NeuroLintPro;
 
-    const result = await engine.processCode(testCode, testFilePath, {
-      layers: ["layer-1", "layer-2", "layer-3"],
-      applyFixes: false,
+    const result = await engine(testCode, testFilePath, true, null, {
+      singleFile: true,
     });
 
     return NextResponse.json({
