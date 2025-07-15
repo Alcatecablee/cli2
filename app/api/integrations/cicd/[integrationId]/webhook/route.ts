@@ -153,7 +153,10 @@ const analyzeFiles = async (
       const issueCount = result.analysis?.detectedIssues?.length || 0;
       addLog(runId, `${file.filename}: ${issueCount} issues found`);
     } catch (error) {
-      addLog(runId, `Error analyzing ${file.filename}: ${error.message}`);
+      addLog(
+        runId,
+        `Error analyzing ${file.filename}: ${error instanceof Error ? error.message : "Unknown error"}`,
+      );
       results.push({
         filename: file.filename,
         success: false,
