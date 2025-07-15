@@ -961,6 +961,37 @@ function ImageGallery({ images }) {
         ) : (
           /* Demo Experience */
           <>
+            {/* Hero Section with Navigation */}
+            <section className="hero" aria-labelledby="hero-title">
+              <div className="hero-nav">
+                <a
+                  href="https://neurolint.dev"
+                  className="nav-link"
+                  aria-label="Go to NeuroLint homepage"
+                >
+                  Home
+                </a>
+                <button
+                  className="nav-link"
+                  onClick={openDashboard}
+                  aria-label="Access NeuroLint Pro dashboard"
+                >
+                  Dashboard
+                </button>
+              </div>
+              <h1 id="hero-title" className="hero-title">
+                Try NeuroLint Pro Live
+              </h1>
+              <p className="hero-desc" role="text">
+                Upload your <strong>React/Next.js files</strong> and see{" "}
+                <strong>real fixes applied</strong> using our{" "}
+                <strong>6-layer system</strong>. <strong>Dry-run mode</strong>{" "}
+                perfect for demos returns{" "}
+                <strong>analysis without changes</strong>, letting you{" "}
+                <strong>explore safely</strong>.
+              </p>
+            </section>
+
             {/* Demo Section */}
             <section
               id="demo"
@@ -968,18 +999,6 @@ function ImageGallery({ images }) {
               aria-labelledby="demo-title"
             >
               <div className="demo-container">
-                <h2 id="demo-title" className="section-title">
-                  Try NeuroLint Pro Live
-                </h2>
-                <p id="demo-description" className="section-subtitle">
-                  Upload your <strong>React/Next.js files</strong> and see{" "}
-                  <strong>real fixes applied</strong> using our{" "}
-                  <strong>6-layer system</strong>. <strong>Dry-run mode</strong>{" "}
-                  perfect for demos returns
-                  <strong>analysis without changes</strong>, letting you{" "}
-                  <strong>explore safely</strong>.
-                </p>
-
                 {/* Advanced Demo Controls */}
                 <div
                   className="demo-controls"
