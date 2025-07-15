@@ -1395,45 +1395,55 @@ function ImageGallery({ images }) {
                     >
                       See real fixes on common React issues
                     </p>
-                    <div
+                                        <div
                       className="sample-buttons"
                       role="group"
                       aria-labelledby="sample-title"
                     >
-                      {onboardingData.projectType ? (
+                      <NoSSR fallback={
                         <>
-                          <div className="recommended-label">
-                            <span>
-                              Recommended for{" "}
-                              {
-                                onboardingSteps[1].options?.find(
-                                  (o) => o.value === onboardingData.projectType,
-                                )?.label
-                              }
-                              :
-                            </span>
-                          </div>
-                          {getRecommendedSamples().map((sampleKey) => {
-                            const sample =
-                              sampleCodes[
-                                sampleKey as keyof typeof sampleCodes
-                              ];
-                            return (
-                              <button
-                                key={sampleKey}
-                                className={`sample-btn ${demoState.isLoading && demoState.currentSample === sampleKey ? "loading" : ""} ${getRecommendedSamples()[0] === sampleKey ? "recommended" : ""}`}
-                                onClick={() => loadSampleCode(sampleKey)}
-                                disabled={demoState.isLoading}
-                              >
-                                {demoState.isLoading &&
-                                demoState.currentSample === sampleKey
-                                  ? "Analyzing..."
-                                  : sample.name}
-                              </button>
-                            );
-                          })}
+                          <button
+                            className="sample-btn"
+                            disabled
+                          >
+                            Loading samples...
+                          </button>
                         </>
-                      ) : (
+                      }>
+                        {onboardingData.projectType ? (
+                          <>
+                            <div className="recommended-label">
+                              <span>
+                                Recommended for{" "}
+                                {
+                                  onboardingSteps[1].options?.find(
+                                    (o) => o.value === onboardingData.projectType,
+                                  )?.label
+                                }
+                                :
+                              </span>
+                            </div>
+                            {getRecommendedSamples().map((sampleKey) => {
+                              const sample =
+                                sampleCodes[
+                                  sampleKey as keyof typeof sampleCodes
+                                ];
+                              return (
+                                <button
+                                  key={sampleKey}
+                                  className={`sample-btn ${demoState.isLoading && demoState.currentSample === sampleKey ? "loading" : ""} ${getRecommendedSamples()[0] === sampleKey ? "recommended" : ""}`}
+                                  onClick={() => loadSampleCode(sampleKey)}
+                                  disabled={demoState.isLoading}
+                                >
+                                  {demoState.isLoading &&
+                                  demoState.currentSample === sampleKey
+                                    ? "Analyzing..."
+                                    : sample.name}
+                                </button>
+                              );
+                            })}
+                          </>
+                        ) : (
                         <>
                           <button
                             className={`sample-btn ${demoState.isLoading && demoState.currentSample === "missing-keys" ? "loading" : ""}`}
