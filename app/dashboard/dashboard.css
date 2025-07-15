@@ -1403,16 +1403,17 @@ legend {
 .upload-area h3 {
   font-size: 20px;
   font-weight: 600;
-  color: #ffffff;
-  margin: 0 0 12px 0;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  color: rgb(255, 255, 255);
+  margin: 0 0 8px 0;
+  font-family: var(--font-sans);
 }
 
 .upload-area p {
-  color: rgba(255, 255, 255, 0.8);
-  margin: 0 0 8px 0;
+  color: rgb(102, 102, 102);
+  margin: 0 0 16px 0;
   font-size: 16px;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  font-family: var(--font-sans);
+  line-height: 1.6;
 }
 
 .file-types {
