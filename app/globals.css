@@ -321,16 +321,41 @@ a {
 }
 
 .dashboard-btn {
-  background: linear-gradient(135deg, #2196f3, #1976d2) !important;
-  border: 1px solid rgba(33, 150, 243, 0.5) !important;
-  color: #ffffff !important;
-  font-weight: 600 !important;
+  padding: 0.875rem 1.25rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid #4a4a4a;
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.9);
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: var(--transition-smooth);
+  position: relative;
+  overflow: hidden;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: manipulation;
 }
 
-.dashboard-btn:hover {
-  background: linear-gradient(135deg, #1976d2, #1565c0) !important;
-  border-color: rgba(33, 150, 243, 0.7) !important;
-  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3) !important;
+.dashboard-btn:hover,
+.dashboard-btn.active {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: #666666;
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-subtle);
+}
+
+.dashboard-btn:focus {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+}
+
+.dashboard-btn:active {
+  transform: translateY(0);
+  transition: var(--transition-fast);
 }
 
 .hero-title {
