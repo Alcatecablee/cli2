@@ -196,7 +196,7 @@ export default function AnalyticsDashboard({
 
       {filteredHistory.length === 0 ? (
         <div className="no-data">
-          <div className="no-data-icon">📊</div>
+          <div className="no-data-icon">•</div>
           <h4>No Analysis Data</h4>
           <p>Run some code analyses to see your analytics dashboard.</p>
         </div>
@@ -205,7 +205,7 @@ export default function AnalyticsDashboard({
           {/* Key Metrics */}
           <div className="metrics-grid">
             <div className="metric-card">
-              <div className="metric-icon">🔍</div>
+              <div className="metric-icon">����</div>
               <div className="metric-content">
                 <div className="metric-value">{analytics.totalAnalyses}</div>
                 <div className="metric-label">Total Analyses</div>
@@ -221,7 +221,7 @@ export default function AnalyticsDashboard({
             </div>
 
             <div className="metric-card">
-              <div className="metric-icon">⚡</div>
+              <div className="metric-icon">•</div>
               <div className="metric-content">
                 <div className="metric-value">
                   {formatTime(analytics.timeSaved)}
@@ -231,7 +231,7 @@ export default function AnalyticsDashboard({
             </div>
 
             <div className="metric-card">
-              <div className="metric-icon">🎯</div>
+              <div className="metric-icon">•</div>
               <div className="metric-content">
                 <div className="metric-value">{analytics.qualityScore}%</div>
                 <div className="metric-label">Avg Quality Score</div>
