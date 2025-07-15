@@ -512,7 +512,11 @@ export default function BulkProcessor({
 
         .progress-fill {
           height: 100%;
-          background: linear-gradient(90deg, #2196f3, #4caf50);
+          background: linear-gradient(
+            90deg,
+            rgba(33, 150, 243, 0.6),
+            rgba(76, 175, 80, 0.6)
+          );
           transition: width 0.3s ease;
         }
 
