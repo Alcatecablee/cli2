@@ -1174,14 +1174,24 @@ function ImageGallery({ images }) {
               className="demo-section"
               aria-labelledby="demo-title"
             >
+              <div className="demo-header">
+                <img
+                  src="https://cdn.builder.io/api/v1/image/assets%2F4b35a64a4a2c446c91402681adcf734e%2F184ab63cffb747d79a1eddbf7cd2552a?format=webp&width=800"
+                  alt="NeuroLint Pro Logo"
+                  className="demo-logo"
+                />
+                <h2 id="demo-title" className="demo-main-title">
+                  Analysis Configuration
+                </h2>
+              </div>
+
               <div className="demo-container">
                 {/* Advanced Demo Controls */}
                 <div
                   className="demo-controls"
                   role="region"
-                  aria-labelledby="controls-title"
+                  aria-labelledby="demo-title"
                 >
-                  <h3 id="controls-title">Analysis Configuration</h3>
                   <div className="controls-grid">
                     <fieldset className="control-group">
                       <legend className="control-label">Mode</legend>
