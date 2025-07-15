@@ -1290,15 +1290,12 @@ export default function Dashboard() {
                     </p>
                     <div className="notification-channels">
                       <div className="channel-item">
-                        <span className="channel-icon">💬</span>
                         <span>Slack Channels</span>
                       </div>
                       <div className="channel-item">
-                        <span className="channel-icon">📧</span>
                         <span>Email Notifications</span>
                       </div>
                       <div className="channel-item">
-                        <span className="channel-icon">👥</span>
                         <span>Microsoft Teams</span>
                       </div>
                     </div>
