@@ -160,7 +160,7 @@ const analyzeFiles = async (
       results.push({
         filename: file.filename,
         success: false,
-        error: error.message,
+        error: error instanceof Error ? error.message : "Unknown error",
       });
     }
   }
