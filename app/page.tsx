@@ -186,7 +186,15 @@ export default function HomePage() {
       }
     };
 
-    loadSavedData();
+    // Add timeout to prevent infinite loading
+    const timeoutId = setTimeout(() => {
+      console.warn("Hydration timeout - proceeding with default state");
+      setIsHydrated(true);
+    }, 1000);
+
+    loadSavedData().finally(() => clearTimeout(timeoutId));
+
+    return () => clearTimeout(timeoutId);
   }, []);
 
   // Save onboarding data whenever it changes (but only after hydration)
