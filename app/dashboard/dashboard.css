@@ -1795,15 +1795,16 @@ legend {
 .btn.btn-primary {
   background: linear-gradient(
     135deg,
-    rgba(255, 255, 255, 0.2) 0%,
-    rgba(255, 255, 255, 0.15) 100%
+    rgba(33, 150, 243, 0.2) 0%,
+    rgba(33, 150, 243, 0.15) 100%
   );
-  border-color: rgba(255, 255, 255, 0.3);
+  border-color: rgba(33, 150, 243, 0.4);
   color: #ffffff;
   font-weight: 600;
   box-shadow:
     var(--shadow-medium),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    0 0 12px rgba(33, 150, 243, 0.2);
 }
 
 .btn.btn-primary:hover {
