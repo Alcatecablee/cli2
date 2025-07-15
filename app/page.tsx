@@ -884,17 +884,17 @@ function ImageGallery({ images }) {
                     <div className="onboarding-welcome">
                       <div className="feature-highlights">
                         <div className="highlight-item">
-                          <div className="highlight-icon">🚀</div>
+                          <div className="highlight-icon">AI-SYS</div>
                           <div className="highlight-text">
                             6-Layer AI System
                           </div>
                         </div>
                         <div className="highlight-item">
-                          <div className="highlight-icon">⚡</div>
+                          <div className="highlight-icon">FAST</div>
                           <div className="highlight-text">Instant Analysis</div>
                         </div>
                         <div className="highlight-item">
-                          <div className="highlight-icon">🛡️</div>
+                          <div className="highlight-icon">SAFE</div>
                           <div className="highlight-text">
                             Safe Transformations
                           </div>
