@@ -1,11 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useAuth } from "../../lib/auth-context";
 
 export default function SignupPage() {
   const router = useRouter();
+  const { user, signUp } = useAuth();
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -17,6 +19,13 @@ export default function SignupPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+
+  // Redirect if already logged in
+  useEffect(() => {
+    if (user) {
+      router.push("/dashboard");
+    }
+  }, [user, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,8 +40,8 @@ export default function SignupPage() {
       return;
     }
 
-    if (formData.password.length < 6) {
-      setError("Password must be at least 6 characters");
+    if (formData.password.length < 8) {
+      setError("Password must be at least 8 characters");
       setLoading(false);
       return;
     }
@@ -43,35 +52,49 @@ export default function SignupPage() {
       return;
     }
 
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      setError("Please enter a valid email address");
+      setLoading(false);
+      return;
+    }
+
+    // Password strength validation
+    const hasUpperCase = /[A-Z]/.test(formData.password);
+    const hasLowerCase = /[a-z]/.test(formData.password);
+    const hasNumbers = /\d/.test(formData.password);
+
+    if (!hasUpperCase || !hasLowerCase || !hasNumbers) {
+      setError(
+        "Password must contain uppercase, lowercase, and numeric characters",
+      );
+      setLoading(false);
+      return;
+    }
+
     try {
-      const response = await fetch("/api/auth/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          email: formData.email,
-          password: formData.password,
-        }),
-      });
+      const result = await signUp(
+        formData.firstName,
+        formData.lastName,
+        formData.email,
+        formData.password,
+      );
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "Signup failed");
-      }
-
-      if (data.session?.access_token) {
-        // Auto-login if email is confirmed
-        localStorage.setItem("supabase_session", JSON.stringify(data.session));
-        localStorage.setItem("user_data", JSON.stringify(data.user));
-        router.push("/dashboard");
+      if (user) {
+        // Check for intended plan from pricing page
+        const intendedPlan = localStorage.getItem("intended_plan");
+        if (intendedPlan) {
+          localStorage.removeItem("intended_plan");
+          const { planId, billingPeriod } = JSON.parse(intendedPlan);
+          router.push(`/checkout?plan=${planId}&billing=${billingPeriod}`);
+        } else {
+          router.push("/dashboard");
+        }
       } else {
         // Show success message for email confirmation
         setSuccess(
-          data.message ||
+          result?.message ||
             "Account created! Please check your email to confirm your account.",
         );
       }
@@ -84,245 +107,579 @@ export default function SignupPage() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
+
+    // Clear error when user starts typing
+    if (error) {
+      setError("");
+    }
+
     setFormData({
       ...formData,
       [name]: type === "checkbox" ? checked : value,
     });
   };
 
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-gray-800 to-black">
-      <div className="max-w-md w-full space-y-8 p-8">
-        <div className="text-center">
-          <Link href="/" className="flex justify-center mb-6">
-            <img
-              src="https://cdn.builder.io/api/v1/image/assets%2Fbcdfdb608d38407b88c1584fe3705961%2F1b38a4a385ed4a0bb404148fae0ce80e?format=webp&width=800"
-              alt="NeuroLint Pro"
-              className="h-12 w-12"
-            />
-          </Link>
-          <h2 className="text-3xl font-bold text-white mb-2">
-            Create your account
-          </h2>
-          <p className="text-gray-400">Start fixing your React code with AI</p>
+  // Don't render if user is already logged in
+  if (user) {
+    return (
+      <div className="onboarding-section">
+        <div className="onboarding-container">
+          <div className="onboarding-content">
+            <div className="onboarding-card">
+              <div
+                style={{
+                  width: "48px",
+                  height: "48px",
+                  border: "2px solid rgba(33, 150, 243, 0.4)",
+                  borderTop: "2px solid #ffffff",
+                  borderRadius: "50%",
+                  margin: "0 auto 1.5rem",
+                  animation: "spin 1s linear infinite",
+                }}
+              ></div>
+              <p className="onboarding-subtitle">Redirecting to dashboard...</p>
+            </div>
+          </div>
         </div>
+        <style jsx>{`
+          @keyframes spin {
+            0% {
+              transform: rotate(0deg);
+            }
+            100% {
+              transform: rotate(360deg);
+            }
+          }
+        `}</style>
+      </div>
+    );
+  }
 
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          {error && (
-            <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-4">
-              <p className="text-red-400 text-sm">{error}</p>
-            </div>
-          )}
-
-          {success && (
-            <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-4">
-              <p className="text-green-400 text-sm">{success}</p>
-            </div>
-          )}
-
-          <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label
-                  htmlFor="firstName"
-                  className="block text-sm font-medium text-gray-300"
-                >
-                  First name
-                </label>
-                <input
-                  id="firstName"
-                  name="firstName"
-                  type="text"
-                  value={formData.firstName}
-                  onChange={handleChange}
-                  className="mt-1 block w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="John"
+  return (
+    <div className="onboarding-section">
+      <div className="onboarding-container">
+        <div className="onboarding-content">
+          <div className="onboarding-card">
+            <div className="onboarding-logo">
+              <Link href="/">
+                <img
+                  src="https://cdn.builder.io/api/v1/image/assets%2Fbcdfdb608d38407b88c1584fe3705961%2F1b38a4a385ed4a0bb404148fae0ce80e?format=webp&width=800"
+                  alt="NeuroLint Pro"
+                  style={{
+                    height: "48px",
+                    width: "48px",
+                    marginBottom: "1.5rem",
+                  }}
                 />
-              </div>
-
-              <div>
-                <label
-                  htmlFor="lastName"
-                  className="block text-sm font-medium text-gray-300"
-                >
-                  Last name
-                </label>
-                <input
-                  id="lastName"
-                  name="lastName"
-                  type="text"
-                  value={formData.lastName}
-                  onChange={handleChange}
-                  className="mt-1 block w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="Doe"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-300"
-              >
-                Email address
-              </label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                required
-                value={formData.email}
-                onChange={handleChange}
-                className="mt-1 block w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="john@example.com"
-              />
-            </div>
-
-            <div>
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium text-gray-300"
-              >
-                Password
-              </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                required
-                value={formData.password}
-                onChange={handleChange}
-                className="mt-1 block w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="At least 6 characters"
-              />
-            </div>
-
-            <div>
-              <label
-                htmlFor="confirmPassword"
-                className="block text-sm font-medium text-gray-300"
-              >
-                Confirm password
-              </label>
-              <input
-                id="confirmPassword"
-                name="confirmPassword"
-                type="password"
-                required
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                className="mt-1 block w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="Confirm your password"
-              />
-            </div>
-          </div>
-
-          <div className="flex items-center">
-            <input
-              id="acceptTerms"
-              name="acceptTerms"
-              type="checkbox"
-              required
-              checked={formData.acceptTerms}
-              onChange={handleChange}
-              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-600 rounded bg-gray-800"
-            />
-            <label
-              htmlFor="acceptTerms"
-              className="ml-2 block text-sm text-gray-300"
-            >
-              I agree to the{" "}
-              <Link href="/terms" className="text-blue-400 hover:text-blue-300">
-                Terms of Service
-              </Link>{" "}
-              and{" "}
-              <Link
-                href="/privacy"
-                className="text-blue-400 hover:text-blue-300"
-              >
-                Privacy Policy
               </Link>
-            </label>
-          </div>
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {loading ? (
-              <div className="flex items-center">
-                <div className="animate-spin -ml-1 mr-3 h-5 w-5 border-2 border-white border-t-transparent rounded-full"></div>
-                Creating account...
-              </div>
-            ) : (
-              "Create account"
-            )}
-          </button>
-
-          <div className="text-center">
-            <p className="text-sm text-gray-400">
-              Already have an account?{" "}
-              <Link
-                href="/login"
-                className="text-blue-400 hover:text-blue-300 font-medium"
-              >
-                Sign in
-              </Link>
+            </div>
+            <h1 className="onboarding-title">Create your account</h1>
+            <p className="onboarding-subtitle">
+              Start fixing your React code with AI
             </p>
-          </div>
-        </form>
 
-        <div className="mt-6">
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-600" />
+            <form onSubmit={handleSubmit}>
+              {error && (
+                <div
+                  style={{
+                    padding: "1rem",
+                    marginBottom: "1.5rem",
+                    background: "rgba(239, 68, 68, 0.1)",
+                    border: "1px solid rgba(239, 68, 68, 0.2)",
+                    borderRadius: "8px",
+                    color: "#fca5a5",
+                    fontSize: "0.875rem",
+                    textAlign: "center",
+                  }}
+                >
+                  {error}
+                </div>
+              )}
+
+              {success && (
+                <div
+                  style={{
+                    padding: "1rem",
+                    marginBottom: "1.5rem",
+                    background: "rgba(34, 197, 94, 0.1)",
+                    border: "1px solid rgba(34, 197, 94, 0.2)",
+                    borderRadius: "8px",
+                    color: "#86efac",
+                    fontSize: "0.875rem",
+                    textAlign: "center",
+                  }}
+                >
+                  {success}
+                </div>
+              )}
+
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr",
+                  gap: "1rem",
+                  marginBottom: "1.5rem",
+                }}
+              >
+                <div>
+                  <label
+                    htmlFor="firstName"
+                    style={{
+                      display: "block",
+                      fontSize: "0.875rem",
+                      fontWeight: "500",
+                      color: "#ffffff",
+                      marginBottom: "0.5rem",
+                    }}
+                  >
+                    First name
+                  </label>
+                  <input
+                    id="firstName"
+                    name="firstName"
+                    type="text"
+                    value={formData.firstName}
+                    onChange={handleChange}
+                    style={{
+                      width: "100%",
+                      padding: "0.875rem 1rem",
+                      background: "rgba(255, 255, 255, 0.05)",
+                      border: "1px solid rgba(255, 255, 255, 0.15)",
+                      borderRadius: "8px",
+                      color: "#ffffff",
+                      fontSize: "1rem",
+                      backdropFilter: "blur(20px)",
+                      WebkitBackdropFilter: "blur(20px)",
+                      transition: "all 0.3s ease",
+                      outline: "none",
+                    }}
+                    placeholder="John"
+                    onFocus={(e) => {
+                      e.target.style.borderColor = "rgba(33, 150, 243, 0.4)";
+                      e.target.style.boxShadow =
+                        "0 0 12px rgba(33, 150, 243, 0.2)";
+                    }}
+                    onBlur={(e) => {
+                      e.target.style.borderColor = "rgba(255, 255, 255, 0.15)";
+                      e.target.style.boxShadow = "none";
+                    }}
+                  />
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="lastName"
+                    style={{
+                      display: "block",
+                      fontSize: "0.875rem",
+                      fontWeight: "500",
+                      color: "#ffffff",
+                      marginBottom: "0.5rem",
+                    }}
+                  >
+                    Last name
+                  </label>
+                  <input
+                    id="lastName"
+                    name="lastName"
+                    type="text"
+                    value={formData.lastName}
+                    onChange={handleChange}
+                    style={{
+                      width: "100%",
+                      padding: "0.875rem 1rem",
+                      background: "rgba(255, 255, 255, 0.05)",
+                      border: "1px solid rgba(255, 255, 255, 0.15)",
+                      borderRadius: "8px",
+                      color: "#ffffff",
+                      fontSize: "1rem",
+                      backdropFilter: "blur(20px)",
+                      WebkitBackdropFilter: "blur(20px)",
+                      transition: "all 0.3s ease",
+                      outline: "none",
+                    }}
+                    placeholder="Doe"
+                    onFocus={(e) => {
+                      e.target.style.borderColor = "rgba(33, 150, 243, 0.4)";
+                      e.target.style.boxShadow =
+                        "0 0 12px rgba(33, 150, 243, 0.2)";
+                    }}
+                    onBlur={(e) => {
+                      e.target.style.borderColor = "rgba(255, 255, 255, 0.15)";
+                      e.target.style.boxShadow = "none";
+                    }}
+                  />
+                </div>
+              </div>
+
+              <div style={{ marginBottom: "1.5rem" }}>
+                <label
+                  htmlFor="email"
+                  style={{
+                    display: "block",
+                    fontSize: "0.875rem",
+                    fontWeight: "500",
+                    color: "#ffffff",
+                    marginBottom: "0.5rem",
+                  }}
+                >
+                  Email address
+                </label>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  required
+                  value={formData.email}
+                  onChange={handleChange}
+                  style={{
+                    width: "100%",
+                    padding: "0.875rem 1rem",
+                    background: "rgba(255, 255, 255, 0.05)",
+                    border: "1px solid rgba(255, 255, 255, 0.15)",
+                    borderRadius: "8px",
+                    color: "#ffffff",
+                    fontSize: "1rem",
+                    backdropFilter: "blur(20px)",
+                    WebkitBackdropFilter: "blur(20px)",
+                    transition: "all 0.3s ease",
+                    outline: "none",
+                  }}
+                  placeholder="john@example.com"
+                  onFocus={(e) => {
+                    e.target.style.borderColor = "rgba(33, 150, 243, 0.4)";
+                    e.target.style.boxShadow =
+                      "0 0 12px rgba(33, 150, 243, 0.2)";
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.borderColor = "rgba(255, 255, 255, 0.15)";
+                    e.target.style.boxShadow = "none";
+                  }}
+                />
+              </div>
+
+              <div style={{ marginBottom: "1.5rem" }}>
+                <label
+                  htmlFor="password"
+                  style={{
+                    display: "block",
+                    fontSize: "0.875rem",
+                    fontWeight: "500",
+                    color: "#ffffff",
+                    marginBottom: "0.5rem",
+                  }}
+                >
+                  Password
+                </label>
+                <input
+                  id="password"
+                  name="password"
+                  type="password"
+                  required
+                  value={formData.password}
+                  onChange={handleChange}
+                  style={{
+                    width: "100%",
+                    padding: "0.875rem 1rem",
+                    background: "rgba(255, 255, 255, 0.05)",
+                    border: "1px solid rgba(255, 255, 255, 0.15)",
+                    borderRadius: "8px",
+                    color: "#ffffff",
+                    fontSize: "1rem",
+                    backdropFilter: "blur(20px)",
+                    WebkitBackdropFilter: "blur(20px)",
+                    transition: "all 0.3s ease",
+                    outline: "none",
+                  }}
+                  placeholder="At least 8 characters"
+                  onFocus={(e) => {
+                    e.target.style.borderColor = "rgba(33, 150, 243, 0.4)";
+                    e.target.style.boxShadow =
+                      "0 0 12px rgba(33, 150, 243, 0.2)";
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.borderColor = "rgba(255, 255, 255, 0.15)";
+                    e.target.style.boxShadow = "none";
+                  }}
+                />
+              </div>
+
+              <div style={{ marginBottom: "2rem" }}>
+                <label
+                  htmlFor="confirmPassword"
+                  style={{
+                    display: "block",
+                    fontSize: "0.875rem",
+                    fontWeight: "500",
+                    color: "#ffffff",
+                    marginBottom: "0.5rem",
+                  }}
+                >
+                  Confirm password
+                </label>
+                <input
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  type="password"
+                  required
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  style={{
+                    width: "100%",
+                    padding: "0.875rem 1rem",
+                    background: "rgba(255, 255, 255, 0.05)",
+                    border: "1px solid rgba(255, 255, 255, 0.15)",
+                    borderRadius: "8px",
+                    color: "#ffffff",
+                    fontSize: "1rem",
+                    backdropFilter: "blur(20px)",
+                    WebkitBackdropFilter: "blur(20px)",
+                    transition: "all 0.3s ease",
+                    outline: "none",
+                  }}
+                  placeholder="Confirm your password"
+                  onFocus={(e) => {
+                    e.target.style.borderColor = "rgba(33, 150, 243, 0.4)";
+                    e.target.style.boxShadow =
+                      "0 0 12px rgba(33, 150, 243, 0.2)";
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.borderColor = "rgba(255, 255, 255, 0.15)";
+                    e.target.style.boxShadow = "none";
+                  }}
+                />
+              </div>
+
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "flex-start",
+                  marginBottom: "2rem",
+                  fontSize: "0.875rem",
+                }}
+              >
+                <input
+                  id="acceptTerms"
+                  name="acceptTerms"
+                  type="checkbox"
+                  required
+                  checked={formData.acceptTerms}
+                  onChange={handleChange}
+                  style={{
+                    width: "16px",
+                    height: "16px",
+                    background: "rgba(255, 255, 255, 0.05)",
+                    border: "1px solid rgba(255, 255, 255, 0.15)",
+                    borderRadius: "4px",
+                    accentColor: "rgba(33, 150, 243, 0.9)",
+                    marginTop: "2px",
+                  }}
+                />
+                <label
+                  htmlFor="acceptTerms"
+                  style={{
+                    marginLeft: "0.5rem",
+                    color: "rgba(255, 255, 255, 0.7)",
+                    lineHeight: "1.5",
+                  }}
+                >
+                  I agree to the{" "}
+                  <Link
+                    href="/terms"
+                    style={{
+                      color: "rgba(33, 150, 243, 0.9)",
+                      textDecoration: "none",
+                    }}
+                  >
+                    Terms of Service
+                  </Link>{" "}
+                  and{" "}
+                  <Link
+                    href="/privacy"
+                    style={{
+                      color: "rgba(33, 150, 243, 0.9)",
+                      textDecoration: "none",
+                    }}
+                  >
+                    Privacy Policy
+                  </Link>
+                </label>
+              </div>
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="onboarding-btn primary"
+                style={{
+                  width: "100%",
+                  marginBottom: "1.5rem",
+                  opacity: loading ? 0.7 : 1,
+                  cursor: loading ? "not-allowed" : "pointer",
+                }}
+              >
+                {loading ? (
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: "20px",
+                        height: "20px",
+                        border: "2px solid rgba(255, 255, 255, 0.3)",
+                        borderTop: "2px solid #ffffff",
+                        borderRadius: "50%",
+                        marginRight: "0.75rem",
+                        animation: "spin 1s linear infinite",
+                      }}
+                    ></div>
+                    Creating account...
+                  </div>
+                ) : (
+                  "Create account"
+                )}
+              </button>
+
+              <div style={{ textAlign: "center", marginBottom: "2rem" }}>
+                <p
+                  style={{
+                    fontSize: "0.875rem",
+                    color: "rgba(255, 255, 255, 0.7)",
+                  }}
+                >
+                  Already have an account?{" "}
+                  <Link
+                    href="/login"
+                    style={{
+                      color: "rgba(33, 150, 243, 0.9)",
+                      textDecoration: "none",
+                      fontWeight: "500",
+                    }}
+                  >
+                    Sign in
+                  </Link>
+                </p>
+              </div>
+            </form>
+
+            <div style={{ marginTop: "1.5rem" }}>
+              <div style={{ position: "relative", marginBottom: "1.5rem" }}>
+                <div
+                  style={{
+                    position: "absolute",
+                    inset: "0",
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
+                  <div
+                    style={{
+                      width: "100%",
+                      height: "1px",
+                      background: "rgba(255, 255, 255, 0.15)",
+                    }}
+                  />
+                </div>
+                <div
+                  style={{
+                    position: "relative",
+                    display: "flex",
+                    justifyContent: "center",
+                    fontSize: "0.875rem",
+                  }}
+                >
+                  <span
+                    style={{
+                      padding: "0 1rem",
+                      background:
+                        "linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 50%, rgba(0, 0, 0, 0.9) 100%)",
+                      color: "rgba(255, 255, 255, 0.5)",
+                    }}
+                  >
+                    Or continue with
+                  </span>
+                </div>
+              </div>
+
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(2, 1fr)",
+                  gap: "0.75rem",
+                }}
+              >
+                <button
+                  type="button"
+                  className="onboarding-btn secondary"
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: "0.5rem",
+                  }}
+                >
+                  <svg
+                    style={{ height: "20px", width: "20px" }}
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      fill="currentColor"
+                      d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                    />
+                    <path
+                      fill="currentColor"
+                      d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                    />
+                    <path
+                      fill="currentColor"
+                      d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+                    />
+                    <path
+                      fill="currentColor"
+                      d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                    />
+                  </svg>
+                  Google
+                </button>
+
+                <button
+                  type="button"
+                  className="onboarding-btn secondary"
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: "0.5rem",
+                  }}
+                >
+                  <svg
+                    style={{ height: "20px", width: "20px" }}
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M12 0C5.374 0 0 5.373 0 12 0 17.302 3.438 21.8 8.207 23.387c.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z" />
+                  </svg>
+                  GitHub
+                </button>
+              </div>
             </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-gray-900 text-gray-400">
-                Or continue with
-              </span>
-            </div>
-          </div>
-
-          <div className="mt-6 grid grid-cols-2 gap-3">
-            <button
-              type="button"
-              className="w-full inline-flex justify-center py-2 px-4 border border-gray-600 rounded-lg shadow-sm bg-gray-800 text-sm font-medium text-gray-300 hover:bg-gray-700"
-            >
-              <svg className="h-5 w-5" viewBox="0 0 24 24">
-                <path
-                  fill="currentColor"
-                  d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-                />
-                <path
-                  fill="currentColor"
-                  d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-                />
-                <path
-                  fill="currentColor"
-                  d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
-                />
-                <path
-                  fill="currentColor"
-                  d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-                />
-              </svg>
-              <span className="ml-2">Google</span>
-            </button>
-
-            <button
-              type="button"
-              className="w-full inline-flex justify-center py-2 px-4 border border-gray-600 rounded-lg shadow-sm bg-gray-800 text-sm font-medium text-gray-300 hover:bg-gray-700"
-            >
-              <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 0C5.374 0 0 5.373 0 12 0 17.302 3.438 21.8 8.207 23.387c.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z" />
-              </svg>
-              <span className="ml-2">GitHub</span>
-            </button>
           </div>
         </div>
       </div>
+
+      <style jsx>{`
+        @keyframes spin {
+          0% {
+            transform: rotate(0deg);
+          }
+          100% {
+            transform: rotate(360deg);
+          }
+        }
+      `}</style>
     </div>
   );
 }
