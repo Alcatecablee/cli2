@@ -89,29 +89,58 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
 
         // Verify session is still valid with server
-        const response = await fetch("/api/auth/user", {
-          headers: {
-            Authorization: `Bearer ${sessionData.access_token}`,
-          },
-        });
+        try {
+          const response = await fetch("/api/auth/user", {
+            headers: {
+              Authorization: `Bearer ${sessionData.access_token}`,
+            },
+            // Add timeout and better error handling
+            signal: AbortSignal.timeout(10000), // 10 second timeout
+          });
 
-        if (response.ok) {
-          const { user: currentUser } = await response.json();
+          if (response.ok) {
+            const { user: currentUser } = await response.json();
 
-          // Additional validation on user data
-          if (currentUser && currentUser.id && currentUser.email) {
-            setUser(currentUser);
-            setSession(sessionData);
+            // Additional validation on user data
+            if (currentUser && currentUser.id && currentUser.email) {
+              setUser(currentUser);
+              setSession(sessionData);
+            } else {
+              console.error("Invalid user data received");
+              clearSession();
+            }
+          } else if (response.status === 401) {
+            // Session invalid, try to refresh or clear
+            console.log("Session invalid, clearing storage");
+            clearSession();
           } else {
-            console.error("Invalid user data received");
+            console.error("Session validation failed:", response.status);
             clearSession();
           }
-        } else if (response.status === 401) {
-          // Session invalid, try to refresh or clear
-          console.log("Session invalid, clearing storage");
-          clearSession();
-        } else {
-          console.error("Session validation failed:", response.status);
+        } catch (fetchError) {
+          console.warn("Session validation network error:", fetchError);
+
+          // If it's a network error but we have a valid session structure,
+          // continue with the cached session to avoid blocking the user
+          if (sessionData.access_token && sessionData.refresh_token) {
+            console.log("Using cached session due to network error");
+            // Try to get cached user data
+            const cachedUserData = localStorage.getItem("user_data");
+            if (cachedUserData) {
+              try {
+                const userData = JSON.parse(cachedUserData);
+                if (userData && userData.id && userData.email) {
+                  setUser(userData);
+                  setSession(sessionData);
+                  return; // Exit early with cached data
+                }
+              } catch (e) {
+                console.error("Invalid cached user data");
+              }
+            }
+          }
+
+          // If we can't use cached data, clear session
           clearSession();
         }
       }
