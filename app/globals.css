@@ -465,6 +465,34 @@ a {
   animation: fadeInUp 1s ease-out 1s both;
 }
 
+.demo-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  padding: 0 2rem;
+}
+
+.demo-logo {
+  height: 60px;
+  width: auto;
+  margin-bottom: 1.5rem;
+  filter: brightness(1.1);
+  transition: var(--transition-smooth);
+}
+
+.demo-logo:hover {
+  filter: brightness(1.2);
+  transform: scale(1.02);
+}
+
+.demo-main-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+  letter-spacing: -0.02em;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
 .demo-container {
   max-width: 1400px;
   margin: 0 auto;
