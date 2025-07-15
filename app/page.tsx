@@ -1405,16 +1405,11 @@ function ImageGallery({ images }) {
                       role="group"
                       aria-labelledby="sample-title"
                     >
-                      <NoSSR
-                        fallback={
-                          <>
-                            <button className="sample-btn" disabled>
-                              Loading samples...
-                            </button>
-                          </>
-                        }
-                      >
-                        {onboardingData.projectType ? (
+                                            {!isHydrated ? (
+                        <button className="sample-btn" disabled>
+                          Loading samples...
+                        </button>
+                      ) : onboardingData.projectType ? (
                           <>
                             <div className="recommended-label">
                               <span>
