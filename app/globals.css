@@ -986,6 +986,19 @@ a {
     font-size: 1rem;
     min-height: 48px;
   }
+  .demo-header {
+    padding: 0 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .demo-logo {
+    height: 40px;
+  }
+
+  .demo-main-title {
+    font-size: 1.75rem;
+  }
+
   .demo-container {
     padding: 0 1rem;
     gap: 2rem;
