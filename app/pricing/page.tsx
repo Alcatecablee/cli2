@@ -145,7 +145,7 @@ export default function PricingPage() {
       name: "Additional Analyses",
       description: "Extra analyses beyond your plan limit",
       price: "$0.10 per analysis",
-      icon: "🔄",
+      icon: "+",
     },
     {
       name: "Priority Processing",
@@ -157,13 +157,13 @@ export default function PricingPage() {
       name: "Custom Integration",
       description: "Bespoke integrations for your workflow",
       price: "Starting at $500",
-      icon: "🔗",
+      icon: "→",
     },
     {
       name: "Professional Training",
       description: "Expert training for your team",
       price: "$200/hour",
-      icon: "🎓",
+      icon: "↗",
     },
   ];
 
@@ -291,7 +291,7 @@ export default function PricingPage() {
                     <ul>
                       {plan.limitations.map((limitation, index) => (
                         <li key={index} className="limitation-item">
-                          <span className="limitation-icon">⚠</span>
+                          <span className="limitation-icon">•</span>
                           {limitation}
                         </li>
                       ))}
@@ -473,21 +473,21 @@ export default function PricingPage() {
 
       <style jsx>{`
         .pricing-page {
-          background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+          background: #000000;
           min-height: 100vh;
           color: white;
           font-family:
-            -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            "Inter",
+            -apple-system,
+            BlinkMacSystemFont,
+            sans-serif;
         }
 
         .pricing-header {
           padding: 2rem 1rem 4rem;
           text-align: center;
-          background: linear-gradient(
-            135deg,
-            rgba(33, 150, 243, 0.1) 0%,
-            rgba(255, 255, 255, 0.05) 100%
-          );
+          background: rgba(255, 255, 255, 0.02);
+          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .header-nav {
@@ -505,17 +505,14 @@ export default function PricingPage() {
         }
 
         .nav-link:hover {
-          color: #2196f3;
+          color: #ffffff;
         }
 
         .header-content h1 {
           font-size: 3rem;
-          font-weight: 700;
+          font-weight: 900;
           margin: 0 0 1rem 0;
-          background: linear-gradient(135deg, #ffffff 0%, #2196f3 100%);
-          background-clip: text;
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
+          color: #ffffff;
         }
 
         .header-description {
@@ -561,7 +558,7 @@ export default function PricingPage() {
           left: 3px;
           width: 24px;
           height: 24px;
-          background: #2196f3;
+          background: #ffffff;
           border-radius: 12px;
           transition: transform 0.2s ease;
         }
@@ -571,13 +568,14 @@ export default function PricingPage() {
         }
 
         .discount-badge {
-          background: linear-gradient(135deg, #ff9800, #f57c00);
+          background: rgba(255, 255, 255, 0.1);
           color: white;
           padding: 2px 8px;
           border-radius: 12px;
           font-size: 0.75rem;
           font-weight: 600;
           margin-left: 0.5rem;
+          border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .pricing-container {
@@ -610,17 +608,13 @@ export default function PricingPage() {
         }
 
         .pricing-card.popular {
-          border-color: #2196f3;
-          box-shadow: 0 8px 32px rgba(33, 150, 243, 0.2);
+          border-color: rgba(255, 255, 255, 0.3);
+          box-shadow: 0 8px 32px rgba(255, 255, 255, 0.1);
         }
 
         .pricing-card.enterprise {
-          border-color: #ff9800;
-          background: linear-gradient(
-            135deg,
-            rgba(255, 152, 0, 0.1) 0%,
-            rgba(255, 255, 255, 0.05) 100%
-          );
+          border-color: rgba(255, 255, 255, 0.3);
+          background: rgba(255, 255, 255, 0.08);
         }
 
         .plan-badge {
@@ -628,17 +622,19 @@ export default function PricingPage() {
           top: -12px;
           left: 50%;
           transform: translateX(-50%);
-          background: linear-gradient(135deg, #2196f3, #1976d2);
+          background: rgba(255, 255, 255, 0.1);
           color: white;
           padding: 6px 20px;
           border-radius: 20px;
           font-size: 0.85rem;
           font-weight: 600;
           white-space: nowrap;
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          backdrop-filter: blur(10px);
         }
 
         .enterprise .plan-badge {
-          background: linear-gradient(135deg, #ff9800, #f57c00);
+          background: rgba(255, 255, 255, 0.15);
         }
 
         .plan-header {
@@ -660,7 +656,7 @@ export default function PricingPage() {
         .price-free {
           font-size: 2.5rem;
           font-weight: 700;
-          color: #4caf50;
+          color: #ffffff;
         }
 
         .price-currency {
@@ -690,7 +686,7 @@ export default function PricingPage() {
         }
 
         .yearly-savings {
-          color: #4caf50;
+          color: rgba(255, 255, 255, 0.8);
           font-size: 0.9rem;
           font-weight: 600;
           margin-top: 0.5rem;
@@ -722,7 +718,7 @@ export default function PricingPage() {
         }
 
         .feature-icon {
-          color: #4caf50;
+          color: rgba(255, 255, 255, 0.8);
           font-weight: bold;
           flex-shrink: 0;
           margin-top: 2px;
@@ -751,7 +747,7 @@ export default function PricingPage() {
         }
 
         .limitation-icon {
-          color: #ff9800;
+          color: rgba(255, 255, 255, 0.5);
           flex-shrink: 0;
           margin-top: 2px;
         }
@@ -776,21 +772,21 @@ export default function PricingPage() {
         }
 
         .plan-cta.popular {
-          background: linear-gradient(135deg, #2196f3, #1976d2);
-          border-color: #2196f3;
+          background: rgba(255, 255, 255, 0.2);
+          border-color: rgba(255, 255, 255, 0.3);
         }
 
         .plan-cta.popular:hover {
-          background: linear-gradient(135deg, #1976d2, #1565c0);
+          background: rgba(255, 255, 255, 0.25);
         }
 
         .plan-cta.enterprise {
-          background: linear-gradient(135deg, #ff9800, #f57c00);
-          border-color: #ff9800;
+          background: rgba(255, 255, 255, 0.2);
+          border-color: rgba(255, 255, 255, 0.3);
         }
 
         .plan-cta.enterprise:hover {
-          background: linear-gradient(135deg, #f57c00, #ef6c00);
+          background: rgba(255, 255, 255, 0.25);
         }
 
         .addons-section,
@@ -830,7 +826,7 @@ export default function PricingPage() {
 
         .addon-card:hover {
           transform: translateY(-4px);
-          border-color: rgba(33, 150, 243, 0.3);
+          border-color: rgba(255, 255, 255, 0.2);
         }
 
         .addon-icon {
@@ -851,7 +847,7 @@ export default function PricingPage() {
         }
 
         .addon-price {
-          color: #2196f3;
+          color: rgba(255, 255, 255, 0.9);
           font-weight: 600;
           font-size: 1rem;
         }
@@ -905,7 +901,7 @@ export default function PricingPage() {
         }
 
         .value-cell.check {
-          color: #4caf50;
+          color: rgba(255, 255, 255, 0.9);
           font-weight: bold;
         }
 
@@ -955,7 +951,7 @@ export default function PricingPage() {
         .stat-number {
           font-size: 2.5rem;
           font-weight: 700;
-          color: #2196f3;
+          color: #ffffff;
           margin-bottom: 0.5rem;
         }
 
