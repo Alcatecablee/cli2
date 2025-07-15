@@ -63,7 +63,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     checkSession();
   }, []);
 
-  const checkSession = async () => {
+    const checkSession = useCallback(async () => {
     try {
       // Check if we're in a browser environment
       if (
