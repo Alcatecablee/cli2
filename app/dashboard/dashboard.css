@@ -1700,13 +1700,15 @@ legend {
 }
 
 .setting-item input[type="checkbox"]:checked::after {
-  content: "✓";
+  content: "";
   position: absolute;
-  top: -1px;
-  left: 2px;
-  font-size: 12px;
-  color: #000000;
-  font-weight: bold;
+  top: 2px;
+  left: 4px;
+  width: 6px;
+  height: 10px;
+  border: solid #000000;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
 }
 
 .form-input {
