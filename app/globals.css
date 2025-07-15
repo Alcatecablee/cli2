@@ -1744,3 +1744,326 @@ legend {
     grid-template-columns: 1fr;
   }
 }
+
+/* ==================================================================
+   ONBOARDING EXPERIENCE - ENTERPRISE DARK THEME
+   ================================================================== */
+
+.onboarding-section {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background: #000000;
+}
+
+.onboarding-container {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.onboarding-progress {
+  margin-bottom: 3rem;
+  text-align: center;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 2px;
+  background: #4a4a4a;
+  border-radius: 0;
+  margin-bottom: 1rem;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: #ffffff;
+  transition: width 0.3s ease;
+}
+
+.progress-text {
+  font-size: 0.875rem;
+  color: #666666;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.onboarding-content {
+  background: #000000;
+  border: 1px solid #4a4a4a;
+  padding: 3rem;
+}
+
+.onboarding-card {
+  text-align: center;
+}
+
+.onboarding-title {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 1rem;
+  font-family: var(--font-sans);
+}
+
+.onboarding-subtitle {
+  font-size: 1.125rem;
+  color: #666666;
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+.onboarding-description {
+  font-size: 1rem;
+  color: #666666;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Welcome Step */
+.onboarding-welcome {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+.feature-highlights {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  width: 100%;
+}
+
+.highlight-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1.5rem;
+  border: 1px solid #4a4a4a;
+  background: #000000;
+}
+
+.highlight-icon {
+  font-size: 0.875rem;
+  color: #ffffff;
+  font-weight: 600;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.highlight-text {
+  font-size: 0.875rem;
+  color: #666666;
+  text-align: center;
+  line-height: 1.4;
+}
+
+/* Buttons */
+.onboarding-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.875rem 2rem;
+  border: 1px solid #4a4a4a;
+  background: #000000;
+  color: #ffffff;
+  font-size: 0.875rem;
+  font-weight: 500;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0 0.5rem;
+}
+
+.onboarding-btn:hover {
+  background: #ffffff;
+  color: #000000;
+}
+
+.onboarding-btn.primary {
+  background: #ffffff;
+  color: #000000;
+}
+
+.onboarding-btn.primary:hover {
+  background: #000000;
+  color: #ffffff;
+}
+
+.onboarding-btn.secondary {
+  color: #666666;
+}
+
+.onboarding-btn.secondary:hover {
+  color: #ffffff;
+  background: #000000;
+}
+
+/* Selection Options */
+.onboarding-options {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.option-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 1.5rem;
+  border: 1px solid #4a4a4a;
+  background: #000000;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+  width: 100%;
+}
+
+.option-card:hover {
+  border-color: #ffffff;
+  background: #000000;
+}
+
+.option-label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 0.5rem;
+}
+
+.option-description {
+  font-size: 0.875rem;
+  color: #666666;
+  line-height: 1.4;
+}
+
+/* Transition Step */
+.onboarding-transition {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+.transition-highlights {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  width: 100%;
+}
+
+.transition-item {
+  padding: 1rem;
+  border: 1px solid #4a4a4a;
+  background: #000000;
+  font-size: 0.875rem;
+  color: #666666;
+  text-align: center;
+}
+
+.transition-item strong {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+/* Hero Personalization */
+.hero-personalization {
+  margin: 1rem 0;
+  padding: 0.75rem 1.5rem;
+  border: 1px solid #4a4a4a;
+  background: #000000;
+  text-align: center;
+}
+
+.hero-personalization span {
+  font-size: 0.875rem;
+  color: #666666;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Recommended Sample Label */
+.recommended-label {
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.recommended-label span {
+  font-size: 0.875rem;
+  color: #666666;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.sample-btn.recommended {
+  border-color: #ffffff;
+  background: #ffffff;
+  color: #000000;
+}
+
+.sample-btn.recommended:hover {
+  background: #000000;
+  color: #ffffff;
+  border-color: #ffffff;
+}
+
+/* Responsive Design for Onboarding */
+@media (max-width: 768px) {
+  .onboarding-section {
+    padding: 1rem;
+  }
+
+  .onboarding-content {
+    padding: 2rem;
+  }
+
+  .feature-highlights {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .onboarding-btn {
+    display: block;
+    margin: 0.5rem 0;
+    width: 100%;
+  }
+
+  .transition-highlights {
+    gap: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .onboarding-content {
+    padding: 1.5rem;
+  }
+
+  .onboarding-title {
+    font-size: 1.5rem;
+  }
+
+  .feature-highlights {
+    gap: 0.75rem;
+  }
+
+  .highlight-item {
+    padding: 1rem;
+  }
+}
