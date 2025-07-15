@@ -214,7 +214,7 @@ export default function ApiKeysManager({
             className="btn btn-sm btn-secondary"
             onClick={() => setCreatedKey(null)}
           >
-            I've saved it
+            I&apos;ve saved it
           </button>
         </div>
       )}
