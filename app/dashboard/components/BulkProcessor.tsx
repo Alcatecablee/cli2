@@ -248,7 +248,7 @@ export default function BulkProcessor({
           ref={folderInputRef}
           type="file"
           style={{ display: "none" }}
-          webkitdirectory=""
+          {...({ webkitdirectory: "" } as any)}
           multiple
           accept=".ts,.tsx,.js,.jsx"
           onChange={handleFolderUpload}
