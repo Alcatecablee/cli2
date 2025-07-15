@@ -251,7 +251,7 @@ export async function POST(request: NextRequest) {
       // Update project stats
       if (project) {
         const totalIssues = analyses.reduce(
-          (sum, analysis) =>
+          (sum: number, analysis: any) =>
             sum + (analysis.result.analysis?.detectedIssues?.length || 0),
           0,
         );
