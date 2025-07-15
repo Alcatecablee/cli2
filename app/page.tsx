@@ -161,7 +161,7 @@ export default function HomePage() {
       title: "Ready to see NeuroLint Pro in action?",
       subtitle: "Upload your code or try our curated samples",
       description:
-        "Experience our 6-layer transformation system with real code analysis and intelligent recommendations.",
+        "Experience our 6-layer automated fixing system with real code analysis and enterprise-grade transformations.",
       type: "transition" as const,
     },
   ];
