@@ -171,10 +171,13 @@ export default function PricingPage() {
     },
   ];
 
-  const handlePlanSelection = (planId: string) => {
+  const handlePlanSelection = async (planId: string) => {
     if (planId === "free") {
-      // Direct to dashboard
-      window.location.href = "/dashboard";
+      if (!user) {
+        window.location.href = "/signup";
+      } else {
+        window.location.href = "/dashboard";
+      }
     } else if (planId === "enterprise" || planId === "team") {
       // Contact sales
       window.location.href =
@@ -182,9 +185,31 @@ export default function PricingPage() {
         plans.find((p) => p.id === planId)?.name +
         " Plan";
     } else {
-      // Start trial or payment
+      // Check if user is authenticated
+      if (!user) {
+        // Store intended plan and redirect to signup
+        localStorage.setItem(
+          "intended_plan",
+          JSON.stringify({ planId, billingPeriod }),
+        );
+        window.location.href = "/signup";
+        return;
+      }
+
+      // Start payment process
       window.location.href = `/checkout?plan=${planId}&billing=${billingPeriod}`;
     }
+  };
+
+  const getCurrentPlanBadge = (planId: string) => {
+    if (user?.plan === planId) {
+      return (
+        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 ml-2">
+          Current Plan
+        </span>
+      );
+    }
+    return null;
   };
 
   const calculateYearlyDiscount = (
