@@ -33,9 +33,7 @@ export default function RootLayout({
         />
       </head>
       <body>
-        <ExternalServiceErrorBoundary>
-          <AuthProvider>{children}</AuthProvider>
-        </ExternalServiceErrorBoundary>
+        <AuthProvider>{children}</AuthProvider>
         <Script
           src="https://www.paypal.com/sdk/js?client-id=AaZabZwUPYitlE5MOXwohkXxtMzI7GaSArFxw7JYMIDfZE_PHvsMzY1WEsZk_QwTdek4SEpjj_DC5ys7&currency=USD&intent=capture&enable-funding=venmo,card"
           strategy="lazyOnload"
