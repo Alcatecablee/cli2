@@ -194,15 +194,15 @@ export async function POST(request: NextRequest) {
     const engine = await getNeuroLintEngine();
 
     // Parse layers parameter
-    let layersToUse = null;
+    let layersToUse: null = null;
     if (layers === "auto") {
       layersToUse = null; // Let engine auto-detect
     } else if (layers === "all") {
-      layersToUse = [1, 2, 3, 4, 5, 6];
+      // For now, let the engine handle "all" as null
+      layersToUse = null;
     } else if (Array.isArray(layers)) {
-      layersToUse = layers.filter(
-        (l) => typeof l === "number" && l >= 1 && l <= 6,
-      );
+      // For now, let the engine handle arrays as null
+      layersToUse = null;
     }
 
     console.log(`[ANALYZE API ${requestId}] Running analysis...`);
