@@ -1395,21 +1395,20 @@ function ImageGallery({ images }) {
                     >
                       See real fixes on common React issues
                     </p>
-                                        <div
+                    <div
                       className="sample-buttons"
                       role="group"
                       aria-labelledby="sample-title"
                     >
-                      <NoSSR fallback={
-                        <>
-                          <button
-                            className="sample-btn"
-                            disabled
-                          >
-                            Loading samples...
-                          </button>
-                        </>
-                      }>
+                      <NoSSR
+                        fallback={
+                          <>
+                            <button className="sample-btn" disabled>
+                              Loading samples...
+                            </button>
+                          </>
+                        }
+                      >
                         {onboardingData.projectType ? (
                           <>
                             <div className="recommended-label">
@@ -1417,7 +1416,8 @@ function ImageGallery({ images }) {
                                 Recommended for{" "}
                                 {
                                   onboardingSteps[1].options?.find(
-                                    (o) => o.value === onboardingData.projectType,
+                                    (o) =>
+                                      o.value === onboardingData.projectType,
                                   )?.label
                                 }
                                 :
@@ -1444,49 +1444,50 @@ function ImageGallery({ images }) {
                             })}
                           </>
                         ) : (
-                        <>
-                          <button
-                            className={`sample-btn ${demoState.isLoading && demoState.currentSample === "missing-keys" ? "loading" : ""}`}
-                            onClick={() => loadSampleCode("missing-keys")}
-                            disabled={demoState.isLoading}
-                          >
-                            {demoState.isLoading &&
-                            demoState.currentSample === "missing-keys"
-                              ? "Analyzing..."
-                              : "Missing Keys & Entities"}
-                          </button>
-                          <button
-                            className={`sample-btn ${demoState.isLoading && demoState.currentSample === "html-entities" ? "loading" : ""}`}
-                            onClick={() => loadSampleCode("html-entities")}
-                            disabled={demoState.isLoading}
-                          >
-                            {demoState.isLoading &&
-                            demoState.currentSample === "html-entities"
-                              ? "Analyzing..."
-                              : "HTML Entity Corruption"}
-                          </button>
-                          <button
-                            className={`sample-btn ${demoState.isLoading && demoState.currentSample === "ssr-issues" ? "loading" : ""}`}
-                            onClick={() => loadSampleCode("ssr-issues")}
-                            disabled={demoState.isLoading}
-                          >
-                            {demoState.isLoading &&
-                            demoState.currentSample === "ssr-issues"
-                              ? "Analyzing..."
-                              : "SSR Hydration Issues"}
-                          </button>
-                          <button
-                            className={`sample-btn ${demoState.isLoading && demoState.currentSample === "accessibility" ? "loading" : ""}`}
-                            onClick={() => loadSampleCode("accessibility")}
-                            disabled={demoState.isLoading}
-                          >
-                            {demoState.isLoading &&
-                            demoState.currentSample === "accessibility"
-                              ? "Analyzing..."
-                              : "Accessibility & Testing"}
-                          </button>
-                        </>
-                      )}
+                          <>
+                            <button
+                              className={`sample-btn ${demoState.isLoading && demoState.currentSample === "missing-keys" ? "loading" : ""}`}
+                              onClick={() => loadSampleCode("missing-keys")}
+                              disabled={demoState.isLoading}
+                            >
+                              {demoState.isLoading &&
+                              demoState.currentSample === "missing-keys"
+                                ? "Analyzing..."
+                                : "Missing Keys & Entities"}
+                            </button>
+                            <button
+                              className={`sample-btn ${demoState.isLoading && demoState.currentSample === "html-entities" ? "loading" : ""}`}
+                              onClick={() => loadSampleCode("html-entities")}
+                              disabled={demoState.isLoading}
+                            >
+                              {demoState.isLoading &&
+                              demoState.currentSample === "html-entities"
+                                ? "Analyzing..."
+                                : "HTML Entity Corruption"}
+                            </button>
+                            <button
+                              className={`sample-btn ${demoState.isLoading && demoState.currentSample === "ssr-issues" ? "loading" : ""}`}
+                              onClick={() => loadSampleCode("ssr-issues")}
+                              disabled={demoState.isLoading}
+                            >
+                              {demoState.isLoading &&
+                              demoState.currentSample === "ssr-issues"
+                                ? "Analyzing..."
+                                : "SSR Hydration Issues"}
+                            </button>
+                            <button
+                              className={`sample-btn ${demoState.isLoading && demoState.currentSample === "accessibility" ? "loading" : ""}`}
+                              onClick={() => loadSampleCode("accessibility")}
+                              disabled={demoState.isLoading}
+                            >
+                              {demoState.isLoading &&
+                              demoState.currentSample === "accessibility"
+                                ? "Analyzing..."
+                                : "Accessibility & Testing"}
+                            </button>
+                          </>
+                        )}
+                      </NoSSR>
                     </div>
                   </div>
                 </div>
