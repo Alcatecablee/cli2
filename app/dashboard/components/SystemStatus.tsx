@@ -39,7 +39,7 @@ export default function SystemStatus() {
 
           return {
             service: service.name,
-            status: response.ok ? "healthy" : "warning",
+            status: (response.ok ? "healthy" : "warning") as const,
             uptime: `${responseTime}ms`,
             lastCheck: new Date().toLocaleTimeString(),
             details: response.ok ? "Operational" : `HTTP ${response.status}`,
