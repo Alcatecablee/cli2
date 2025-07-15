@@ -90,13 +90,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         // Verify session is still valid with server
         try {
+          // Create abort controller for timeout
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+
           const response = await fetch("/api/auth/user", {
             headers: {
               Authorization: `Bearer ${sessionData.access_token}`,
             },
-            // Add timeout and better error handling
-            signal: AbortSignal.timeout(10000), // 10 second timeout
+            signal: controller.signal,
           });
+
+          clearTimeout(timeoutId);
 
           if (response.ok) {
             const { user: currentUser } = await response.json();
