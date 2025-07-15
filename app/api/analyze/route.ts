@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { randomUUID } from "crypto";
 import { dataStore, dataUtils } from "../../../lib/data-store";
+import { authenticateRequest } from "../../../lib/auth-middleware";
 
 // Import the neurolint engine
 const getNeuroLintEngine = async () => {
@@ -19,13 +20,13 @@ export async function POST(request: NextRequest) {
   let authenticatedUser = null;
 
   try {
-    // Check for API key authentication
-    const apiKeyHeader =
-      request.headers.get("x-api-key") ||
-      request.headers.get("authorization")?.replace("Bearer ", "");
+    // Check for authentication - either API key or session token
+    const apiKeyHeader = request.headers.get("x-api-key");
+    const authHeader = request.headers.get("authorization");
 
     let rateLimitInfo = null;
 
+    // Try API key authentication first
     if (apiKeyHeader) {
       const apiKey = dataUtils.validateApiKey(apiKeyHeader);
       if (!apiKey) {
@@ -77,6 +78,41 @@ export async function POST(request: NextRequest) {
       apiKey.usageCount = (apiKey.usageCount || 0) + 1;
       apiKey.lastUsed = new Date().toISOString();
       dataStore.apiKeys.set(apiKey.id, apiKey);
+    } else if (
+      authHeader &&
+      authHeader.startsWith("Bearer ") &&
+      !apiKeyHeader
+    ) {
+      // Try session authentication if no API key provided
+      const authResult = await authenticateRequest(request);
+
+      if (authResult.success && authResult.user) {
+        authenticatedUser = {
+          userId: authResult.user.id,
+          authType: "session",
+          email: authResult.user.email,
+          plan: authResult.user.plan,
+          permissions: ["analyze", "projects"], // Default permissions for authenticated users
+        };
+
+        // Set rate limits based on user plan
+        const planLimits = {
+          free: { requestsPerHour: 10, requestsPerDay: 50 },
+          pro: { requestsPerHour: 100, requestsPerDay: 1000 },
+          enterprise: { requestsPerHour: 1000, requestsPerDay: 10000 },
+        };
+
+        const limits =
+          planLimits[authResult.user.plan as keyof typeof planLimits] ||
+          planLimits.free;
+
+        rateLimitInfo = {
+          remaining: limits.requestsPerHour, // Simplified for demo
+          hourlyLimit: limits.requestsPerHour,
+          dailyLimit: limits.requestsPerDay,
+          plan: authResult.user.plan,
+        };
+      }
     }
 
     const body = await request.json();
