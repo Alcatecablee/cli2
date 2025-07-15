@@ -174,6 +174,11 @@ export default function HomePage() {
   // Load data from localStorage after hydration to prevent SSR mismatch
   useEffect(() => {
     try {
+      // Scroll to top when page loads
+      if (typeof window !== "undefined") {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
       // Synchronous localStorage loading to avoid async complications
       if (typeof window !== "undefined") {
         const savedOnboarding = localStorage.getItem("neurolint-onboarding");
