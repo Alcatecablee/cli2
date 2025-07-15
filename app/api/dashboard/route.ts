@@ -1,59 +1,12 @@
 import { NextResponse } from "next/server";
 import { randomUUID } from "crypto";
-
-// Simple session tracking for dashboard users (in production, use proper auth)
-const dashboardSessions = new Map<
-  string,
-  {
-    created: number;
-    lastUsed: number;
-    analysisCount: number;
-    plan: "free" | "professional" | "enterprise";
-  }
->();
+import { dataStore, dataUtils } from "../../../lib/data-store";
 
 const RATE_LIMITS = {
   free: { maxAnalyses: 5, windowMs: 60 * 60 * 1000 }, // 5 per hour
   professional: { maxAnalyses: 100, windowMs: 60 * 60 * 1000 }, // 100 per hour
   enterprise: { maxAnalyses: 1000, windowMs: 60 * 60 * 1000 }, // 1000 per hour
 };
-
-function validateSession(sessionId?: string) {
-  if (!sessionId) {
-    // Create a new free session
-    const newSessionId = randomUUID();
-    dashboardSessions.set(newSessionId, {
-      created: Date.now(),
-      lastUsed: Date.now(),
-      analysisCount: 0,
-      plan: "free",
-    });
-    return {
-      sessionId: newSessionId,
-      session: dashboardSessions.get(newSessionId)!,
-    };
-  }
-
-  const session = dashboardSessions.get(sessionId);
-  if (!session) {
-    // Session expired or invalid, create new one
-    const newSessionId = randomUUID();
-    dashboardSessions.set(newSessionId, {
-      created: Date.now(),
-      lastUsed: Date.now(),
-      analysisCount: 0,
-      plan: "free",
-    });
-    return {
-      sessionId: newSessionId,
-      session: dashboardSessions.get(newSessionId)!,
-    };
-  }
-
-  // Update last used
-  session.lastUsed = Date.now();
-  return { sessionId, session };
-}
 
 function checkRateLimit(session: any): {
   allowed: boolean;
@@ -99,7 +52,8 @@ export async function POST(req: Request) {
     });
 
     // Validate session and get/create session
-    const { sessionId: validSessionId, session } = validateSession(sessionId);
+    const { sessionId: validSessionId, session } =
+      dataUtils.validateSession(sessionId);
 
     // Check rate limits
     const rateLimit = checkRateLimit(session);
@@ -283,7 +237,7 @@ export async function GET(req: Request) {
 
   if (sessionId) {
     // Return session info
-    const session = dashboardSessions.get(sessionId);
+    const session = dataStore.dashboardSessions.get(sessionId);
     if (session) {
       const rateLimit = checkRateLimit(session);
       return NextResponse.json({
@@ -306,7 +260,7 @@ export async function GET(req: Request) {
     status: "healthy",
     service: "NeuroLint Pro Dashboard API",
     timestamp: new Date().toISOString(),
-    activeSessions: dashboardSessions.size,
+    activeSessions: dataStore.dashboardSessions.size,
     plans: Object.keys(RATE_LIMITS),
   });
 }
@@ -317,9 +271,9 @@ setInterval(
     const now = Date.now();
     const TWENTY_FOUR_HOURS = 24 * 60 * 60 * 1000;
 
-    for (const [sessionId, session] of dashboardSessions.entries()) {
+    for (const [sessionId, session] of dataStore.dashboardSessions.entries()) {
       if (now - session.lastUsed > TWENTY_FOUR_HOURS) {
-        dashboardSessions.delete(sessionId);
+        dataStore.dashboardSessions.delete(sessionId);
       }
     }
   },
