@@ -227,7 +227,6 @@ export async function POST(request: NextRequest) {
     const processingTime = Date.now() - startTime;
 
     console.log(`[ANALYZE API ${requestId}] Analysis complete:`, {
-      success: result?.success,
       processingTime,
       issuesFound: result?.analysis?.detectedIssues?.length || 0,
     });
