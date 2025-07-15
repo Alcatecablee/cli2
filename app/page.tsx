@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import { isNetworkError, handleExternalServiceError } from "../lib/fetch-utils";
-import NoSSR from "../src/components/NoSSR";
 
 // Demo state interface for sophisticated analysis results - matches NeuroLint Pro output
 interface DemoResult {
