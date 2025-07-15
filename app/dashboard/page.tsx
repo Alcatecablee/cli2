@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback, useRef } from "react";
 import "./dashboard.css";
 import BulkProcessor from "./components/BulkProcessor";
 import AnalyticsDashboard from "./components/AnalyticsDashboard";
+import ApiKeysManager from "./components/ApiKeysManager";
 
 // Import the same result interfaces from the demo
 interface DemoResult {
@@ -670,6 +671,44 @@ export default function Dashboard() {
       description: "View insights & trends",
     },
     {
+      id: "api-keys",
+      icon: (
+        <svg
+          viewBox="0 0 24 24"
+          width="20"
+          height="20"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+        >
+          <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 11-7.778 7.778 5.5 5.5 0 017.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4" />
+        </svg>
+      ),
+      label: "API Keys",
+      description: "Manage API access",
+    },
+    {
+      id: "integrations",
+      icon: (
+        <svg
+          viewBox="0 0 24 24"
+          width="20"
+          height="20"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+        >
+          <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z" />
+          <polyline points="7.5,4.21 12,6.81 16.5,4.21" />
+          <polyline points="7.5,19.79 7.5,14.6 3,12" />
+          <polyline points="21,12 16.5,14.6 16.5,19.79" />
+          <polyline points="12,22.08 12,17" />
+        </svg>
+      ),
+      label: "Integrations",
+      description: "CI/CD & webhooks",
+    },
+    {
       id: "projects",
       icon: (
         <svg
@@ -1144,6 +1183,132 @@ export default function Dashboard() {
               <AnalyticsDashboard
                 analysisHistory={dashboardState.analysisHistory}
               />
+            </div>
+          )}
+
+          {/* API Keys Tab */}
+          {dashboardState.activeSection === "api-keys" && (
+            <div className="tab-content">
+              <ApiKeysManager userId="demo-user" />
+            </div>
+          )}
+
+          {/* Integrations Tab */}
+          {dashboardState.activeSection === "integrations" && (
+            <div className="tab-content">
+              <div className="integrations-overview">
+                <h3>Integrations & Automations</h3>
+                <p className="tab-description">
+                  Connect NeuroLint Pro with your development workflow.
+                </p>
+
+                <div className="integration-categories">
+                  <div className="integration-category">
+                    <div className="category-header">
+                      <h4>CI/CD Pipelines</h4>
+                      <span className="category-status">Coming Soon</span>
+                    </div>
+                    <p>
+                      Automatically analyze code in your CI/CD pipeline with
+                      GitHub Actions, GitLab CI, Jenkins, and more.
+                    </p>
+                    <div className="supported-platforms">
+                      <span className="platform-badge">GitHub Actions</span>
+                      <span className="platform-badge">GitLab CI</span>
+                      <span className="platform-badge">Jenkins</span>
+                      <span className="platform-badge">Azure DevOps</span>
+                    </div>
+                  </div>
+
+                  <div className="integration-category">
+                    <div className="category-header">
+                      <h4>Webhooks</h4>
+                      <span className="category-status">Available</span>
+                    </div>
+                    <p>
+                      Receive real-time notifications when analyses complete or
+                      issues are detected.
+                    </p>
+                    <div className="webhook-features">
+                      <div className="feature-item">
+                        ✅ Analysis completion notifications
+                      </div>
+                      <div className="feature-item">✅ Error alerts</div>
+                      <div className="feature-item">
+                        ✅ Custom payload formatting
+                      </div>
+                      <div className="feature-item">✅ Retry mechanisms</div>
+                    </div>
+                  </div>
+
+                  <div className="integration-category">
+                    <div className="category-header">
+                      <h4>Team Notifications</h4>
+                      <span className="category-status">Available</span>
+                    </div>
+                    <p>
+                      Keep your team informed with Slack and Microsoft Teams
+                      integrations.
+                    </p>
+                    <div className="notification-channels">
+                      <div className="channel-item">
+                        <span className="channel-icon">💬</span>
+                        <span>Slack Channels</span>
+                      </div>
+                      <div className="channel-item">
+                        <span className="channel-icon">📧</span>
+                        <span>Email Notifications</span>
+                      </div>
+                      <div className="channel-item">
+                        <span className="channel-icon">👥</span>
+                        <span>Microsoft Teams</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="integration-category">
+                    <div className="category-header">
+                      <h4>API Access</h4>
+                      <span className="category-status">Available</span>
+                    </div>
+                    <p>
+                      Programmatic access to NeuroLint Pro analysis engine with
+                      comprehensive REST API.
+                    </p>
+                    <div className="api-features">
+                      <div className="feature-item">
+                        🔑 API key authentication
+                      </div>
+                      <div className="feature-item">📊 Rate limiting</div>
+                      <div className="feature-item">
+                        📖 OpenAPI documentation
+                      </div>
+                      <div className="feature-item">🔧 SDKs coming soon</div>
+                    </div>
+                    <div className="api-actions">
+                      <button
+                        className="btn btn-primary"
+                        onClick={() =>
+                          window.open("/api/docs?format=html", "_blank")
+                        }
+                      >
+                        View API Docs
+                      </button>
+                      <button
+                        className="btn btn-secondary"
+                        onClick={() =>
+                          setDashboardState((prev) => ({
+                            ...prev,
+                            activeSection: "api-keys",
+                          }))
+                        }
+                      >
+                        Manage API Keys
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           )}
 
