@@ -1503,8 +1503,8 @@ function ImageGallery({ images }) {
                                 <div className="insight-value">
                                   ~
                                   {Math.round(
-                                    demoState.result.analysis.detectedIssues
-                                      .length * 2.5,
+                                    (demoState.result.analysis.detectedIssues
+                                      ?.length || 0) * 2.5,
                                   )}{" "}
                                   hours dev time
                                 </div>
