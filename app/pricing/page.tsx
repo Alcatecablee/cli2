@@ -456,14 +456,14 @@ export default function PricingPage() {
             <h4>Can I switch plans anytime?</h4>
             <p>
               Yes, you can upgrade or downgrade your plan at any time. Changes
-              take effect immediately, and we'll prorate the charges.
+              take effect immediately, and we&apos;ll prorate the charges.
             </p>
           </div>
           <div className="faq-item">
             <h4>What happens if I exceed my analysis limit?</h4>
             <p>
               You can purchase additional analyses at $0.10 each, or upgrade to
-              a higher plan. We'll notify you before you reach your limit.
+              a higher plan. We&apos;ll notify you before you reach your limit.
             </p>
           </div>
           <div className="faq-item">
