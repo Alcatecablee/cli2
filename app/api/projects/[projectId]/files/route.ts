@@ -139,8 +139,10 @@ export async function POST(
       0,
     );
     const avgQuality =
-      existingFiles.reduce((sum, file) => sum + file.qualityScore, 0) /
-      totalFiles;
+      existingFiles.reduce(
+        (sum: number, file: any) => sum + file.qualityScore,
+        0,
+      ) / totalFiles;
 
     const updatedProject = {
       ...project,
