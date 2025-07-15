@@ -200,18 +200,9 @@ export default function HomePage() {
     getInitialOnboardingState(),
   );
 
-  // Save onboarding data to localStorage whenever it changes
+  // Save onboarding data whenever it changes
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      try {
-        localStorage.setItem(
-          "neurolint-onboarding",
-          JSON.stringify(onboardingData),
-        );
-      } catch (error) {
-        console.warn("Failed to save onboarding data to localStorage:", error);
-      }
-    }
+    saveOnboardingData(onboardingData);
   }, [onboardingData]);
 
   const texts = [
