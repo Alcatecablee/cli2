@@ -954,7 +954,32 @@ function ImageGallery({ images }) {
       </a>
 
       <main id="main-content" role="main">
-        {!onboardingData.completedOnboarding ? (
+        {!isHydrated ? (
+          /* Loading state during hydration */
+          <section className="onboarding-section">
+            <div className="onboarding-container">
+              <div className="onboarding-content">
+                <div
+                  className="onboarding-card"
+                  style={{ textAlign: "center" }}
+                >
+                  <div
+                    style={{
+                      width: "40px",
+                      height: "40px",
+                      border: "3px solid rgba(255, 255, 255, 0.1)",
+                      borderTop: "3px solid #2196f3",
+                      borderRadius: "50%",
+                      animation: "spin 1s linear infinite",
+                      margin: "2rem auto",
+                    }}
+                  ></div>
+                  <p className="onboarding-subtitle">Loading...</p>
+                </div>
+              </div>
+            </div>
+          </section>
+        ) : !onboardingData.completedOnboarding ? (
           /* Onboarding Experience */
           <section
             className="onboarding-section"
