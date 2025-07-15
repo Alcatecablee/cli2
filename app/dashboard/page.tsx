@@ -636,11 +636,35 @@ export default function Dashboard() {
   // Show loading screen while checking authentication
   if (authLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-gray-800 to-black">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-          <p className="text-white">Loading dashboard...</p>
+      <div className="onboarding-section">
+        <div className="onboarding-container">
+          <div className="onboarding-content">
+            <div className="onboarding-card">
+              <div
+                style={{
+                  width: "48px",
+                  height: "48px",
+                  border: "2px solid rgba(33, 150, 243, 0.4)",
+                  borderTop: "2px solid #ffffff",
+                  borderRadius: "50%",
+                  margin: "0 auto 1.5rem",
+                  animation: "spin 1s linear infinite",
+                }}
+              ></div>
+              <p className="onboarding-subtitle">Loading dashboard...</p>
+            </div>
+          </div>
         </div>
+        <style jsx>{`
+          @keyframes spin {
+            0% {
+              transform: rotate(0deg);
+            }
+            100% {
+              transform: rotate(360deg);
+            }
+          }
+        `}</style>
       </div>
     );
   }
