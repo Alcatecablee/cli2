@@ -632,11 +632,12 @@
 }
 
 .header-title h1 {
-  font-size: 24px;
+  font-size: 32px;
   font-weight: 600;
-  color: #ffffff;
+  color: rgb(255, 255, 255);
   margin: 0;
   line-height: 1.2;
+  font-family: var(--font-sans);
 }
 
 .header-title p {
