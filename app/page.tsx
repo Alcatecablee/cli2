@@ -911,7 +911,6 @@ function ImageGallery({ images }) {
         }),
       }).catch((fetchError) => {
         console.error("[FRONTEND] File upload network error:", fetchError);
-        handleExternalServiceError(fetchError, "File Upload API");
         throw new Error(
           `Network error during file upload: ${fetchError.message}`,
         );
