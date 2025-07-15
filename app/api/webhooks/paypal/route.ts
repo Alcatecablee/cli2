@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import crypto from "crypto";
 
 const supabase = createClient(
   process.env.SUPABASE_URL!,
@@ -7,27 +8,115 @@ const supabase = createClient(
 );
 
 // PayPal webhook signature verification
-async function verifyPayPalWebhook(request: NextRequest): Promise<boolean> {
-  // In production, implement proper PayPal webhook signature verification
-  // For now, return true for development
-  return true;
+async function verifyPayPalWebhook(
+  request: NextRequest,
+  body: string,
+): Promise<boolean> {
+  try {
+    // Get PayPal headers
+    const authAlgo = request.headers.get("PAYPAL-AUTH-ALGO");
+    const transmission_id = request.headers.get("PAYPAL-TRANSMISSION-ID");
+    const cert_url = request.headers.get("PAYPAL-CERT-URL");
+    const transmission_sig = request.headers.get("PAYPAL-TRANSMISSION-SIG");
+    const transmission_time = request.headers.get("PAYPAL-TRANSMISSION-TIME");
+    const webhook_id = process.env.PAYPAL_WEBHOOK_ID;
+
+    // Validate required headers are present
+    if (
+      !authAlgo ||
+      !transmission_id ||
+      !cert_url ||
+      !transmission_sig ||
+      !transmission_time ||
+      !webhook_id
+    ) {
+      console.error("Missing required PayPal webhook headers");
+      return false;
+    }
+
+    // In development, allow bypassing verification if explicitly set
+    if (
+      process.env.NODE_ENV === "development" &&
+      process.env.PAYPAL_WEBHOOK_VERIFY_DISABLED === "true"
+    ) {
+      console.warn("PayPal webhook verification disabled for development");
+      return true;
+    }
+
+    // TODO: Implement full PayPal webhook signature verification
+    // This requires:
+    // 1. Fetching the PayPal certificate from cert_url
+    // 2. Validating the certificate chain
+    // 3. Verifying the signature using the certificate
+    // 4. Checking transmission time to prevent replay attacks
+
+    // For now, implement basic validation
+    const expectedSig = crypto
+      .createHmac("sha256", process.env.PAYPAL_WEBHOOK_SECRET || "")
+      .update(`${webhook_id}|${transmission_time}|${body}`)
+      .digest("base64");
+
+    // This is a simplified verification - implement full verification for production
+    return transmission_sig === expectedSig;
+  } catch (error) {
+    console.error("PayPal webhook verification error:", error);
+    return false;
+  }
 }
 
 export async function POST(request: NextRequest) {
+  let body: string;
+
   try {
+    // Get raw body for signature verification
+    body = await request.text();
+
     // Verify webhook signature
-    const isValid = await verifyPayPalWebhook(request);
+    const isValid = await verifyPayPalWebhook(request, body);
     if (!isValid) {
+      console.error("PayPal webhook signature verification failed");
       return NextResponse.json(
         { error: "Invalid webhook signature" },
         { status: 401 },
       );
     }
 
-    const webhookData = await request.json();
+    // Parse the body after verification
+    const webhookData = JSON.parse(body);
     const { event_type, resource } = webhookData;
 
+    // Validate webhook data structure
+    if (!event_type || !resource) {
+      console.error("Invalid PayPal webhook data structure");
+      return NextResponse.json(
+        { error: "Invalid webhook data" },
+        { status: 400 },
+      );
+    }
+
     console.log("PayPal webhook received:", event_type, resource?.id);
+
+    // Add request logging for audit trail
+    const logData = {
+      event_type,
+      resource_id: resource?.id,
+      timestamp: new Date().toISOString(),
+      ip: request.headers.get("x-forwarded-for") || "unknown",
+    };
+
+    // Store webhook event for audit (optional)
+    await supabase
+      .from("webhook_logs")
+      .insert({
+        provider: "paypal",
+        event_type,
+        data: logData,
+        created_at: new Date().toISOString(),
+      })
+      .then(() => {})
+      .catch((err) => {
+        console.warn("Failed to log webhook event:", err.message);
+      });
 
     switch (event_type) {
       case "BILLING.SUBSCRIPTION.ACTIVATED":
