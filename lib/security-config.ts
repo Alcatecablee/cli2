@@ -176,7 +176,9 @@ export function getFileSizeLimit(plan: string): number {
 
 export function isAllowedFileType(filename: string): boolean {
   const extension = "." + filename.split(".").pop()?.toLowerCase();
-  return SECURITY_CONFIG.INPUT.ALLOWED_FILE_TYPES.includes(extension);
+  return SECURITY_CONFIG.INPUT.ALLOWED_FILE_TYPES.includes(
+    extension as ".js" | ".jsx" | ".ts" | ".tsx",
+  );
 }
 
 // Logging utility with security considerations
