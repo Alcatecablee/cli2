@@ -268,7 +268,7 @@ export default function Dashboard() {
 
       const content = document.createElement("div");
       content.innerHTML = `
-        <h3 style="margin-top: 0; color: #2196f3;">Copy Code Manually</h3>
+                <h3 style="margin-top: 0; color: rgba(33, 150, 243, 0.9);">Copy Code Manually</h3>
         <p style="color: rgba(255, 255, 255, 0.8);">Please copy the code below manually:</p>
         <textarea readonly style="
           width: 100%;
