@@ -1642,8 +1642,8 @@ function ImageGallery({ images }) {
                                             className="code-action-btn"
                                             onClick={() =>
                                               copyToClipboard(
-                                                demoState.result.originalCode ||
-                                                  "",
+                                                demoState.result
+                                                  ?.originalCode || "",
                                                 "Original",
                                               )
                                             }
