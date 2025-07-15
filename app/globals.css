@@ -43,6 +43,16 @@
   --onboarding-accent-glow: rgba(33, 150, 243, 0.15);
 }
 
+/* Loading spinner animation */
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 html,
 body {
   background: #000000;
