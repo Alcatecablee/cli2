@@ -205,19 +205,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, [clearSession]); // Include clearSession in dependencies
 
-  const clearSession = useCallback(() => {
-    try {
-      localStorage.removeItem("supabase_session");
-      localStorage.removeItem("user_data");
-      setUser(null);
-      setSession(null);
-    } catch (error) {
-      console.error("Error clearing session:", error);
-      // Still clear state even if localStorage fails
-      setUser(null);
-      setSession(null);
-    }
-  }, []);
+  // Check for existing session on mount
+  useEffect(() => {
+    checkSession();
+  }, [checkSession]);
 
   const signIn = async (email: string, password: string) => {
     setLoading(true);
