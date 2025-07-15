@@ -491,7 +491,7 @@ export default function PricingPage() {
             <h4>Do you offer refunds?</h4>
             <p>
               Yes, we offer a 30-day money-back guarantee for all paid plans if
-              you're not satisfied.
+              you&apos;re not satisfied.
             </p>
           </div>
         </div>
