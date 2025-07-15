@@ -343,7 +343,6 @@ export default function ApiKeysManager({
       <div className="api-keys-list">
         {apiKeys.length === 0 ? (
           <div className="empty-state">
-            <div className="empty-icon">🔑</div>
             <h4>No API Keys</h4>
             <p>
               Create your first API key to get started with programmatic access.
