@@ -1313,14 +1313,10 @@ export default function Dashboard() {
                       comprehensive REST API.
                     </p>
                     <div className="api-features">
-                      <div className="feature-item">
-                        🔑 API key authentication
-                      </div>
+                      <div className="feature-item">API key authentication</div>
                       <div className="feature-item">Rate limiting</div>
-                      <div className="feature-item">
-                        📖 OpenAPI documentation
-                      </div>
-                      <div className="feature-item">🔧 SDKs coming soon</div>
+                      <div className="feature-item">OpenAPI documentation</div>
+                      <div className="feature-item">SDKs coming soon</div>
                     </div>
                     <div className="api-actions">
                       <button
