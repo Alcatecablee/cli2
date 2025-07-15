@@ -1750,7 +1750,7 @@ function ImageGallery({ images }) {
                                             className="code-action-btn"
                                             onClick={() =>
                                               downloadCode(
-                                                demoState.result.transformed ||
+                                                demoState.result?.transformed ||
                                                   "",
                                                 "fixed-code.tsx",
                                               )
