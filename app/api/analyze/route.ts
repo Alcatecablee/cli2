@@ -305,7 +305,7 @@ export async function POST(request: NextRequest) {
 
     // Add rate limit info for authenticated users
     if (rateLimitInfo) {
-      response.rateLimitInfo = rateLimitInfo;
+      (response as any).rateLimitInfo = rateLimitInfo;
     }
 
     return NextResponse.json(response);
