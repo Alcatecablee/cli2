@@ -1194,6 +1194,148 @@ function ImageGallery({ images }) {
                 <h2 id="demo-title" className="demo-main-title">
                   Analysis Configuration
                 </h2>
+
+                {/* User Guidance Section */}
+                <div className="demo-guidance">
+                  <div className="guidance-intro">
+                    <h3 className="guidance-title">How to Use the Demo</h3>
+                    <p className="guidance-text">
+                      Configure your analysis settings below, then upload code
+                      or try our sample files. Perfect for exploring NeuroLint
+                      Pro's capabilities risk-free.
+                    </p>
+                  </div>
+
+                  <div className="guidance-cards">
+                    <div className="guidance-card">
+                      <div className="guidance-card-header">
+                        <span className="guidance-icon">🔍</span>
+                        <h4>Mode Selection</h4>
+                      </div>
+                      <div className="guidance-card-content">
+                        <div className="guidance-option">
+                          <strong>Dry-Run (Recommended for beginners)</strong>
+                          <p>
+                            Preview what issues would be fixed without modifying
+                            code. See confidence scores and impact estimates.
+                          </p>
+                        </div>
+                        <div className="guidance-option">
+                          <strong>Apply Fixes</strong>
+                          <p>
+                            Actually transforms your code. Best for seeing
+                            before/after comparisons and testing fix quality.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="guidance-card">
+                      <div className="guidance-card-header">
+                        <span className="guidance-icon">⚡</span>
+                        <h4>Layer Selection</h4>
+                      </div>
+                      <div className="guidance-card-content">
+                        <div className="guidance-option">
+                          <strong>Auto-Detect (Recommended)</strong>
+                          <p>
+                            Smart analysis that selects appropriate layers based
+                            on your code. Perfect for most use cases.
+                          </p>
+                        </div>
+                        <div className="guidance-option">
+                          <strong>All Layers</strong>
+                          <p>
+                            Comprehensive analysis across all 6 layers:
+                            Configuration → Patterns → Components → Hydration →
+                            Next.js → Testing
+                          </p>
+                        </div>
+                        <div className="guidance-option">
+                          <strong>Custom Selection</strong>
+                          <p>
+                            Choose specific layers when you know what issues to
+                            target. Each layer focuses on different problem
+                            types.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="guidance-layers">
+                    <h4 className="layers-title">Layer Overview</h4>
+                    <div className="layers-grid">
+                      <div className="layer-info">
+                        <span className="layer-number">1</span>
+                        <div className="layer-details">
+                          <strong>Configuration</strong>
+                          <p>TypeScript/Next.js config modernization</p>
+                        </div>
+                      </div>
+                      <div className="layer-info">
+                        <span className="layer-number">2</span>
+                        <div className="layer-details">
+                          <strong>Patterns</strong>
+                          <p>HTML entities, imports, console cleanup</p>
+                        </div>
+                      </div>
+                      <div className="layer-info">
+                        <span className="layer-number">3</span>
+                        <div className="layer-details">
+                          <strong>Components</strong>
+                          <p>Missing keys, React imports, accessibility</p>
+                        </div>
+                      </div>
+                      <div className="layer-info">
+                        <span className="layer-number">4</span>
+                        <div className="layer-details">
+                          <strong>Hydration</strong>
+                          <p>SSR safety guards, localStorage protection</p>
+                        </div>
+                      </div>
+                      <div className="layer-info">
+                        <span className="layer-number">5</span>
+                        <div className="layer-details">
+                          <strong>Next.js</strong>
+                          <p>App Router compliance, 'use client' directives</p>
+                        </div>
+                      </div>
+                      <div className="layer-info">
+                        <span className="layer-number">6</span>
+                        <div className="layer-details">
+                          <strong>Testing</strong>
+                          <p>TypeScript props, error handling, exports</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="guidance-tips">
+                    <h4 className="tips-title">💡 Pro Tips</h4>
+                    <ul className="tips-list">
+                      <li>
+                        Start with <strong>Dry-Run</strong> mode to explore
+                        safely
+                      </li>
+                      <li>
+                        Try our <strong>sample codes</strong> to understand
+                        capabilities
+                      </li>
+                      <li>
+                        Check <strong>confidence scores</strong> before applying
+                        fixes
+                      </li>
+                      <li>
+                        Use <strong>Auto-Detect</strong> for balanced analysis
+                      </li>
+                      <li>
+                        Upload your own code (max 100KB) for personalized
+                        analysis
+                      </li>
+                    </ul>
+                  </div>
+                </div>
               </div>
 
               <div className="demo-container">
