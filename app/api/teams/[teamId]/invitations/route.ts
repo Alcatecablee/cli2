@@ -340,7 +340,7 @@ export async function PATCH(
       // Update team stats
       const team = teams.get(teamId);
       if (team) {
-        team.stats.memberCount = members.filter((m) => m.isActive).length;
+        team.stats.memberCount = members.filter((m: any) => m.isActive).length;
         teams.set(teamId, team);
       }
 
