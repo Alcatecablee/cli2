@@ -1382,11 +1382,27 @@ function ImageGallery({ images }) {
                           Apply Fixes
                         </button>
                       </div>
-                      <div id="dry-run-description" className="sr-only">
-                        Analyze code without making changes
+                      <div
+                        id="dry-run-description"
+                        className="mode-description"
+                      >
+                        {!demoState.applyFixes && (
+                          <p>
+                            ✨ Safe preview mode - see what would be fixed
+                            without changing your code
+                          </p>
+                        )}
                       </div>
-                      <div id="apply-fixes-description" className="sr-only">
-                        Analyze and modify your code files
+                      <div
+                        id="apply-fixes-description"
+                        className="mode-description"
+                      >
+                        {demoState.applyFixes && (
+                          <p>
+                            🚀 Active mode - transforms your code with automated
+                            fixes
+                          </p>
+                        )}
                       </div>
                     </fieldset>
 
