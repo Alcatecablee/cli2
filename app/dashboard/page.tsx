@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import "./dashboard.css";
+import BulkProcessor from "./components/BulkProcessor";
+import AnalyticsDashboard from "./components/AnalyticsDashboard";
 
 // Import the same result interfaces from the demo
 interface DemoResult {
@@ -630,6 +632,44 @@ export default function Dashboard() {
       description: "Upload and analyze files",
     },
     {
+      id: "bulk",
+      icon: (
+        <svg
+          viewBox="0 0 24 24"
+          width="20"
+          height="20"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+        >
+          <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+          <polyline points="14,2 14,8 20,8" />
+          <path d="M16 13H8" />
+          <path d="M16 17H8" />
+          <path d="M10 9H8" />
+        </svg>
+      ),
+      label: "Bulk Processing",
+      description: "Process multiple files",
+    },
+    {
+      id: "analytics",
+      icon: (
+        <svg
+          viewBox="0 0 24 24"
+          width="20"
+          height="20"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+        >
+          <polyline points="22,12 18,12 15,21 9,3 6,12 2,12" />
+        </svg>
+      ),
+      label: "Analytics",
+      description: "View insights & trends",
+    },
+    {
       id: "projects",
       icon: (
         <svg
@@ -1064,6 +1104,46 @@ export default function Dashboard() {
                 ></div>
               </div>
               <p className="progress-status">{dashboardState.progressStatus}</p>
+            </div>
+          )}
+
+          {/* Bulk Processing Tab */}
+          {dashboardState.activeSection === "bulk" && (
+            <div className="tab-content">
+              <BulkProcessor
+                onAnalysisComplete={(results) => {
+                  // Save bulk results to history
+                  results.forEach((result, index) => {
+                    if (result.success) {
+                      saveToHistory(
+                        result.filename || `bulk-file-${index}`,
+                        result,
+                        Array.isArray(dashboardState.selectedLayers)
+                          ? dashboardState.selectedLayers
+                          : [],
+                        result.metadata?.processingTimeMs || 0,
+                      );
+                    }
+                  });
+
+                  // Show summary
+                  const successCount = results.filter((r) => r.success).length;
+                  alert(
+                    `Bulk processing complete! ${successCount}/${results.length} files processed successfully.`,
+                  );
+                }}
+                selectedLayers={dashboardState.selectedLayers}
+                applyFixes={dashboardState.applyFixes}
+              />
+            </div>
+          )}
+
+          {/* Analytics Tab */}
+          {dashboardState.activeSection === "analytics" && (
+            <div className="tab-content">
+              <AnalyticsDashboard
+                analysisHistory={dashboardState.analysisHistory}
+              />
             </div>
           )}
 
