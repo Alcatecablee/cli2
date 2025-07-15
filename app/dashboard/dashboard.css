@@ -1900,6 +1900,25 @@ legend {
   border-color: rgba(220, 38, 38, 0.8);
 }
 
+.btn.btn-warning {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 215, 0, 0.8) 0%,
+    rgba(255, 193, 7, 0.8) 100%
+  );
+  border-color: rgba(255, 215, 0, 0.6);
+  color: #000000;
+}
+
+.btn.btn-warning:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 215, 0, 0.9) 0%,
+    rgba(255, 193, 7, 0.9) 100%
+  );
+  border-color: rgba(255, 215, 0, 0.8);
+}
+
 .btn.btn-sm {
   padding: 12px 20px;
   font-size: 12px;
