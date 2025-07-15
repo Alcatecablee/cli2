@@ -9,37 +9,19 @@ const nextConfig = {
   images: {
     domains: ["cdn.builder.io"],
   },
-  // Development stability
-  onDemandEntries: {
-    maxInactiveAge: 25 * 1000,
-    pagesBufferLength: 2,
+  // Experimental features for better stability
+  experimental: {
+    serverComponentsExternalPackages: [],
+    optimizePackageImports: ["lucide-react"],
   },
-  // Development configuration
-  webpack: (config, { dev, isServer }) => {
-    if (dev && !isServer) {
-      // Improve HMR reliability
+  // Development configuration - simplified
+  webpack: (config, { dev }) => {
+    if (dev) {
+      // Basic watch options
       config.watchOptions = {
-        poll: 1000,
-        aggregateTimeout: 300,
-        ignored: /node_modules/,
+        poll: false,
+        aggregateTimeout: 200,
       };
-
-      // Better error handling for HMR
-      config.optimization = {
-        ...config.optimization,
-        moduleIds: "named",
-        chunkIds: "named",
-      };
-
-      // Ensure proper HMR setup
-      if (config.entry && typeof config.entry !== "function") {
-        config.entry = async () => {
-          const entries = await (typeof config.entry === "function"
-            ? config.entry()
-            : config.entry);
-          return entries;
-        };
-      }
     }
     return config;
   },
