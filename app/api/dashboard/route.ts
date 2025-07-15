@@ -13,7 +13,8 @@ function checkRateLimit(session: any): {
   remaining: number;
   resetTime: number;
 } {
-  const limits = RATE_LIMITS[session.plan];
+  const limits =
+    RATE_LIMITS[session.plan as keyof typeof RATE_LIMITS] || RATE_LIMITS.free;
   const now = Date.now();
   const windowStart = now - limits.windowMs;
 
