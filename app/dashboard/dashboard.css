@@ -1799,11 +1799,13 @@ legend {
   background: linear-gradient(
     135deg,
     rgba(33, 150, 243, 0.3) 0%,
-    rgba(33, 150, 243, 0.22) 100%
+    rgba(33, 150, 243, 0.22) 50%,
+    rgba(255, 255, 255, 0.12) 100%
   );
   border-color: rgba(33, 150, 243, 0.5);
   box-shadow:
-    var(--shadow-large),
+    0 12px 40px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15),
     0 0 16px rgba(33, 150, 243, 0.3);
 }
 
