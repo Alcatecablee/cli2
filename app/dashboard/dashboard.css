@@ -421,9 +421,10 @@
 }
 
 .nav-item.active {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(33, 150, 243, 0.12);
   color: #ffffff;
-  border-left: 3px solid #ffffff;
+  border-left: 3px solid #2196f3;
+  box-shadow: 0 0 12px rgba(33, 150, 243, 0.2);
 }
 
 .nav-icon {
