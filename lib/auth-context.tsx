@@ -58,10 +58,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  // Check for existing session on mount
-  useEffect(() => {
-    checkSession();
-  }, [checkSession]);
+  const clearSession = useCallback(() => {
+    try {
+      localStorage.removeItem("supabase_session");
+      localStorage.removeItem("user_data");
+      setUser(null);
+      setSession(null);
+    } catch (error) {
+      console.error("Error clearing session:", error);
+      // Still clear state even if localStorage fails
+      setUser(null);
+      setSession(null);
+    }
+  }, []);
 
   const checkSession = useCallback(async () => {
     try {
