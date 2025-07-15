@@ -159,7 +159,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     } catch (error) {
       console.error("Session check failed:", error);
-      clearSession();
+
+      // Only clear session if it's not a network error
+      if (error instanceof TypeError && error.message.includes("fetch")) {
+        console.warn(
+          "Network error during session check, will retry on next page load",
+        );
+        // Don't clear session for network errors - user might be offline
+      } else {
+        clearSession();
+      }
     } finally {
       setLoading(false);
     }
