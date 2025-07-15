@@ -175,26 +175,35 @@ export default function HomePage() {
 
   // Load data from localStorage after hydration to prevent SSR mismatch
   useEffect(() => {
-    const loadSavedData = async () => {
-      try {
-        const savedData = await loadOnboardingData();
-        setOnboardingData(savedData);
-      } catch (error) {
-        console.warn("Failed to load saved onboarding data:", error);
-      } finally {
-        setIsHydrated(true);
+    try {
+      // Synchronous localStorage loading to avoid async complications
+      if (typeof window !== "undefined") {
+        const savedOnboarding = localStorage.getItem("neurolint-onboarding");
+        if (savedOnboarding) {
+          const parsed = JSON.parse(savedOnboarding);
+          if (
+            parsed &&
+            typeof parsed === "object" &&
+            typeof parsed.completedOnboarding === "boolean"
+          ) {
+            setOnboardingData({
+              projectType: parsed.projectType || "",
+              experienceLevel: parsed.experienceLevel || "",
+              hasCode: parsed.hasCode || false,
+              completedOnboarding: parsed.completedOnboarding,
+            });
+          }
+        }
       }
-    };
-
-    // Add timeout to prevent infinite loading
-    const timeoutId = setTimeout(() => {
-      console.warn("Hydration timeout - proceeding with default state");
+    } catch (error) {
+      console.warn("Failed to load saved onboarding data:", error);
+      // Clear corrupted data
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("neurolint-onboarding");
+      }
+    } finally {
       setIsHydrated(true);
-    }, 1000);
-
-    loadSavedData().finally(() => clearTimeout(timeoutId));
-
-    return () => clearTimeout(timeoutId);
+    }
   }, []);
 
   // Save onboarding data whenever it changes (but only after hydration)
