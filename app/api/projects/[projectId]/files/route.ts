@@ -90,7 +90,7 @@ export async function POST(
         content,
         size: content.length,
         uploadedAt: new Date().toISOString(),
-        lastAnalyzed: null,
+        lastAnalyzed: null as string | null,
         analysisResults: null,
         issues: [],
         qualityScore: 0,
