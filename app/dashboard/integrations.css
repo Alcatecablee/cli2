@@ -59,8 +59,9 @@
 
 /* Status colors - using data attributes instead of :contains */
 .category-status[data-status="available"] {
-  background: rgba(76, 175, 80, 0.2);
-  color: #4caf50;
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .category-status[data-status="coming-soon"] {
