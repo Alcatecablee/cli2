@@ -208,7 +208,7 @@ export default function CheckoutPage() {
             </div>
 
             <div className="guarantee">
-              <div className="guarantee-icon">🛡️</div>
+              <div className="guarantee-icon">✓</div>
               <div>
                 <strong>30-Day Money-Back Guarantee</strong>
                 <p>Not satisfied? Get a full refund within 30 days.</p>
@@ -262,7 +262,7 @@ export default function CheckoutPage() {
 
               <div className="form-group">
                 <div className="trial-info">
-                  <h3>🎉 14-Day Free Trial</h3>
+                  <h3>14-Day Free Trial</h3>
                   <p>
                     Start with a completely free 14-day trial. No payment
                     required until your trial ends.
@@ -311,7 +311,7 @@ export default function CheckoutPage() {
               </button>
 
               <div className="payment-info">
-                <p>🔒 Secure checkout powered by Stripe</p>
+                <p>Secure checkout powered by Stripe</p>
                 <p>Payment details will be collected after your free trial</p>
               </div>
             </form>
@@ -321,19 +321,19 @@ export default function CheckoutPage() {
         {/* Trust Indicators */}
         <div className="trust-indicators">
           <div className="trust-item">
-            <span>🔒</span>
+            <span>•</span>
             <span>SSL Encrypted</span>
           </div>
           <div className="trust-item">
-            <span>💳</span>
+            <span>•</span>
             <span>Secure Payments</span>
           </div>
           <div className="trust-item">
-            <span>↩️</span>
+            <span>•</span>
             <span>30-Day Refund</span>
           </div>
           <div className="trust-item">
-            <span>🏆</span>
+            <span>•</span>
             <span>Trusted by 500+ Teams</span>
           </div>
         </div>
@@ -342,10 +342,13 @@ export default function CheckoutPage() {
       <style jsx>{`
         .checkout-page {
           min-height: 100vh;
-          background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+          background: #000000;
           color: white;
           font-family:
-            -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            "Inter",
+            -apple-system,
+            BlinkMacSystemFont,
+            sans-serif;
         }
 
         .checkout-container {
@@ -360,7 +363,7 @@ export default function CheckoutPage() {
         }
 
         .back-link {
-          color: #2196f3;
+          color: rgba(255, 255, 255, 0.8);
           text-decoration: none;
           margin-bottom: 1rem;
           display: inline-block;
@@ -368,7 +371,7 @@ export default function CheckoutPage() {
         }
 
         .back-link:hover {
-          opacity: 0.8;
+          color: #ffffff;
         }
 
         .checkout-header h1 {
@@ -414,7 +417,7 @@ export default function CheckoutPage() {
           font-size: 1.25rem;
           font-weight: 600;
           margin: 0 0 0.5rem 0;
-          color: #2196f3;
+          color: #ffffff;
         }
 
         .plan-info p {
@@ -448,13 +451,13 @@ export default function CheckoutPage() {
         }
 
         .price-amount {
-          color: #2196f3;
+          color: #ffffff;
           font-size: 1.1rem;
           font-weight: 700;
         }
 
         .savings {
-          color: #4caf50;
+          color: rgba(255, 255, 255, 0.8);
           font-size: 0.9rem;
           font-weight: 500;
           text-align: center;
@@ -485,8 +488,8 @@ export default function CheckoutPage() {
           display: flex;
           align-items: flex-start;
           gap: 1rem;
-          background: rgba(76, 175, 80, 0.1);
-          border: 1px solid rgba(76, 175, 80, 0.2);
+          background: rgba(255, 255, 255, 0.05);
+          border: 1px solid rgba(255, 255, 255, 0.1);
           border-radius: 8px;
           padding: 1rem;
         }
@@ -497,7 +500,7 @@ export default function CheckoutPage() {
         }
 
         .guarantee strong {
-          color: #4caf50;
+          color: #ffffff;
           display: block;
           margin-bottom: 0.25rem;
         }
@@ -532,7 +535,7 @@ export default function CheckoutPage() {
 
         .form-group input:focus {
           outline: none;
-          border-color: #2196f3;
+          border-color: rgba(255, 255, 255, 0.3);
         }
 
         .form-group small {
@@ -543,14 +546,14 @@ export default function CheckoutPage() {
         }
 
         .trial-info {
-          background: rgba(33, 150, 243, 0.1);
-          border: 1px solid rgba(33, 150, 243, 0.2);
+          background: rgba(255, 255, 255, 0.05);
+          border: 1px solid rgba(255, 255, 255, 0.1);
           border-radius: 8px;
           padding: 1.5rem;
         }
 
         .trial-info h3 {
-          color: #2196f3;
+          color: #ffffff;
           margin: 0 0 0.5rem 0;
           font-size: 1.1rem;
         }
@@ -590,7 +593,7 @@ export default function CheckoutPage() {
         }
 
         .checkbox-label a {
-          color: #2196f3;
+          color: rgba(255, 255, 255, 0.8);
           text-decoration: none;
         }
 
@@ -601,8 +604,8 @@ export default function CheckoutPage() {
         .submit-btn {
           width: 100%;
           padding: 1rem 2rem;
-          background: linear-gradient(135deg, #2196f3, #1976d2);
-          border: none;
+          background: rgba(255, 255, 255, 0.1);
+          border: 1px solid rgba(255, 255, 255, 0.2);
           border-radius: 12px;
           color: white;
           font-size: 1.1rem;
@@ -616,7 +619,7 @@ export default function CheckoutPage() {
         }
 
         .submit-btn:hover:not(:disabled) {
-          background: linear-gradient(135deg, #1976d2, #1565c0);
+          background: rgba(255, 255, 255, 0.15);
           transform: translateY(-2px);
         }
 
