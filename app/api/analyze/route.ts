@@ -320,7 +320,7 @@ export async function POST(request: NextRequest) {
           authenticatedUser.userId,
           "analysis.failed",
           {
-            filename: body?.filename || "unknown",
+            filename: "unknown",
             error: error instanceof Error ? error.message : "Unknown error",
             processingTime,
           },
