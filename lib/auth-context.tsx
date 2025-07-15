@@ -59,6 +59,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const checkSession = async () => {
     try {
+      // Check if we're in a browser environment
+      if (
+        typeof window === "undefined" ||
+        typeof localStorage === "undefined"
+      ) {
+        return;
+      }
+
       const savedSession = localStorage.getItem("supabase_session");
 
       if (savedSession) {
