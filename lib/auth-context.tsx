@@ -194,7 +194,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } finally {
       setLoading(false);
     }
-  }, []); // Empty dependency array since checkSession doesn't depend on any props/state
+  }, [clearSession]); // Include clearSession in dependencies
 
   const clearSession = useCallback(() => {
     try {
