@@ -1719,7 +1719,7 @@ function ImageGallery({ images }) {
                                             className="code-action-btn"
                                             onClick={() =>
                                               copyToClipboard(
-                                                demoState.result.transformed ||
+                                                demoState.result?.transformed ||
                                                   "",
                                                 "Fixed",
                                               )
