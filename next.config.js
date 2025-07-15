@@ -10,7 +10,7 @@ const nextConfig = {
     ignoreDuringBuilds: false,
   },
   images: {
-    domains: [],
+    domains: ["cdn.builder.io"],
   },
   // Optimize for production
   swcMinify: true,
