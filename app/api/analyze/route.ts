@@ -232,7 +232,7 @@ export async function POST(request: NextRequest) {
     });
 
     // Save analysis to project if specified
-    if (projectId && result.success) {
+    if (projectId && result) {
       const analyses = dataStore.projectAnalyses.get(projectId) || [];
       const analysisRecord = {
         id: `analysis_${Date.now()}_${Math.random().toString(36).substring(2)}`,
