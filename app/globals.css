@@ -251,8 +251,8 @@ a {
 .nav-link {
   color: rgba(255, 255, 255, 0.8);
   font-weight: 500;
-  font-size: 1rem;
-  padding: 0.75rem 1.25rem;
+  font-size: 0.95rem;
+  padding: 0.875rem 1.5rem;
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.05);
@@ -265,6 +265,7 @@ a {
   display: flex;
   align-items: center;
   justify-content: center;
+  white-space: nowrap;
 }
 
 .nav-link:hover,
@@ -285,7 +286,8 @@ a {
   font-size: 4rem;
   font-weight: 900;
   color: var(--foreground);
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
+  margin-top: 1rem;
   letter-spacing: -0.04em;
   font-family: var(--font-sans);
   line-height: 1.1;
@@ -327,15 +329,16 @@ a {
 .hero-desc {
   font-size: 1.2rem;
   color: var(--foreground);
-  margin-bottom: 0;
-  max-width: 700px;
+  margin-bottom: 2rem;
+  margin-top: 1.5rem;
+  max-width: 750px;
   margin-left: auto;
   margin-right: auto;
   line-height: 1.6;
   font-weight: 400;
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 16px;
-  padding: 1.5rem 2rem;
+  padding: 2rem 2.5rem;
   background: linear-gradient(
     135deg,
     rgba(255, 255, 255, 0.1) 0%,
