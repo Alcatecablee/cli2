@@ -66,6 +66,94 @@ const clearDemoState = () => ({
   applyFixes: false,
 });
 
+// Helper function to save onboarding data with auth-aware persistence
+const saveOnboardingData = async (data: OnboardingData) => {
+  // Always save to localStorage for immediate persistence
+  if (typeof window !== "undefined") {
+    try {
+      localStorage.setItem("neurolint-onboarding", JSON.stringify(data));
+    } catch (error) {
+      console.warn("Failed to save onboarding data to localStorage:", error);
+    }
+  }
+
+  // TODO: For authenticated users, also save to database via API
+  // This would integrate with the existing session management system
+  // Example implementation:
+  // if (user && session) {
+  //   try {
+  //     await fetch('/api/user/onboarding', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         'Authorization': `Bearer ${session.access_token}`
+  //       },
+  //       body: JSON.stringify(data)
+  //     });
+  //   } catch (error) {
+  //     console.warn('Failed to save onboarding data to database:', error);
+  //   }
+  // }
+};
+
+// Helper function to load onboarding data with auth-aware persistence
+const loadOnboardingData = async (): Promise<OnboardingData> => {
+  // TODO: For authenticated users, try to load from database first
+  // This would check for user preferences stored server-side
+  // if (user && session) {
+  //   try {
+  //     const response = await fetch('/api/user/onboarding', {
+  //       headers: {
+  //         'Authorization': `Bearer ${session.access_token}`
+  //       }
+  //     });
+  //     if (response.ok) {
+  //       const serverData = await response.json();
+  //       if (serverData.onboardingData) {
+  //         return serverData.onboardingData;
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.warn('Failed to load onboarding data from database:', error);
+  //   }
+  // }
+
+  // Fall back to localStorage
+  if (typeof window !== "undefined") {
+    try {
+      const savedOnboarding = localStorage.getItem("neurolint-onboarding");
+      if (savedOnboarding) {
+        const parsed = JSON.parse(savedOnboarding);
+        // Validate the structure before using
+        if (
+          parsed &&
+          typeof parsed === "object" &&
+          typeof parsed.completedOnboarding === "boolean"
+        ) {
+          return {
+            projectType: parsed.projectType || "",
+            experienceLevel: parsed.experienceLevel || "",
+            hasCode: parsed.hasCode || false,
+            completedOnboarding: parsed.completedOnboarding,
+          };
+        }
+      }
+    } catch (error) {
+      console.warn("Failed to load onboarding data from localStorage:", error);
+      // Clear corrupted data
+      localStorage.removeItem("neurolint-onboarding");
+    }
+  }
+
+  // Return default state if no valid saved data
+  return {
+    projectType: "",
+    experienceLevel: "",
+    hasCode: false,
+    completedOnboarding: false,
+  };
+};
+
 // Helper function to initialize onboarding state with persistence
 const getInitialOnboardingState = (): OnboardingData => {
   // Try to load from localStorage first
