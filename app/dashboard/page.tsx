@@ -1144,7 +1144,7 @@ export default function Dashboard() {
                   : "Dry-Run Mode"}
               </span>
               {" • "}
-              <span style={{ color: "#2196f3" }}>
+              <span style={{ color: "rgba(33, 150, 243, 0.9)" }}>
                 {dashboardState.selectedLayers.length === 0
                   ? "Auto-Detect Layers"
                   : dashboardState.selectedLayers.length === 6
