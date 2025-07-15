@@ -11,7 +11,7 @@ interface CheckoutPlan {
   features: string[];
 }
 
-export default function CheckoutPage() {
+function CheckoutContent() {
   const searchParams = useSearchParams();
   const planId = searchParams.get("plan");
   const billing = searchParams.get("billing") || "monthly";
