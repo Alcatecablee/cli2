@@ -1735,7 +1735,7 @@ legend {
 
 .progress-text {
   font-size: 0.875rem;
-  color: #666666;
+  color: rgba(33, 150, 243, 0.8);
   font-family: var(--font-mono);
   text-transform: uppercase;
   letter-spacing: 0.5px;
