@@ -1821,7 +1821,8 @@ export default function Dashboard() {
                       <div className="usage-row">
                         <label>Analyses Used</label>
                         <div className="usage-value">
-                          {rateLimitInfo.used} / {rateLimitInfo.limit}
+                          {rateLimitInfo.used || 0} /{" "}
+                          {rateLimitInfo.limit || "∞"}
                         </div>
                       </div>
                       <div className="usage-row">
@@ -1842,9 +1843,57 @@ export default function Dashboard() {
                     <Link href="/pricing" className="btn btn-primary">
                       Upgrade Plan
                     </Link>
-                    <Link href="/checkout" className="btn btn-secondary">
+                    <button
+                      className="btn btn-secondary"
+                      onClick={async () => {
+                        try {
+                          const response = await fetch("/api/subscriptions", {
+                            headers: {
+                              ...(session?.access_token && {
+                                Authorization: `Bearer ${session.access_token}`,
+                              }),
+                            },
+                          });
+                          const data = await response.json();
+
+                          if (data.subscriptions?.length > 0) {
+                            // Show billing history
+                            const historyData = {
+                              subscriptions: data.subscriptions,
+                              currentPlan: data.currentPlan,
+                              exportedAt: new Date().toISOString(),
+                            };
+
+                            const blob = new Blob(
+                              [JSON.stringify(historyData, null, 2)],
+                              {
+                                type: "application/json",
+                              },
+                            );
+                            const url = URL.createObjectURL(blob);
+                            const a = document.createElement("a");
+                            a.href = url;
+                            a.download = `billing-history-${new Date().toISOString().split("T")[0]}.json`;
+                            a.click();
+                            URL.revokeObjectURL(url);
+                          } else {
+                            alert(
+                              "No billing history found. You're on the free plan.",
+                            );
+                          }
+                        } catch (error) {
+                          console.error(
+                            "Failed to fetch billing history:",
+                            error,
+                          );
+                          alert(
+                            "Failed to fetch billing history. Please try again.",
+                          );
+                        }
+                      }}
+                    >
                       Billing History
-                    </Link>
+                    </button>
                   </div>
                 </div>
 
@@ -1853,26 +1902,44 @@ export default function Dashboard() {
                   <div className="account-actions">
                     <button
                       className="btn btn-secondary"
-                      onClick={() => {
-                        const data = {
-                          profile: {
-                            email: user?.email,
-                            plan: user?.plan,
-                            memberSince: user?.created_at,
-                          },
-                          history: dashboardState.analysisHistory,
-                          projects: dashboardState.projects,
-                          settings: dashboardState.settings,
-                        };
-                        const blob = new Blob([JSON.stringify(data, null, 2)], {
-                          type: "application/json",
-                        });
-                        const url = URL.createObjectURL(blob);
-                        const a = document.createElement("a");
-                        a.href = url;
-                        a.download = "neurolint-account-data.json";
-                        a.click();
-                        URL.revokeObjectURL(url);
+                      onClick={async () => {
+                        try {
+                          const response = await fetch("/api/exports", {
+                            method: "POST",
+                            headers: {
+                              "Content-Type": "application/json",
+                              ...(session?.access_token && {
+                                Authorization: `Bearer ${session.access_token}`,
+                              }),
+                            },
+                            body: JSON.stringify({ exportType: "complete" }),
+                          });
+
+                          const result = await response.json();
+
+                          if (result.success) {
+                            const blob = new Blob(
+                              [JSON.stringify(result.data, null, 2)],
+                              {
+                                type: "application/json",
+                              },
+                            );
+                            const url = URL.createObjectURL(blob);
+                            const a = document.createElement("a");
+                            a.href = url;
+                            a.download = result.filename;
+                            a.click();
+                            URL.revokeObjectURL(url);
+                            alert("Account data exported successfully!");
+                          } else {
+                            throw new Error(result.error || "Export failed");
+                          }
+                        } catch (error) {
+                          console.error("Export failed:", error);
+                          alert(
+                            "Failed to export account data. Please try again.",
+                          );
+                        }
                       }}
                     >
                       Export Account Data
