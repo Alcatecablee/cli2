@@ -191,7 +191,7 @@ export async function DELETE(
 
     if (fileId) {
       // Delete specific file
-      const updatedFiles = files.filter((file) => file.id !== fileId);
+      const updatedFiles = files.filter((file: any) => file.id !== fileId);
       projectFiles.set(projectId, updatedFiles);
 
       return NextResponse.json({
