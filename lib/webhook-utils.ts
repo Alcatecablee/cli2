@@ -138,7 +138,7 @@ const triggerWebhookCall = async (
     const updatedEvent = {
       ...event,
       status: "failed" as const,
-      response: error.message,
+      response: error instanceof Error ? error.message : String(error),
     };
 
     webhookEvents.set(event.id, updatedEvent);
