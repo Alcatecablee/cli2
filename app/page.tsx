@@ -1126,39 +1126,45 @@ function ImageGallery({ images }) {
             {/* Hero Section with Navigation */}
             <section className="hero" aria-labelledby="hero-title">
               <div className="hero-nav">
-                <img
-                  src="https://cdn.builder.io/api/v1/image/assets%2F4b35a64a4a2c446c91402681adcf734e%2F485afb87468542eeba91d45b141bab95?format=webp&width=800"
-                  alt="NeuroLint Pro"
-                  className="nav-logo"
-                />
-                <a
-                  href="https://neurolint.dev"
-                  className="nav-link"
-                  aria-label="Go to NeuroLint homepage"
-                >
-                  Home
-                </a>
-                <a
-                  href="/pricing"
-                  className="nav-link"
-                  aria-label="View pricing plans"
-                >
-                  Pricing
-                </a>
-                <a
-                  href="/api-docs"
-                  className="nav-link"
-                  aria-label="View API documentation"
-                >
-                  API Docs
-                </a>
-                <button
-                  className="nav-link"
-                  onClick={openDashboard}
-                  aria-label="Access NeuroLint Pro dashboard"
-                >
-                  Dashboard
-                </button>
+                <div className="nav-left">
+                  <img
+                    src="https://cdn.builder.io/api/v1/image/assets%2F4b35a64a4a2c446c91402681adcf734e%2F485afb87468542eeba91d45b141bab95?format=webp&width=800"
+                    alt="NeuroLint Pro"
+                    className="nav-logo"
+                  />
+                </div>
+                <div className="nav-center">
+                  <a
+                    href="https://neurolint.dev"
+                    className="nav-link"
+                    aria-label="Go to NeuroLint homepage"
+                  >
+                    Home
+                  </a>
+                  <a
+                    href="/pricing"
+                    className="nav-link"
+                    aria-label="View pricing plans"
+                  >
+                    Pricing
+                  </a>
+                  <a
+                    href="/api-docs"
+                    className="nav-link"
+                    aria-label="View API documentation"
+                  >
+                    API Docs
+                  </a>
+                </div>
+                <div className="nav-right">
+                  <button
+                    className="nav-link dashboard-btn"
+                    onClick={openDashboard}
+                    aria-label="Access NeuroLint Pro dashboard"
+                  >
+                    Dashboard
+                  </button>
+                </div>
               </div>
               <h1 id="hero-title" className="hero-title">
                 Try NeuroLint Pro Live
