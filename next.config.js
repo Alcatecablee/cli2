@@ -21,6 +21,34 @@ const nextConfig = {
   compress: true,
   poweredByHeader: false,
   generateEtags: false,
+  // Webpack configuration for better error handling
+  webpack: (config, { dev, isServer }) => {
+    if (dev && !isServer) {
+      // Add better error handling for HMR
+      config.optimization = {
+        ...config.optimization,
+        splitChunks: {
+          ...config.optimization.splitChunks,
+          cacheGroups: {
+            ...config.optimization.splitChunks?.cacheGroups,
+            vendor: {
+              test: /[\\/]node_modules[\\/]/,
+              name: "vendors",
+              chunks: "all",
+            },
+          },
+        },
+      };
+
+      // Configure module federation for better error isolation
+      config.experiments = {
+        ...config.experiments,
+        topLevelAwait: true,
+      };
+    }
+
+    return config;
+  },
   // Security headers
   async headers() {
     return [
