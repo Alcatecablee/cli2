@@ -196,7 +196,7 @@ export default function ApiKeysManager({
       {/* Show newly created key */}
       {createdKey && (
         <div className="created-key-alert">
-          <h4>🎉 API Key Created Successfully!</h4>
+          <h4>API Key Created Successfully</h4>
           <p>
             <strong>Important:</strong> This is the only time your API key will
             be displayed. Please copy it now and store it securely.
