@@ -12,6 +12,10 @@ const nextConfig = {
   images: {
     domains: ["cdn.builder.io"],
   },
+  // Development configuration
+  allowedDevOrigins: [
+    "afcb112eb6d042b48289f58d3e1c0ee7-89acb4930301485cbb75a12d6.fly.dev",
+  ],
   // Optimize for production
   swcMinify: true,
   compress: true,
