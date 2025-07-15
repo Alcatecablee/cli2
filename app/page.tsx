@@ -1978,8 +1978,8 @@ function ImageGallery({ images }) {
                                   <strong>Analysis Complete</strong>
                                 </p>
                                 <p style={{ fontSize: "0.9rem" }}>
-                                  {demoState.result?.analysis?.detectedIssues
-                                    ?.length > 0
+                                  {(demoState.result?.analysis?.detectedIssues
+                                    ?.length || 0) > 0
                                     ? `Found ${demoState.result?.analysis?.detectedIssues?.length || 0} issues that can be fixed. Switch to "Apply Fixes" mode to see the transformed code.`
                                     : "No issues detected in your code. Great job!"}
                                 </p>
