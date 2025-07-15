@@ -695,6 +695,22 @@ export default function Dashboard() {
     }
   }, []);
 
+  // Load subscription data when account section is opened
+  useEffect(() => {
+    if (
+      dashboardState.activeSection === "account" &&
+      user &&
+      session?.access_token
+    ) {
+      loadSubscriptionData();
+    }
+  }, [
+    dashboardState.activeSection,
+    user,
+    session?.access_token,
+    loadSubscriptionData,
+  ]);
+
   // Show loading screen while checking authentication
   if (authLoading) {
     return (
