@@ -961,13 +961,23 @@ export default function Dashboard() {
                     "Free"}{" "}
                   Plan
                 </span>
-                <button
-                  onClick={signOut}
-                  className="text-xs text-gray-400 hover:text-white mt-1"
-                  title="Sign out"
-                >
-                  Sign out
-                </button>
+                <div className="flex items-center space-x-2 mt-1">
+                  <Link
+                    href="/profile"
+                    className="text-xs text-gray-400 hover:text-white"
+                    title="Profile settings"
+                  >
+                    Profile
+                  </Link>
+                  <span className="text-gray-600">•</span>
+                  <button
+                    onClick={signOut}
+                    className="text-xs text-gray-400 hover:text-white"
+                    title="Sign out"
+                  >
+                    Sign out
+                  </button>
+                </div>
               </div>
             )}
           </div>
