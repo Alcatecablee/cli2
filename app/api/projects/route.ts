@@ -1,10 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { promises as fs } from "fs";
 import path from "path";
-
-// In-memory storage for demo purposes - replace with database in production
-const projects = new Map();
-const projectAnalyses = new Map();
+import { dataStore } from "../../../lib/data-store";
 
 export async function GET(request: NextRequest) {
   try {
@@ -14,7 +11,7 @@ export async function GET(request: NextRequest) {
 
     if (projectId) {
       // Get specific project
-      const project = projects.get(projectId);
+      const project = dataStore.projects.get(projectId);
       if (!project || project.userId !== userId) {
         return NextResponse.json(
           { error: "Project not found" },
@@ -23,7 +20,7 @@ export async function GET(request: NextRequest) {
       }
 
       // Include recent analyses
-      const analyses = projectAnalyses.get(projectId) || [];
+      const analyses = dataStore.projectAnalyses.get(projectId) || [];
       return NextResponse.json({
         ...project,
         analyses: analyses.slice(-10), // Last 10 analyses
@@ -32,7 +29,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Get all projects for user
-    const userProjects = Array.from(projects.values()).filter(
+    const userProjects = Array.from(dataStore.projects.values()).filter(
       (p) => p.userId === userId,
     );
 
@@ -86,8 +83,8 @@ export async function POST(request: NextRequest) {
       },
     };
 
-    projects.set(projectId, project);
-    projectAnalyses.set(projectId, []);
+    dataStore.projects.set(projectId, project);
+    dataStore.projectAnalyses.set(projectId, []);
 
     return NextResponse.json({ project }, { status: 201 });
   } catch (error) {
@@ -111,7 +108,7 @@ export async function PUT(request: NextRequest) {
       );
     }
 
-    const project = projects.get(projectId);
+    const project = dataStore.projects.get(projectId);
     if (!project || project.userId !== userId) {
       return NextResponse.json({ error: "Project not found" }, { status: 404 });
     }
@@ -122,7 +119,7 @@ export async function PUT(request: NextRequest) {
       updatedAt: new Date().toISOString(),
     };
 
-    projects.set(projectId, updatedProject);
+    dataStore.projects.set(projectId, updatedProject);
 
     return NextResponse.json({ project: updatedProject });
   } catch (error) {
@@ -147,13 +144,13 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    const project = projects.get(projectId);
+    const project = dataStore.projects.get(projectId);
     if (!project || project.userId !== userId) {
       return NextResponse.json({ error: "Project not found" }, { status: 404 });
     }
 
-    projects.delete(projectId);
-    projectAnalyses.delete(projectId);
+    dataStore.projects.delete(projectId);
+    dataStore.projectAnalyses.delete(projectId);
 
     return NextResponse.json({ success: true });
   } catch (error) {
