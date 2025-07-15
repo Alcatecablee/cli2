@@ -103,9 +103,8 @@ export default function HomePage() {
       ),
       description: (
         <>
-          Experience advanced code analysis with our{" "}
-          <strong>transformation platform</strong>. Detect bugs, optimize
-          performance, and <strong>maintain clean code automatically</strong>.
+          Experience our 6-layer automated fixing system with real code analysis
+          and enterprise-grade transformations.
         </>
       ),
       type: "welcome" as const,
