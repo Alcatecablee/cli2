@@ -97,7 +97,7 @@ export default function HomePage() {
       subtitle:
         "Ready to experience the most sophisticated React/Next.js fixing system ever built?",
       description:
-        "Our 6-layer sequential pipeline orchestrates AST-first transformations with fail-safe validation. From TypeScript configuration optimization to SSR hydration guards, each layer builds upon the previous—ensuring enterprise-grade code integrity through intelligent pattern detection and incremental validation.",
+        "Our **6-layer system** fixes your code step-by-step. From **configuration setup** to **React component fixes**, each layer builds on the last one. **Never breaks your code** and finds **every common issue** automatically.",
       type: "welcome" as const,
     },
     {
