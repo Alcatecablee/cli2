@@ -135,7 +135,7 @@ export async function POST(
     // Update project stats
     const totalFiles = existingFiles.length;
     const totalIssues = existingFiles.reduce(
-      (sum, file) => sum + (file.issues?.length || 0),
+      (sum: number, file: any) => sum + (file.issues?.length || 0),
       0,
     );
     const avgQuality =
