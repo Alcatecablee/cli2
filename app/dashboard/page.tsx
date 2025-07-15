@@ -1760,6 +1760,139 @@ export default function Dashboard() {
             </div>
           )}
 
+          {/* User Account Tab */}
+          {dashboardState.activeSection === "account" && (
+            <div className="tab-content">
+              <h3>User Account</h3>
+
+              <div className="account-sections">
+                <div className="account-section">
+                  <h4>Profile Information</h4>
+                  <div className="profile-info">
+                    <div className="profile-row">
+                      <label>Name</label>
+                      <div className="profile-value">
+                        {user?.firstName && user?.lastName
+                          ? `${user.firstName} ${user.lastName}`
+                          : "Not set"}
+                      </div>
+                    </div>
+                    <div className="profile-row">
+                      <label>Email</label>
+                      <div className="profile-value">{user?.email}</div>
+                    </div>
+                    <div className="profile-row">
+                      <label>Plan</label>
+                      <div className="profile-value">
+                        <span className="plan-badge">
+                          {user?.plan?.charAt(0).toUpperCase() +
+                            user?.plan?.slice(1) || "Free"}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="profile-row">
+                      <label>Member Since</label>
+                      <div className="profile-value">
+                        {user?.created_at
+                          ? new Date(user.created_at).toLocaleDateString()
+                          : "Recently"}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="profile-actions">
+                    <Link href="/profile" className="btn btn-primary">
+                      Edit Profile
+                    </Link>
+                  </div>
+                </div>
+
+                <div className="account-section">
+                  <h4>Usage & Billing</h4>
+                  {rateLimitInfo && (
+                    <div className="usage-info">
+                      <div className="usage-row">
+                        <label>Current Plan</label>
+                        <div className="usage-value">
+                          <span className="plan-badge">
+                            {rateLimitInfo.plan.toUpperCase()}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="usage-row">
+                        <label>Analyses Used</label>
+                        <div className="usage-value">
+                          {rateLimitInfo.used} / {rateLimitInfo.limit}
+                        </div>
+                      </div>
+                      <div className="usage-row">
+                        <label>Remaining</label>
+                        <div className="usage-value">
+                          {rateLimitInfo.remaining} analyses
+                        </div>
+                      </div>
+                      <div className="usage-row">
+                        <label>Resets</label>
+                        <div className="usage-value">
+                          {new Date(rateLimitInfo.resetTime).toLocaleString()}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  <div className="billing-actions">
+                    <Link href="/pricing" className="btn btn-primary">
+                      Upgrade Plan
+                    </Link>
+                    <Link href="/checkout" className="btn btn-secondary">
+                      Billing History
+                    </Link>
+                  </div>
+                </div>
+
+                <div className="account-section">
+                  <h4>Account Actions</h4>
+                  <div className="account-actions">
+                    <button
+                      className="btn btn-secondary"
+                      onClick={() => {
+                        const data = {
+                          profile: {
+                            email: user?.email,
+                            plan: user?.plan,
+                            memberSince: user?.created_at,
+                          },
+                          history: dashboardState.analysisHistory,
+                          projects: dashboardState.projects,
+                          settings: dashboardState.settings,
+                        };
+                        const blob = new Blob([JSON.stringify(data, null, 2)], {
+                          type: "application/json",
+                        });
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement("a");
+                        a.href = url;
+                        a.download = "neurolint-account-data.json";
+                        a.click();
+                        URL.revokeObjectURL(url);
+                      }}
+                    >
+                      Export Account Data
+                    </button>
+                    <button
+                      className="btn btn-warning"
+                      onClick={() => {
+                        if (confirm("Are you sure you want to sign out?")) {
+                          signOut();
+                        }
+                      }}
+                    >
+                      Sign Out
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Settings Tab */}
           {dashboardState.activeSection === "settings" && (
             <div className="tab-content">
