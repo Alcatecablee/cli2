@@ -475,6 +475,13 @@ app.get("/app", (req, res) => {
 });
 
 /**
+ * Serve documentation page
+ */
+app.get("/docs", (req, res) => {
+  res.sendFile(path.join(__dirname, "docs.html"));
+});
+
+/**
  * Test endpoint that uses the REAL engine on a sample file
  */
 app.get("/api/test", async (req, res) => {
