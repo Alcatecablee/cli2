@@ -6,6 +6,7 @@ import "./integrations.css";
 import BulkProcessor from "./components/BulkProcessor";
 import AnalyticsDashboard from "./components/AnalyticsDashboard";
 import ApiKeysManager from "./components/ApiKeysManager";
+import SystemStatus from "./components/SystemStatus";
 
 // Import the same result interfaces from the demo
 interface DemoResult {
@@ -764,6 +765,24 @@ export default function Dashboard() {
       ),
       label: "Sample Files",
       description: "Test with examples",
+    },
+    {
+      id: "status",
+      icon: (
+        <svg
+          viewBox="0 0 24 24"
+          width="20"
+          height="20"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+        >
+          <circle cx="12" cy="12" r="3" />
+          <path d="M12 1v6m0 6v6m11-7h-6m-6 0H1" />
+        </svg>
+      ),
+      label: "System Status",
+      description: "Health & monitoring",
     },
     {
       id: "settings",
@@ -1615,6 +1634,13 @@ export default function Dashboard() {
                   </div>
                 ))}
               </div>
+            </div>
+          )}
+
+          {/* System Status Tab */}
+          {dashboardState.activeSection === "status" && (
+            <div className="tab-content">
+              <SystemStatus />
             </div>
           )}
 
