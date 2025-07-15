@@ -579,7 +579,7 @@ export default function ApiKeysManager({
         .form-field input:focus,
         .form-field select:focus {
           outline: none;
-          border-color: #2196f3;
+          border-color: rgba(33, 150, 243, 0.6);
         }
 
         .permissions-grid {
