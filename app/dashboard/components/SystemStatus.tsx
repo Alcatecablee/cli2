@@ -83,13 +83,13 @@ export default function SystemStatus() {
   const getStatusIcon = (status: string) => {
     switch (status) {
       case "healthy":
-        return "✅";
+        return "●";
       case "warning":
-        return "⚠️";
+        return "●";
       case "error":
-        return "❌";
+        return "●";
       default:
-        return "⏳";
+        return "●";
     }
   };
 
