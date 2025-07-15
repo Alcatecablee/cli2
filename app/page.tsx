@@ -163,6 +163,7 @@ const getDefaultOnboardingState = (): OnboardingData => ({
 });
 
 export default function HomePage() {
+  // Fast Refresh test - this should update without full reload
   const [currentText, setCurrentText] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [onboardingStep, setOnboardingStep] = useState(0);
