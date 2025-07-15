@@ -92,7 +92,7 @@ export async function POST(
         uploadedAt: new Date().toISOString(),
         lastAnalyzed: null as string | null,
         analysisResults: null as any,
-        issues: [],
+        issues: [] as any[],
         qualityScore: 0,
       };
 
