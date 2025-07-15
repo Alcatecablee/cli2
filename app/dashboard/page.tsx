@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState, useEffect, useCallback, useRef } from "react";
+import { useAuth } from "../../lib/auth-context";
+import { useRouter } from "next/navigation";
 import "./dashboard.css";
 import "./integrations.css";
 import BulkProcessor from "./components/BulkProcessor";
@@ -192,6 +194,16 @@ export default function BlogPost({ post }) {
 };
 
 export default function Dashboard() {
+  const { user, session, loading: authLoading, signOut } = useAuth();
+  const router = useRouter();
+
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!authLoading && !user) {
+      router.push("/login");
+    }
+  }, [authLoading, user, router]);
+
   const [dashboardState, setDashboardState] = useState<DashboardState>({
     isLoading: false,
     currentFile: null,
@@ -426,15 +438,19 @@ export default function Dashboard() {
           uploadProgress: 25,
         }));
 
-        const response = await fetch("/api/dashboard", {
+        const response = await fetch("/api/analyze", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            ...(session?.access_token && {
+              Authorization: `Bearer ${session.access_token}`,
+            }),
+          },
           body: JSON.stringify({
             code,
             filename,
             layers,
             applyFixes,
-            sessionId,
           }),
         });
 
@@ -918,8 +934,23 @@ export default function Dashboard() {
             </div>
             {!dashboardState.sidebarCollapsed && (
               <div className="user-info">
-                <span className="user-name">Free User</span>
-                <span className="user-plan">Unlimited Access</span>
+                <span className="user-name">
+                  {user?.firstName
+                    ? `${user.firstName} ${user.lastName}`
+                    : user?.email}
+                </span>
+                <span className="user-plan">
+                  {user?.plan?.charAt(0).toUpperCase() + user?.plan?.slice(1) ||
+                    "Free"}{" "}
+                  Plan
+                </span>
+                <button
+                  onClick={signOut}
+                  className="text-xs text-gray-400 hover:text-white mt-1"
+                  title="Sign out"
+                >
+                  Sign out
+                </button>
               </div>
             )}
           </div>
