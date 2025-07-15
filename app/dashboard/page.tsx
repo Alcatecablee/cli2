@@ -287,7 +287,7 @@ export default function Dashboard() {
           padding: 8px 16px;
           background: rgba(33, 150, 243, 0.2);
           border: 1px solid rgba(33, 150, 243, 0.4);
-          color: #2196f3;
+                    color: rgba(33, 150, 243, 0.9);
           border-radius: 4px;
           cursor: pointer;
           font-weight: 500;
