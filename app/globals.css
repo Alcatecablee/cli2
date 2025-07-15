@@ -821,7 +821,7 @@ a {
     font-size: 0.9rem;
   }
   .hero {
-    padding: 2rem 1.5rem 3rem 1.5rem;
+    padding: 4rem 1.5rem 3rem 1.5rem;
     min-height: auto;
   }
   .hero-nav {
@@ -837,6 +837,9 @@ a {
     padding: 0.75rem 1rem;
     font-size: 0.9rem;
   }
+  .hero-nav {
+    gap: 1rem;
+  }
   .hero-subtitle {
     font-size: 0.8rem;
     padding: 0.6rem 1.2rem;
@@ -849,10 +852,10 @@ a {
     margin-bottom: 2rem;
   }
   .hero-desc {
-    font-size: 1.2rem;
-    padding: 2rem 2.5rem;
+    font-size: 1.1rem;
+    padding: 1.75rem 2rem;
     border-radius: 12px;
-    margin-bottom: 3rem;
+    margin-bottom: 2.5rem;
     max-width: 100%;
   }
   .hero-actions {
@@ -915,8 +918,12 @@ a {
     order: unset;
   }
   .hero {
-    padding: 2.5rem 1rem 3rem 1rem;
-    min-height: 70vh;
+    padding: 4rem 1rem 3rem 1rem;
+    min-height: auto;
+  }
+  .hero-nav {
+    gap: 0.75rem;
+    top: 1.5rem;
   }
   .hero-subtitle {
     font-size: 0.75rem;
@@ -928,9 +935,9 @@ a {
     margin-bottom: 1.5rem;
   }
   .hero-desc {
-    font-size: 1.1rem;
-    padding: 1.5rem 2rem;
-    margin-bottom: 2.5rem;
+    font-size: 1rem;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 2rem;
   }
   .hero-actions .btn {
     padding: 0.875rem 1.5rem;
