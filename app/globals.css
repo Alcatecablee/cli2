@@ -876,6 +876,11 @@ a {
     max-width: 100%;
     flex-wrap: wrap;
   }
+
+  .nav-logo {
+    height: 28px;
+    margin-right: 0.75rem;
+  }
   .nav-link {
     padding: 0.5rem 0.75rem;
     font-size: 0.8rem;
