@@ -1135,6 +1135,13 @@ function ImageGallery({ images }) {
                 >
                   Pricing
                 </a>
+                <a
+                  href="/api-docs"
+                  className="nav-link"
+                  aria-label="View API documentation"
+                >
+                  API Docs
+                </a>
                 <button
                   className="nav-link"
                   onClick={openDashboard}
