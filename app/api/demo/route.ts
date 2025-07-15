@@ -2,6 +2,8 @@
 import { NextResponse } from "next/server";
 import { randomUUID } from "crypto";
 
+export const dynamic = "force-dynamic";
+
 // Simple in-memory rate limiting (for production, use Redis or similar)
 const requestCounts = new Map<string, { count: number; resetTime: number }>();
 const RATE_LIMIT = 10; // 10 requests per minute
