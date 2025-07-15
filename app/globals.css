@@ -215,13 +215,13 @@ a {
 }
 
 .hero {
-  min-height: 40vh;
+  min-height: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 2rem 1rem 0 1rem;
+  padding: 2rem 1rem 3rem 1rem;
   position: relative;
   background: #000000;
 }
@@ -314,7 +314,7 @@ a {
 .hero-desc {
   font-size: 1.2rem;
   color: var(--foreground);
-  margin-bottom: 2rem;
+  margin-bottom: 0;
   max-width: 700px;
   margin-left: auto;
   margin-right: auto;
@@ -443,9 +443,9 @@ a {
 
 /* Demo Section */
 .demo-section {
-  padding: 0 0 4rem 0;
+  padding: 2rem 0 4rem 0;
   background: #000000;
-  min-height: 100vh;
+  min-height: auto;
   animation: fadeInUp 1s ease-out 1s both;
 }
 
@@ -456,7 +456,6 @@ a {
   display: grid;
   grid-template-columns: 1fr;
   gap: 2rem;
-  margin-top: 0;
 }
 
 .demo-upload-section {
