@@ -151,7 +151,7 @@ export default function PricingPage() {
       name: "Priority Processing",
       description: "Jump to the front of the queue",
       price: "$5/month per user",
-      icon: "⚡",
+      icon: "→",
     },
     {
       name: "Custom Integration",
