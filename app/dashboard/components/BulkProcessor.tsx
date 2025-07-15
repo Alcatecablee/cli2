@@ -145,7 +145,13 @@ export default function BulkProcessor({
           ...prev,
           results: prev.results.map((r, idx) =>
             idx === i
-              ? { ...r, status: "error", progress: 0, error: error.message }
+              ? {
+                  ...r,
+                  status: "error",
+                  progress: 0,
+                  error:
+                    error instanceof Error ? error.message : "Unknown error",
+                }
               : r,
           ),
           overallProgress: ((i + 1) / totalFiles) * 100,
