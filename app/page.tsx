@@ -990,65 +990,8 @@ function ImageGallery({ images }) {
             </div>
           </section>
         ) : (
-          /* Main Demo Experience */
+          /* Demo Experience */
           <>
-            {/* Hero Section */}
-            <section className="hero" aria-labelledby="hero-title">
-              <div
-                className="hero-subtitle"
-                role="text"
-                aria-label="Service type"
-              >
-                Automated Code Fixing Service
-              </div>
-              <h1
-                id="hero-title"
-                className="typewriter"
-                aria-live="polite"
-                aria-atomic="true"
-              >
-                {currentText}
-              </h1>
-              <p className="hero-desc" role="text">
-                Automated multi-layer code fixing for React and Next.js.
-                Resolves common issues—HTML entities, missing keys, SSR
-                safety—using a validated 6-layer pipeline with automatic
-                rollback.
-              </p>
-              {onboardingData.projectType && (
-                <div className="hero-personalization">
-                  <span>
-                    Optimized for{" "}
-                    {
-                      onboardingSteps[1].options?.find(
-                        (o) => o.value === onboardingData.projectType,
-                      )?.label
-                    }
-                  </span>
-                </div>
-              )}
-              <div
-                className="hero-actions"
-                role="group"
-                aria-label="Main actions"
-              >
-                <a
-                  href="#demo"
-                  className="btn"
-                  aria-describedby="demo-description"
-                >
-                  Try Demo
-                </a>
-                <button
-                  className="btn"
-                  onClick={openDashboard}
-                  aria-label="Access NeuroLint Pro dashboard for your projects"
-                >
-                  Dashboard
-                </button>
-              </div>
-            </section>
-
             {/* Demo Section */}
             <section
               id="demo"
