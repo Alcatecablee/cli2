@@ -452,12 +452,40 @@ export default function BulkProcessor({
         }
 
         .btn-primary {
-          background: #2196f3;
-          color: white;
+          background: linear-gradient(
+            135deg,
+            rgba(33, 150, 243, 0.2) 0%,
+            rgba(33, 150, 243, 0.15) 50%,
+            rgba(255, 255, 255, 0.1) 100%
+          );
+          border: 1px solid rgba(33, 150, 243, 0.4);
+          border-radius: 8px;
+          backdrop-filter: blur(20px) saturate(1.2);
+          -webkit-backdrop-filter: blur(20px) saturate(1.2);
+          box-shadow:
+            0 8px 32px rgba(0, 0, 0, 0.2),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1),
+            0 0 12px rgba(33, 150, 243, 0.2);
+          color: #ffffff;
+          font-size: 14px;
+          font-weight: 500;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
         }
 
         .btn-primary:hover:not(:disabled) {
-          background: #1976d2;
+          background: linear-gradient(
+            135deg,
+            rgba(33, 150, 243, 0.3) 0%,
+            rgba(33, 150, 243, 0.22) 50%,
+            rgba(255, 255, 255, 0.12) 100%
+          );
+          border-color: rgba(33, 150, 243, 0.5);
+          transform: translateY(-2px);
+          box-shadow:
+            0 12px 40px rgba(0, 0, 0, 0.3),
+            inset 0 1px 0 rgba(255, 255, 255, 0.15),
+            0 0 16px rgba(33, 150, 243, 0.3);
         }
 
         .btn-secondary {
