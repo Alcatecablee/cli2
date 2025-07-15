@@ -76,37 +76,51 @@ export const POST = createAuthenticatedHandler(async (request, user) => {
       };
     }
 
-    // Export projects and analysis data
+    // Export projects and analysis data (from in-memory store)
     if (exportType === "projects" || exportType === "complete") {
-      // Get projects
-      const { data: projects } = await supabase
-        .from("projects")
-        .select("*")
-        .eq("user_id", user.id)
-        .order("created_at", { ascending: false });
+      // Import data store
+      const { dataStore } = await import("../../../lib/data-store");
 
-      // Get project files and analyses
-      let projectsWithFiles = [];
-      if (projects && projects.length > 0) {
-        for (const project of projects) {
-          const { data: files } = await supabase
-            .from("project_files")
-            .select("*")
-            .eq("project_id", project.id)
-            .order("created_at", { ascending: false });
+      // Get user projects from in-memory store
+      const userProjects = [];
+      for (const [projectId, project] of dataStore.projects.entries()) {
+        if (project.userId === user.id) {
+          // Get project files
+          const projectFiles = [];
+          for (const [fileId, file] of dataStore.projectFiles.entries()) {
+            if (file.projectId === projectId) {
+              projectFiles.push(file);
+            }
+          }
 
-          projectsWithFiles.push({
+          // Get project analyses
+          const projectAnalyses = [];
+          for (const [
+            analysisId,
+            analysis,
+          ] of dataStore.projectAnalyses.entries()) {
+            if (analysis.projectId === projectId) {
+              projectAnalyses.push(analysis);
+            }
+          }
+
+          userProjects.push({
             ...project,
-            files: files || [],
+            files: projectFiles,
+            analyses: projectAnalyses,
           });
         }
       }
 
       exportData.projects = {
-        projects: projectsWithFiles,
-        totalProjects: projects?.length || 0,
-        totalFiles: projectsWithFiles.reduce(
-          (acc, p) => acc + p.files.length,
+        projects: userProjects,
+        totalProjects: userProjects.length,
+        totalFiles: userProjects.reduce(
+          (acc, p) => acc + (p.files?.length || 0),
+          0,
+        ),
+        totalAnalyses: userProjects.reduce(
+          (acc, p) => acc + (p.analyses?.length || 0),
           0,
         ),
       };
