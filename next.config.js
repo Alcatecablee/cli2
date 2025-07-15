@@ -9,6 +9,11 @@ const nextConfig = {
   images: {
     domains: ["cdn.builder.io"],
   },
+  // Development stability
+  onDemandEntries: {
+    maxInactiveAge: 25 * 1000,
+    pagesBufferLength: 2,
+  },
   // Development configuration
   webpack: (config, { dev, isServer }) => {
     if (dev && !isServer) {
