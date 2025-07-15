@@ -1330,7 +1330,7 @@ legend {
 
 .upload-area {
   border: 2px dashed rgba(255, 255, 255, 0.3);
-  padding: 60px;
+  padding: 3rem;
   text-align: center;
   background: linear-gradient(
     135deg,
@@ -1339,18 +1339,20 @@ legend {
     rgba(255, 255, 255, 0.02) 100%
   );
   cursor: pointer;
-  border-radius: 20px;
-  transition: var(--transition-smooth);
-  position: relative;
-  overflow: hidden;
-  backdrop-filter: blur(25px) saturate(1.2);
-  -webkit-backdrop-filter: blur(25px) saturate(1.2);
-  box-shadow: var(--shadow-medium);
-  min-height: 280px;
+  min-height: 240px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  border-radius: 20px;
+  backdrop-filter: blur(15px) saturate(1.1);
+  -webkit-backdrop-filter: blur(15px) saturate(1.1);
+  transition: var(--transition-smooth);
+  position: relative;
+  overflow: hidden;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .upload-area::before {
