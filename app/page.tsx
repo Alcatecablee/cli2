@@ -98,11 +98,10 @@ export default function HomePage() {
         "Ready to experience the most sophisticated React/Next.js fixing system ever built?",
       description: (
         <>
-          Our <strong>6-layer system</strong> fixes your code step-by-step. From{" "}
-          <strong>configuration setup</strong> to{" "}
-          <strong>React component fixes</strong>, each layer builds on the last
-          one. <strong>Never breaks your code</strong> and finds{" "}
-          <strong>every common issue</strong> automatically.
+          Experience advanced code fixing with our{" "}
+          <strong>6-layer transformation system</strong>. Detect issues,
+          optimize components, and{" "}
+          <strong>maintain clean code automatically</strong>.
         </>
       ),
       type: "welcome" as const,
