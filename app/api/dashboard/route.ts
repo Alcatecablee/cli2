@@ -185,7 +185,6 @@ export async function POST(req: Request) {
     const newRateLimit = checkRateLimit(session);
 
     console.log(`[DASHBOARD API ${requestId}] Analysis complete:`, {
-      success: result?.success,
       processingTime,
       remaining: newRateLimit.remaining,
     });
