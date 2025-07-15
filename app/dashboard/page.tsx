@@ -1267,13 +1267,13 @@ export default function Dashboard() {
                     </p>
                     <div className="webhook-features">
                       <div className="feature-item">
-                        ✅ Analysis completion notifications
+                        Analysis completion notifications
                       </div>
-                      <div className="feature-item">✅ Error alerts</div>
+                      <div className="feature-item">Error alerts</div>
                       <div className="feature-item">
-                        ✅ Custom payload formatting
+                        Custom payload formatting
                       </div>
-                      <div className="feature-item">✅ Retry mechanisms</div>
+                      <div className="feature-item">Retry mechanisms</div>
                     </div>
                   </div>
 
