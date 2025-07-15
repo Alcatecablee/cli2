@@ -118,7 +118,10 @@ export async function POST(
           console.error("File analysis error:", analysisError);
           fileRecord.analysisResults = {
             error: "Analysis failed",
-            message: analysisError.message,
+            message:
+              analysisError instanceof Error
+                ? analysisError.message
+                : "Unknown error",
           };
         }
       }
