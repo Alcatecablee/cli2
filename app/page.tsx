@@ -96,8 +96,15 @@ export default function HomePage() {
       title: "Welcome to NeuroLint Pro",
       subtitle:
         "Ready to experience the most sophisticated React/Next.js fixing system ever built?",
-      description:
-        "Our **6-layer system** fixes your code step-by-step. From **configuration setup** to **React component fixes**, each layer builds on the last one. **Never breaks your code** and finds **every common issue** automatically.",
+      description: (
+        <>
+          Our <strong>6-layer system</strong> fixes your code step-by-step. From{" "}
+          <strong>configuration setup</strong> to{" "}
+          <strong>React component fixes</strong>, each layer builds on the last
+          one. <strong>Never breaks your code</strong> and finds{" "}
+          <strong>every common issue</strong> automatically.
+        </>
+      ),
       type: "welcome" as const,
     },
     {
