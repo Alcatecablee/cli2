@@ -133,9 +133,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         } catch (fetchError) {
           console.warn("Session validation network error:", fetchError);
 
-          // If it's a network error but we have a valid session structure,
-          // continue with the cached session to avoid blocking the user
-          if (sessionData.access_token && sessionData.refresh_token) {
+          // Check if it's a network/timeout error
+          const isNetworkError =
+            fetchError instanceof TypeError &&
+            (fetchError.message.includes("fetch") ||
+              fetchError.message.includes("Failed to fetch") ||
+              fetchError.name === "AbortError");
+
+          if (
+            isNetworkError &&
+            sessionData.access_token &&
+            sessionData.refresh_token
+          ) {
             console.log("Using cached session due to network error");
             // Try to get cached user data
             const cachedUserData = localStorage.getItem("user_data");
@@ -145,6 +154,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 if (userData && userData.id && userData.email) {
                   setUser(userData);
                   setSession(sessionData);
+
+                  // Schedule a retry in 30 seconds
+                  setTimeout(() => {
+                    console.log("Retrying session validation...");
+                    checkSession();
+                  }, 30000);
+
                   return; // Exit early with cached data
                 }
               } catch (e) {
@@ -153,7 +169,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             }
           }
 
-          // If we can't use cached data, clear session
+          // If we can't use cached data or it's not a network error, clear session
           clearSession();
         }
       }
