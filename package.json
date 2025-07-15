@@ -37,6 +37,7 @@
   "author": "NeuroLint Pro",
   "license": "MIT",
   "dependencies": {
+    "@paypal/checkout-server-sdk": "^1.0.3",
     "@supabase/supabase-js": "^2.51.0",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
