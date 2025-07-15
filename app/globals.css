@@ -2398,6 +2398,33 @@ legend {
   backdrop-filter: blur(20px);
 }
 
+.mode-description {
+  margin-top: 0.75rem;
+}
+
+.mode-description p {
+  font-size: 0.8rem;
+  color: rgba(33, 150, 243, 0.8);
+  background: rgba(33, 150, 243, 0.05);
+  border: 1px solid rgba(33, 150, 243, 0.2);
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  margin: 0;
+  text-align: center;
+  animation: fadeInUp 0.3s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .guidance-intro {
   text-align: center;
   margin-bottom: 2rem;
