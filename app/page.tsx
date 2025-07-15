@@ -824,37 +824,6 @@ function ImageGallery({ images }) {
         Skip to main content
       </a>
 
-      {/* Header - only show after onboarding */}
-      {onboardingData.completedOnboarding && (
-        <header className="header" role="banner">
-          <div className="header-inner">
-            <a
-              href="/"
-              className="logo"
-              aria-label="NeuroLint Pro - Go to homepage"
-            >
-              <img
-                src="https://cdn.builder.io/api/v1/image/assets%2F52b46fbc49c34422a0037fa4f335b74e%2F7086ba5cd2d641ae97bba9bb4d012f4e?format=webp&width=800"
-                alt="NeuroLint Pro"
-                className="logo-img"
-              />
-            </a>
-            <nav className="nav" role="navigation" aria-label="Main navigation">
-              <a href="#demo" aria-describedby="demo-description">
-                Demo
-              </a>
-              <button
-                className="btn"
-                onClick={openDashboard}
-                aria-label="Access NeuroLint Pro dashboard"
-              >
-                Dashboard
-              </button>
-            </nav>
-          </div>
-        </header>
-      )}
-
       <main id="main-content" role="main">
         {!onboardingData.completedOnboarding ? (
           /* Onboarding Experience */
