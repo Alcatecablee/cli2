@@ -174,15 +174,15 @@ export default function BulkProcessor({
   const getStatusIcon = (status: string) => {
     switch (status) {
       case "pending":
-        return "⏳";
+        return "●";
       case "processing":
-        return "•";
+        return "●";
       case "completed":
-        return "✅";
+        return "●";
       case "error":
-        return "❌";
+        return "●";
       default:
-        return "⏳";
+        return "●";
     }
   };
 
