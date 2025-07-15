@@ -1,32 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import crypto from "crypto";
-
-// In-memory storage for demo purposes - replace with database in production
-const apiKeys = new Map();
-const userApiKeys = new Map();
-
-interface ApiKey {
-  id: string;
-  key: string;
-  name: string;
-  userId: string;
-  permissions: string[];
-  createdAt: string;
-  lastUsed: string | null;
-  expiresAt: string | null;
-  isActive: boolean;
-  usageCount: number;
-  rateLimit: {
-    requestsPerHour: number;
-    requestsPerDay: number;
-  };
-}
-
-const generateApiKey = (): string => {
-  const prefix = "nlp_";
-  const key = crypto.randomBytes(32).toString("hex");
-  return prefix + key;
-};
+import {
+  apiKeys,
+  userApiKeys,
+  generateApiKey,
+  type ApiKey,
+} from "@/lib/api-key-utils";
 
 export async function GET(request: NextRequest) {
   try {
