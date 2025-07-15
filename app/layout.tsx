@@ -70,8 +70,8 @@ export default function RootLayout({
               }
             });
 
-            // Override fetch to handle dev server connectivity issues
-            if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
+                        // Override fetch to handle dev server connectivity issues
+            if (typeof window !== 'undefined') {
               const originalFetch = window.fetch;
               window.fetch = function(...args) {
                 return originalFetch.apply(this, args).catch(error => {
