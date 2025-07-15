@@ -97,7 +97,7 @@ export default function HomePage() {
       subtitle:
         "Ready to transform messy code into clean, optimized masterpieces?",
       description:
-        "Our AI-powered 6-layer system automatically fixes React/Next.js issues—from HTML entities to SSR hydration problems.",
+        "Professional-grade automated debugging service that safely fixes HTML entities, missing key props, SSR issues, and more. Built on proven enterprise patterns.",
       type: "welcome" as const,
     },
     {
