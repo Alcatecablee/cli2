@@ -137,11 +137,12 @@ const analyzeFiles = async (
     try {
       addLog(runId, `Analyzing ${file.filename}...`);
 
-      const result = await engine.analyzecode(
+      const result = await engine(
         file.content,
         file.filename,
-        layers,
         false, // Always dry run for CI/CD
+        null, // layers
+        { singleFile: true },
       );
 
       results.push({
