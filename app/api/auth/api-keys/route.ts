@@ -4,7 +4,7 @@ import {
   userApiKeys,
   generateApiKey,
   type ApiKey,
-} from "@/lib/api-key-utils";
+} from "../../../../lib/api-key-utils";
 
 export async function GET(request: NextRequest) {
   try {
