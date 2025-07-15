@@ -971,6 +971,13 @@ function ImageGallery({ images }) {
                 >
                   Home
                 </a>
+                <a
+                  href="/pricing"
+                  className="nav-link"
+                  aria-label="View pricing plans"
+                >
+                  Pricing
+                </a>
                 <button
                   className="nav-link"
                   onClick={openDashboard}
