@@ -879,7 +879,7 @@ a {
   }
   .demo-upload-section {
     grid-template-columns: 1fr;
-    gap: 2rem;
+    gap: 2.5rem;
   }
   .upload-area {
     min-height: 200px;
