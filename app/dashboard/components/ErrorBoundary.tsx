@@ -166,13 +166,26 @@ export default class ErrorBoundary extends Component<Props, State> {
             }
 
             .btn-primary {
-              background: #2196f3;
+              background: linear-gradient(
+                135deg,
+                rgba(33, 150, 243, 0.2) 0%,
+                rgba(33, 150, 243, 0.15) 50%,
+                rgba(255, 255, 255, 0.1) 100%
+              );
+              border: 1px solid rgba(33, 150, 243, 0.4);
+              backdrop-filter: blur(20px) saturate(1.2);
+              -webkit-backdrop-filter: blur(20px) saturate(1.2);
               color: white;
             }
 
             .btn-primary:hover {
-              background: #1976d2;
-              transform: translateY(-1px);
+              background: linear-gradient(
+                135deg,
+                rgba(33, 150, 243, 0.3) 0%,
+                rgba(33, 150, 243, 0.22) 50%,
+                rgba(255, 255, 255, 0.12) 100%
+              );
+              transform: translateY(-2px);
             }
 
             .btn-secondary {
