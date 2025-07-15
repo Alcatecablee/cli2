@@ -57,12 +57,13 @@
   letter-spacing: 0.5px;
 }
 
-.category-status:contains("Available") {
+/* Status colors - using data attributes instead of :contains */
+.category-status[data-status="available"] {
   background: rgba(76, 175, 80, 0.2);
   color: #4caf50;
 }
 
-.category-status:contains("Coming Soon") {
+.category-status[data-status="coming-soon"] {
   background: rgba(255, 152, 0, 0.2);
   color: #ff9800;
 }
