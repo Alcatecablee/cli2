@@ -286,8 +286,8 @@ a {
   font-size: 4rem;
   font-weight: 900;
   color: var(--foreground);
-  margin-bottom: 2rem;
-  margin-top: 1rem;
+  margin-bottom: 3rem;
+  margin-top: 2rem;
   letter-spacing: -0.04em;
   font-family: var(--font-sans);
   line-height: 1.1;
