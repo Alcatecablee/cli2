@@ -100,11 +100,12 @@ export async function POST(
       if (analyze) {
         try {
           const engine = await getNeuroLintEngine();
-          const analysisResult = await engine.analyzecode(
+          const analysisResult = await engine(
             content,
             filename,
-            "auto",
-            false,
+            false, // dryRun
+            null, // layers
+            { singleFile: true },
           );
 
           fileRecord.lastAnalyzed = new Date().toISOString();
