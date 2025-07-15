@@ -320,6 +320,19 @@ a {
   outline-offset: 2px;
 }
 
+.dashboard-btn {
+  background: linear-gradient(135deg, #2196f3, #1976d2) !important;
+  border: 1px solid rgba(33, 150, 243, 0.5) !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+}
+
+.dashboard-btn:hover {
+  background: linear-gradient(135deg, #1976d2, #1565c0) !important;
+  border-color: rgba(33, 150, 243, 0.7) !important;
+  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3) !important;
+}
+
 .hero-title {
   font-size: 4rem;
   font-weight: 900;
