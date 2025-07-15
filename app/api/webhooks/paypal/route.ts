@@ -108,11 +108,11 @@ export async function POST(request: NextRequest) {
     await supabase
       .from("webhook_logs")
       .insert({
-        provider: "paypal",
+                provider: "paypal",
         event_type,
         data: logData,
         created_at: new Date().toISOString(),
-            });
+      });
     } catch (webhookLogError) {
       console.warn("Failed to log webhook event:", webhookLogError instanceof Error ? webhookLogError.message : 'Unknown error');
     }
