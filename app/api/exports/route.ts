@@ -162,8 +162,8 @@ export const POST = createAuthenticatedHandler(async (request, user) => {
 export const GET = createAuthenticatedHandler(async (request, user) => {
   try {
     // Get counts for each data type
-    const [profileCount, subscriptionsCount, projectsCount, paymentsCount] =
-      await Promise.all([
+    const [profileCount, subscriptionsCount, paymentsCount] = await Promise.all(
+      [
         supabase
           .from("profiles")
           .select("id", { count: "exact" })
@@ -173,14 +173,20 @@ export const GET = createAuthenticatedHandler(async (request, user) => {
           .select("id", { count: "exact" })
           .eq("user_id", user.id),
         supabase
-          .from("projects")
-          .select("id", { count: "exact" })
-          .eq("user_id", user.id),
-        supabase
           .from("payments")
           .select("id", { count: "exact" })
           .eq("user_id", user.id),
-      ]);
+      ],
+    );
+
+    // Get project counts from in-memory store
+    const { dataStore } = await import("../../../lib/data-store");
+    let userProjectsCount = 0;
+    for (const [, project] of dataStore.projects.entries()) {
+      if (project.userId === user.id) {
+        userProjectsCount++;
+      }
+    }
 
     return NextResponse.json({
       availableExports: {
@@ -195,7 +201,7 @@ export const GET = createAuthenticatedHandler(async (request, user) => {
         },
         projects: {
           description: "Project data and analysis files",
-          recordCount: projectsCount.count || 0,
+          recordCount: userProjectsCount,
         },
         complete: {
           description: "All user data in a single export",
