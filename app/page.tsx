@@ -896,9 +896,9 @@ function ImageGallery({ images }) {
                           </div>
                         </div>
                         <div className="highlight-item">
-                          <div className="highlight-icon">SAFE</div>
+                          <div className="highlight-icon">PROTECTED</div>
                           <div className="highlight-text">
-                            Safe Transformations
+                            Never Corrupts Code
                           </div>
                         </div>
                       </div>
