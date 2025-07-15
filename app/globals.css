@@ -958,7 +958,7 @@ a:focus-visible {
 }
 
 .modal-logo {
-  max-width: 200px;
+  max-width: 120px;
   height: auto;
   filter: brightness(1.1);
   transition: var(--transition-smooth);
