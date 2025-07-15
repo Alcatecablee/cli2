@@ -1,6 +1,7 @@
 import React from "react";
 import type { Metadata } from "next";
 import Script from "next/script";
+import { AuthProvider } from "../lib/auth-context";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -32,7 +33,7 @@ export default function RootLayout({
         />
       </head>
       <body>
-        {children}
+        <AuthProvider>{children}</AuthProvider>
         <Script
           src="https://www.paypal.com/sdk/js?client-id=AaZabZwUPYitlE5MOXwohkXxtMzI7GaSArFxw7JYMIDfZE_PHvsMzY1WEsZk_QwTdek4SEpjj_DC5ys7&currency=USD&intent=capture&enable-funding=venmo,card"
           strategy="lazyOnload"
