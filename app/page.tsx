@@ -66,13 +66,43 @@ const clearDemoState = () => ({
   applyFixes: false,
 });
 
-// Helper function to initialize onboarding state
-const getInitialOnboardingState = (): OnboardingData => ({
-  projectType: "",
-  experienceLevel: "",
-  hasCode: false,
-  completedOnboarding: false,
-});
+// Helper function to initialize onboarding state with persistence
+const getInitialOnboardingState = (): OnboardingData => {
+  // Try to load from localStorage first
+  if (typeof window !== "undefined") {
+    try {
+      const savedOnboarding = localStorage.getItem("neurolint-onboarding");
+      if (savedOnboarding) {
+        const parsed = JSON.parse(savedOnboarding);
+        // Validate the structure before using
+        if (
+          parsed &&
+          typeof parsed === "object" &&
+          typeof parsed.completedOnboarding === "boolean"
+        ) {
+          return {
+            projectType: parsed.projectType || "",
+            experienceLevel: parsed.experienceLevel || "",
+            hasCode: parsed.hasCode || false,
+            completedOnboarding: parsed.completedOnboarding,
+          };
+        }
+      }
+    } catch (error) {
+      console.warn("Failed to load onboarding data from localStorage:", error);
+      // Clear corrupted data
+      localStorage.removeItem("neurolint-onboarding");
+    }
+  }
+
+  // Return default state if no valid saved data
+  return {
+    projectType: "",
+    experienceLevel: "",
+    hasCode: false,
+    completedOnboarding: false,
+  };
+};
 
 export default function HomePage() {
   const [currentText, setCurrentText] = useState("");
@@ -81,6 +111,20 @@ export default function HomePage() {
   const [onboardingData, setOnboardingData] = useState<OnboardingData>(
     getInitialOnboardingState(),
   );
+
+  // Save onboarding data to localStorage whenever it changes
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      try {
+        localStorage.setItem(
+          "neurolint-onboarding",
+          JSON.stringify(onboardingData),
+        );
+      } catch (error) {
+        console.warn("Failed to save onboarding data to localStorage:", error);
+      }
+    }
+  }, [onboardingData]);
 
   const texts = [
     "Fix React Errors Instantly",
@@ -499,6 +543,20 @@ function ImageGallery({ images }) {
 
   const skipOnboarding = () => {
     setOnboardingData((prev) => ({ ...prev, completedOnboarding: true }));
+  };
+
+  // Reset onboarding function (useful for testing or user preference)
+  const resetOnboarding = () => {
+    setOnboardingData({
+      projectType: "",
+      experienceLevel: "",
+      hasCode: false,
+      completedOnboarding: false,
+    });
+    setOnboardingStep(0);
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("neurolint-onboarding");
+    }
   };
 
   useEffect(() => {
