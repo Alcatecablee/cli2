@@ -553,11 +553,11 @@ export default function AnalyticsDashboard({
         }
 
         .legend-color.analyses {
-          background: #2196f3;
+          background: rgba(33, 150, 243, 0.8);
         }
 
         .legend-color.issues {
-          background: #ff9800;
+          background: rgba(255, 152, 0, 0.8);
         }
 
         .issues-chart {
