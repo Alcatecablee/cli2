@@ -33,6 +33,14 @@
   --shadow-subtle: 0 2px 8px rgba(0, 0, 0, 0.12);
   --shadow-medium: 0 8px 24px rgba(0, 0, 0, 0.15);
   --shadow-strong: 0 16px 40px rgba(0, 0, 0, 0.2);
+
+  /* Onboarding specific colors */
+  --onboarding-bg: rgba(255, 255, 255, 0.02);
+  --onboarding-card: rgba(255, 255, 255, 0.05);
+  --onboarding-border: rgba(255, 255, 255, 0.1);
+  --onboarding-hover: rgba(255, 255, 255, 0.08);
+  --onboarding-accent: #2196f3;
+  --onboarding-accent-glow: rgba(33, 150, 243, 0.15);
 }
 
 html,
