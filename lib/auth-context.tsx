@@ -61,7 +61,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // Check for existing session on mount
   useEffect(() => {
     checkSession();
-  }, []);
+  }, [checkSession]);
 
   const checkSession = useCallback(async () => {
     try {
