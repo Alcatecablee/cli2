@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
+import { useAuth } from "../../lib/auth-context";
+import Link from "next/link";
 
 interface PricingPlan {
   id: string;
@@ -18,9 +20,11 @@ interface PricingPlan {
 }
 
 export default function PricingPage() {
+  const { user, session } = useAuth();
   const [billingPeriod, setBillingPeriod] = useState<"monthly" | "yearly">(
     "monthly",
   );
+  const [loading, setLoading] = useState<string | null>(null);
 
   const plans: PricingPlan[] = [
     {
