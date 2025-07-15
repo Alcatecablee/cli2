@@ -986,6 +986,11 @@ a {
     gap: 0.5rem;
     top: 1.5rem;
   }
+
+  .nav-logo {
+    height: 24px;
+    margin-right: 0.5rem;
+  }
   .hero-subtitle {
     font-size: 0.75rem;
     padding: 0.5rem 1rem;
