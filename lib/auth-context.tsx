@@ -196,7 +196,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, []); // Empty dependency array since checkSession doesn't depend on any props/state
 
-  const clearSession = () => {
+  const clearSession = useCallback(() => {
     try {
       localStorage.removeItem("supabase_session");
       localStorage.removeItem("user_data");
@@ -208,7 +208,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setUser(null);
       setSession(null);
     }
-  };
+  }, []);
 
   const signIn = async (email: string, password: string) => {
     setLoading(true);
