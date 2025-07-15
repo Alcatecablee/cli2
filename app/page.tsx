@@ -1127,7 +1127,7 @@ function ImageGallery({ images }) {
             <section className="hero" aria-labelledby="hero-title">
               <div className="hero-nav">
                 <img
-                  src="https://cdn.builder.io/api/v1/image/assets%2F4b35a64a4a2c446c91402681adcf734e%2F184ab63cffb747d79a1eddbf7cd2552a?format=webp&width=800"
+                  src="https://cdn.builder.io/api/v1/image/assets%2F4b35a64a4a2c446c91402681adcf734e%2F485afb87468542eeba91d45b141bab95?format=webp&width=800"
                   alt="NeuroLint Pro"
                   className="nav-logo"
                 />
