@@ -232,6 +232,12 @@ export default function Dashboard() {
     },
     progressStatus: "",
     uploadProgress: 0,
+    subscriptionData: {
+      subscriptions: [],
+      currentPlan: user?.plan || "free",
+      loading: false,
+      error: null,
+    },
   });
 
   // Robust copy function with fallbacks
