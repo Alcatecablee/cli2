@@ -265,17 +265,17 @@ a {
 .nav-link {
   color: rgba(255, 255, 255, 0.8);
   font-weight: 500;
-  font-size: 0.875rem;
-  padding: 0.625rem 1rem;
+  font-size: 0.8rem;
+  padding: 0.5rem 0.75rem;
   border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 6px;
+  border-radius: 5px;
   background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   transition: var(--transition-smooth);
   text-decoration: none;
   cursor: pointer;
-  min-height: 36px;
+  min-height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
