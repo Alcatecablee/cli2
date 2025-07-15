@@ -95,9 +95,9 @@ export default function HomePage() {
       id: 0,
       title: "Welcome to NeuroLint Pro",
       subtitle:
-        "Ready to transform messy code into clean, optimized masterpieces?",
+        "Ready to experience the most sophisticated React/Next.js fixing system ever built?",
       description:
-        "Professional-grade automated debugging service that safely fixes HTML entities, missing key props, SSR issues, and more. Built on proven enterprise patterns.",
+        "Our 6-layer sequential pipeline orchestrates AST-first transformations with fail-safe validation. From TypeScript configuration optimization to SSR hydration guards, each layer builds upon the previous—ensuring enterprise-grade code integrity through intelligent pattern detection and incremental validation.",
       type: "welcome" as const,
     },
     {
