@@ -1319,7 +1319,7 @@ export default function Dashboard() {
                       <div className="feature-item">
                         🔑 API key authentication
                       </div>
-                      <div className="feature-item">📊 Rate limiting</div>
+                      <div className="feature-item">Rate limiting</div>
                       <div className="feature-item">
                         📖 OpenAPI documentation
                       </div>
