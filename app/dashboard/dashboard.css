@@ -1784,6 +1784,9 @@ legend {
 }
 
 .btn.btn-primary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: linear-gradient(
     135deg,
     rgba(33, 150, 243, 0.2) 0%,
@@ -1799,13 +1802,15 @@ legend {
     inset 0 1px 0 rgba(255, 255, 255, 0.1),
     0 0 12px rgba(33, 150, 243, 0.2);
   color: #ffffff;
-  font-size: 0.875rem;
+  font-size: 14px;
   font-weight: 500;
   font-family: var(--font-sans);
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  padding: 14px 32px;
+  margin: 0 8px;
 }
 
 .btn.btn-primary:hover {
