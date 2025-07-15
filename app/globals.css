@@ -242,10 +242,24 @@ a {
   left: 50%;
   transform: translateX(-50%);
   display: flex;
+  align-items: center;
   gap: 2rem;
   z-index: 10;
   width: auto;
   max-width: calc(100% - 4rem);
+}
+
+.nav-logo {
+  height: 32px;
+  width: auto;
+  margin-right: 1rem;
+  filter: brightness(1.1);
+  transition: var(--transition-smooth);
+}
+
+.nav-logo:hover {
+  filter: brightness(1.2);
+  transform: scale(1.05);
 }
 
 .nav-link {
