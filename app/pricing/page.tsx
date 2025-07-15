@@ -278,7 +278,10 @@ export default function PricingPage() {
               {plan.badge && <div className="plan-badge">{plan.badge}</div>}
 
               <div className="plan-header">
-                <h3>{plan.name}</h3>
+                <h3>
+                  {plan.name}
+                  {getCurrentPlanBadge(plan.id)}
+                </h3>
                 <div className="plan-price">
                   {plan.price === 0 ? (
                     <span className="price-free">Free</span>
@@ -330,10 +333,27 @@ export default function PricingPage() {
               </div>
 
               <button
-                className={`plan-cta ${plan.popular ? "popular" : ""} ${plan.enterprise ? "enterprise" : ""}`}
+                className={`plan-cta ${plan.popular ? "popular" : ""} ${plan.enterprise ? "enterprise" : ""} ${
+                  user?.plan === plan.id ? "current-plan" : ""
+                }`}
                 onClick={() => handlePlanSelection(plan.id)}
+                disabled={
+                  loading === plan.id ||
+                  (user?.plan === plan.id && plan.id !== "free")
+                }
               >
-                {plan.ctaText}
+                {loading === plan.id ? (
+                  <div className="flex items-center justify-center">
+                    <div className="animate-spin -ml-1 mr-3 h-5 w-5 border-2 border-white border-t-transparent rounded-full"></div>
+                    Processing...
+                  </div>
+                ) : user?.plan === plan.id && plan.id !== "free" ? (
+                  "Current Plan"
+                ) : !user && plan.id !== "free" ? (
+                  "Sign Up to Start"
+                ) : (
+                  plan.ctaText
+                )}
               </button>
             </div>
           ))}
