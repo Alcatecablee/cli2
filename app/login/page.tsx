@@ -1,47 +1,72 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useAuth } from "../../lib/auth-context";
 
 export default function LoginPage() {
   const router = useRouter();
+  const { user, signIn } = useAuth();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [attempts, setAttempts] = useState(0);
+
+  // Redirect if already logged in
+  useEffect(() => {
+    if (user) {
+      router.push("/dashboard");
+    }
+  }, [user, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError("");
 
+    // Client-side validation
+    const email = formData.email.trim();
+    const password = formData.password;
+
+    if (!email || !password) {
+      setError("Please fill in all fields");
+      setLoading(false);
+      return;
+    }
+
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setError("Please enter a valid email address");
+      setLoading(false);
+      return;
+    }
+
+    // Rate limiting on client side
+    if (attempts >= 5) {
+      setError("Too many failed attempts. Please wait before trying again.");
+      setLoading(false);
+      return;
+    }
+
     try {
-      const response = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+      await signIn(email, password);
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "Login failed");
+      // Check for intended plan from pricing page
+      const intendedPlan = localStorage.getItem("intended_plan");
+      if (intendedPlan) {
+        localStorage.removeItem("intended_plan");
+        const { planId, billingPeriod } = JSON.parse(intendedPlan);
+        router.push(`/checkout?plan=${planId}&billing=${billingPeriod}`);
+      } else {
+        router.push("/dashboard");
       }
-
-      // Store the session token
-      if (data.session?.access_token) {
-        localStorage.setItem("supabase_session", JSON.stringify(data.session));
-        localStorage.setItem("user_data", JSON.stringify(data.user));
-      }
-
-      // Redirect to dashboard
-      router.push("/dashboard");
     } catch (err) {
+      setAttempts((prev) => prev + 1);
       setError(err instanceof Error ? err.message : "Login failed");
     } finally {
       setLoading(false);
@@ -49,11 +74,30 @@ export default function LoginPage() {
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+
+    // Clear error when user starts typing
+    if (error) {
+      setError("");
+    }
+
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [name]: value,
     });
   };
+
+  // Don't render if user is already logged in
+  if (user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-gray-800 to-black">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+          <p className="text-white">Redirecting to dashboard...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-gray-800 to-black">
