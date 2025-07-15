@@ -7,6 +7,7 @@ import BulkProcessor from "./components/BulkProcessor";
 import AnalyticsDashboard from "./components/AnalyticsDashboard";
 import ApiKeysManager from "./components/ApiKeysManager";
 import SystemStatus from "./components/SystemStatus";
+import ErrorBoundary from "./components/ErrorBoundary";
 
 // Import the same result interfaces from the demo
 interface DemoResult {
@@ -1169,47 +1170,55 @@ export default function Dashboard() {
           {/* Bulk Processing Tab */}
           {dashboardState.activeSection === "bulk" && (
             <div className="tab-content">
-              <BulkProcessor
-                onAnalysisComplete={(results) => {
-                  // Save bulk results to history
-                  results.forEach((result, index) => {
-                    if (result.success) {
-                      saveToHistory(
-                        result.filename || `bulk-file-${index}`,
-                        result,
-                        Array.isArray(dashboardState.selectedLayers)
-                          ? dashboardState.selectedLayers
-                          : [],
-                        result.metadata?.processingTimeMs || 0,
-                      );
-                    }
-                  });
+              <ErrorBoundary>
+                <BulkProcessor
+                  onAnalysisComplete={(results) => {
+                    // Save bulk results to history
+                    results.forEach((result, index) => {
+                      if (result.success) {
+                        saveToHistory(
+                          result.filename || `bulk-file-${index}`,
+                          result,
+                          Array.isArray(dashboardState.selectedLayers)
+                            ? dashboardState.selectedLayers
+                            : [],
+                          result.metadata?.processingTimeMs || 0,
+                        );
+                      }
+                    });
 
-                  // Show summary
-                  const successCount = results.filter((r) => r.success).length;
-                  alert(
-                    `Bulk processing complete! ${successCount}/${results.length} files processed successfully.`,
-                  );
-                }}
-                selectedLayers={dashboardState.selectedLayers}
-                applyFixes={dashboardState.applyFixes}
-              />
+                    // Show summary
+                    const successCount = results.filter(
+                      (r) => r.success,
+                    ).length;
+                    alert(
+                      `Bulk processing complete! ${successCount}/${results.length} files processed successfully.`,
+                    );
+                  }}
+                  selectedLayers={dashboardState.selectedLayers}
+                  applyFixes={dashboardState.applyFixes}
+                />
+              </ErrorBoundary>
             </div>
           )}
 
           {/* Analytics Tab */}
           {dashboardState.activeSection === "analytics" && (
             <div className="tab-content">
-              <AnalyticsDashboard
-                analysisHistory={dashboardState.analysisHistory}
-              />
+              <ErrorBoundary>
+                <AnalyticsDashboard
+                  analysisHistory={dashboardState.analysisHistory}
+                />
+              </ErrorBoundary>
             </div>
           )}
 
           {/* API Keys Tab */}
           {dashboardState.activeSection === "api-keys" && (
             <div className="tab-content">
-              <ApiKeysManager userId="demo-user" />
+              <ErrorBoundary>
+                <ApiKeysManager userId="demo-user" />
+              </ErrorBoundary>
             </div>
           )}
 
@@ -1651,7 +1660,9 @@ export default function Dashboard() {
           {/* System Status Tab */}
           {dashboardState.activeSection === "status" && (
             <div className="tab-content">
-              <SystemStatus />
+              <ErrorBoundary>
+                <SystemStatus />
+              </ErrorBoundary>
             </div>
           )}
 
