@@ -10,6 +10,7 @@ interface User {
   lastName: string;
   plan: string;
   emailConfirmed: boolean;
+  createdAt?: string;
 }
 
 interface Session {
