@@ -596,6 +596,54 @@ export default function Dashboard() {
     }));
   }, []);
 
+  // Load subscription data from API
+  const loadSubscriptionData = useCallback(async () => {
+    if (!session?.access_token) return;
+
+    setDashboardState((prev) => ({
+      ...prev,
+      subscriptionData: {
+        ...prev.subscriptionData,
+        loading: true,
+        error: null,
+      },
+    }));
+
+    try {
+      const response = await fetch("/api/subscriptions", {
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch subscription data");
+      }
+
+      const data = await response.json();
+
+      setDashboardState((prev) => ({
+        ...prev,
+        subscriptionData: {
+          subscriptions: data.subscriptions || [],
+          currentPlan: data.currentPlan || user?.plan || "free",
+          loading: false,
+          error: null,
+        },
+      }));
+    } catch (error) {
+      console.error("Failed to load subscription data:", error);
+      setDashboardState((prev) => ({
+        ...prev,
+        subscriptionData: {
+          ...prev.subscriptionData,
+          loading: false,
+          error: error instanceof Error ? error.message : "Unknown error",
+        },
+      }));
+    }
+  }, [session?.access_token, user?.plan]);
+
   // Load saved data and session on component mount
   useEffect(() => {
     const savedHistory = localStorage.getItem("neurolint-history");
