@@ -875,7 +875,7 @@ a {
   }
   .demo-container {
     padding: 0 1.5rem;
-    gap: 2.5rem;
+    gap: 3rem;
   }
   .demo-upload-section {
     grid-template-columns: 1fr;
