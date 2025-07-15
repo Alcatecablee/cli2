@@ -59,13 +59,35 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const checkSession = async () => {
     try {
       const savedSession = localStorage.getItem("supabase_session");
-      const savedUser = localStorage.getItem("user_data");
 
-      if (savedSession && savedUser) {
-        const sessionData = JSON.parse(savedSession);
-        const userData = JSON.parse(savedUser);
+      if (savedSession) {
+        let sessionData;
+        try {
+          sessionData = JSON.parse(savedSession);
+        } catch (e) {
+          console.error("Invalid session data in localStorage");
+          clearSession();
+          return;
+        }
 
-        // Verify session is still valid
+        // Check if session has expired
+        if (
+          sessionData.expires_at &&
+          sessionData.expires_at * 1000 < Date.now()
+        ) {
+          console.log("Session expired");
+          clearSession();
+          return;
+        }
+
+        // Validate session structure
+        if (!sessionData.access_token || !sessionData.refresh_token) {
+          console.error("Invalid session structure");
+          clearSession();
+          return;
+        }
+
+        // Verify session is still valid with server
         const response = await fetch("/api/auth/user", {
           headers: {
             Authorization: `Bearer ${sessionData.access_token}`,
@@ -74,10 +96,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         if (response.ok) {
           const { user: currentUser } = await response.json();
-          setUser(currentUser);
-          setSession(sessionData);
+
+          // Additional validation on user data
+          if (currentUser && currentUser.id && currentUser.email) {
+            setUser(currentUser);
+            setSession(sessionData);
+          } else {
+            console.error("Invalid user data received");
+            clearSession();
+          }
+        } else if (response.status === 401) {
+          // Session invalid, try to refresh or clear
+          console.log("Session invalid, clearing storage");
+          clearSession();
         } else {
-          // Session invalid, clear storage
+          console.error("Session validation failed:", response.status);
           clearSession();
         }
       }
@@ -90,21 +123,36 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const clearSession = () => {
-    localStorage.removeItem("supabase_session");
-    localStorage.removeItem("user_data");
-    setUser(null);
-    setSession(null);
+    try {
+      localStorage.removeItem("supabase_session");
+      localStorage.removeItem("user_data");
+      setUser(null);
+      setSession(null);
+    } catch (error) {
+      console.error("Error clearing session:", error);
+      // Still clear state even if localStorage fails
+      setUser(null);
+      setSession(null);
+    }
   };
 
   const signIn = async (email: string, password: string) => {
     setLoading(true);
     try {
+      // Input validation
+      if (!email || !password) {
+        throw new Error("Email and password are required");
+      }
+
       const response = await fetch("/api/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({
+          email: email.trim().toLowerCase(),
+          password,
+        }),
       });
 
       const data = await response.json();
@@ -113,9 +161,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         throw new Error(data.error || "Login failed");
       }
 
-      if (data.session?.access_token) {
+      // Validate response data
+      if (!data.session?.access_token || !data.user?.id) {
+        throw new Error("Invalid response from server");
+      }
+
+      try {
         localStorage.setItem("supabase_session", JSON.stringify(data.session));
         localStorage.setItem("user_data", JSON.stringify(data.user));
+        setUser(data.user);
+        setSession(data.session);
+      } catch (storageError) {
+        console.error("Failed to save session to localStorage:", storageError);
+        // Still set state even if localStorage fails
         setUser(data.user);
         setSession(data.session);
       }
