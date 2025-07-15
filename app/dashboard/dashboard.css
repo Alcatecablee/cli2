@@ -1376,11 +1376,12 @@ legend {
   pointer-events: none;
 }
 
-.upload-area:hover {
-  border-color: rgba(255, 255, 255, 0.5);
-  background: rgba(255, 255, 255, 0.06);
+.upload-area:hover,
+.upload-area:focus-within {
+  border-color: #666666;
+  background: rgba(255, 255, 255, 0.05);
   transform: translateY(-4px);
-  box-shadow: var(--shadow-large);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
 }
 
 .upload-area:focus-within {
