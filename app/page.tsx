@@ -155,56 +155,45 @@ const loadOnboardingData = async (): Promise<OnboardingData> => {
   };
 };
 
-// Helper function to initialize onboarding state with persistence
-const getInitialOnboardingState = (): OnboardingData => {
-  // Try to load from localStorage first
-  if (typeof window !== "undefined") {
-    try {
-      const savedOnboarding = localStorage.getItem("neurolint-onboarding");
-      if (savedOnboarding) {
-        const parsed = JSON.parse(savedOnboarding);
-        // Validate the structure before using
-        if (
-          parsed &&
-          typeof parsed === "object" &&
-          typeof parsed.completedOnboarding === "boolean"
-        ) {
-          return {
-            projectType: parsed.projectType || "",
-            experienceLevel: parsed.experienceLevel || "",
-            hasCode: parsed.hasCode || false,
-            completedOnboarding: parsed.completedOnboarding,
-          };
-        }
-      }
-    } catch (error) {
-      console.warn("Failed to load onboarding data from localStorage:", error);
-      // Clear corrupted data
-      localStorage.removeItem("neurolint-onboarding");
-    }
-  }
-
-  // Return default state if no valid saved data
-  return {
-    projectType: "",
-    experienceLevel: "",
-    hasCode: false,
-    completedOnboarding: false,
-  };
-};
+// Helper function to get default onboarding state (SSR-safe)
+const getDefaultOnboardingState = (): OnboardingData => ({
+  projectType: "",
+  experienceLevel: "",
+  hasCode: false,
+  completedOnboarding: false,
+});
 
 export default function HomePage() {
   const [currentText, setCurrentText] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [onboardingStep, setOnboardingStep] = useState(0);
   const [onboardingData, setOnboardingData] = useState<OnboardingData>(
-    getInitialOnboardingState(),
+    getDefaultOnboardingState(),
   );
+  const [isHydrated, setIsHydrated] = useState(false);
 
-  // Save onboarding data whenever it changes
+  // Load data from localStorage after hydration to prevent SSR mismatch
   useEffect(() => {
-    saveOnboardingData(onboardingData);
-  }, [onboardingData]);
+    const loadSavedData = async () => {
+      try {
+        const savedData = await loadOnboardingData();
+        setOnboardingData(savedData);
+      } catch (error) {
+        console.warn("Failed to load saved onboarding data:", error);
+      } finally {
+        setIsHydrated(true);
+      }
+    };
+
+    loadSavedData();
+  }, []);
+
+  // Save onboarding data whenever it changes (but only after hydration)
+  useEffect(() => {
+    if (isHydrated) {
+      saveOnboardingData(onboardingData);
+    }
+  }, [onboardingData, isHydrated]);
 
   const texts = [
     "Fix React Errors Instantly",
