@@ -277,7 +277,6 @@ a {
 .nav-logo {
   height: 48px;
   width: auto;
-  margin-right: 1rem;
   filter: brightness(1.1);
   transition: var(--transition-smooth);
 }
