@@ -1,13 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { randomUUID } from "crypto";
-
-// Import webhook trigger function
-import { triggerWebhook } from "../webhooks/route";
-
-// In-memory storage (same references as other routes)
-const apiKeys = new Map();
-const projects = new Map();
-const projectAnalyses = new Map();
+import { dataStore, dataUtils } from "../../../lib/data-store";
 
 // Import the neurolint engine
 const getNeuroLintEngine = async () => {
@@ -20,60 +13,10 @@ const getNeuroLintEngine = async () => {
   }
 };
 
-// API Key validation
-const validateApiKey = (key: string): any => {
-  for (const apiKey of apiKeys.values()) {
-    if (apiKey.key === key && apiKey.isActive) {
-      // Check expiration
-      if (apiKey.expiresAt && new Date(apiKey.expiresAt) < new Date()) {
-        return null;
-      }
-      return apiKey;
-    }
-  }
-  return null;
-};
-
-// Rate limiting for API keys
-const checkApiRateLimit = (
-  apiKey: any,
-): { allowed: boolean; remaining: number } => {
-  const now = Date.now();
-  const hourWindow = 60 * 60 * 1000;
-  const dayWindow = 24 * 60 * 60 * 1000;
-
-  // Simple rate limiting - in production, use Redis or similar
-  const hourlyCount = apiKey.hourlyUsage || 0;
-  const dailyCount = apiKey.dailyUsage || 0;
-  const lastHourReset = apiKey.lastHourReset || 0;
-  const lastDayReset = apiKey.lastDayReset || 0;
-
-  // Reset counters if needed
-  if (now - lastHourReset > hourWindow) {
-    apiKey.hourlyUsage = 0;
-    apiKey.lastHourReset = now;
-  }
-
-  if (now - lastDayReset > dayWindow) {
-    apiKey.dailyUsage = 0;
-    apiKey.lastDayReset = now;
-  }
-
-  const hourlyAllowed = apiKey.hourlyUsage < apiKey.rateLimit.requestsPerHour;
-  const dailyAllowed = apiKey.dailyUsage < apiKey.rateLimit.requestsPerDay;
-
-  return {
-    allowed: hourlyAllowed && dailyAllowed,
-    remaining: Math.min(
-      apiKey.rateLimit.requestsPerHour - apiKey.hourlyUsage,
-      apiKey.rateLimit.requestsPerDay - apiKey.dailyUsage,
-    ),
-  };
-};
-
 export async function POST(request: NextRequest) {
   const requestId = randomUUID().substring(0, 8);
   const startTime = Date.now();
+  let authenticatedUser = null;
 
   try {
     // Check for API key authentication
@@ -81,11 +24,10 @@ export async function POST(request: NextRequest) {
       request.headers.get("x-api-key") ||
       request.headers.get("authorization")?.replace("Bearer ", "");
 
-    let authenticatedUser = null;
     let rateLimitInfo = null;
 
     if (apiKeyHeader) {
-      const apiKey = validateApiKey(apiKeyHeader);
+      const apiKey = dataUtils.validateApiKey(apiKeyHeader);
       if (!apiKey) {
         return NextResponse.json(
           { error: "Invalid or expired API key" },
@@ -105,13 +47,13 @@ export async function POST(request: NextRequest) {
       }
 
       // Check rate limits
-      const rateLimit = checkApiRateLimit(apiKey);
+      const rateLimit = dataUtils.checkApiRateLimit(apiKey);
       if (!rateLimit.allowed) {
         return NextResponse.json(
           {
             error: "Rate limit exceeded",
             remaining: rateLimit.remaining,
-            resetTime: apiKey.lastHourReset + 60 * 60 * 1000,
+            resetTime: (apiKey.lastHourReset || 0) + 60 * 60 * 1000,
           },
           { status: 429 },
         );
@@ -134,6 +76,7 @@ export async function POST(request: NextRequest) {
       apiKey.dailyUsage = (apiKey.dailyUsage || 0) + 1;
       apiKey.usageCount = (apiKey.usageCount || 0) + 1;
       apiKey.lastUsed = new Date().toISOString();
+      dataStore.apiKeys.set(apiKey.id, apiKey);
     }
 
     const body = await request.json();
@@ -193,7 +136,7 @@ export async function POST(request: NextRequest) {
     // Check project access if projectId provided
     let project = null;
     if (projectId) {
-      project = projects.get(projectId);
+      project = dataStore.projects.get(projectId);
       if (!project) {
         return NextResponse.json(
           { error: "Project not found" },
@@ -255,7 +198,7 @@ export async function POST(request: NextRequest) {
 
     // Save analysis to project if specified
     if (projectId && result.success) {
-      const analyses = projectAnalyses.get(projectId) || [];
+      const analyses = dataStore.projectAnalyses.get(projectId) || [];
       const analysisRecord = {
         id: `analysis_${Date.now()}_${Math.random().toString(36).substring(2)}`,
         filename,
@@ -268,7 +211,7 @@ export async function POST(request: NextRequest) {
       };
 
       analyses.push(analysisRecord);
-      projectAnalyses.set(projectId, analyses.slice(-100)); // Keep last 100 analyses
+      dataStore.projectAnalyses.set(projectId, analyses.slice(-100)); // Keep last 100 analyses
 
       // Update project stats
       if (project) {
@@ -288,20 +231,24 @@ export async function POST(request: NextRequest) {
         project.stats.lastAnalyzed = new Date().toISOString();
         project.stats.qualityScore = Math.round(avgConfidence * 100);
         project.updatedAt = new Date().toISOString();
-        projects.set(projectId, project);
+        dataStore.projects.set(projectId, project);
       }
     }
 
     // Trigger webhooks for authenticated users
     if (authenticatedUser) {
       try {
-        await triggerWebhook(authenticatedUser.userId, "analysis.completed", {
-          filename,
-          projectId,
-          issuesFound: result.analysis?.detectedIssues?.length || 0,
-          qualityScore: Math.round((result.analysis?.confidence || 0) * 100),
-          processingTime,
-        });
+        await dataUtils.triggerWebhook(
+          authenticatedUser.userId,
+          "analysis.completed",
+          {
+            filename,
+            projectId,
+            issuesFound: result.analysis?.detectedIssues?.length || 0,
+            qualityScore: Math.round((result.analysis?.confidence || 0) * 100),
+            processingTime,
+          },
+        );
       } catch (webhookError) {
         console.error("Webhook trigger failed:", webhookError);
         // Don't fail the analysis if webhook fails
@@ -334,11 +281,15 @@ export async function POST(request: NextRequest) {
     // Trigger error webhook for authenticated users
     if (authenticatedUser) {
       try {
-        await triggerWebhook(authenticatedUser.userId, "analysis.failed", {
-          filename: body?.filename || "unknown",
-          error: error.message,
-          processingTime,
-        });
+        await dataUtils.triggerWebhook(
+          authenticatedUser.userId,
+          "analysis.failed",
+          {
+            filename: body?.filename || "unknown",
+            error: error instanceof Error ? error.message : "Unknown error",
+            processingTime,
+          },
+        );
       } catch (webhookError) {
         console.error("Error webhook trigger failed:", webhookError);
       }
