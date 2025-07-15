@@ -176,7 +176,7 @@ export default function BulkProcessor({
       case "pending":
         return "⏳";
       case "processing":
-        return "🔄";
+        return "•";
       case "completed":
         return "✅";
       case "error":
