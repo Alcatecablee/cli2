@@ -890,8 +890,10 @@ function ImageGallery({ images }) {
                           </div>
                         </div>
                         <div className="highlight-item">
-                          <div className="highlight-icon">FAST</div>
-                          <div className="highlight-text">Instant Analysis</div>
+                          <div className="highlight-icon">INSTANT</div>
+                          <div className="highlight-text">
+                            Results in Seconds
+                          </div>
                         </div>
                         <div className="highlight-item">
                           <div className="highlight-icon">SAFE</div>
