@@ -1570,7 +1570,7 @@ function ImageGallery({ images }) {
                                                 key={index}
                                                 className="improvement-item"
                                               >
-                                                • {improvement}
+                                                �� {improvement}
                                               </div>
                                             ),
                                           )}
@@ -1673,8 +1673,8 @@ function ImageGallery({ images }) {
                                             className="code-action-btn"
                                             onClick={() =>
                                               downloadCode(
-                                                demoState.result.originalCode ||
-                                                  "",
+                                                demoState.result
+                                                  ?.originalCode || "",
                                                 "original-code.tsx",
                                               )
                                             }
