@@ -1226,7 +1226,12 @@ export default function Dashboard() {
                   <div className="integration-category">
                     <div className="category-header">
                       <h4>CI/CD Pipelines</h4>
-                      <span className="category-status">Coming Soon</span>
+                      <span
+                        className="category-status"
+                        data-status="coming-soon"
+                      >
+                        Coming Soon
+                      </span>
                     </div>
                     <p>
                       Automatically analyze code in your CI/CD pipeline with
@@ -1243,7 +1248,9 @@ export default function Dashboard() {
                   <div className="integration-category">
                     <div className="category-header">
                       <h4>Webhooks</h4>
-                      <span className="category-status">Available</span>
+                      <span className="category-status" data-status="available">
+                        Available
+                      </span>
                     </div>
                     <p>
                       Receive real-time notifications when analyses complete or
@@ -1264,7 +1271,9 @@ export default function Dashboard() {
                   <div className="integration-category">
                     <div className="category-header">
                       <h4>Team Notifications</h4>
-                      <span className="category-status">Available</span>
+                      <span className="category-status" data-status="available">
+                        Available
+                      </span>
                     </div>
                     <p>
                       Keep your team informed with Slack and Microsoft Teams
@@ -1289,7 +1298,9 @@ export default function Dashboard() {
                   <div className="integration-category">
                     <div className="category-header">
                       <h4>API Access</h4>
-                      <span className="category-status">Available</span>
+                      <span className="category-status" data-status="available">
+                        Available
+                      </span>
                     </div>
                     <p>
                       Programmatic access to NeuroLint Pro analysis engine with
