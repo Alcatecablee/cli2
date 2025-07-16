@@ -1291,9 +1291,12 @@ export default function PricingPage() {
                       fontSize: "0.875rem",
                     }}
                   >
-                    Yes, you can upgrade or downgrade your plan at any time.
-                    Changes take effect immediately, and we'll prorate the
-                    charges accordingly.
+                    Yes, you can upgrade your plan at any time through your
+                    dashboard. Plan changes take effect immediately.{" "}
+                    <em>
+                      Note: Automatic downgrades and prorating are not yet
+                      implemented.
+                    </em>
                   </p>
                 </div>
                 <div
@@ -1357,9 +1360,10 @@ export default function PricingPage() {
                       fontSize: "0.875rem",
                     }}
                   >
-                    You can purchase additional analyses at $0.10 each, or
-                    upgrade to a higher plan. We'll notify you before you reach
-                    your limit.
+                    Rate limiting is enforced based on your plan. You'll receive
+                    notifications before reaching your limit. Additional
+                    analysis purchases at $0.10 each are planned but not yet
+                    implemented.
                   </p>
                 </div>
                 <div
@@ -1378,7 +1382,7 @@ export default function PricingPage() {
                       margin: "0 0 0.75rem 0",
                     }}
                   >
-                    Do you offer refunds?
+                    What payment methods do you accept?
                   </h4>
                   <p
                     style={{
@@ -1388,8 +1392,9 @@ export default function PricingPage() {
                       fontSize: "0.875rem",
                     }}
                   >
-                    Yes, we offer a 30-day money-back guarantee for all paid
-                    plans if you're not completely satisfied with our service.
+                    Currently we support PayPal integration. Additional payment
+                    methods including credit cards and bank transfers are
+                    planned for future releases.
                   </p>
                 </div>
               </div>
