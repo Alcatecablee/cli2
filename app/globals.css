@@ -441,12 +441,12 @@ a {
 }
 
 .hero-actions .btn {
-  background: var(--primary);
-  color: var(--primary-foreground);
+  background: var(--info-glow);
+  color: var(--status-info);
   font-weight: 700;
   font-size: 1.2rem;
   padding: 1.25rem 2.5rem;
-  border: 1px solid #4a4a4a;
+  border: 1px solid rgba(33, 150, 243, 0.4);
   border-radius: 8px;
   cursor: pointer;
   transition: var(--transition-smooth);
@@ -459,17 +459,22 @@ a {
   font-family: var(--font-sans);
   position: relative;
   overflow: hidden;
-  /* Improve touch targets */
   touch-action: manipulation;
+  box-shadow:
+    0 0 0 1px rgba(33, 150, 243, 0.3),
+    0 4px 12px rgba(33, 150, 243, 0.15);
+  transform: translateY(-1px);
 }
 
 .hero-actions .btn:hover,
 .hero-actions .btn:focus {
-  background: var(--background);
-  color: var(--foreground);
+  background: rgba(33, 150, 243, 0.2);
+  color: #ffffff;
   transform: translateY(-3px);
-  border-color: #666666;
-  box-shadow: var(--shadow-strong);
+  border-color: rgba(33, 150, 243, 0.6);
+  box-shadow:
+    0 0 0 1px rgba(33, 150, 243, 0.4),
+    0 8px 24px rgba(33, 150, 243, 0.25);
 }
 
 .hero-actions .btn:focus {
