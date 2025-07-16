@@ -300,6 +300,22 @@ export default function PricingPage() {
                       </li>
                     ))}
                   </ul>
+
+                  {plan.limitations && (
+                    <div className="plan-limitations">
+                      <h5 className="limitations-title">Limitations:</h5>
+                      <ul className="limitations-list">
+                        {plan.limitations.map((limitation, index) => (
+                          <li key={index} className="limitation-item">
+                            <span className="limitation-icon">•</span>
+                            <span className="limitation-text">
+                              {limitation}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
                 </div>
 
                 <button
