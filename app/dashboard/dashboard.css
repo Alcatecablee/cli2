@@ -1863,30 +1863,7 @@ legend {
   flex-wrap: wrap;
 }
 
-/* Beautiful Buttons */
-.btn {
-  padding: 16px 24px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 12px;
-  color: rgba(255, 255, 255, 0.9);
-  cursor: pointer;
-  transition: var(--transition-smooth);
-  font-size: 14px;
-  font-weight: 500;
-  text-align: center;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 52px;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  box-shadow: var(--shadow-subtle);
-  position: relative;
-  overflow: hidden;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-}
+/* Dashboard buttons use the unified system from globals.css */
 
 .btn::before {
   content: "";
