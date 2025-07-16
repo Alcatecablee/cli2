@@ -972,7 +972,7 @@ function ImageGallery({ images }) {
           error:
             error instanceof Error ? error.message : "File processing failed",
         },
-            }));
+      }));
     }
   };
 
@@ -1200,16 +1200,19 @@ function ImageGallery({ images }) {
             <section id="demo" className="demo-section">
               <div className="demo-header">
                 {/* Enterprise Platform Section */}
-                                <div className="enterprise-platform">
+                <div className="enterprise-platform">
                   <div className="platform-container">
-                                        <div className="platform-hero">
+                    <div className="platform-hero">
                       <h3>Enterprise-Grade Analysis Engine</h3>
-                      <p>Six-layer automated transformation with enterprise safety</p>
+                      <p>
+                        Six-layer automated transformation with enterprise
+                        safety
+                      </p>
                     </div>
 
-                                        <div className="platform-metrics">
+                    <div className="platform-metrics">
                       <div className="metric-card">
-                        <div className="metric-value">< 60s</div>
+                        <div className="metric-value">&lt; 60s</div>
                         <div className="metric-label">Processing</div>
                       </div>
                       <div className="metric-card">
@@ -1301,7 +1304,7 @@ function ImageGallery({ images }) {
                           <strong>All Layers</strong>
                           <p>
                             Comprehensive analysis across all 6 layers:
-                            Configuration → Patterns → Components ����� Hydration
+                            Configuration → Patterns → Components ��� Hydration
                             → Next.js → Testing
                           </p>
                         </div>
