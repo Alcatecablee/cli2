@@ -14,7 +14,7 @@ if (supabaseUrl && supabaseServiceKey) {
 
 export async function POST(request: NextRequest) {
   try {
-    if (!supabaseUrl || !supabaseServiceKey) {
+    if (!supabase) {
       return NextResponse.json(
         { error: "Service configuration error" },
         { status: 500 },
