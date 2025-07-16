@@ -830,7 +830,7 @@ export default function CollaboratePage() {
                   fontSize: "0.75rem",
                 }}
               >
-                ✕
+                ×
               </button>
             </div>
           </div>
