@@ -944,7 +944,7 @@ export default function PricingPage() {
               </div>
             </div>
 
-            {/* Feature Comparison Table */}
+            {/* Feature Comparison */}
             <div style={{ marginBottom: "3rem" }}>
               <h2
                 style={{
@@ -957,178 +957,555 @@ export default function PricingPage() {
               >
                 Feature Comparison
               </h2>
+
+              {/* Mobile-First Feature Comparison */}
               <div
                 style={{
-                  background: "rgba(255, 255, 255, 0.05)",
-                  border: "1px solid rgba(255, 255, 255, 0.15)",
-                  borderRadius: "16px",
-                  padding: "2rem",
-                  overflowX: "auto",
+                  display: "grid",
+                  gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+                  gap: "1.5rem",
                 }}
               >
-                <table
+                {/* Free Plan */}
+                <div
                   style={{
-                    width: "100%",
-                    borderCollapse: "collapse",
-                    fontSize: "0.875rem",
+                    background: "rgba(255, 255, 255, 0.05)",
+                    border: "1px solid rgba(255, 255, 255, 0.15)",
+                    borderRadius: "16px",
+                    padding: "1.5rem",
                   }}
                 >
-                  <thead>
-                    <tr>
-                      <th
-                        style={{
-                          textAlign: "left",
-                          padding: "1rem 0.5rem",
-                          color: "rgba(255, 255, 255, 0.9)",
-                          fontWeight: "600",
-                          borderBottom: "1px solid rgba(255, 255, 255, 0.15)",
-                        }}
-                      >
-                        Features
-                      </th>
-                      <th
-                        style={{
-                          textAlign: "center",
-                          padding: "1rem 0.5rem",
-                          color: "rgba(255, 255, 255, 0.9)",
-                          fontWeight: "600",
-                          borderBottom: "1px solid rgba(255, 255, 255, 0.15)",
-                        }}
-                      >
-                        Free
-                      </th>
-                      <th
-                        style={{
-                          textAlign: "center",
-                          padding: "1rem 0.5rem",
-                          color: "rgba(255, 255, 255, 0.9)",
-                          fontWeight: "600",
-                          borderBottom: "1px solid rgba(255, 255, 255, 0.15)",
-                        }}
-                      >
-                        Developer
-                      </th>
-                      <th
-                        style={{
-                          textAlign: "center",
-                          padding: "1rem 0.5rem",
-                          color: "rgba(255, 255, 255, 0.9)",
-                          fontWeight: "600",
-                          borderBottom: "1px solid rgba(255, 255, 255, 0.15)",
-                        }}
-                      >
-                        Professional
-                      </th>
-                      <th
-                        style={{
-                          textAlign: "center",
-                          padding: "1rem 0.5rem",
-                          color: "rgba(255, 255, 255, 0.9)",
-                          fontWeight: "600",
-                          borderBottom: "1px solid rgba(255, 255, 255, 0.15)",
-                        }}
-                      >
-                        Team
-                      </th>
-                      <th
-                        style={{
-                          textAlign: "center",
-                          padding: "1rem 0.5rem",
-                          color: "rgba(255, 255, 255, 0.9)",
-                          fontWeight: "600",
-                          borderBottom: "1px solid rgba(255, 255, 255, 0.15)",
-                        }}
-                      >
-                        Enterprise
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {[
-                      [
-                        "Monthly Analyses",
-                        "5",
-                        "50",
-                        "500",
-                        "2,000",
-                        "Unlimited",
-                      ],
-                      [
-                        "File Size Limit",
-                        "200KB",
-                        "1MB",
-                        "10MB",
-                        "50MB",
-                        "Unlimited",
-                      ],
-                      ["6-Layer Fixing System", "✓", "✓", "✓", "✓", "✓"],
-                      ["Apply Fixes Mode", "×", "✓", "✓", "✓", "✓"],
-                      [
-                        "API Access",
-                        "×",
-                        "Basic",
-                        "Advanced",
-                        "Premium",
-                        "Unlimited",
-                      ],
-                      [
-                        "Team Collaboration",
-                        "×",
-                        "×",
-                        "5 members",
-                        "Unlimited",
-                        "Unlimited",
-                      ],
-                      ["CI/CD Integrations", "×", "×", "✓", "✓", "✓"],
-                      ["Webhooks", "×", "×", "✓", "Advanced", "Custom"],
-                      [
-                        "Priority Support",
-                        "×",
-                        "Email",
-                        "Email",
-                        "Dedicated",
-                        "24/7 Phone",
-                      ],
-                      ["SLA Guarantee", "×", "×", "×", "✓", "Custom"],
-                      ["On-premise Deployment", "×", "×", "×", "×", "✓"],
-                    ].map((row, index) => (
-                      <tr key={index}>
-                        {row.map((cell, cellIndex) => (
-                          <td
-                            key={cellIndex}
-                            style={{
-                              padding: "0.75rem 0.5rem",
-                              color:
-                                cellIndex === 0
-                                  ? "rgba(255, 255, 255, 0.9)"
-                                  : "rgba(255, 255, 255, 0.7)",
-                              textAlign: cellIndex === 0 ? "left" : "center",
-                              borderBottom:
-                                index < 10
-                                  ? "1px solid rgba(255, 255, 255, 0.08)"
-                                  : "none",
-                              fontWeight: cellIndex === 0 ? "500" : "400",
-                            }}
-                          >
-                            {cell === "✓" ? (
-                              <span style={{ color: "rgba(76, 175, 80, 0.9)" }}>
-                                ✓
-                              </span>
-                            ) : cell === "×" ? (
-                              <span
-                                style={{ color: "rgba(255, 255, 255, 0.3)" }}
-                              >
-                                ×
-                              </span>
-                            ) : (
-                              cell
-                            )}
-                          </td>
-                        ))}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                  <h3
+                    style={{
+                      fontSize: "1.25rem",
+                      fontWeight: "600",
+                      color: "#ffffff",
+                      margin: "0 0 1rem 0",
+                      textAlign: "center",
+                    }}
+                  >
+                    Free
+                  </h3>
+                  <div style={{ fontSize: "0.875rem" }}>
+                    <div
+                      style={{
+                        marginBottom: "0.75rem",
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <span style={{ color: "rgba(255, 255, 255, 0.7)" }}>
+                        Monthly Analyses:
+                      </span>
+                      <span style={{ color: "#ffffff", fontWeight: "500" }}>
+                        5
+                      </span>
+                    </div>
+                    <div
+                      style={{
+                        marginBottom: "0.75rem",
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <span style={{ color: "rgba(255, 255, 255, 0.7)" }}>
+                        File Size Limit:
+                      </span>
+                      <span style={{ color: "#ffffff", fontWeight: "500" }}>
+                        200KB
+                      </span>
+                    </div>
+                    <div
+                      style={{
+                        marginBottom: "0.75rem",
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <span style={{ color: "rgba(255, 255, 255, 0.7)" }}>
+                        6-Layer System:
+                      </span>
+                      <span style={{ color: "rgba(76, 175, 80, 0.9)" }}>✓</span>
+                    </div>
+                    <div
+                      style={{
+                        marginBottom: "0.75rem",
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <span style={{ color: "rgba(255, 255, 255, 0.7)" }}>
+                        Apply Fixes:
+                      </span>
+                      <span style={{ color: "rgba(255, 255, 255, 0.3)" }}>
+                        ×
+                      </span>
+                    </div>
+                    <div
+                      style={{
+                        marginBottom: "0.75rem",
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <span style={{ color: "rgba(255, 255, 255, 0.7)" }}>
+                        API Access:
+                      </span>
+                      <span style={{ color: "rgba(255, 255, 255, 0.3)" }}>
+                        ×
+                      </span>
+                    </div>
+                    <div
+                      style={{
+                        marginBottom: "0.75rem",
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <span style={{ color: "rgba(255, 255, 255, 0.7)" }}>
+                        Team Features:
+                      </span>
+                      <span style={{ color: "rgba(255, 255, 255, 0.3)" }}>
+                        ×
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Developer Plan */}
+                <div
+                  style={{
+                    background: "rgba(255, 255, 255, 0.05)",
+                    border: "1px solid rgba(255, 255, 255, 0.15)",
+                    borderRadius: "16px",
+                    padding: "1.5rem",
+                  }}
+                >
+                  <h3
+                    style={{
+                      fontSize: "1.25rem",
+                      fontWeight: "600",
+                      color: "#ffffff",
+                      margin: "0 0 1rem 0",
+                      textAlign: "center",
+                    }}
+                  >
+                    Developer
+                  </h3>
+                  <div style={{ fontSize: "0.875rem" }}>
+                    <div
+                      style={{
+                        marginBottom: "0.75rem",
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <span style={{ color: "rgba(255, 255, 255, 0.7)" }}>
+                        Monthly Analyses:
+                      </span>
+                      <span style={{ color: "#ffffff", fontWeight: "500" }}>
+                        50
+                      </span>
+                    </div>
+                    <div
+                      style={{
+                        marginBottom: "0.75rem",
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <span style={{ color: "rgba(255, 255, 255, 0.7)" }}>
+                        File Size Limit:
+                      </span>
+                      <span style={{ color: "#ffffff", fontWeight: "500" }}>
+                        1MB
+                      </span>
+                    </div>
+                    <div
+                      style={{
+                        marginBottom: "0.75rem",
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <span style={{ color: "rgba(255, 255, 255, 0.7)" }}>
+                        6-Layer System:
+                      </span>
+                      <span style={{ color: "rgba(76, 175, 80, 0.9)" }}>✓</span>
+                    </div>
+                    <div
+                      style={{
+                        marginBottom: "0.75rem",
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <span style={{ color: "rgba(255, 255, 255, 0.7)" }}>
+                        Apply Fixes:
+                      </span>
+                      <span style={{ color: "rgba(76, 175, 80, 0.9)" }}>✓</span>
+                    </div>
+                    <div
+                      style={{
+                        marginBottom: "0.75rem",
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <span style={{ color: "rgba(255, 255, 255, 0.7)" }}>
+                        API Access:
+                      </span>
+                      <span style={{ color: "#ffffff", fontWeight: "500" }}>
+                        Basic
+                      </span>
+                    </div>
+                    <div
+                      style={{
+                        marginBottom: "0.75rem",
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <span style={{ color: "rgba(255, 255, 255, 0.7)" }}>
+                        Team Features:
+                      </span>
+                      <span style={{ color: "rgba(255, 255, 255, 0.3)" }}>
+                        ×
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Professional Plan */}
+                <div
+                  style={{
+                    background:
+                      "linear-gradient(135deg, rgba(33, 150, 243, 0.12) 0%, rgba(33, 150, 243, 0.06) 50%, rgba(255, 255, 255, 0.02) 100%)",
+                    border: "1px solid rgba(33, 150, 243, 0.3)",
+                    borderRadius: "16px",
+                    padding: "1.5rem",
+                    position: "relative",
+                  }}
+                >
+                  <div
+                    style={{
+                      position: "absolute",
+                      top: "-10px",
+                      left: "50%",
+                      transform: "translateX(-50%)",
+                      background: "rgba(33, 150, 243, 0.2)",
+                      color: "rgba(33, 150, 243, 0.9)",
+                      padding: "0.3rem 0.8rem",
+                      borderRadius: "12px",
+                      fontSize: "0.75rem",
+                      fontWeight: "600",
+                    }}
+                  >
+                    POPULAR
+                  </div>
+                  <h3
+                    style={{
+                      fontSize: "1.25rem",
+                      fontWeight: "600",
+                      color: "#ffffff",
+                      margin: "0 0 1rem 0",
+                      textAlign: "center",
+                    }}
+                  >
+                    Professional
+                  </h3>
+                  <div style={{ fontSize: "0.875rem" }}>
+                    <div
+                      style={{
+                        marginBottom: "0.75rem",
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <span style={{ color: "rgba(255, 255, 255, 0.7)" }}>
+                        Monthly Analyses:
+                      </span>
+                      <span style={{ color: "#ffffff", fontWeight: "500" }}>
+                        500
+                      </span>
+                    </div>
+                    <div
+                      style={{
+                        marginBottom: "0.75rem",
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <span style={{ color: "rgba(255, 255, 255, 0.7)" }}>
+                        File Size Limit:
+                      </span>
+                      <span style={{ color: "#ffffff", fontWeight: "500" }}>
+                        10MB
+                      </span>
+                    </div>
+                    <div
+                      style={{
+                        marginBottom: "0.75rem",
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <span style={{ color: "rgba(255, 255, 255, 0.7)" }}>
+                        6-Layer System:
+                      </span>
+                      <span style={{ color: "rgba(76, 175, 80, 0.9)" }}>✓</span>
+                    </div>
+                    <div
+                      style={{
+                        marginBottom: "0.75rem",
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <span style={{ color: "rgba(255, 255, 255, 0.7)" }}>
+                        Apply Fixes:
+                      </span>
+                      <span style={{ color: "rgba(76, 175, 80, 0.9)" }}>✓</span>
+                    </div>
+                    <div
+                      style={{
+                        marginBottom: "0.75rem",
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <span style={{ color: "rgba(255, 255, 255, 0.7)" }}>
+                        API Access:
+                      </span>
+                      <span style={{ color: "#ffffff", fontWeight: "500" }}>
+                        Advanced
+                      </span>
+                    </div>
+                    <div
+                      style={{
+                        marginBottom: "0.75rem",
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <span style={{ color: "rgba(255, 255, 255, 0.7)" }}>
+                        Team Features:
+                      </span>
+                      <span style={{ color: "#ffffff", fontWeight: "500" }}>
+                        5 members
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Team Plan */}
+                <div
+                  style={{
+                    background: "rgba(255, 255, 255, 0.05)",
+                    border: "1px solid rgba(255, 255, 255, 0.15)",
+                    borderRadius: "16px",
+                    padding: "1.5rem",
+                  }}
+                >
+                  <h3
+                    style={{
+                      fontSize: "1.25rem",
+                      fontWeight: "600",
+                      color: "#ffffff",
+                      margin: "0 0 1rem 0",
+                      textAlign: "center",
+                    }}
+                  >
+                    Team
+                  </h3>
+                  <div style={{ fontSize: "0.875rem" }}>
+                    <div
+                      style={{
+                        marginBottom: "0.75rem",
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <span style={{ color: "rgba(255, 255, 255, 0.7)" }}>
+                        Monthly Analyses:
+                      </span>
+                      <span style={{ color: "#ffffff", fontWeight: "500" }}>
+                        2,000
+                      </span>
+                    </div>
+                    <div
+                      style={{
+                        marginBottom: "0.75rem",
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <span style={{ color: "rgba(255, 255, 255, 0.7)" }}>
+                        File Size Limit:
+                      </span>
+                      <span style={{ color: "#ffffff", fontWeight: "500" }}>
+                        50MB
+                      </span>
+                    </div>
+                    <div
+                      style={{
+                        marginBottom: "0.75rem",
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <span style={{ color: "rgba(255, 255, 255, 0.7)" }}>
+                        6-Layer System:
+                      </span>
+                      <span style={{ color: "rgba(76, 175, 80, 0.9)" }}>✓</span>
+                    </div>
+                    <div
+                      style={{
+                        marginBottom: "0.75rem",
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <span style={{ color: "rgba(255, 255, 255, 0.7)" }}>
+                        Apply Fixes:
+                      </span>
+                      <span style={{ color: "rgba(76, 175, 80, 0.9)" }}>✓</span>
+                    </div>
+                    <div
+                      style={{
+                        marginBottom: "0.75rem",
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <span style={{ color: "rgba(255, 255, 255, 0.7)" }}>
+                        API Access:
+                      </span>
+                      <span style={{ color: "#ffffff", fontWeight: "500" }}>
+                        Premium
+                      </span>
+                    </div>
+                    <div
+                      style={{
+                        marginBottom: "0.75rem",
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <span style={{ color: "rgba(255, 255, 255, 0.7)" }}>
+                        Team Features:
+                      </span>
+                      <span style={{ color: "#ffffff", fontWeight: "500" }}>
+                        Unlimited
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Enterprise Plan */}
+                <div
+                  style={{
+                    background:
+                      "linear-gradient(135deg, rgba(255, 215, 0, 0.08) 0%, rgba(255, 215, 0, 0.04) 50%, rgba(255, 255, 255, 0.02) 100%)",
+                    border: "1px solid rgba(255, 215, 0, 0.3)",
+                    borderRadius: "16px",
+                    padding: "1.5rem",
+                  }}
+                >
+                  <h3
+                    style={{
+                      fontSize: "1.25rem",
+                      fontWeight: "600",
+                      color: "#ffffff",
+                      margin: "0 0 1rem 0",
+                      textAlign: "center",
+                    }}
+                  >
+                    Enterprise
+                  </h3>
+                  <div style={{ fontSize: "0.875rem" }}>
+                    <div
+                      style={{
+                        marginBottom: "0.75rem",
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <span style={{ color: "rgba(255, 255, 255, 0.7)" }}>
+                        Monthly Analyses:
+                      </span>
+                      <span style={{ color: "#ffffff", fontWeight: "500" }}>
+                        Unlimited
+                      </span>
+                    </div>
+                    <div
+                      style={{
+                        marginBottom: "0.75rem",
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <span style={{ color: "rgba(255, 255, 255, 0.7)" }}>
+                        File Size Limit:
+                      </span>
+                      <span style={{ color: "#ffffff", fontWeight: "500" }}>
+                        Unlimited
+                      </span>
+                    </div>
+                    <div
+                      style={{
+                        marginBottom: "0.75rem",
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <span style={{ color: "rgba(255, 255, 255, 0.7)" }}>
+                        6-Layer System:
+                      </span>
+                      <span style={{ color: "rgba(76, 175, 80, 0.9)" }}>✓</span>
+                    </div>
+                    <div
+                      style={{
+                        marginBottom: "0.75rem",
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <span style={{ color: "rgba(255, 255, 255, 0.7)" }}>
+                        Apply Fixes:
+                      </span>
+                      <span style={{ color: "rgba(76, 175, 80, 0.9)" }}>✓</span>
+                    </div>
+                    <div
+                      style={{
+                        marginBottom: "0.75rem",
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <span style={{ color: "rgba(255, 255, 255, 0.7)" }}>
+                        API Access:
+                      </span>
+                      <span style={{ color: "#ffffff", fontWeight: "500" }}>
+                        Unlimited
+                      </span>
+                    </div>
+                    <div
+                      style={{
+                        marginBottom: "0.75rem",
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <span style={{ color: "rgba(255, 255, 255, 0.7)" }}>
+                        Team Features:
+                      </span>
+                      <span style={{ color: "#ffffff", fontWeight: "500" }}>
+                        Unlimited
+                      </span>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 
