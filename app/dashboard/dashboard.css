@@ -2036,15 +2036,25 @@ legend {
 }
 
 .collaborate-actions .btn-primary {
-  background: linear-gradient(135deg, rgba(33, 150, 243, 0.2) 0%, rgba(33, 150, 243, 0.15) 50%, rgba(255, 255, 255, 0.1) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(33, 150, 243, 0.2) 0%,
+    rgba(33, 150, 243, 0.15) 50%,
+    rgba(255, 255, 255, 0.1) 100%
+  );
   border: 1px solid var(--collaborate-border);
   color: #ffffff;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .collaborate-actions .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 0 16px rgba(33, 150, 243, 0.3);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 0 16px rgba(33, 150, 243, 0.3);
 }
 
 .collaborate-actions .btn-secondary {
@@ -2086,13 +2096,6 @@ legend {
 
 .getting-started-steps li:last-child {
   margin-bottom: 0;
-}
-  border-radius: 16px;
-  backdrop-filter: blur(25px) saturate(1.3);
-  -webkit-backdrop-filter: blur(25px) saturate(1.3);
-  box-shadow:
-    0 12px 40px rgba(33, 150, 243, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .business-insights h3 {
