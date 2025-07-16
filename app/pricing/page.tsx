@@ -145,7 +145,13 @@ export default function PricingPage() {
   ];
 
   const handlePlanSelection = async (planId: string) => {
-    if (planId === "enterprise") {
+    if (planId === "free") {
+      if (!user) {
+        window.location.href = "/signup";
+      } else {
+        window.location.href = "/dashboard";
+      }
+    } else if (planId === "enterprise" || planId === "team") {
       // Contact sales
       window.location.href = `mailto:sales@neurolint.pro?subject=Interest in ${plans.find((p) => p.id === planId)?.name} Plan`;
     } else {
