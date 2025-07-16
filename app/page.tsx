@@ -1184,9 +1184,7 @@ function ImageGallery({ images }) {
                   </button>
                 </div>
               </div>
-              <h1 id="hero-title" className="hero-title">
-                NeuroLint Pro
-              </h1>
+
               <p className="hero-desc" role="text">
                 Upload your <strong>React/Next.js files</strong> and see{" "}
                 <strong>real fixes applied</strong> using our{" "}
