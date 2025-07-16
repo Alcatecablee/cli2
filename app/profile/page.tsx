@@ -45,7 +45,7 @@ export default function ProfilePage() {
     }
   }, [user]);
 
-  const loadSubscriptions = async () => {
+  const loadSubscriptions = useCallback(async () => {
     if (!session?.access_token) return;
 
     try {
@@ -64,7 +64,7 @@ export default function ProfilePage() {
     } finally {
       setLoadingSubscriptions(false);
     }
-  };
+  }, [session?.access_token]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
