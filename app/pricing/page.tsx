@@ -877,15 +877,6 @@ export default function PricingPage() {
                   >
                     $0.10 per analysis
                   </div>
-                  <div
-                    style={{
-                      fontSize: "0.75rem",
-                      color: "rgba(255, 255, 255, 0.5)",
-                      marginTop: "0.5rem",
-                    }}
-                  >
-                    →
-                  </div>
                 </div>
 
                 <div
