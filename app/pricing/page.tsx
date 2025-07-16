@@ -1379,8 +1379,8 @@ export default function PricingPage() {
                       fontSize: "0.875rem",
                     }}
                   >
-                    Rate limiting is enforced based on your plan. You'll receive
-                    notifications before reaching your limit. Additional
+                    Rate limiting is enforced based on your plan. You&apos;ll
+                    receive notifications before reaching your limit. Additional
                     analysis purchases at $0.10 each are planned but not yet
                     implemented.
                   </p>
