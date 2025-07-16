@@ -1349,10 +1349,9 @@ function ImageGallery({ images }) {
 
               <div className="demo-container">
                 {/* Advanced Demo Controls */}
-                <div
+                                <div
                   className="demo-controls"
                   role="region"
-                  aria-labelledby="demo-title"
                 >
                   <div className="controls-grid">
                     <fieldset className="control-group">
