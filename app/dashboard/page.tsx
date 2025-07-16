@@ -2003,13 +2003,34 @@ export default function Dashboard() {
                 <h3>Analysis History</h3>
                 <button
                   className="btn btn-secondary"
-                  onClick={() => {
+                  onClick={async () => {
                     if (confirm("Clear all analysis history?")) {
-                      localStorage.removeItem("neurolint-history");
-                      setDashboardState((prev) => ({
-                        ...prev,
-                        analysisHistory: [],
-                      }));
+                      try {
+                        if (user?.id) {
+                          // Clear from Supabase
+                          const success =
+                            await dataService.clearAnalysisHistory(user.id);
+                          if (success) {
+                            localStorage.removeItem("neurolint-history");
+                            setDashboardState((prev) => ({
+                              ...prev,
+                              analysisHistory: [],
+                            }));
+                          } else {
+                            alert("Failed to clear history. Please try again.");
+                          }
+                        } else {
+                          // Fallback to localStorage for non-authenticated users
+                          localStorage.removeItem("neurolint-history");
+                          setDashboardState((prev) => ({
+                            ...prev,
+                            analysisHistory: [],
+                          }));
+                        }
+                      } catch (error) {
+                        console.error("Error clearing history:", error);
+                        alert("Failed to clear history. Please try again.");
+                      }
                     }
                   }}
                 >
