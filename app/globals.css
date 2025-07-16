@@ -595,8 +595,6 @@ a {
   justify-content: center;
   align-items: center;
   border-radius: 20px;
-  backdrop-filter: blur(15px) saturate(1.1);
-  -webkit-backdrop-filter: blur(15px) saturate(1.1);
   transition: var(--transition-smooth);
   position: relative;
   overflow: hidden;
