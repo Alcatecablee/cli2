@@ -167,7 +167,7 @@ export default function ApiKeysManager({
 
   useEffect(() => {
     loadApiKeys();
-  }, [userId]);
+  }, [loadApiKeys]);
 
   if (loading) {
     return (
