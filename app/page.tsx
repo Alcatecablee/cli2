@@ -1294,7 +1294,7 @@ function ImageGallery({ images }) {
                     </div>
                   </div>
 
-                  <div className="guidance-layers">
+                  <div className="layer-architecture">
                     <h4 className="layers-title">Layer Overview</h4>
                     <div className="layers-grid">
                       <div className="layer-info">
