@@ -2404,9 +2404,9 @@ legend {
 
 .mode-description p {
   font-size: 0.8rem;
-  color: rgba(33, 150, 243, 0.8);
-  background: rgba(33, 150, 243, 0.05);
-  border: 1px solid rgba(33, 150, 243, 0.2);
+  color: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 6px;
   padding: 0.5rem 0.75rem;
   margin: 0;
