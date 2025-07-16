@@ -216,6 +216,14 @@ export default function PricingPage() {
     return Math.round(discount);
   };
 
+  const openDashboard = () => {
+    if (user) {
+      window.location.href = "/dashboard";
+    } else {
+      window.location.href = "/login";
+    }
+  };
+
   return (
     <div className="onboarding-section">
       <div className="onboarding-container">
@@ -224,6 +232,53 @@ export default function PricingPage() {
             className="onboarding-card"
             style={{ maxWidth: "1200px", width: "100%" }}
           >
+            {/* Header Navigation */}
+            <div
+              className="hero-nav"
+              style={{ position: "relative", marginBottom: "2rem" }}
+            >
+              <div className="nav-left">
+                <img
+                  src="https://cdn.builder.io/api/v1/image/assets%2F4b35a64a4a2c446c91402681adcf734e%2F485afb87468542eeba91d45b141bab95?format=webp&width=800"
+                  alt="NeuroLint Pro"
+                  className="nav-logo"
+                />
+              </div>
+              <div className="nav-center">
+                <a
+                  href="https://neurolint.dev"
+                  className="nav-link"
+                  aria-label="Go to NeuroLint homepage"
+                >
+                  Home
+                </a>
+                <a
+                  href="/pricing"
+                  className="nav-link"
+                  aria-label="View pricing plans"
+                  style={{ color: "rgba(33, 150, 243, 0.9)" }}
+                >
+                  Pricing
+                </a>
+                <a
+                  href="/api-docs"
+                  className="nav-link"
+                  aria-label="View API documentation"
+                >
+                  API Docs
+                </a>
+              </div>
+              <div className="nav-right">
+                <button
+                  className="nav-link dashboard-btn"
+                  onClick={openDashboard}
+                  aria-label="Access NeuroLint Pro dashboard"
+                >
+                  Dashboard
+                </button>
+              </div>
+            </div>
+
             {/* Hero Section */}
             <div style={{ textAlign: "center", marginBottom: "3rem" }}>
               <h1 className="onboarding-title">Choose Your Plan</h1>
