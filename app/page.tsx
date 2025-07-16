@@ -478,8 +478,8 @@ export default function HomePage() {
     applyFixes: false,
   });
 
-  // Sophisticated sample code examples that showcase different layer capabilities
-  const sampleCodes = {
+    // Sophisticated sample code examples that showcase different layer capabilities
+  const sampleCodes = useMemo(() => ({
     "missing-keys": {
       name: "Missing Keys & HTML Entities",
       description: "Showcases Layer 2 (Patterns) and Layer 3 (Components)",
