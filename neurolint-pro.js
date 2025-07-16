@@ -20,11 +20,14 @@ const { execSync } = require("child_process");
 // Import enhanced AST engine if available
 let NeuroLintProEnhanced = null;
 try {
-  NeuroLintProEnhanced = require("./neurolint-pro-enhanced");
-  console.log("[NEUROLINT PRO] Enhanced AST engine loaded successfully");
+  // TEMPORARILY DISABLED: Enhanced engine has integration issues
+  // NeuroLintProEnhanced = require("./neurolint-pro-enhanced");
+  // console.log("[NEUROLINT PRO] Enhanced AST engine loaded successfully");
+  throw new Error("Enhanced engine temporarily disabled for core fix");
 } catch (error) {
   console.log(
-    "[NEUROLINT PRO] Using standard engine (enhanced features not available)",
+    "[NEUROLINT PRO] Using standard engine (enhanced features not available):",
+    error.message,
   );
 }
 
