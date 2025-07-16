@@ -401,33 +401,82 @@ export default function PricingPage() {
                     transition: "all 0.3s ease",
                   }}
                 >
-                  {plan.badge && (
-                    <div
-                      style={{
-                        position: "absolute",
-                        top: "1rem",
-                        right: "1rem",
-                        background: plan.popular
-                          ? "rgba(33, 150, 243, 0.2)"
-                          : plan.enterprise
-                            ? "rgba(255, 215, 0, 0.2)"
-                            : "rgba(255, 255, 255, 0.1)",
-                        color: plan.popular
-                          ? "rgba(33, 150, 243, 0.9)"
-                          : plan.enterprise
-                            ? "rgba(255, 215, 0, 0.9)"
-                            : "#ffffff",
-                        padding: "0.4rem 0.8rem",
-                        borderRadius: "12px",
-                        fontSize: "0.75rem",
-                        fontWeight: "600",
-                        textTransform: "uppercase",
-                        letterSpacing: "0.5px",
-                      }}
-                    >
-                      {plan.badge}
-                    </div>
-                  )}
+                  {/* Badge and Trial Status */}
+                  <div
+                    style={{
+                      position: "absolute",
+                      top: "1rem",
+                      right: "1rem",
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "0.5rem",
+                      alignItems: "flex-end",
+                    }}
+                  >
+                    {plan.badge && (
+                      <div
+                        style={{
+                          background: plan.popular
+                            ? "rgba(33, 150, 243, 0.2)"
+                            : plan.enterprise
+                              ? "rgba(255, 215, 0, 0.2)"
+                              : "rgba(255, 255, 255, 0.1)",
+                          color: plan.popular
+                            ? "rgba(33, 150, 243, 0.9)"
+                            : plan.enterprise
+                              ? "rgba(255, 215, 0, 0.9)"
+                              : "#ffffff",
+                          padding: "0.4rem 0.8rem",
+                          borderRadius: "12px",
+                          fontSize: "0.75rem",
+                          fontWeight: "600",
+                          textTransform: "uppercase",
+                          letterSpacing: "0.5px",
+                        }}
+                      >
+                        {plan.badge}
+                      </div>
+                    )}
+
+                    {/* Trial Status Indicator */}
+                    {user && user.isOnTrial && user.trialPlan === plan.id && (
+                      <div
+                        style={{
+                          background: "rgba(76, 175, 80, 0.2)",
+                          color: "rgba(76, 175, 80, 0.9)",
+                          padding: "0.4rem 0.8rem",
+                          borderRadius: "12px",
+                          fontSize: "0.75rem",
+                          fontWeight: "600",
+                          textTransform: "uppercase",
+                          letterSpacing: "0.5px",
+                        }}
+                      >
+                        Trial: {user.trialDaysRemaining} days left
+                      </div>
+                    )}
+
+                    {/* Trial Available Indicator */}
+                    {user &&
+                      !user.trialUsed &&
+                      (plan.id === "developer" || plan.id === "professional") &&
+                      !user.isOnTrial && (
+                        <div
+                          style={{
+                            background: "rgba(33, 150, 243, 0.2)",
+                            color: "rgba(33, 150, 243, 0.9)",
+                            padding: "0.4rem 0.8rem",
+                            borderRadius: "12px",
+                            fontSize: "0.75rem",
+                            fontWeight: "600",
+                            textTransform: "uppercase",
+                            letterSpacing: "0.5px",
+                          }}
+                        >
+                          14-Day Free Trial
+                        </div>
+                      )}
+                  </div>
 
                   <div style={{ marginBottom: "2rem" }}>
                     <h3
