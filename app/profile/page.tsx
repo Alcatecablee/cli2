@@ -113,10 +113,10 @@ export default function ProfilePage() {
   // Show loading screen while checking authentication
   if (authLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-gray-800 to-black">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-          <p className="text-white">Loading profile...</p>
+      <div className="profile-loading">
+        <div className="loading-content">
+          <div className="spinner"></div>
+          <p>Loading profile...</p>
         </div>
       </div>
     );
@@ -128,51 +128,43 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black">
-      <div className="max-w-4xl mx-auto py-8 px-4">
+    <div className="profile-page">
+      <div className="profile-container">
         {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <h1 className="text-3xl font-bold text-white">Profile Settings</h1>
-            <Link
-              href="/dashboard"
-              className="inline-flex items-center text-blue-400 hover:text-blue-300"
-            >
+        <div className="profile-header">
+          <div className="header-content">
+            <h1 className="page-title">Profile Settings</h1>
+            <Link href="/dashboard" className="back-link">
               ← Back to Dashboard
             </Link>
           </div>
-          <p className="text-gray-400">
+          <p className="page-subtitle">
             Manage your account information and preferences
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="profile-grid">
           {/* Profile Information */}
-          <div className="lg:col-span-2">
-            <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
-              <h2 className="text-xl font-semibold text-white mb-6">
-                Personal Information
-              </h2>
+          <div className="main-content">
+            <div className="profile-card">
+              <h2 className="card-title">Personal Information</h2>
 
               {success && (
-                <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-4 mb-6">
-                  <p className="text-green-400 text-sm">{success}</p>
+                <div className="alert success">
+                  <p>{success}</p>
                 </div>
               )}
 
               {error && (
-                <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-4 mb-6">
-                  <p className="text-red-400 text-sm">{error}</p>
+                <div className="alert error">
+                  <p>{error}</p>
                 </div>
               )}
 
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <label
-                      htmlFor="firstName"
-                      className="block text-sm font-medium text-gray-300 mb-2"
-                    >
+              <form onSubmit={handleSubmit} className="profile-form">
+                <div className="form-row">
+                  <div className="form-group">
+                    <label htmlFor="firstName" className="form-label">
                       First Name
                     </label>
                     <input
@@ -181,16 +173,13 @@ export default function ProfilePage() {
                       type="text"
                       value={formData.firstName}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="form-input"
                       placeholder="Enter your first name"
                     />
                   </div>
 
-                  <div>
-                    <label
-                      htmlFor="lastName"
-                      className="block text-sm font-medium text-gray-300 mb-2"
-                    >
+                  <div className="form-group">
+                    <label htmlFor="lastName" className="form-label">
                       Last Name
                     </label>
                     <input
@@ -199,17 +188,14 @@ export default function ProfilePage() {
                       type="text"
                       value={formData.lastName}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="form-input"
                       placeholder="Enter your last name"
                     />
                   </div>
                 </div>
 
-                <div>
-                  <label
-                    htmlFor="email"
-                    className="block text-sm font-medium text-gray-300 mb-2"
-                  >
+                <div className="form-group">
+                  <label htmlFor="email" className="form-label">
                     Email Address
                   </label>
                   <input
@@ -218,22 +204,22 @@ export default function ProfilePage() {
                     type="email"
                     value={formData.email}
                     disabled
-                    className="w-full px-4 py-3 bg-gray-600 border border-gray-600 rounded-lg text-gray-400 cursor-not-allowed"
+                    className="form-input disabled"
                   />
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="form-help">
                     Email cannot be changed. Contact support if needed.
                   </p>
                 </div>
 
-                <div className="flex items-center justify-between pt-4">
+                <div className="form-actions">
                   <button
                     type="submit"
                     disabled={loading}
-                    className="bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium py-3 px-6 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800"
+                    className={`btn primary ${loading ? "loading" : ""}`}
                   >
                     {loading ? (
-                      <div className="flex items-center">
-                        <div className="animate-spin -ml-1 mr-3 h-5 w-5 border-2 border-white border-t-transparent rounded-full"></div>
+                      <div className="btn-loading">
+                        <div className="loading-spinner"></div>
                         Saving...
                       </div>
                     ) : (
@@ -246,79 +232,66 @@ export default function ProfilePage() {
           </div>
 
           {/* Account Overview */}
-          <div className="space-y-6">
+          <div className="sidebar">
             {/* Account Status */}
-            <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
-              <h3 className="text-lg font-semibold text-white mb-4">
-                Account Status
-              </h3>
-              <div className="space-y-3">
-                <div className="flex justify-between">
-                  <span className="text-gray-400">Plan</span>
-                  <span className="text-white font-medium">
+            <div className="profile-card">
+              <h3 className="card-subtitle">Account Status</h3>
+              <div className="status-list">
+                <div className="status-item">
+                  <span className="status-label">Plan</span>
+                  <span className="status-value">
                     {user.plan?.charAt(0).toUpperCase() + user.plan?.slice(1)}
                   </span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-400">Email Status</span>
+                <div className="status-item">
+                  <span className="status-label">Email Status</span>
                   <span
-                    className={`font-medium ${user.emailConfirmed ? "text-green-400" : "text-yellow-400"}`}
+                    className={`status-value ${user.emailConfirmed ? "verified" : "pending"}`}
                   >
                     {user.emailConfirmed ? "Verified" : "Pending"}
                   </span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-400">Member Since</span>
-                  <span className="text-white">
+                <div className="status-item">
+                  <span className="status-label">Member Since</span>
+                  <span className="status-value">
                     {user.createdAt ? formatDate(user.createdAt) : "N/A"}
                   </span>
                 </div>
               </div>
 
-              <div className="mt-6 space-y-3">
-                <Link
-                  href="/pricing"
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg text-center block"
-                >
+              <div className="action-buttons">
+                <Link href="/pricing" className="btn secondary full-width">
                   Upgrade Plan
                 </Link>
-                <button
-                  onClick={signOut}
-                  className="w-full bg-gray-700 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded-lg"
-                >
+                <button onClick={signOut} className="btn tertiary full-width">
                   Sign Out
                 </button>
               </div>
             </div>
 
             {/* Subscription History */}
-            <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
-              <h3 className="text-lg font-semibold text-white mb-4">
-                Subscription History
-              </h3>
+            <div className="profile-card">
+              <h3 className="card-subtitle">Subscription History</h3>
 
               {loadingSubscriptions ? (
-                <div className="text-center py-4">
-                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500 mx-auto"></div>
+                <div className="loading-center">
+                  <div className="spinner small"></div>
                 </div>
               ) : subscriptions.length === 0 ? (
-                <p className="text-gray-400 text-sm">No subscription history</p>
+                <p className="empty-state">No subscription history</p>
               ) : (
-                <div className="space-y-3">
+                <div className="subscription-list">
                   {subscriptions.map((subscription: any) => (
-                    <div
-                      key={subscription.id}
-                      className="border border-gray-700 rounded-lg p-4"
-                    >
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="font-medium text-white">
+                    <div key={subscription.id} className="subscription-item">
+                      <div className="subscription-header">
+                        <span className="subscription-name">
                           {subscription.plan?.charAt(0).toUpperCase() +
                             subscription.plan?.slice(1)}{" "}
                           Plan
                         </span>
                         {getStatusBadge(subscription.status)}
                       </div>
-                      <div className="text-sm text-gray-400 space-y-1">
+                      <div className="subscription-details">
                         <div>
                           Started: {formatDate(subscription.created_at)}
                         </div>
