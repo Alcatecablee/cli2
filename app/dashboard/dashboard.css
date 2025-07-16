@@ -29,6 +29,11 @@
   --info-glow: rgba(33, 150, 243, 0.12);
   --error-glow: rgba(229, 62, 62, 0.12);
   --inactive-glow: rgba(102, 102, 102, 0.08);
+
+  /* Collaboration-specific colors */
+  --collaborate-primary: rgba(33, 150, 243, 0.15);
+  --collaborate-secondary: rgba(255, 255, 255, 0.08);
+  --collaborate-border: rgba(33, 150, 243, 0.3);
 }
 
 /* Enhanced focus styles for accessibility */
