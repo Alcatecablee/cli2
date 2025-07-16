@@ -835,7 +835,12 @@ function ImageGallery({ images }) {
         }));
       }
     },
-    [demoState.isLoading],
+    [
+      demoState.isLoading,
+      demoState.applyFixes,
+      demoState.selectedLayers,
+      sampleCodes,
+    ],
   );
 
   // Sophisticated file upload with real engine integration
