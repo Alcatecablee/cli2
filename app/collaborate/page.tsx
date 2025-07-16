@@ -163,11 +163,7 @@ export default function CollaboratePage() {
 
     // Copy session link to clipboard
     const sessionLink = `${window.location.origin}/collaborate?session=${newSessionId}`;
-    navigator.clipboard.writeText(sessionLink).then(() => {
-      alert(
-        "Session link copied to clipboard! Share it with your collaborators.",
-      );
-    });
+    copyToClipboard(sessionLink, "Session link");
   }, [userName]);
 
   /**
@@ -797,7 +793,7 @@ export default function CollaboratePage() {
                   "Run collaborative code analysis and fixes in real-time",
               },
               {
-                icon: "���",
+                icon: "↔",
                 title: "Comments & Chat",
                 description: "Add contextual comments and chat with your team",
               },
