@@ -1199,7 +1199,7 @@ function ImageGallery({ images }) {
             <section id="demo" className="demo-section">
               <div className="demo-header">
                 {/* User Guidance Section */}
-                <div className="demo-guidance">
+                <div className="analysis-platform">
                   <div className="guidance-intro">
                     <h3 className="guidance-title">How to Use the Demo</h3>
                     <p className="guidance-text">
