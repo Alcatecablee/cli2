@@ -1153,6 +1153,13 @@ function ImageGallery({ images }) {
                     Home
                   </a>
                   <a
+                    href="/collaborate"
+                    className="nav-link"
+                    aria-label="Start collaborative coding session"
+                  >
+                    Collaborate
+                  </a>
+                  <a
                     href="/pricing"
                     className="nav-link"
                     aria-label="View pricing plans"
