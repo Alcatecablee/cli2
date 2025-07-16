@@ -1242,7 +1242,7 @@ function ImageGallery({ images }) {
                   <div className="operational-modes">
                     <div className="guidance-card">
                       <div className="guidance-card-header">
-                        <h4>Mode Selection</h4>
+                        <h4>Operational Modes</h4>
                       </div>
                       <div className="guidance-card-content">
                         <div className="guidance-option">
