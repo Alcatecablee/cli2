@@ -39,7 +39,7 @@ export default function ApiKeysManager({
   });
   const [createdKey, setCreatedKey] = useState<string | null>(null);
 
-  const loadApiKeys = async () => {
+  const loadApiKeys = useCallback(async () => {
     try {
       setLoading(true);
       const response = await fetch(`/api/auth/api-keys?userId=${userId}`);
@@ -55,7 +55,7 @@ export default function ApiKeysManager({
     } finally {
       setLoading(false);
     }
-  };
+  }, [userId]);
 
   const createApiKey = async () => {
     try {
