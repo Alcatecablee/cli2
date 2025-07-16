@@ -972,10 +972,11 @@ function ImageGallery({ images }) {
           error:
             error instanceof Error ? error.message : "File processing failed",
         },
-      }));
+            }));
     }
   };
 
+  // The main return statement for the HomePage component
   return (
     <div>
       {/* Skip to content link for accessibility */}
@@ -1300,7 +1301,7 @@ function ImageGallery({ images }) {
                           <strong>All Layers</strong>
                           <p>
                             Comprehensive analysis across all 6 layers:
-                            Configuration → Patterns → Components ��� Hydration
+                            Configuration → Patterns → Components ����� Hydration
                             → Next.js → Testing
                           </p>
                         </div>
