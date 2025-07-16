@@ -1516,14 +1516,24 @@ legend {
 }
 
 .btn.primary {
-  background: var(--status-info);
-  color: #ffffff;
-  border-color: var(--status-info);
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.9);
+  border-color: var(--border);
+  position: relative;
+  overflow: hidden;
 }
 
 .btn.primary:hover:not(:disabled) {
-  background: rgba(33, 150, 243, 0.8);
-  border-color: rgba(33, 150, 243, 0.8);
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--border-subtle);
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-subtle);
+}
+
+.btn.primary:active:not(:disabled) {
+  transform: translateY(0);
+  transition: var(--transition-fast);
 }
 
 .btn.primary:disabled {
@@ -1532,14 +1542,19 @@ legend {
 }
 
 .btn.secondary {
-  background: var(--status-info);
-  color: #ffffff;
-  border-color: var(--status-info);
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.9);
+  border-color: var(--border);
+  position: relative;
+  overflow: hidden;
 }
 
 .btn.secondary:hover {
-  background: rgba(33, 150, 243, 0.8);
-  border-color: rgba(33, 150, 243, 0.8);
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--border-subtle);
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-subtle);
 }
 
 .btn.tertiary {
