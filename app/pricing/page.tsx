@@ -1397,6 +1397,71 @@ export default function PricingPage() {
                     planned for future releases.
                   </p>
                 </div>
+
+                <div
+                  style={{
+                    background: "rgba(255, 255, 255, 0.05)",
+                    border: "1px solid rgba(255, 255, 255, 0.15)",
+                    borderRadius: "12px",
+                    padding: "1.5rem",
+                  }}
+                >
+                  <h4
+                    style={{
+                      fontSize: "1rem",
+                      fontWeight: "600",
+                      color: "#ffffff",
+                      margin: "0 0 0.75rem 0",
+                    }}
+                  >
+                    Can I cancel anytime?
+                  </h4>
+                  <p
+                    style={{
+                      color: "rgba(255, 255, 255, 0.8)",
+                      margin: "0",
+                      lineHeight: "1.5",
+                      fontSize: "0.875rem",
+                    }}
+                  >
+                    Yes, you can cancel your subscription at any time through
+                    your dashboard. Cancellation functionality is implemented
+                    and your access continues until the end of your billing
+                    period.
+                  </p>
+                </div>
+
+                <div
+                  style={{
+                    background: "rgba(255, 255, 255, 0.05)",
+                    border: "1px solid rgba(255, 255, 255, 0.15)",
+                    borderRadius: "12px",
+                    padding: "1.5rem",
+                  }}
+                >
+                  <h4
+                    style={{
+                      fontSize: "1rem",
+                      fontWeight: "600",
+                      color: "#ffffff",
+                      margin: "0 0 0.75rem 0",
+                    }}
+                  >
+                    Do you offer refunds?
+                  </h4>
+                  <p
+                    style={{
+                      color: "rgba(255, 255, 255, 0.8)",
+                      margin: "0",
+                      lineHeight: "1.5",
+                      fontSize: "0.875rem",
+                    }}
+                  >
+                    Refunds are handled on a case-by-case basis. Please contact
+                    our support team for assistance. Automated refund processing
+                    is planned for future implementation.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
