@@ -540,8 +540,8 @@ a {
 .demo-logo {
   height: 60px;
   width: auto;
-  margin-bottom: 4rem;
-  margin-top: -8rem;
+  margin-bottom: 6rem;
+  margin-top: -12rem;
   filter: brightness(1.1);
   transition: var(--transition-smooth);
 }
