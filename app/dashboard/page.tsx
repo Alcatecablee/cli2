@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import "./dashboard.css";
 import "./integrations.css";
+import "./collaboration-styles.css";
 import BulkProcessor from "./components/BulkProcessor";
 import AnalyticsDashboard from "./components/AnalyticsDashboard";
 import ApiKeysManager from "./components/ApiKeysManager";
