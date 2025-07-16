@@ -478,12 +478,13 @@ export default function HomePage() {
     applyFixes: false,
   });
 
-    // Sophisticated sample code examples that showcase different layer capabilities
-  const sampleCodes = useMemo(() => ({
-    "missing-keys": {
-      name: "Missing Keys & HTML Entities",
-      description: "Showcases Layer 2 (Patterns) and Layer 3 (Components)",
-      code: `const items = [
+  // Sophisticated sample code examples that showcase different layer capabilities
+  const sampleCodes = useMemo(
+    () => ({
+      "missing-keys": {
+        name: "Missing Keys & HTML Entities",
+        description: "Showcases Layer 2 (Patterns) and Layer 3 (Components)",
+        code: `const items = [
   { id: 1, name: &quot;React Component&quot; },
   { id: 2, name: &quot;Next.js App&quot; },
   { id: 3, name: &quot;TypeScript Fix&quot; }
@@ -500,14 +501,14 @@ function ItemList() {
 }
 
 export default ItemList;`,
-      expectedLayers: [1, 2, 3],
-      expectedIssues: ["HTML entities", "Missing key props"],
-    },
-    "html-entities": {
-      name: "HTML Entity Corruption",
-      description:
-        "Showcases Layer 2 (Entity Cleanup) sophisticated pattern detection",
-      code: `const message = &quot;Welcome to NeuroLint Pro&quot;;
+        expectedLayers: [1, 2, 3],
+        expectedIssues: ["HTML entities", "Missing key props"],
+      },
+      "html-entities": {
+        name: "HTML Entity Corruption",
+        description:
+          "Showcases Layer 2 (Entity Cleanup) sophisticated pattern detection",
+        code: `const message = &quot;Welcome to NeuroLint Pro&quot;;
 const description = &quot;Detects &amp; fixes 50+ issues&quot;;
 const note = &quot;Smart confidence scoring &amp; impact estimation&quot;;
 
@@ -522,17 +523,17 @@ function Display() {
     </div>
   );
 }`,
-      expectedLayers: [1, 2],
-      expectedIssues: [
-        "HTML quote entities",
-        "HTML ampersand entities",
-        "Console.log usage",
-      ],
-    },
-    "ssr-issues": {
-      name: "SSR Hydration Issues",
-      description: "Showcases Layer 4 (Hydration) SSR safety guards",
-      code: `import { useState, useEffect } from 'react';
+        expectedLayers: [1, 2],
+        expectedIssues: [
+          "HTML quote entities",
+          "HTML ampersand entities",
+          "Console.log usage",
+        ],
+      },
+      "ssr-issues": {
+        name: "SSR Hydration Issues",
+        description: "Showcases Layer 4 (Hydration) SSR safety guards",
+        code: `import { useState, useEffect } from 'react';
 
 function ThemeToggle() {
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
@@ -552,17 +553,17 @@ function ThemeToggle() {
 }
 
 export default ThemeToggle;`,
-      expectedLayers: [1, 4],
-      expectedIssues: [
-        "Unguarded localStorage usage",
-        "Document access without SSR guards",
-      ],
-    },
-    accessibility: {
-      name: "Accessibility & Testing Issues",
-      description:
-        "Showcases Layer 3 (Components) and Layer 6 (Testing) comprehensive validation",
-      code: `import { useState } from 'react';
+        expectedLayers: [1, 4],
+        expectedIssues: [
+          "Unguarded localStorage usage",
+          "Document access without SSR guards",
+        ],
+      },
+      accessibility: {
+        name: "Accessibility & Testing Issues",
+        description:
+          "Showcases Layer 3 (Components) and Layer 6 (Testing) comprehensive validation",
+        code: `import { useState } from 'react';
 
 function ImageGallery({ images }) {
   const [loading, setLoading] = useState(false);
@@ -592,15 +593,17 @@ function ImageGallery({ images }) {
     </div>
   );
 }`,
-      expectedLayers: [1, 3, 6],
-      expectedIssues: [
-        "Missing key props",
-        "Missing alt attributes",
-        "Missing error handling",
-        "Missing prop types",
-      ],
-    },
-  };
+        expectedLayers: [1, 3, 6],
+        expectedIssues: [
+          "Missing key props",
+          "Missing alt attributes",
+          "Missing error handling",
+          "Missing prop types",
+        ],
+      },
+    }),
+    [],
+  );
 
   // Get personalized sample recommendations based on onboarding data
   const getRecommendedSamples = () => {
