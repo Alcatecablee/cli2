@@ -849,42 +849,50 @@ a {
   cursor: pointer;
 }
 
-/* Button Styles */
+/* ==================================================================
+   UNIFIED BUTTON SYSTEM - DEMO STYLE
+   ================================================================== */
+
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 1rem 2rem;
-  background: transparent;
-  color: #ffffff;
-  text-decoration: none;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  font-weight: 600;
-  font-size: 1rem;
+  padding: 0.875rem 1.25rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.9);
   cursor: pointer;
-  min-height: 48px;
-  min-width: 120px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: var(--transition-smooth);
   position: relative;
   overflow: hidden;
-  border-radius: 8px;
-  transition:
-    background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-    color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-    transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-    border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: manipulation;
+  text-decoration: none;
 }
 
 .btn:hover,
 .btn:focus {
-  background: #ffffff;
-  color: #000000;
-  border-color: #ffffff;
-  transform: translateY(-1px);
-  outline: none;
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--border-subtle);
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-subtle);
+}
+
+.btn:focus {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
 }
 
 .btn:active {
   transform: translateY(0);
+  transition: var(--transition-fast);
 }
 
 /* Enhanced Mobile Responsive */
