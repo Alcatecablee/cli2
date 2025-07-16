@@ -404,7 +404,7 @@ export default function CollaboratePage() {
                 marginBottom: "1.5rem",
               }}
             >
-              ✨
+              +
             </div>
 
             <h3
@@ -550,7 +550,7 @@ export default function CollaboratePage() {
                 marginBottom: "1.5rem",
               }}
             >
-              🤝
+              →
             </div>
 
             <h3
@@ -692,24 +692,24 @@ export default function CollaboratePage() {
           >
             {[
               {
-                icon: "⚡",
+                icon: "→",
                 title: "Real-time Editing",
                 description:
                   "See changes instantly with live cursors and selections",
               },
               {
-                icon: "🔧",
+                icon: "⚡",
                 title: "Live NeuroLint Pro",
                 description:
                   "Run collaborative code analysis and fixes in real-time",
               },
               {
-                icon: "💬",
+                icon: "↔",
                 title: "Comments & Chat",
                 description: "Add contextual comments and chat with your team",
               },
               {
-                icon: "🎯",
+                icon: "+",
                 title: "Conflict Resolution",
                 description:
                   "Advanced operational transforms prevent editing conflicts",
