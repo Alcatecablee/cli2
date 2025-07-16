@@ -1,14 +1,14 @@
 const items = [
-  { id: 1, name: &quot;React Component&quot; },
-  { id: 2, name: &quot;Next.js App&quot; }
+  { id: 1, name: "React Component" },
+  { id: 2, name: "Next.js App" },
 ];
 
 function ItemList() {
   return (
     <ul>
-      {items.map(item =>
+      {items.map((item) => (
         <li>{item.name}</li>
-      )}
+      ))}
     </ul>
   );
 }
