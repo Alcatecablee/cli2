@@ -2,9 +2,16 @@ import { NextRequest, NextResponse } from "next/server";
 import { createAuthenticatedHandler } from "../../../lib/auth-middleware";
 import { createClient } from "@supabase/supabase-js";
 
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE;
+
+if (!supabaseUrl || !supabaseServiceKey) {
+  console.error("Missing Supabase environment variables");
+}
+
 const supabase = createClient(
-  process.env.SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE!, // Use service role for admin operations
+  supabaseUrl || "",
+  supabaseServiceKey || "", // Use service role for admin operations
 );
 
 interface Subscription {
