@@ -1230,91 +1230,20 @@ function ImageGallery({ images }) {
                     </div>
                   </div>
 
-                  <div className="operational-modes">
-                    <div className="guidance-card">
-                      <div className="guidance-card-header">
-                        <h4>Operational Modes</h4>
-                      </div>
-                      <div className="modes-grid">
-                        <div className="mode-card analysis-mode">
-                          <div className="mode-header">
-                            <div className="mode-indicator"></div>
-                            <h5>Analysis Mode</h5>
-                          </div>
-                          <div className="mode-content">
-                            <p>
-                              Comprehensive code inspection without
-                              modification. Generates detailed reports with
-                              confidence scoring and impact analysis.
-                            </p>
-                            <div className="mode-features">
-                              <span className="feature-tag">
-                                Non-destructive
-                              </span>
-                              <span className="feature-tag">
-                                Confidence scoring
-                              </span>
-                              <span className="feature-tag">
-                                Impact assessment
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="mode-card transformation-mode">
-                          <div className="mode-header">
-                            <div className="mode-indicator"></div>
-                            <h5>Transformation Mode</h5>
-                          </div>
-                          <div className="mode-content">
-                            <p>
-                              Active code transformation with real-time
-                              validation. Each change is verified for syntax
-                              correctness and logical integrity.
-                            </p>
-                            <div className="mode-features">
-                              <span className="feature-tag">
-                                Real-time validation
-                              </span>
-                              <span className="feature-tag">
-                                Incremental processing
-                              </span>
-                              <span className="feature-tag">
-                                Rollback protection
-                              </span>
-                            </div>
-                          </div>
+                  <div className="operation-modes">
+                    <div className="mode-selector">
+                      <div className="mode-option active">
+                        <div className="mode-icon analysis"></div>
+                        <div className="mode-info">
+                          <h4>Analysis</h4>
+                          <span>Inspect without changes</span>
                         </div>
                       </div>
-                    </div>
-
-                    <div className="guidance-card">
-                      <div className="guidance-card-header">
-                        <h4>Layer Selection</h4>
-                      </div>
-                      <div className="guidance-card-content">
-                        <div className="guidance-option">
-                          <strong>Auto-Detect (Recommended)</strong>
-                          <p>
-                            Smart analysis that selects appropriate layers based
-                            on your code. Perfect for most use cases.
-                          </p>
-                        </div>
-                        <div className="guidance-option">
-                          <strong>All Layers</strong>
-                          <p>
-                            Comprehensive analysis across all 6 layers:
-                            Configuration → Patterns → Components ��� Hydration
-                            → Next.js → Testing
-                          </p>
-                        </div>
-                        <div className="guidance-option">
-                          <strong>Custom Selection</strong>
-                          <p>
-                            Choose specific layers when you know what issues to
-                            target. Each layer focuses on different problem
-                            types.
-                          </p>
+                      <div className="mode-option">
+                        <div className="mode-icon transform"></div>
+                        <div className="mode-info">
+                          <h4>Transform</h4>
+                          <span>Real-time validation</span>
                         </div>
                       </div>
                     </div>
