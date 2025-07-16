@@ -1516,23 +1516,30 @@ legend {
 }
 
 .btn.primary {
-  background: rgba(255, 255, 255, 0.05);
-  color: rgba(255, 255, 255, 0.9);
-  border-color: var(--border);
+  background: var(--info-glow);
+  color: var(--status-info);
+  border-color: rgba(33, 150, 243, 0.4);
   position: relative;
   overflow: hidden;
+  box-shadow:
+    0 0 0 1px rgba(33, 150, 243, 0.3),
+    0 4px 12px rgba(33, 150, 243, 0.15);
+  transform: translateY(-1px);
+  font-weight: 600;
 }
 
 .btn.primary:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: var(--border-subtle);
+  background: rgba(33, 150, 243, 0.2);
+  border-color: rgba(33, 150, 243, 0.6);
   color: #ffffff;
   transform: translateY(-2px);
-  box-shadow: var(--shadow-subtle);
+  box-shadow:
+    0 0 0 1px rgba(33, 150, 243, 0.4),
+    0 6px 16px rgba(33, 150, 243, 0.25);
 }
 
 .btn.primary:active:not(:disabled) {
-  transform: translateY(0);
+  transform: translateY(-1px);
   transition: var(--transition-fast);
 }
 
@@ -1542,19 +1549,26 @@ legend {
 }
 
 .btn.secondary {
-  background: rgba(255, 255, 255, 0.05);
-  color: rgba(255, 255, 255, 0.9);
-  border-color: var(--border);
+  background: var(--info-glow);
+  color: var(--status-info);
+  border-color: rgba(33, 150, 243, 0.4);
   position: relative;
   overflow: hidden;
+  box-shadow:
+    0 0 0 1px rgba(33, 150, 243, 0.3),
+    0 4px 12px rgba(33, 150, 243, 0.15);
+  transform: translateY(-1px);
+  font-weight: 600;
 }
 
 .btn.secondary:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: var(--border-subtle);
+  background: rgba(33, 150, 243, 0.2);
+  border-color: rgba(33, 150, 243, 0.6);
   color: #ffffff;
   transform: translateY(-2px);
-  box-shadow: var(--shadow-subtle);
+  box-shadow:
+    0 0 0 1px rgba(33, 150, 243, 0.4),
+    0 6px 16px rgba(33, 150, 243, 0.25);
 }
 
 .btn.tertiary {
