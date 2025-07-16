@@ -1200,13 +1200,43 @@ function ImageGallery({ images }) {
               <div className="demo-header">
                 {/* User Guidance Section */}
                 <div className="analysis-platform">
-                  <div className="guidance-intro">
-                    <h3 className="guidance-title">How to Use the Demo</h3>
-                    <p className="guidance-text">
-                      Configure your analysis settings below, then upload code
-                      or try our sample files. Perfect for exploring NeuroLint
-                      Pro&apos;s capabilities risk-free.
-                    </p>
+                  <div className="platform-overview">
+                    <div className="overview-header">
+                      <h3 className="platform-title">
+                        Enterprise Code Analysis Platform
+                      </h3>
+                      <p className="platform-subtitle">
+                        Production-ready automated code transformation with
+                        enterprise-grade safety mechanisms
+                      </p>
+                    </div>
+
+                    <div className="technical-specs">
+                      <div className="spec-grid">
+                        <div className="spec-item">
+                          <div className="spec-label">Processing Time</div>
+                          <div className="spec-value">Sub-minute execution</div>
+                        </div>
+                        <div className="spec-item">
+                          <div className="spec-label">Safety Rating</div>
+                          <div className="spec-value">
+                            100% rollback capability
+                          </div>
+                        </div>
+                        <div className="spec-item">
+                          <div className="spec-label">File Support</div>
+                          <div className="spec-value">
+                            TypeScript, JavaScript, React
+                          </div>
+                        </div>
+                        <div className="spec-item">
+                          <div className="spec-label">Validation</div>
+                          <div className="spec-value">
+                            AST-based syntax verification
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
 
                   <div className="guidance-cards">
