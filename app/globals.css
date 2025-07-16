@@ -2466,14 +2466,7 @@ legend {
 }
 
 .guidance-card-header {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
   margin-bottom: 1rem;
-}
-
-.guidance-icon {
-  font-size: 1.25rem;
 }
 
 .guidance-card-header h4 {
