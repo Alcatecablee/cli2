@@ -1284,28 +1284,25 @@ function ImageGallery({ images }) {
                     </div>
                   </div>
 
-                  <div className="execution-strategy">
-                    <h4 className="section-heading">Execution Strategy</h4>
-                    <div className="strategy-options">
-                      <div className="strategy-item">
-                        <div className="strategy-label">Auto-Detection</div>
-                        <div className="strategy-description">
-                          Intelligent layer selection based on semantic analysis
-                        </div>
+                  <div className="execution-panel">
+                    <div className="panel-header">
+                      <h4>Execution Strategy</h4>
+                    </div>
+                    <div className="execution-grid">
+                      <div className="execution-card recommended">
+                        <div className="card-indicator"></div>
+                        <h5>Auto-Detect</h5>
+                        <p>Smart selection</p>
                       </div>
-                      <div className="strategy-item">
-                        <div className="strategy-label">Comprehensive Scan</div>
-                        <div className="strategy-description">
-                          Full six-layer analysis with dependency validation
-                        </div>
+                      <div className="execution-card">
+                        <div className="card-indicator"></div>
+                        <h5>Full Stack</h5>
+                        <p>All 6 layers</p>
                       </div>
-                      <div className="strategy-item">
-                        <div className="strategy-label">
-                          Targeted Processing
-                        </div>
-                        <div className="strategy-description">
-                          Custom layer selection for specific use cases
-                        </div>
+                      <div className="execution-card">
+                        <div className="card-indicator"></div>
+                        <h5>Custom</h5>
+                        <p>Targeted</p>
                       </div>
                     </div>
                   </div>
