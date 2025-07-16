@@ -3,12 +3,15 @@
   "version": "1.0.0",
   "description": "NeuroLint Pro - Premium React/Next.js Code Fixing Service",
   "main": "server.js",
+  "bin": {
+    "neurolint": "./bin/neurolint.js"
+  },
   "scripts": {
     "start": "next start",
     "dev": "next dev",
-    "neurolint": "node neurolint-pro.js",
-    "neurolint-dry": "node neurolint-pro.js --dry-run",
-    "neurolint-enhanced": "node neurolint-pro-enhanced.js",
+    "neurolint": "node bin/neurolint.js",
+    "neurolint-legacy": "node neurolint-pro.js",
+    "neurolint-enhanced": "node bin/neurolint.js --enhanced",
     "validate-ast": "node validate-ast.js",
     "test-enhanced": "node test-enhanced-ast.js",
     "collab-server": "node -e \"const { CollaborationServer } = require('./lib/collaboration-server'); const server = new CollaborationServer(8080); server.start();\"",
