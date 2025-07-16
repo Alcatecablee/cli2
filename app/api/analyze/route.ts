@@ -6,6 +6,12 @@ import { authenticateRequest } from "../../../lib/auth-middleware";
 // Import the neurolint engine
 const getNeuroLintEngine = async () => {
   try {
+    // Skip engine loading during build time
+    if (process.env.NODE_ENV === "production" && !process.env.RUNTIME_PHASE) {
+      console.log("Skipping engine import during build time");
+      return null;
+    }
+
     const engine = await import("../../../neurolint-pro.js");
     return engine.default || engine;
   } catch (error) {
