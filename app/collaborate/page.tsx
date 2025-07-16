@@ -458,12 +458,15 @@ export default function CollaboratePage() {
                     style={{
                       flex: 1,
                       padding: "0.75rem",
-                      background: "rgba(33, 150, 243, 0.12)",
+                      background:
+                        "linear-gradient(135deg, rgba(33, 150, 243, 0.2) 0%, rgba(33, 150, 243, 0.15) 50%, rgba(255, 255, 255, 0.1) 100%)",
                       border: "1px solid rgba(33, 150, 243, 0.4)",
                       borderRadius: "6px",
-                      color: "#2196f3",
+                      color: "#ffffff",
                       fontWeight: 600,
                       cursor: "pointer",
+                      boxShadow:
+                        "0 8px 32px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 0 12px rgba(33, 150, 243, 0.2)",
                     }}
                   >
                     Create
@@ -490,22 +493,27 @@ export default function CollaboratePage() {
                 style={{
                   width: "100%",
                   padding: "1rem",
-                  background: "rgba(33, 150, 243, 0.12)",
+                  background:
+                    "linear-gradient(135deg, rgba(33, 150, 243, 0.2) 0%, rgba(33, 150, 243, 0.15) 50%, rgba(255, 255, 255, 0.1) 100%)",
                   border: "1px solid rgba(33, 150, 243, 0.4)",
                   borderRadius: "8px",
-                  color: "#2196f3",
+                  color: "#ffffff",
                   fontSize: "1rem",
                   fontWeight: 600,
                   cursor: "pointer",
-                  transition: "all 0.2s ease",
+                  transition: "all 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
+                  boxShadow:
+                    "0 8px 32px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 0 12px rgba(33, 150, 243, 0.2)",
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = "rgba(33, 150, 243, 0.2)";
-                  e.currentTarget.style.borderColor = "rgba(33, 150, 243, 0.6)";
+                  e.currentTarget.style.transform = "translateY(-2px)";
+                  e.currentTarget.style.boxShadow =
+                    "0 8px 32px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 0 16px rgba(33, 150, 243, 0.3)";
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.background = "rgba(33, 150, 243, 0.12)";
-                  e.currentTarget.style.borderColor = "rgba(33, 150, 243, 0.4)";
+                  e.currentTarget.style.transform = "translateY(0)";
+                  e.currentTarget.style.boxShadow =
+                    "0 8px 32px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 0 12px rgba(33, 150, 243, 0.2)";
                 }}
               >
                 Start New Session
@@ -978,9 +986,12 @@ export default function CollaboratePage() {
             width: "56px",
             height: "56px",
             borderRadius: "28px",
-            background: "rgba(33, 150, 243, 0.12)",
+            background:
+              "linear-gradient(135deg, rgba(33, 150, 243, 0.2) 0%, rgba(33, 150, 243, 0.15) 50%, rgba(255, 255, 255, 0.1) 100%)",
             border: "1px solid rgba(33, 150, 243, 0.4)",
-            color: "#2196f3",
+            color: "#ffffff",
+            boxShadow:
+              "0 8px 32px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 0 12px rgba(33, 150, 243, 0.2)",
             fontSize: "1.25rem",
             cursor: "pointer",
             display: "flex",
@@ -990,7 +1001,7 @@ export default function CollaboratePage() {
             zIndex: 1000,
           }}
         >
-          💬
+          ↔
           {unreadCount > 0 && (
             <div
               style={{
