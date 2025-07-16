@@ -3,6 +3,8 @@ import { randomUUID } from "crypto";
 import { dataStore, dataUtils } from "../../../lib/data-store";
 import { authenticateRequest } from "../../../lib/auth-middleware";
 
+export const dynamic = "force-dynamic";
+
 // Import the neurolint engine
 const getNeuroLintEngine = async () => {
   try {
