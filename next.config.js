@@ -9,6 +9,10 @@ const nextConfig = {
   images: {
     domains: ["cdn.builder.io"],
   },
+  env: {
+    NEXT_PUBLIC_SUPABASE_URL: process.env.SUPABASE_URL,
+    NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY,
+  },
   // Experimental features for better stability
   experimental: {
     serverComponentsExternalPackages: [],
