@@ -1199,7 +1199,7 @@ function ImageGallery({ images }) {
             <section
               id="demo"
               className="demo-section"
-              aria-labelledby="demo-title"
+              
             >
               
 
