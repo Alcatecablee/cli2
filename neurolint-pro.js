@@ -18,18 +18,8 @@ const path = require("path");
 const { execSync } = require("child_process");
 
 // Import enhanced AST engine if available
-let NeuroLintProEnhanced = null;
-try {
-  // TEMPORARILY DISABLED: Enhanced engine has integration issues
-  // NeuroLintProEnhanced = require("./neurolint-pro-enhanced");
-  // console.log("[NEUROLINT PRO] Enhanced AST engine loaded successfully");
-  throw new Error("Enhanced engine temporarily disabled for core fix");
-} catch (error) {
-  console.log(
-    "[NEUROLINT PRO] Using standard engine (enhanced features not available):",
-    error.message,
-  );
-}
+// Enhanced engine is now loaded explicitly via CLI flags
+// No automatic loading - users control when to use AST features
 
 // Execute existing layer scripts via child process since they are not properly modularized
 
