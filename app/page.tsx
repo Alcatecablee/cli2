@@ -1200,7 +1200,7 @@ function ImageGallery({ images }) {
               <div className="demo-header">
                 {/* Enterprise Platform Section */}
                 <div className="enterprise-platform">
-                  <div className="platform-overview">
+                  <div className="platform-container">
                     <div className="overview-header">
                       <h3 className="platform-title">
                         Enterprise Code Analysis Platform
