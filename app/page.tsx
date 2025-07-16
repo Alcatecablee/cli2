@@ -216,13 +216,16 @@ export default function HomePage() {
     }
   }, [onboardingData, isHydrated]);
 
-  const texts = [
-    "Fix React Errors Instantly",
-    "Eliminate HTML Entities",
-    "Add Missing Key Props",
-    "Secure SSR Hydration",
-    "Professional Code Quality",
-  ];
+  const texts = useMemo(
+    () => [
+      "Fix React Errors Instantly",
+      "Eliminate HTML Entities",
+      "Add Missing Key Props",
+      "Secure SSR Hydration",
+      "Professional Code Quality",
+    ],
+    [],
+  );
 
   const onboardingSteps = [
     {
