@@ -55,6 +55,99 @@ export default function CollaboratePage() {
     color: "#2196f3",
   };
 
+  // Robust copy function with fallbacks
+  const copyToClipboard = async (text: string, description: string) => {
+    try {
+      // First try the modern Clipboard API
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(text);
+        alert(`${description} copied to clipboard!`);
+        return;
+      }
+    } catch (err) {
+      console.warn("Clipboard API failed, trying fallback:", err);
+    }
+
+    // Fallback method using textarea
+    try {
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+      textArea.style.position = "fixed";
+      textArea.style.left = "-999999px";
+      textArea.style.top = "-999999px";
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+
+      const successful = document.execCommand("copy");
+      document.body.removeChild(textArea);
+
+      if (successful) {
+        alert(`${description} copied to clipboard!`);
+      } else {
+        throw new Error("execCommand failed");
+      }
+    } catch (fallbackErr) {
+      console.error("All copy methods failed:", fallbackErr);
+      // Show user a manual copy option
+      const modal = document.createElement("div");
+      modal.style.cssText = `
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(0, 0, 0, 0.9);
+        color: white;
+        padding: 20px;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        z-index: 10000;
+        max-width: 90vw;
+        max-height: 80vh;
+        overflow: auto;
+        backdrop-filter: blur(10px);
+      `;
+
+      const content = document.createElement("div");
+      content.innerHTML = `
+        <h3 style="margin-top: 0; color: rgba(33, 150, 243, 0.9);">Copy ${description} Manually</h3>
+        <p style="color: rgba(255, 255, 255, 0.8);">Please copy the link below manually:</p>
+        <textarea readonly style="
+          width: 100%;
+          height: 100px;
+          background: rgba(255, 255, 255, 0.05);
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          color: white;
+          padding: 10px;
+          border-radius: 4px;
+          font-family: monospace;
+          font-size: 12px;
+          resize: vertical;
+        ">${text}</textarea>
+        <button onclick="this.parentElement.parentElement.remove()" style="
+          margin-top: 10px;
+          padding: 8px 16px;
+          background: rgba(33, 150, 243, 0.2);
+          border: 1px solid rgba(33, 150, 243, 0.4);
+          color: rgba(33, 150, 243, 0.9);
+          border-radius: 4px;
+          cursor: pointer;
+          font-weight: 500;
+        ">Close</button>
+      `;
+
+      modal.appendChild(content);
+      document.body.appendChild(modal);
+
+      // Auto-select the text in the textarea
+      const textarea = modal.querySelector("textarea") as HTMLTextAreaElement;
+      if (textarea) {
+        textarea.select();
+        textarea.focus();
+      }
+    }
+  };
+
   /**
    * Create new collaboration session
    */
@@ -704,7 +797,7 @@ export default function CollaboratePage() {
                   "Run collaborative code analysis and fixes in real-time",
               },
               {
-                icon: "↔",
+                icon: "���",
                 title: "Comments & Chat",
                 description: "Add contextual comments and chat with your team",
               },
