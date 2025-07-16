@@ -810,6 +810,441 @@ export default function PricingPage() {
               </div>
             </div>
 
+            {/* Add-ons & Services Section */}
+            <div style={{ marginBottom: "3rem" }}>
+              <h2
+                style={{
+                  fontSize: "1.5rem",
+                  fontWeight: "600",
+                  color: "#ffffff",
+                  margin: "0 0 1rem 0",
+                  textAlign: "center",
+                }}
+              >
+                Add-ons & Services
+              </h2>
+              <p
+                style={{
+                  fontSize: "1rem",
+                  color: "rgba(255, 255, 255, 0.8)",
+                  margin: "0 0 2rem 0",
+                  textAlign: "center",
+                }}
+              >
+                Enhance your plan with additional services
+              </p>
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+                  gap: "1.5rem",
+                }}
+              >
+                <div
+                  style={{
+                    background: "rgba(255, 255, 255, 0.05)",
+                    border: "1px solid rgba(255, 255, 255, 0.15)",
+                    borderRadius: "12px",
+                    padding: "1.5rem",
+                    textAlign: "center",
+                  }}
+                >
+                  <div
+                    style={{
+                      fontSize: "2rem",
+                      marginBottom: "1rem",
+                    }}
+                  >
+                    +
+                  </div>
+                  <h4
+                    style={{
+                      fontSize: "1rem",
+                      fontWeight: "600",
+                      color: "#ffffff",
+                      margin: "0 0 0.5rem 0",
+                    }}
+                  >
+                    Additional Analyses
+                  </h4>
+                  <p
+                    style={{
+                      color: "rgba(255, 255, 255, 0.7)",
+                      margin: "0 0 1rem 0",
+                      fontSize: "0.875rem",
+                    }}
+                  >
+                    Extra analyses beyond your plan limit
+                  </p>
+                  <div
+                    style={{
+                      fontSize: "1.25rem",
+                      fontWeight: "600",
+                      color: "rgba(33, 150, 243, 0.9)",
+                    }}
+                  >
+                    $0.10 per analysis
+                  </div>
+                  <div
+                    style={{
+                      fontSize: "0.75rem",
+                      color: "rgba(255, 255, 255, 0.5)",
+                      marginTop: "0.5rem",
+                    }}
+                  >
+                    →
+                  </div>
+                </div>
+
+                <div
+                  style={{
+                    background: "rgba(255, 255, 255, 0.05)",
+                    border: "1px solid rgba(255, 255, 255, 0.15)",
+                    borderRadius: "12px",
+                    padding: "1.5rem",
+                    textAlign: "center",
+                  }}
+                >
+                  <div
+                    style={{
+                      fontSize: "2rem",
+                      marginBottom: "1rem",
+                    }}
+                  >
+                    ⚡
+                  </div>
+                  <h4
+                    style={{
+                      fontSize: "1rem",
+                      fontWeight: "600",
+                      color: "#ffffff",
+                      margin: "0 0 0.5rem 0",
+                    }}
+                  >
+                    Priority Processing
+                  </h4>
+                  <p
+                    style={{
+                      color: "rgba(255, 255, 255, 0.7)",
+                      margin: "0 0 1rem 0",
+                      fontSize: "0.875rem",
+                    }}
+                  >
+                    Jump to the front of the queue
+                  </p>
+                  <div
+                    style={{
+                      fontSize: "1.25rem",
+                      fontWeight: "600",
+                      color: "rgba(33, 150, 243, 0.9)",
+                    }}
+                  >
+                    $5/month per user
+                  </div>
+                  <div
+                    style={{
+                      fontSize: "0.75rem",
+                      color: "rgba(255, 255, 255, 0.5)",
+                      marginTop: "0.5rem",
+                    }}
+                  >
+                    →
+                  </div>
+                </div>
+
+                <div
+                  style={{
+                    background: "rgba(255, 255, 255, 0.05)",
+                    border: "1px solid rgba(255, 255, 255, 0.15)",
+                    borderRadius: "12px",
+                    padding: "1.5rem",
+                    textAlign: "center",
+                  }}
+                >
+                  <div
+                    style={{
+                      fontSize: "2rem",
+                      marginBottom: "1rem",
+                    }}
+                  >
+                    🔗
+                  </div>
+                  <h4
+                    style={{
+                      fontSize: "1rem",
+                      fontWeight: "600",
+                      color: "#ffffff",
+                      margin: "0 0 0.5rem 0",
+                    }}
+                  >
+                    Custom Integration
+                  </h4>
+                  <p
+                    style={{
+                      color: "rgba(255, 255, 255, 0.7)",
+                      margin: "0 0 1rem 0",
+                      fontSize: "0.875rem",
+                    }}
+                  >
+                    Bespoke integrations for your workflow
+                  </p>
+                  <div
+                    style={{
+                      fontSize: "1.25rem",
+                      fontWeight: "600",
+                      color: "rgba(33, 150, 243, 0.9)",
+                    }}
+                  >
+                    Starting at $500
+                  </div>
+                  <div
+                    style={{
+                      fontSize: "0.75rem",
+                      color: "rgba(255, 255, 255, 0.5)",
+                      marginTop: "0.5rem",
+                    }}
+                  >
+                    ↗
+                  </div>
+                </div>
+
+                <div
+                  style={{
+                    background: "rgba(255, 255, 255, 0.05)",
+                    border: "1px solid rgba(255, 255, 255, 0.15)",
+                    borderRadius: "12px",
+                    padding: "1.5rem",
+                    textAlign: "center",
+                  }}
+                >
+                  <div
+                    style={{
+                      fontSize: "2rem",
+                      marginBottom: "1rem",
+                    }}
+                  >
+                    🎓
+                  </div>
+                  <h4
+                    style={{
+                      fontSize: "1rem",
+                      fontWeight: "600",
+                      color: "#ffffff",
+                      margin: "0 0 0.5rem 0",
+                    }}
+                  >
+                    Professional Training
+                  </h4>
+                  <p
+                    style={{
+                      color: "rgba(255, 255, 255, 0.7)",
+                      margin: "0 0 1rem 0",
+                      fontSize: "0.875rem",
+                    }}
+                  >
+                    Expert training for your team
+                  </p>
+                  <div
+                    style={{
+                      fontSize: "1.25rem",
+                      fontWeight: "600",
+                      color: "rgba(33, 150, 243, 0.9)",
+                    }}
+                  >
+                    $200/hour
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Feature Comparison Table */}
+            <div style={{ marginBottom: "3rem" }}>
+              <h2
+                style={{
+                  fontSize: "1.5rem",
+                  fontWeight: "600",
+                  color: "#ffffff",
+                  margin: "0 0 2rem 0",
+                  textAlign: "center",
+                }}
+              >
+                Feature Comparison
+              </h2>
+              <div
+                style={{
+                  background: "rgba(255, 255, 255, 0.05)",
+                  border: "1px solid rgba(255, 255, 255, 0.15)",
+                  borderRadius: "16px",
+                  padding: "2rem",
+                  overflowX: "auto",
+                }}
+              >
+                <table
+                  style={{
+                    width: "100%",
+                    borderCollapse: "collapse",
+                    fontSize: "0.875rem",
+                  }}
+                >
+                  <thead>
+                    <tr>
+                      <th
+                        style={{
+                          textAlign: "left",
+                          padding: "1rem 0.5rem",
+                          color: "rgba(255, 255, 255, 0.9)",
+                          fontWeight: "600",
+                          borderBottom: "1px solid rgba(255, 255, 255, 0.15)",
+                        }}
+                      >
+                        Features
+                      </th>
+                      <th
+                        style={{
+                          textAlign: "center",
+                          padding: "1rem 0.5rem",
+                          color: "rgba(255, 255, 255, 0.9)",
+                          fontWeight: "600",
+                          borderBottom: "1px solid rgba(255, 255, 255, 0.15)",
+                        }}
+                      >
+                        Free
+                      </th>
+                      <th
+                        style={{
+                          textAlign: "center",
+                          padding: "1rem 0.5rem",
+                          color: "rgba(255, 255, 255, 0.9)",
+                          fontWeight: "600",
+                          borderBottom: "1px solid rgba(255, 255, 255, 0.15)",
+                        }}
+                      >
+                        Developer
+                      </th>
+                      <th
+                        style={{
+                          textAlign: "center",
+                          padding: "1rem 0.5rem",
+                          color: "rgba(255, 255, 255, 0.9)",
+                          fontWeight: "600",
+                          borderBottom: "1px solid rgba(255, 255, 255, 0.15)",
+                        }}
+                      >
+                        Professional
+                      </th>
+                      <th
+                        style={{
+                          textAlign: "center",
+                          padding: "1rem 0.5rem",
+                          color: "rgba(255, 255, 255, 0.9)",
+                          fontWeight: "600",
+                          borderBottom: "1px solid rgba(255, 255, 255, 0.15)",
+                        }}
+                      >
+                        Team
+                      </th>
+                      <th
+                        style={{
+                          textAlign: "center",
+                          padding: "1rem 0.5rem",
+                          color: "rgba(255, 255, 255, 0.9)",
+                          fontWeight: "600",
+                          borderBottom: "1px solid rgba(255, 255, 255, 0.15)",
+                        }}
+                      >
+                        Enterprise
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {[
+                      [
+                        "Monthly Analyses",
+                        "5",
+                        "50",
+                        "500",
+                        "2,000",
+                        "Unlimited",
+                      ],
+                      [
+                        "File Size Limit",
+                        "200KB",
+                        "1MB",
+                        "10MB",
+                        "50MB",
+                        "Unlimited",
+                      ],
+                      ["6-Layer Fixing System", "✓", "✓", "✓", "✓", "✓"],
+                      ["Apply Fixes Mode", "×", "✓", "✓", "✓", "✓"],
+                      [
+                        "API Access",
+                        "×",
+                        "Basic",
+                        "Advanced",
+                        "Premium",
+                        "Unlimited",
+                      ],
+                      [
+                        "Team Collaboration",
+                        "×",
+                        "×",
+                        "5 members",
+                        "Unlimited",
+                        "Unlimited",
+                      ],
+                      ["CI/CD Integrations", "×", "×", "✓", "✓", "✓"],
+                      ["Webhooks", "×", "×", "✓", "Advanced", "Custom"],
+                      [
+                        "Priority Support",
+                        "×",
+                        "Email",
+                        "Email",
+                        "Dedicated",
+                        "24/7 Phone",
+                      ],
+                      ["SLA Guarantee", "×", "×", "×", "✓", "Custom"],
+                      ["On-premise Deployment", "×", "×", "×", "×", "✓"],
+                    ].map((row, index) => (
+                      <tr key={index}>
+                        {row.map((cell, cellIndex) => (
+                          <td
+                            key={cellIndex}
+                            style={{
+                              padding: "0.75rem 0.5rem",
+                              color:
+                                cellIndex === 0
+                                  ? "rgba(255, 255, 255, 0.9)"
+                                  : "rgba(255, 255, 255, 0.7)",
+                              textAlign: cellIndex === 0 ? "left" : "center",
+                              borderBottom:
+                                index < 10
+                                  ? "1px solid rgba(255, 255, 255, 0.08)"
+                                  : "none",
+                              fontWeight: cellIndex === 0 ? "500" : "400",
+                            }}
+                          >
+                            {cell === "✓" ? (
+                              <span style={{ color: "rgba(76, 175, 80, 0.9)" }}>
+                                ✓
+                              </span>
+                            ) : cell === "×" ? (
+                              <span
+                                style={{ color: "rgba(255, 255, 255, 0.3)" }}
+                              >
+                                ×
+                              </span>
+                            ) : (
+                              cell
+                            )}
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
             {/* FAQ Section */}
             <div style={{ marginBottom: "2rem" }}>
               <h2
