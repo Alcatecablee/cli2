@@ -1249,52 +1249,37 @@ function ImageGallery({ images }) {
                     </div>
                   </div>
 
-                  <div className="layer-architecture">
-                    <h4 className="section-heading">Six-Layer Architecture</h4>
-                    <div className="architecture-grid">
-                      <div className="layer-block">
-                        <div className="layer-number">01</div>
-                        <div className="layer-content">
-                          <h6>Configuration Layer</h6>
-                          <p>
-                            TypeScript and Next.js configuration optimization
-                          </p>
-                        </div>
+                  <div className="layer-stack">
+                    <div className="stack-header">
+                      <h4>Processing Pipeline</h4>
+                      <div className="stack-progress">
+                        <div className="progress-bar"></div>
                       </div>
-                      <div className="layer-block">
-                        <div className="layer-number">02</div>
-                        <div className="layer-content">
-                          <h6>Pattern Layer</h6>
-                          <p>Code pattern standardization and cleanup</p>
-                        </div>
+                    </div>
+                    <div className="layer-grid">
+                      <div className="layer-item">
+                        <div className="layer-badge">01</div>
+                        <h5>Config</h5>
                       </div>
-                      <div className="layer-block">
-                        <div className="layer-number">03</div>
-                        <div className="layer-content">
-                          <h6>Component Layer</h6>
-                          <p>React component structure and accessibility</p>
-                        </div>
+                      <div className="layer-item">
+                        <div className="layer-badge">02</div>
+                        <h5>Patterns</h5>
                       </div>
-                      <div className="layer-block">
-                        <div className="layer-number">04</div>
-                        <div className="layer-content">
-                          <h6>Hydration Layer</h6>
-                          <p>Server-side rendering safety mechanisms</p>
-                        </div>
+                      <div className="layer-item">
+                        <div className="layer-badge">03</div>
+                        <h5>Components</h5>
                       </div>
-                      <div className="layer-block">
-                        <div className="layer-number">05</div>
-                        <div className="layer-content">
-                          <h6>Next.js Layer</h6>
-                          <p>App Router compliance and optimization</p>
-                        </div>
+                      <div className="layer-item">
+                        <div className="layer-badge">04</div>
+                        <h5>Hydration</h5>
                       </div>
-                      <div className="layer-block">
-                        <div className="layer-number">06</div>
-                        <div className="layer-content">
-                          <h6>Testing Layer</h6>
-                          <p>Type safety and error boundary implementation</p>
-                        </div>
+                      <div className="layer-item">
+                        <div className="layer-badge">05</div>
+                        <h5>Next.js</h5>
+                      </div>
+                      <div className="layer-item">
+                        <div className="layer-badge">06</div>
+                        <h5>Testing</h5>
                       </div>
                     </div>
                   </div>
