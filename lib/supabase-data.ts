@@ -47,6 +47,26 @@ export interface UserSettings {
   updated_at?: string;
 }
 
+// Helper function to format error messages properly
+function formatError(error: any): string {
+  if (error instanceof Error) {
+    return `${error.name}: ${error.message}`;
+  }
+  if (typeof error === "object" && error !== null) {
+    return JSON.stringify(
+      {
+        message: error.message || "Unknown error",
+        details: error.details || "",
+        hint: error.hint || "",
+        code: error.code || "",
+      },
+      null,
+      2,
+    );
+  }
+  return String(error);
+}
+
 // Data service functions
 export const dataService = {
   // Analysis History
@@ -68,13 +88,13 @@ export const dataService = {
         .single();
 
       if (error) {
-        console.error("Error saving analysis history:", error);
+        console.error("Error saving analysis history:", formatError(error));
         return null;
       }
 
       return data;
     } catch (error) {
-      console.error("Error in saveAnalysisHistory:", error);
+      console.error("Error in saveAnalysisHistory:", formatError(error));
       return null;
     }
   },
@@ -92,13 +112,13 @@ export const dataService = {
         .limit(limit);
 
       if (error) {
-        console.error("Error fetching analysis history:", error);
+        console.error("Error fetching analysis history:", formatError(error));
         return [];
       }
 
       return data || [];
     } catch (error) {
-      console.error("Error in getAnalysisHistory:", error);
+      console.error("Error in getAnalysisHistory:", formatError(error));
       return [];
     }
   },
@@ -115,13 +135,13 @@ export const dataService = {
         .eq("user_id", userId);
 
       if (error) {
-        console.error("Error deleting analysis history:", error);
+        console.error("Error deleting analysis history:", formatError(error));
         return false;
       }
 
       return true;
     } catch (error) {
-      console.error("Error in deleteAnalysisHistory:", error);
+      console.error("Error in deleteAnalysisHistory:", formatError(error));
       return false;
     }
   },
@@ -134,13 +154,13 @@ export const dataService = {
         .eq("user_id", userId);
 
       if (error) {
-        console.error("Error clearing analysis history:", error);
+        console.error("Error clearing analysis history:", formatError(error));
         return false;
       }
 
       return true;
     } catch (error) {
-      console.error("Error in clearAnalysisHistory:", error);
+      console.error("Error in clearAnalysisHistory:", formatError(error));
       return false;
     }
   },
@@ -161,13 +181,13 @@ export const dataService = {
         .single();
 
       if (error) {
-        console.error("Error saving project:", error);
+        console.error("Error saving project:", formatError(error));
         return null;
       }
 
       return data;
     } catch (error) {
-      console.error("Error in saveProject:", error);
+      console.error("Error in saveProject:", formatError(error));
       return null;
     }
   },
@@ -181,13 +201,13 @@ export const dataService = {
         .order("created_at", { ascending: false });
 
       if (error) {
-        console.error("Error fetching projects:", error);
+        console.error("Error fetching projects:", formatError(error));
         return [];
       }
 
       return data || [];
     } catch (error) {
-      console.error("Error in getProjects:", error);
+      console.error("Error in getProjects:", formatError(error));
       return [];
     }
   },
@@ -210,13 +230,13 @@ export const dataService = {
         .single();
 
       if (error) {
-        console.error("Error updating project:", error);
+        console.error("Error updating project:", formatError(error));
         return null;
       }
 
       return data;
     } catch (error) {
-      console.error("Error in updateProject:", error);
+      console.error("Error in updateProject:", formatError(error));
       return null;
     }
   },
@@ -230,13 +250,13 @@ export const dataService = {
         .eq("user_id", userId);
 
       if (error) {
-        console.error("Error deleting project:", error);
+        console.error("Error deleting project:", formatError(error));
         return false;
       }
 
       return true;
     } catch (error) {
-      console.error("Error in deleteProject:", error);
+      console.error("Error in deleteProject:", formatError(error));
       return false;
     }
   },
@@ -262,13 +282,13 @@ export const dataService = {
             theme: "dark",
           };
         }
-        console.error("Error fetching user settings:", error);
+        console.error("Error fetching user settings:", formatError(error));
         return null;
       }
 
       return data;
     } catch (error) {
-      console.error("Error in getUserSettings:", error);
+      console.error("Error in getUserSettings:", formatError(error));
       return null;
     }
   },
@@ -292,13 +312,13 @@ export const dataService = {
         .single();
 
       if (error) {
-        console.error("Error saving user settings:", error);
+        console.error("Error saving user settings:", formatError(error));
         return null;
       }
 
       return data;
     } catch (error) {
-      console.error("Error in saveUserSettings:", error);
+      console.error("Error in saveUserSettings:", formatError(error));
       return null;
     }
   },
@@ -324,7 +344,7 @@ export const dataService = {
       const updatedHistory = [newItem, ...localHistory].slice(0, 50);
       localStorage.setItem("neurolint-history", JSON.stringify(updatedHistory));
     } catch (error) {
-      console.error("Error saving to localStorage:", error);
+      console.error("Error saving to localStorage:", formatError(error));
     }
 
     // If user is authenticated, also save to Supabase
@@ -332,7 +352,7 @@ export const dataService = {
       try {
         await this.saveAnalysisHistory(userId, analysisData);
       } catch (error) {
-        console.error("Error saving to Supabase:", error);
+        console.error("Error saving to Supabase:", formatError(error));
         // Continue execution - localStorage backup is available
       }
     }
@@ -351,14 +371,14 @@ export const dataService = {
               JSON.stringify(supabaseHistory),
             );
           } catch (error) {
-            console.error("Error updating localStorage:", error);
+            console.error("Error updating localStorage:", formatError(error));
           }
           return supabaseHistory;
         }
       } catch (error) {
         console.error(
           "Error fetching from Supabase, falling back to localStorage:",
-          error,
+          formatError(error),
         );
       }
     }
@@ -370,7 +390,7 @@ export const dataService = {
       );
       return localHistory;
     } catch (error) {
-      console.error("Error reading from localStorage:", error);
+      console.error("Error reading from localStorage:", formatError(error));
       return [];
     }
   },
