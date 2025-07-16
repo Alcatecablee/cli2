@@ -183,7 +183,7 @@ export default function PricingPage() {
       {/* Pricing Plans */}
       <section className="pricing-section">
         <div className="pricing-container">
-          <div className="pricing-grid">
+          <div className="pricing-cards">
             {plans.map((plan) => (
               <div
                 key={plan.id}
