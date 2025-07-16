@@ -887,8 +887,13 @@ export default function PricingPage() {
                       fontSize: "0.875rem",
                     }}
                   >
-                    Yes! All paid plans include a 14-day free trial. No credit
-                    card required to start exploring our professional features.
+                    <strong style={{ color: "rgba(33, 150, 243, 0.9)" }}>
+                      Yes!
+                    </strong>{" "}
+                    All Developer and Professional plans include a{" "}
+                    <strong>14-day free trial</strong>. No credit card required
+                    to start exploring our professional features. Full access to
+                    all plan features during the trial period.
                   </p>
                 </div>
                 <div
