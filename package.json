@@ -37,6 +37,10 @@
   "author": "NeuroLint Pro",
   "license": "MIT",
   "dependencies": {
+    "@babel/generator": "^7.28.0",
+    "@babel/parser": "^7.28.0",
+    "@babel/traverse": "^7.28.0",
+    "@babel/types": "^7.28.1",
     "@paypal/checkout-server-sdk": "^1.0.3",
     "@supabase/supabase-js": "^2.51.0",
     "cors": "^2.8.5",
