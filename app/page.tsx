@@ -1306,42 +1306,39 @@ function ImageGallery({ images }) {
                           </p>
                         </div>
                       </div>
-                      <div className="layer-info">
-                        <span className="layer-number">2</span>
-                        <div className="layer-details">
-                          <strong>Patterns</strong>
-                          <p>HTML entities, imports, console cleanup</p>
+                      <div className="layer-block">
+                        <div className="layer-number">02</div>
+                        <div className="layer-content">
+                          <h6>Pattern Layer</h6>
+                          <p>Code pattern standardization and cleanup</p>
                         </div>
                       </div>
-                      <div className="layer-info">
-                        <span className="layer-number">3</span>
-                        <div className="layer-details">
-                          <strong>Components</strong>
-                          <p>Missing keys, React imports, accessibility</p>
+                      <div className="layer-block">
+                        <div className="layer-number">03</div>
+                        <div className="layer-content">
+                          <h6>Component Layer</h6>
+                          <p>React component structure and accessibility</p>
                         </div>
                       </div>
-                      <div className="layer-info">
-                        <span className="layer-number">4</span>
-                        <div className="layer-details">
-                          <strong>Hydration</strong>
-                          <p>SSR safety guards, localStorage protection</p>
+                      <div className="layer-block">
+                        <div className="layer-number">04</div>
+                        <div className="layer-content">
+                          <h6>Hydration Layer</h6>
+                          <p>Server-side rendering safety mechanisms</p>
                         </div>
                       </div>
-                      <div className="layer-info">
-                        <span className="layer-number">5</span>
-                        <div className="layer-details">
-                          <strong>Next.js</strong>
-                          <p>
-                            App Router compliance, &apos;use client&apos;
-                            directives
-                          </p>
+                      <div className="layer-block">
+                        <div className="layer-number">05</div>
+                        <div className="layer-content">
+                          <h6>Next.js Layer</h6>
+                          <p>App Router compliance and optimization</p>
                         </div>
                       </div>
-                      <div className="layer-info">
-                        <span className="layer-number">6</span>
-                        <div className="layer-details">
-                          <strong>Testing</strong>
-                          <p>TypeScript props, error handling, exports</p>
+                      <div className="layer-block">
+                        <div className="layer-number">06</div>
+                        <div className="layer-content">
+                          <h6>Testing Layer</h6>
+                          <p>Type safety and error boundary implementation</p>
                         </div>
                       </div>
                     </div>
