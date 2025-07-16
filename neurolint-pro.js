@@ -2030,7 +2030,9 @@ async function NeuroLintPro(
   }
 }
 
+// Export main function and utility functions
 module.exports = NeuroLintPro;
+module.exports.applyLayerTransformations = applyLayerTransformations;
 
 // CLI interface
 if (require.main === module) {
