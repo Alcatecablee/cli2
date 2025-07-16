@@ -2,6 +2,7 @@ import React from "react";
 import type { Metadata } from "next";
 import Script from "next/script";
 import { AuthProvider } from "../lib/auth-context";
+import ScrollToTop from "../src/components/ScrollToTop";
 import "./globals.css";
 
 export const metadata: Metadata = {
