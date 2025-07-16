@@ -5,14 +5,13 @@ import { createClient } from "@supabase/supabase-js";
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE;
 
-if (!supabaseUrl || !supabaseServiceKey) {
+let supabase: any = null;
+
+if (supabaseUrl && supabaseServiceKey) {
+  supabase = createClient(supabaseUrl, supabaseServiceKey);
+} else {
   console.error("Missing Supabase environment variables");
 }
-
-const supabase = createClient(
-  supabaseUrl || "",
-  supabaseServiceKey || "", // Use service role for admin operations
-);
 
 interface Subscription {
   id: string;
