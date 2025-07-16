@@ -1239,7 +1239,7 @@ function ImageGallery({ images }) {
                     </div>
                   </div>
 
-                  <div className="guidance-cards">
+                  <div className="operational-modes">
                     <div className="guidance-card">
                       <div className="guidance-card-header">
                         <h4>Mode Selection</h4>
@@ -1952,7 +1952,7 @@ function ImageGallery({ images }) {
                                                 key={index}
                                                 className="improvement-item"
                                               >
-                                                �� {improvement}
+                                                ��� {improvement}
                                               </div>
                                             ),
                                           )}
