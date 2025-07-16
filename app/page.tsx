@@ -1209,7 +1209,6 @@ function ImageGallery({ images }) {
                   <div className="guidance-cards">
                     <div className="guidance-card">
                       <div className="guidance-card-header">
-                        <span className="guidance-icon">🔍</span>
                         <h4>Mode Selection</h4>
                       </div>
                       <div className="guidance-card-content">
@@ -1232,7 +1231,6 @@ function ImageGallery({ images }) {
 
                     <div className="guidance-card">
                       <div className="guidance-card-header">
-                        <span className="guidance-icon">⚡</span>
                         <h4>Layer Selection</h4>
                       </div>
                       <div className="guidance-card-content">
