@@ -673,12 +673,23 @@ export default function PricingPage() {
                             animation: "spin 1s linear infinite",
                           }}
                         ></div>
-                        Processing...
+                        {user &&
+                        !user.trialUsed &&
+                        (plan.id === "developer" || plan.id === "professional")
+                          ? "Starting Trial..."
+                          : "Processing..."}
                       </div>
+                    ) : user && user.isOnTrial && user.trialPlan === plan.id ? (
+                      `Active Trial (${user.trialDaysRemaining} days left)`
                     ) : user?.plan === plan.id ? (
                       "Current Plan"
                     ) : !user && plan.id !== "free" ? (
                       "Sign Up to Start"
+                    ) : user &&
+                      !user.trialUsed &&
+                      (plan.id === "developer" ||
+                        plan.id === "professional") ? (
+                      "Start 14-Day Free Trial"
                     ) : (
                       plan.ctaText
                     )}
