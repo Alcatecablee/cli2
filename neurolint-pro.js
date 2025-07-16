@@ -1763,33 +1763,7 @@ async function NeuroLintPro(
   requestedLayers = null,
   options = {},
 ) {
-  // Try enhanced AST engine first if available and not explicitly disabled
-  if (NeuroLintProEnhanced && options.useEnhancedAST !== false) {
-    try {
-      console.log(
-        "[NEUROLINT PRO] Using enhanced AST engine with semantic analysis",
-      );
-      const enhancedOptions = {
-        ...options,
-        filename: filePath,
-        dryRun,
-        verbose: options.verbose || false,
-      };
-      return await NeuroLintProEnhanced(
-        code,
-        filePath,
-        dryRun,
-        requestedLayers,
-        enhancedOptions,
-      );
-    } catch (error) {
-      console.warn(
-        "[NEUROLINT PRO] Enhanced AST engine failed, falling back to standard engine:",
-        error.message,
-      );
-      // Continue with standard execution below
-    }
-  }
+  // Standard engine - no automatic enhanced engine loading
 
   console.log(
     "%c🧠 NEUROLINT PRO ENGINE STARTED (Standard Mode)",
