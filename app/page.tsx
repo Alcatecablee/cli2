@@ -1344,29 +1344,30 @@ function ImageGallery({ images }) {
                     </div>
                   </div>
 
-                  <div className="guidance-tips">
-                    <h4 className="tips-title">Best Practices</h4>
-                    <ul className="tips-list">
-                      <li>
-                        Start with <strong>Dry-Run</strong> mode to explore
-                        safely
-                      </li>
-                      <li>
-                        Try our <strong>sample codes</strong> to understand
-                        capabilities
-                      </li>
-                      <li>
-                        Check <strong>confidence scores</strong> before applying
-                        fixes
-                      </li>
-                      <li>
-                        Use <strong>Auto-Detect</strong> for balanced analysis
-                      </li>
-                      <li>
-                        Upload your own code (max 100KB) for personalized
-                        analysis
-                      </li>
-                    </ul>
+                  <div className="execution-strategy">
+                    <h4 className="section-heading">Execution Strategy</h4>
+                    <div className="strategy-options">
+                      <div className="strategy-item">
+                        <div className="strategy-label">Auto-Detection</div>
+                        <div className="strategy-description">
+                          Intelligent layer selection based on semantic analysis
+                        </div>
+                      </div>
+                      <div className="strategy-item">
+                        <div className="strategy-label">Comprehensive Scan</div>
+                        <div className="strategy-description">
+                          Full six-layer analysis with dependency validation
+                        </div>
+                      </div>
+                      <div className="strategy-item">
+                        <div className="strategy-label">
+                          Targeted Processing
+                        </div>
+                        <div className="strategy-description">
+                          Custom layer selection for specific use cases
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
