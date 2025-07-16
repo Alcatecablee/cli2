@@ -657,54 +657,121 @@ export default function Dashboard() {
 
   // Load saved data and session on component mount
   useEffect(() => {
-    const savedHistory = localStorage.getItem("neurolint-history");
-    const savedProjects = localStorage.getItem("neurolint-projects");
-    const savedSettings = localStorage.getItem("neurolint-settings");
-    const savedSessionId = localStorage.getItem("neurolint-session-id");
-
-    if (savedHistory) {
+    const loadDashboardData = async () => {
       try {
-        const history = JSON.parse(savedHistory);
+        // Load analysis history (hybrid approach)
+        const history = await dataService.getAnalysisHistoryHybrid(
+          user?.id || null,
+        );
         setDashboardState((prev) => ({ ...prev, analysisHistory: history }));
-      } catch (e) {
-        console.error("Failed to load analysis history:", e);
-      }
-    }
 
-    if (savedProjects) {
-      try {
-        const projects = JSON.parse(savedProjects);
-        setDashboardState((prev) => ({ ...prev, projects: projects }));
-      } catch (e) {
-        console.error("Failed to load projects:", e);
-      }
-    }
+        // If user is authenticated, load Supabase data
+        if (user?.id) {
+          try {
+            // Load projects from Supabase
+            const projects = await dataService.getProjects(user.id);
+            const formattedProjects = projects.map((p) => ({
+              id: p.id,
+              name: p.name,
+              description: p.description,
+              files: Array.isArray(p.files) ? p.files : [],
+              createdAt: new Date(p.created_at),
+              lastAnalyzed: p.last_analyzed
+                ? new Date(p.last_analyzed)
+                : undefined,
+            }));
+            setDashboardState((prev) => ({
+              ...prev,
+              projects: formattedProjects,
+            }));
 
-    if (savedSettings) {
-      try {
-        const settings = JSON.parse(savedSettings);
-        setDashboardState((prev) => ({
-          ...prev,
-          settings: { ...prev.settings, ...settings },
-        }));
-      } catch (e) {
-        console.error("Failed to load settings:", e);
-      }
-    }
+            // Load user settings from Supabase
+            const settings = await dataService.getUserSettings(user.id);
+            if (settings) {
+              setDashboardState((prev) => ({
+                ...prev,
+                settings: {
+                  defaultLayers: settings.default_layers || [],
+                  autoSave: settings.auto_save,
+                  notifications: settings.notifications,
+                  theme: settings.theme as "dark" | "light",
+                },
+              }));
+            }
+          } catch (error) {
+            console.error("Error loading Supabase data:", error);
+            // Fall back to localStorage
+            const savedProjects = localStorage.getItem("neurolint-projects");
+            const savedSettings = localStorage.getItem("neurolint-settings");
 
-    if (savedSessionId) {
-      setSessionId(savedSessionId);
-      // Load session info from API
-      fetch(`/api/dashboard?sessionId=${savedSessionId}`)
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.rateLimitInfo) {
-            setRateLimitInfo(data.rateLimitInfo);
+            if (savedProjects) {
+              try {
+                const projects = JSON.parse(savedProjects);
+                setDashboardState((prev) => ({ ...prev, projects }));
+              } catch (e) {
+                console.error("Failed to load projects from localStorage:", e);
+              }
+            }
+
+            if (savedSettings) {
+              try {
+                const settings = JSON.parse(savedSettings);
+                setDashboardState((prev) => ({
+                  ...prev,
+                  settings: { ...prev.settings, ...settings },
+                }));
+              } catch (e) {
+                console.error("Failed to load settings from localStorage:", e);
+              }
+            }
           }
-        })
-        .catch((e) => console.error("Failed to load session info:", e));
-    }
-  }, []);
+        } else {
+          // For non-authenticated users, use localStorage
+          const savedProjects = localStorage.getItem("neurolint-projects");
+          const savedSettings = localStorage.getItem("neurolint-settings");
+
+          if (savedProjects) {
+            try {
+              const projects = JSON.parse(savedProjects);
+              setDashboardState((prev) => ({ ...prev, projects }));
+            } catch (e) {
+              console.error("Failed to load projects:", e);
+            }
+          }
+
+          if (savedSettings) {
+            try {
+              const settings = JSON.parse(savedSettings);
+              setDashboardState((prev) => ({
+                ...prev,
+                settings: { ...prev.settings, ...settings },
+              }));
+            } catch (e) {
+              console.error("Failed to load settings:", e);
+            }
+          }
+        }
+
+        // Load session info
+        const savedSessionId = localStorage.getItem("neurolint-session-id");
+        if (savedSessionId) {
+          setSessionId(savedSessionId);
+          fetch(`/api/dashboard?sessionId=${savedSessionId}`)
+            .then((res) => res.json())
+            .then((data) => {
+              if (data.rateLimitInfo) {
+                setRateLimitInfo(data.rateLimitInfo);
+              }
+            })
+            .catch((e) => console.error("Failed to load session info:", e));
+        }
+      } catch (error) {
+        console.error("Error loading dashboard data:", error);
+      }
+    };
+
+    loadDashboardData();
+  }, [user?.id]);
 
   // Load subscription data when account section is opened
   useEffect(() => {
