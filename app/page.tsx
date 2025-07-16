@@ -1201,15 +1201,7 @@ function ImageGallery({ images }) {
               className="demo-section"
               aria-labelledby="demo-title"
             >
-              <div className="demo-header">
-                <img
-                  src="https://cdn.builder.io/api/v1/image/assets%2F4b35a64a4a2c446c91402681adcf734e%2F184ab63cffb747d79a1eddbf7cd2552a?format=webp&width=800"
-                  alt="NeuroLint Pro Logo"
-                  className="demo-logo"
-                />
-                <h2 id="demo-title" className="demo-main-title">
-                  Analysis Configuration
-                </h2>
+              
 
                 {/* User Guidance Section */}
                 <div className="demo-guidance">
@@ -1261,7 +1253,7 @@ function ImageGallery({ images }) {
                           <strong>All Layers</strong>
                           <p>
                             Comprehensive analysis across all 6 layers:
-                            Configuration → Patterns → Components → Hydration →
+                            Configuration → Patterns → Components ��� Hydration →
                             Next.js → Testing
                           </p>
                         </div>
