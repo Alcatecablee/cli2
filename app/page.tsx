@@ -1198,8 +1198,8 @@ function ImageGallery({ images }) {
             {/* Demo Section */}
             <section id="demo" className="demo-section">
               <div className="demo-header">
-                {/* User Guidance Section */}
-                <div className="analysis-platform">
+                {/* Enterprise Platform Section */}
+                <div className="enterprise-platform">
                   <div className="platform-overview">
                     <div className="overview-header">
                       <h3 className="platform-title">
