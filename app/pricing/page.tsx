@@ -145,17 +145,25 @@ export default function PricingPage() {
   ];
 
   const handlePlanSelection = async (planId: string) => {
-    if (planId === "free") {
-      if (!user) {
-        window.location.href = "/signup";
-      } else {
-        window.location.href = "/dashboard";
+    setLoading(planId);
+
+    try {
+      if (planId === "free") {
+        if (!user) {
+          window.location.href = "/signup";
+        } else {
+          window.location.href = "/dashboard";
+        }
+        return;
       }
-    } else if (planId === "enterprise" || planId === "team") {
-      // Contact sales
-      window.location.href = `mailto:sales@neurolint.pro?subject=Interest in ${plans.find((p) => p.id === planId)?.name} Plan`;
-    } else {
-      // Check if user is authenticated
+
+      if (planId === "enterprise" || planId === "team") {
+        // Contact sales
+        window.location.href = `mailto:sales@neurolint.pro?subject=Interest in ${plans.find((p) => p.id === planId)?.name} Plan`;
+        return;
+      }
+
+      // For paid plans (developer, professional)
       if (!user) {
         // Store intended plan and redirect to signup
         localStorage.setItem(
@@ -165,8 +173,23 @@ export default function PricingPage() {
         window.location.href = "/signup";
         return;
       }
-      // Start payment process
-      window.location.href = `/checkout?plan=${planId}&billing=${billingPeriod}`;
+
+      // If user is authenticated, check if they can start a trial
+      if (
+        user &&
+        !user.trialUsed &&
+        (planId === "developer" || planId === "professional")
+      ) {
+        // Eligible for free trial - go to checkout for trial signup
+        window.location.href = `/checkout?plan=${planId}&billing=${billingPeriod}`;
+      } else {
+        // Not eligible for trial or already used - redirect to payment/upgrade
+        alert(
+          "Trial not available. Please contact support for upgrade options.",
+        );
+      }
+    } finally {
+      setLoading(null);
     }
   };
 
