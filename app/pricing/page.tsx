@@ -188,226 +188,697 @@ export default function PricingPage() {
   };
 
   return (
-    <div className="pricing-page">
-      {/* Navigation */}
-      <nav className="pricing-nav">
-        <div className="nav-container">
-          <Link href="/" className="nav-logo">
-            <img
-              src="https://cdn.builder.io/api/v1/image/assets%2F4b35a64a4a2c446c91402681adcf734e%2F485afb87468542eeba91d45b141bab95?format=webp&width=800"
-              alt="NeuroLint Pro"
-              className="logo-img"
-            />
-          </Link>
-          <div className="nav-links">
-            <Link href="/" className="nav-link">
-              Home
-            </Link>
-            <Link href="/dashboard" className="nav-link">
-              Dashboard
-            </Link>
-          </div>
-        </div>
-      </nav>
+    <div className="onboarding-section">
+      <div className="onboarding-container">
+        <div className="onboarding-content">
+          <div
+            className="onboarding-card"
+            style={{ maxWidth: "1200px", width: "100%" }}
+          >
+            {/* Logo and Navigation */}
+            <div className="onboarding-logo">
+              <Link href="/">
+                <img
+                  src="https://cdn.builder.io/api/v1/image/assets%2Fbcdfdb608d38407b88c1584fe3705961%2F1b38a4a385ed4a0bb404148fae0ce80e?format=webp&width=800"
+                  alt="NeuroLint Pro"
+                  style={{
+                    height: "48px",
+                    width: "48px",
+                    marginBottom: "1.5rem",
+                  }}
+                />
+              </Link>
+            </div>
 
-      {/* Hero Section */}
-      <section className="pricing-hero">
-        <div className="hero-container">
-          <h1 className="hero-title">Choose Your Plan</h1>
-          <p className="hero-subtitle">
-            Professional React/Next.js code fixing with our complete 6-layer
-            system. Scale from individual projects to enterprise deployment.
-          </p>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginBottom: "2rem",
+              }}
+            >
+              <div></div>
+              <div style={{ display: "flex", gap: "1rem" }}>
+                <Link
+                  href="/"
+                  style={{
+                    color: "rgba(33, 150, 243, 0.9)",
+                    textDecoration: "none",
+                    fontSize: "0.875rem",
+                    fontWeight: "500",
+                  }}
+                >
+                  Home
+                </Link>
+                <Link
+                  href="/dashboard"
+                  style={{
+                    color: "rgba(33, 150, 243, 0.9)",
+                    textDecoration: "none",
+                    fontSize: "0.875rem",
+                    fontWeight: "500",
+                  }}
+                >
+                  Dashboard
+                </Link>
+              </div>
+            </div>
 
-          {/* Billing Toggle */}
-          <div className="billing-toggle">
-            <span
-              className={`billing-option ${billingPeriod === "monthly" ? "active" : ""}`}
-            >
-              Monthly
-            </span>
-            <button
-              className="toggle-switch"
-              onClick={() =>
-                setBillingPeriod(
-                  billingPeriod === "monthly" ? "yearly" : "monthly",
-                )
-              }
-              aria-label="Toggle billing period"
-            >
+            {/* Hero Section */}
+            <div style={{ textAlign: "center", marginBottom: "3rem" }}>
+              <h1 className="onboarding-title">Choose Your Plan</h1>
+              <p className="onboarding-subtitle">
+                Professional React/Next.js code fixing with our complete 6-layer
+                system. Scale from individual projects to enterprise deployment.
+              </p>
+
+              {/* Billing Toggle */}
               <div
-                className={`toggle-slider ${billingPeriod === "yearly" ? "yearly" : ""}`}
-              />
-            </button>
-            <span
-              className={`billing-option ${billingPeriod === "yearly" ? "active" : ""}`}
-            >
-              Yearly <span className="savings-badge">Save 20%</span>
-            </span>
-          </div>
-        </div>
-      </section>
-
-      {/* Pricing Plans */}
-      <section className="pricing-section">
-        <div className="pricing-container">
-          <div className="pricing-cards">
-            {plans.map((plan) => (
-              <div
-                key={plan.id}
-                className={`pricing-card ${plan.popular ? "popular" : ""} ${plan.enterprise ? "enterprise" : ""}`}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: "1rem",
+                  margin: "2rem 0",
+                }}
               >
-                {plan.badge && <div className="plan-badge">{plan.badge}</div>}
+                <span
+                  style={{
+                    color:
+                      billingPeriod === "monthly"
+                        ? "#ffffff"
+                        : "rgba(255, 255, 255, 0.6)",
+                    fontWeight: "500",
+                    transition: "all 0.3s ease",
+                  }}
+                >
+                  Monthly
+                </span>
+                <button
+                  onClick={() =>
+                    setBillingPeriod(
+                      billingPeriod === "monthly" ? "yearly" : "monthly",
+                    )
+                  }
+                  style={{
+                    position: "relative",
+                    width: "60px",
+                    height: "30px",
+                    background: "rgba(255, 255, 255, 0.1)",
+                    borderRadius: "15px",
+                    border: "1px solid rgba(255, 255, 255, 0.15)",
+                    cursor: "pointer",
+                    transition: "all 0.3s ease",
+                  }}
+                  aria-label="Toggle billing period"
+                >
+                  <div
+                    style={{
+                      position: "absolute",
+                      top: "2px",
+                      left: billingPeriod === "yearly" ? "32px" : "2px",
+                      width: "24px",
+                      height: "24px",
+                      background: "#ffffff",
+                      borderRadius: "12px",
+                      transition: "all 0.3s ease",
+                      boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)",
+                    }}
+                  />
+                </button>
+                <span
+                  style={{
+                    color:
+                      billingPeriod === "yearly"
+                        ? "#ffffff"
+                        : "rgba(255, 255, 255, 0.6)",
+                    fontWeight: "500",
+                    transition: "all 0.3s ease",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.5rem",
+                  }}
+                >
+                  Yearly{" "}
+                  <span
+                    style={{
+                      background: "rgba(33, 150, 243, 0.2)",
+                      color: "rgba(33, 150, 243, 0.9)",
+                      padding: "0.2rem 0.5rem",
+                      borderRadius: "12px",
+                      fontSize: "0.75rem",
+                      fontWeight: "600",
+                    }}
+                  >
+                    Save 20%
+                  </span>
+                </span>
+              </div>
+            </div>
 
-                <div className="plan-header">
-                  <h3 className="plan-name">
-                    {plan.name}
-                    {getCurrentPlanBadge(plan.id)}
-                  </h3>
+            {/* Pricing Cards */}
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+                gap: "1.5rem",
+                marginBottom: "3rem",
+              }}
+            >
+              {plans.map((plan) => (
+                <div
+                  key={plan.id}
+                  style={{
+                    background: plan.popular
+                      ? "linear-gradient(135deg, rgba(33, 150, 243, 0.12) 0%, rgba(33, 150, 243, 0.06) 50%, rgba(255, 255, 255, 0.02) 100%)"
+                      : plan.enterprise
+                        ? "linear-gradient(135deg, rgba(255, 215, 0, 0.08) 0%, rgba(255, 215, 0, 0.04) 50%, rgba(255, 255, 255, 0.02) 100%)"
+                        : "linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.04) 50%, rgba(255, 255, 255, 0.02) 100%)",
+                    border: plan.popular
+                      ? "1px solid rgba(33, 150, 243, 0.3)"
+                      : plan.enterprise
+                        ? "1px solid rgba(255, 215, 0, 0.3)"
+                        : "1px solid rgba(255, 255, 255, 0.15)",
+                    borderRadius: "20px",
+                    padding: "2rem",
+                    backdropFilter: "blur(25px) saturate(1.2)",
+                    WebkitBackdropFilter: "blur(25px) saturate(1.2)",
+                    boxShadow: plan.popular
+                      ? "0 12px 40px rgba(33, 150, 243, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.15)"
+                      : "0 12px 40px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.15)",
+                    position: "relative",
+                    overflow: "hidden",
+                    transition: "all 0.3s ease",
+                  }}
+                >
+                  {plan.badge && (
+                    <div
+                      style={{
+                        position: "absolute",
+                        top: "1rem",
+                        right: "1rem",
+                        background: plan.popular
+                          ? "rgba(33, 150, 243, 0.2)"
+                          : plan.enterprise
+                            ? "rgba(255, 215, 0, 0.2)"
+                            : "rgba(255, 255, 255, 0.1)",
+                        color: plan.popular
+                          ? "rgba(33, 150, 243, 0.9)"
+                          : plan.enterprise
+                            ? "rgba(255, 215, 0, 0.9)"
+                            : "#ffffff",
+                        padding: "0.4rem 0.8rem",
+                        borderRadius: "12px",
+                        fontSize: "0.75rem",
+                        fontWeight: "600",
+                        textTransform: "uppercase",
+                        letterSpacing: "0.5px",
+                      }}
+                    >
+                      {plan.badge}
+                    </div>
+                  )}
 
-                  <div className="plan-pricing">
-                    <div className="price-display">
-                      <span className="price-currency">$</span>
-                      <span className="price-amount">{plan.price}</span>
-                      <span className="price-period">/{plan.period}</span>
-                      {plan.originalPrice && billingPeriod === "yearly" && (
-                        <span className="price-original">
-                          ${plan.originalPrice}
+                  <div style={{ marginBottom: "2rem" }}>
+                    <h3
+                      style={{
+                        fontSize: "1.5rem",
+                        fontWeight: "600",
+                        color: "#ffffff",
+                        margin: "0 0 0.5rem 0",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "0.5rem",
+                      }}
+                    >
+                      {plan.name}
+                      {getCurrentPlanBadge(plan.id)}
+                    </h3>
+
+                    <div style={{ marginBottom: "1rem" }}>
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "baseline",
+                          gap: "0.25rem",
+                        }}
+                      >
+                        <span
+                          style={{
+                            fontSize: "2.5rem",
+                            fontWeight: "700",
+                            color: "#ffffff",
+                          }}
+                        >
+                          ${plan.price}
                         </span>
+                        <span
+                          style={{
+                            fontSize: "1rem",
+                            color: "rgba(255, 255, 255, 0.7)",
+                          }}
+                        >
+                          /{plan.period}
+                        </span>
+                        {plan.originalPrice && billingPeriod === "yearly" && (
+                          <span
+                            style={{
+                              fontSize: "1rem",
+                              color: "rgba(255, 255, 255, 0.5)",
+                              textDecoration: "line-through",
+                              marginLeft: "0.5rem",
+                            }}
+                          >
+                            ${plan.originalPrice}
+                          </span>
+                        )}
+                      </div>
+                      {billingPeriod === "yearly" && plan.originalPrice && (
+                        <div
+                          style={{
+                            fontSize: "0.875rem",
+                            color: "rgba(33, 150, 243, 0.9)",
+                            marginTop: "0.5rem",
+                          }}
+                        >
+                          Save{" "}
+                          {calculateYearlyDiscount(
+                            plan.originalPrice,
+                            plan.price,
+                          )}
+                          % annually
+                        </div>
                       )}
                     </div>
-                    {billingPeriod === "yearly" && plan.originalPrice && (
-                      <div className="yearly-savings">
-                        Save{" "}
-                        {calculateYearlyDiscount(
-                          plan.originalPrice,
-                          plan.price,
-                        )}
-                        % annually
+
+                    <p
+                      style={{
+                        color: "rgba(255, 255, 255, 0.8)",
+                        margin: "0 0 1.5rem 0",
+                        lineHeight: "1.5",
+                      }}
+                    >
+                      {plan.description}
+                    </p>
+                  </div>
+
+                  <div style={{ marginBottom: "2rem" }}>
+                    <ul
+                      style={{ listStyle: "none", padding: "0", margin: "0" }}
+                    >
+                      {plan.features.map((feature, index) => (
+                        <li
+                          key={index}
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "0.75rem",
+                            marginBottom: "0.75rem",
+                            color: "rgba(255, 255, 255, 0.9)",
+                            fontSize: "0.875rem",
+                          }}
+                        >
+                          <span
+                            style={{
+                              color: "rgba(33, 150, 243, 0.9)",
+                              fontWeight: "600",
+                              fontSize: "1rem",
+                            }}
+                          >
+                            ✓
+                          </span>
+                          <span>{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+
+                    {plan.limitations && (
+                      <div style={{ marginTop: "1.5rem" }}>
+                        <h5
+                          style={{
+                            fontSize: "0.875rem",
+                            fontWeight: "600",
+                            color: "rgba(255, 255, 255, 0.7)",
+                            margin: "0 0 0.75rem 0",
+                            textTransform: "uppercase",
+                            letterSpacing: "0.5px",
+                          }}
+                        >
+                          Limitations:
+                        </h5>
+                        <ul
+                          style={{
+                            listStyle: "none",
+                            padding: "0",
+                            margin: "0",
+                          }}
+                        >
+                          {plan.limitations.map((limitation, index) => (
+                            <li
+                              key={index}
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "0.75rem",
+                                marginBottom: "0.5rem",
+                                color: "rgba(255, 255, 255, 0.6)",
+                                fontSize: "0.8rem",
+                              }}
+                            >
+                              <span
+                                style={{
+                                  color: "rgba(255, 255, 255, 0.4)",
+                                  fontSize: "0.875rem",
+                                }}
+                              >
+                                •
+                              </span>
+                              <span>{limitation}</span>
+                            </li>
+                          ))}
+                        </ul>
                       </div>
                     )}
                   </div>
 
-                  <p className="plan-description">{plan.description}</p>
+                  <button
+                    className={`onboarding-btn ${plan.popular ? "primary" : "secondary"}`}
+                    onClick={() => handlePlanSelection(plan.id)}
+                    disabled={loading === plan.id || user?.plan === plan.id}
+                    style={{
+                      width: "100%",
+                      opacity:
+                        loading === plan.id || user?.plan === plan.id ? 0.7 : 1,
+                      cursor:
+                        loading === plan.id || user?.plan === plan.id
+                          ? "not-allowed"
+                          : "pointer",
+                    }}
+                  >
+                    {loading === plan.id ? (
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          gap: "0.5rem",
+                        }}
+                      >
+                        <div
+                          style={{
+                            width: "20px",
+                            height: "20px",
+                            border: "2px solid rgba(255, 255, 255, 0.3)",
+                            borderTop: "2px solid #ffffff",
+                            borderRadius: "50%",
+                            animation: "spin 1s linear infinite",
+                          }}
+                        ></div>
+                        Processing...
+                      </div>
+                    ) : user?.plan === plan.id ? (
+                      "Current Plan"
+                    ) : !user && plan.id !== "free" ? (
+                      "Sign Up to Start"
+                    ) : (
+                      plan.ctaText
+                    )}
+                  </button>
                 </div>
+              ))}
+            </div>
 
-                <div className="plan-features">
-                  <ul className="features-list">
-                    {plan.features.map((feature, index) => (
-                      <li key={index} className="feature-item">
-                        <span className="feature-check">✓</span>
-                        <span className="feature-text">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-
-                  {plan.limitations && (
-                    <div className="plan-limitations">
-                      <h5 className="limitations-title">Limitations:</h5>
-                      <ul className="limitations-list">
-                        {plan.limitations.map((limitation, index) => (
-                          <li key={index} className="limitation-item">
-                            <span className="limitation-icon">•</span>
-                            <span className="limitation-text">
-                              {limitation}
-                            </span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
+            {/* Trust Section */}
+            <div
+              style={{
+                textAlign: "center",
+                marginBottom: "3rem",
+                padding: "2rem",
+                background:
+                  "linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%)",
+                border: "1px solid rgba(255, 255, 255, 0.1)",
+                borderRadius: "16px",
+              }}
+            >
+              <h2
+                style={{
+                  fontSize: "1.5rem",
+                  fontWeight: "600",
+                  color: "#ffffff",
+                  margin: "0 0 2rem 0",
+                }}
+              >
+                Trusted by Developers Worldwide
+              </h2>
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))",
+                  gap: "1.5rem",
+                }}
+              >
+                <div style={{ textAlign: "center" }}>
+                  <div
+                    style={{
+                      fontSize: "2rem",
+                      fontWeight: "700",
+                      color: "rgba(33, 150, 243, 0.9)",
+                      marginBottom: "0.5rem",
+                    }}
+                  >
+                    50,000+
+                  </div>
+                  <div
+                    style={{
+                      fontSize: "0.875rem",
+                      color: "rgba(255, 255, 255, 0.7)",
+                    }}
+                  >
+                    Files Fixed
+                  </div>
                 </div>
-
-                <button
-                  className={`plan-cta btn ${plan.popular ? "primary" : "secondary"} ${
-                    user?.plan === plan.id ? "current" : ""
-                  }`}
-                  onClick={() => handlePlanSelection(plan.id)}
-                  disabled={loading === plan.id || user?.plan === plan.id}
-                >
-                  {loading === plan.id ? (
-                    <div className="btn-loading">
-                      <div className="loading-spinner"></div>
-                      Processing...
-                    </div>
-                  ) : user?.plan === plan.id ? (
-                    "Current Plan"
-                  ) : !user && plan.id !== "free" ? (
-                    "Sign Up to Start"
-                  ) : (
-                    plan.ctaText
-                  )}
-                </button>
+                <div style={{ textAlign: "center" }}>
+                  <div
+                    style={{
+                      fontSize: "2rem",
+                      fontWeight: "700",
+                      color: "rgba(33, 150, 243, 0.9)",
+                      marginBottom: "0.5rem",
+                    }}
+                  >
+                    99.9%
+                  </div>
+                  <div
+                    style={{
+                      fontSize: "0.875rem",
+                      color: "rgba(255, 255, 255, 0.7)",
+                    }}
+                  >
+                    Uptime
+                  </div>
+                </div>
+                <div style={{ textAlign: "center" }}>
+                  <div
+                    style={{
+                      fontSize: "2rem",
+                      fontWeight: "700",
+                      color: "rgba(33, 150, 243, 0.9)",
+                      marginBottom: "0.5rem",
+                    }}
+                  >
+                    500+
+                  </div>
+                  <div
+                    style={{
+                      fontSize: "0.875rem",
+                      color: "rgba(255, 255, 255, 0.7)",
+                    }}
+                  >
+                    Teams
+                  </div>
+                </div>
+                <div style={{ textAlign: "center" }}>
+                  <div
+                    style={{
+                      fontSize: "2rem",
+                      fontWeight: "700",
+                      color: "rgba(33, 150, 243, 0.9)",
+                      marginBottom: "0.5rem",
+                    }}
+                  >
+                    24/7
+                  </div>
+                  <div
+                    style={{
+                      fontSize: "0.875rem",
+                      color: "rgba(255, 255, 255, 0.7)",
+                    }}
+                  >
+                    Support
+                  </div>
+                </div>
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
+            </div>
 
-      {/* Trust Section */}
-      <section className="trust-section">
-        <div className="trust-container">
-          <h2 className="trust-title">Trusted by Developers Worldwide</h2>
-          <div className="trust-stats">
-            <div className="stat-item">
-              <div className="stat-number">50,000+</div>
-              <div className="stat-label">Files Fixed</div>
-            </div>
-            <div className="stat-item">
-              <div className="stat-number">99.9%</div>
-              <div className="stat-label">Uptime</div>
-            </div>
-            <div className="stat-item">
-              <div className="stat-number">500+</div>
-              <div className="stat-label">Teams</div>
-            </div>
-            <div className="stat-item">
-              <div className="stat-number">24/7</div>
-              <div className="stat-label">Support</div>
+            {/* FAQ Section */}
+            <div style={{ marginBottom: "2rem" }}>
+              <h2
+                style={{
+                  fontSize: "1.5rem",
+                  fontWeight: "600",
+                  color: "#ffffff",
+                  margin: "0 0 2rem 0",
+                  textAlign: "center",
+                }}
+              >
+                Frequently Asked Questions
+              </h2>
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+                  gap: "1.5rem",
+                }}
+              >
+                <div
+                  style={{
+                    background: "rgba(255, 255, 255, 0.05)",
+                    border: "1px solid rgba(255, 255, 255, 0.15)",
+                    borderRadius: "12px",
+                    padding: "1.5rem",
+                  }}
+                >
+                  <h4
+                    style={{
+                      fontSize: "1rem",
+                      fontWeight: "600",
+                      color: "#ffffff",
+                      margin: "0 0 0.75rem 0",
+                    }}
+                  >
+                    Can I switch plans anytime?
+                  </h4>
+                  <p
+                    style={{
+                      color: "rgba(255, 255, 255, 0.8)",
+                      margin: "0",
+                      lineHeight: "1.5",
+                      fontSize: "0.875rem",
+                    }}
+                  >
+                    Yes, you can upgrade or downgrade your plan at any time.
+                    Changes take effect immediately, and we'll prorate the
+                    charges accordingly.
+                  </p>
+                </div>
+                <div
+                  style={{
+                    background: "rgba(255, 255, 255, 0.05)",
+                    border: "1px solid rgba(255, 255, 255, 0.15)",
+                    borderRadius: "12px",
+                    padding: "1.5rem",
+                  }}
+                >
+                  <h4
+                    style={{
+                      fontSize: "1rem",
+                      fontWeight: "600",
+                      color: "#ffffff",
+                      margin: "0 0 0.75rem 0",
+                    }}
+                  >
+                    Is there a free trial?
+                  </h4>
+                  <p
+                    style={{
+                      color: "rgba(255, 255, 255, 0.8)",
+                      margin: "0",
+                      lineHeight: "1.5",
+                      fontSize: "0.875rem",
+                    }}
+                  >
+                    Yes! All paid plans include a 14-day free trial. No credit
+                    card required to start exploring our professional features.
+                  </p>
+                </div>
+                <div
+                  style={{
+                    background: "rgba(255, 255, 255, 0.05)",
+                    border: "1px solid rgba(255, 255, 255, 0.15)",
+                    borderRadius: "12px",
+                    padding: "1.5rem",
+                  }}
+                >
+                  <h4
+                    style={{
+                      fontSize: "1rem",
+                      fontWeight: "600",
+                      color: "#ffffff",
+                      margin: "0 0 0.75rem 0",
+                    }}
+                  >
+                    What happens if I exceed my analysis limit?
+                  </h4>
+                  <p
+                    style={{
+                      color: "rgba(255, 255, 255, 0.8)",
+                      margin: "0",
+                      lineHeight: "1.5",
+                      fontSize: "0.875rem",
+                    }}
+                  >
+                    You can purchase additional analyses at $0.10 each, or
+                    upgrade to a higher plan. We'll notify you before you reach
+                    your limit.
+                  </p>
+                </div>
+                <div
+                  style={{
+                    background: "rgba(255, 255, 255, 0.05)",
+                    border: "1px solid rgba(255, 255, 255, 0.15)",
+                    borderRadius: "12px",
+                    padding: "1.5rem",
+                  }}
+                >
+                  <h4
+                    style={{
+                      fontSize: "1rem",
+                      fontWeight: "600",
+                      color: "#ffffff",
+                      margin: "0 0 0.75rem 0",
+                    }}
+                  >
+                    Do you offer refunds?
+                  </h4>
+                  <p
+                    style={{
+                      color: "rgba(255, 255, 255, 0.8)",
+                      margin: "0",
+                      lineHeight: "1.5",
+                      fontSize: "0.875rem",
+                    }}
+                  >
+                    Yes, we offer a 30-day money-back guarantee for all paid
+                    plans if you're not completely satisfied with our service.
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </section>
+      </div>
 
-      {/* FAQ Section */}
-      <section className="faq-section">
-        <div className="faq-container">
-          <h2 className="faq-title">Frequently Asked Questions</h2>
-          <div className="faq-grid">
-            <div className="faq-item">
-              <h4 className="faq-question">Can I switch plans anytime?</h4>
-              <p className="faq-answer">
-                Yes, you can upgrade or downgrade your plan at any time. Changes
-                take effect immediately, and we'll prorate the charges
-                accordingly.
-              </p>
-            </div>
-            <div className="faq-item">
-              <h4 className="faq-question">Is there a free trial?</h4>
-              <p className="faq-answer">
-                Yes! All paid plans include a 14-day free trial. No credit card
-                required to start exploring our professional features.
-              </p>
-            </div>
-            <div className="faq-item">
-              <h4 className="faq-question">
-                What happens if I exceed my analysis limit?
-              </h4>
-              <p className="faq-answer">
-                You can purchase additional analyses at $0.10 each, or upgrade
-                to a higher plan. We'll notify you before you reach your limit.
-              </p>
-            </div>
-            <div className="faq-item">
-              <h4 className="faq-question">Do you offer refunds?</h4>
-              <p className="faq-answer">
-                Yes, we offer a 30-day money-back guarantee for all paid plans
-                if you're not completely satisfied with our service.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
+      <style jsx>{`
+        @keyframes spin {
+          0% {
+            transform: rotate(0deg);
+          }
+          100% {
+            transform: rotate(360deg);
+          }
+        }
+      `}</style>
     </div>
   );
 }
