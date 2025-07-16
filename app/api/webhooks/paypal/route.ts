@@ -2,10 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import crypto from "crypto";
 
-const supabase = createClient(
-  process.env.SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE!,
-);
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE;
+
+if (!supabaseUrl || !supabaseServiceKey) {
+  console.error("Missing Supabase environment variables");
+}
+
+const supabase = createClient(supabaseUrl || "", supabaseServiceKey || "");
 
 // PayPal webhook signature verification
 async function verifyPayPalWebhook(
