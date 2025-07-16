@@ -8,8 +8,8 @@ export const dynamic = "force-dynamic";
 // Import the neurolint engine
 const getNeuroLintEngine = async () => {
   try {
-    // Skip engine loading during build time
-    if (process.env.NODE_ENV === "production" && !process.env.RUNTIME_PHASE) {
+    // Check if we're in a build environment
+    if (process.env.NEXT_PHASE === "phase-production-build") {
       console.log("Skipping engine import during build time");
       return null;
     }
@@ -18,7 +18,7 @@ const getNeuroLintEngine = async () => {
     return engine.default || engine;
   } catch (error) {
     console.error("Failed to load NeuroLint engine:", error);
-    throw new Error("NeuroLint engine not available");
+    return null; // Return null instead of throwing during build
   }
 };
 
