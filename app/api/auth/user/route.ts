@@ -62,6 +62,21 @@ export async function GET(request: NextRequest) {
       });
     }
 
+    // Calculate trial days remaining
+    let trialDaysRemaining = 0;
+    let isOnTrial = false;
+    if (profile.trial_end_date) {
+      const trialEndDate = new Date(profile.trial_end_date);
+      const now = new Date();
+      trialDaysRemaining = Math.max(
+        0,
+        Math.ceil(
+          (trialEndDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24),
+        ),
+      );
+      isOnTrial = trialDaysRemaining > 0;
+    }
+
     return NextResponse.json({
       user: {
         id: user.id,
@@ -73,6 +88,12 @@ export async function GET(request: NextRequest) {
         createdAt: user.created_at,
         profileCreatedAt: profile.created_at,
         lastUpdated: profile.updated_at,
+        trialPlan: profile.trial_plan,
+        trialStartDate: profile.trial_start_date,
+        trialEndDate: profile.trial_end_date,
+        trialUsed: profile.trial_used || false,
+        isOnTrial,
+        trialDaysRemaining,
       },
     });
   } catch (error) {
@@ -141,6 +162,21 @@ export async function PUT(request: NextRequest) {
       );
     }
 
+    // Calculate trial days remaining
+    let trialDaysRemaining = 0;
+    let isOnTrial = false;
+    if (profile.trial_end_date) {
+      const trialEndDate = new Date(profile.trial_end_date);
+      const now = new Date();
+      trialDaysRemaining = Math.max(
+        0,
+        Math.ceil(
+          (trialEndDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24),
+        ),
+      );
+      isOnTrial = trialDaysRemaining > 0;
+    }
+
     return NextResponse.json({
       success: true,
       user: {
@@ -151,6 +187,12 @@ export async function PUT(request: NextRequest) {
         plan: profile.plan || "free",
         emailConfirmed: user.email_confirmed_at !== null,
         lastUpdated: profile.updated_at,
+        trialPlan: profile.trial_plan,
+        trialStartDate: profile.trial_start_date,
+        trialEndDate: profile.trial_end_date,
+        trialUsed: profile.trial_used || false,
+        isOnTrial,
+        trialDaysRemaining,
       },
     });
   } catch (error) {
