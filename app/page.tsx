@@ -1185,7 +1185,7 @@ function ImageGallery({ images }) {
                 </div>
               </div>
               <h1 id="hero-title" className="hero-title">
-                Try NeuroLint Pro Live
+                NeuroLint Pro
               </h1>
               <p className="hero-desc" role="text">
                 Upload your <strong>React/Next.js files</strong> and see{" "}
