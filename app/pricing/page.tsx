@@ -224,63 +224,9 @@ export default function PricingPage() {
             className="onboarding-card"
             style={{ maxWidth: "1200px", width: "100%" }}
           >
-            {/* Logo and Navigation */}
-            <div className="onboarding-logo">
-              <Link href="/">
-                <img
-                  src="https://cdn.builder.io/api/v1/image/assets%2Fbcdfdb608d38407b88c1584fe3705961%2F1b38a4a385ed4a0bb404148fae0ce80e?format=webp&width=800"
-                  alt="NeuroLint Pro"
-                  style={{
-                    height: "48px",
-                    width: "48px",
-                    marginBottom: "1.5rem",
-                  }}
-                />
-              </Link>
-            </div>
-
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                marginBottom: "2rem",
-              }}
-            >
-              <div></div>
-              <div style={{ display: "flex", gap: "1rem" }}>
-                <Link
-                  href="/"
-                  style={{
-                    color: "rgba(33, 150, 243, 0.9)",
-                    textDecoration: "none",
-                    fontSize: "0.875rem",
-                    fontWeight: "500",
-                  }}
-                >
-                  Home
-                </Link>
-                <Link
-                  href="/dashboard"
-                  style={{
-                    color: "rgba(33, 150, 243, 0.9)",
-                    textDecoration: "none",
-                    fontSize: "0.875rem",
-                    fontWeight: "500",
-                  }}
-                >
-                  Dashboard
-                </Link>
-              </div>
-            </div>
-
             {/* Hero Section */}
             <div style={{ textAlign: "center", marginBottom: "3rem" }}>
               <h1 className="onboarding-title">Choose Your Plan</h1>
-              <p className="onboarding-subtitle">
-                Professional React/Next.js code fixing with our complete 6-layer
-                system. Scale from individual projects to enterprise deployment.
-              </p>
 
               {/* Billing Toggle */}
               <div
