@@ -534,7 +534,7 @@ export default function Dashboard() {
         }));
       }
     },
-    [dashboardState.settings.autoSave, saveToHistory],
+    [dashboardState.settings.autoSave, saveToHistory, session?.access_token],
   );
 
   const loadSampleFile = useCallback(
