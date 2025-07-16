@@ -17,6 +17,17 @@ const fs = require("fs");
 const path = require("path");
 const { execSync } = require("child_process");
 
+// Import enhanced AST engine if available
+let NeuroLintProEnhanced = null;
+try {
+  NeuroLintProEnhanced = require("./neurolint-pro-enhanced");
+  console.log("[NEUROLINT PRO] Enhanced AST engine loaded successfully");
+} catch (error) {
+  console.log(
+    "[NEUROLINT PRO] Using standard engine (enhanced features not available)",
+  );
+}
+
 // Execute existing layer scripts via child process since they are not properly modularized
 
 /**
@@ -1868,7 +1879,7 @@ async function NeuroLintPro(
         "🔍 [DRY RUN] Detected issues:",
         analysis ? analysis.detectedIssues : "none",
       );
-      console.log("🔍 [DRY RUN] Recommended layers:", layersToExecute);
+      console.log("�� [DRY RUN] Recommended layers:", layersToExecute);
       console.log(
         "🔍 [DRY RUN] Confidence:",
         analysis ? analysis.confidence : "no analysis",
