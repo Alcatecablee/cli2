@@ -10,7 +10,11 @@ CREATE TABLE IF NOT EXISTS public.profiles (
     email TEXT NOT NULL,
     first_name TEXT CHECK (length(first_name) <= 50),
     last_name TEXT CHECK (length(last_name) <= 50),
-    plan TEXT DEFAULT 'free' CHECK (plan IN ('free', 'pro', 'enterprise')),
+    plan TEXT DEFAULT 'free' CHECK (plan IN ('free', 'developer', 'professional', 'team', 'enterprise')),
+    trial_plan TEXT CHECK (trial_plan IN ('developer', 'professional', 'team', 'enterprise')),
+    trial_start_date TIMESTAMP WITH TIME ZONE,
+    trial_end_date TIMESTAMP WITH TIME ZONE,
+    trial_used BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     CONSTRAINT valid_email CHECK (email ~ '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$')
@@ -20,10 +24,12 @@ CREATE TABLE IF NOT EXISTS public.profiles (
 CREATE TABLE IF NOT EXISTS public.subscriptions (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
-    plan TEXT NOT NULL CHECK (plan IN ('free', 'pro', 'enterprise')),
-    status TEXT DEFAULT 'pending' CHECK (status IN ('active', 'cancelled', 'expired', 'pending')),
+    plan TEXT NOT NULL CHECK (plan IN ('free', 'developer', 'professional', 'team', 'enterprise')),
+    status TEXT DEFAULT 'pending' CHECK (status IN ('active', 'cancelled', 'expired', 'pending', 'trialing')),
     paypal_subscription_id TEXT,
     paypal_payer_id TEXT,
+    trial_start TIMESTAMP WITH TIME ZONE,
+    trial_end TIMESTAMP WITH TIME ZONE,
     current_period_start TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     current_period_end TIMESTAMP WITH TIME ZONE,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
@@ -163,9 +169,87 @@ CREATE TRIGGER update_profiles_updated_at BEFORE UPDATE ON public.profiles
 CREATE TRIGGER update_subscriptions_updated_at BEFORE UPDATE ON public.subscriptions
     FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
 
+-- Create function to check trial status
+CREATE OR REPLACE FUNCTION public.get_user_trial_status(user_uuid UUID)
+RETURNS TABLE (
+    is_on_trial BOOLEAN,
+    trial_plan TEXT,
+    trial_days_remaining INTEGER,
+    trial_end_date TIMESTAMP WITH TIME ZONE
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        CASE 
+            WHEN p.trial_end_date IS NOT NULL AND p.trial_end_date > NOW() THEN TRUE
+            ELSE FALSE
+        END as is_on_trial,
+        p.trial_plan,
+        CASE 
+            WHEN p.trial_end_date IS NOT NULL AND p.trial_end_date > NOW() 
+            THEN EXTRACT(DAY FROM (p.trial_end_date - NOW()))::INTEGER
+            ELSE 0
+        END as trial_days_remaining,
+        p.trial_end_date
+    FROM public.profiles p
+    WHERE p.id = user_uuid;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- Create function to start trial
+CREATE OR REPLACE FUNCTION public.start_trial(
+    user_uuid UUID,
+    plan_name TEXT
+) RETURNS BOOLEAN AS $$
+DECLARE
+    trial_length_days INTEGER := 14;
+BEGIN
+    -- Check if user has already used trial
+    IF EXISTS (
+        SELECT 1 FROM public.profiles 
+        WHERE id = user_uuid AND trial_used = TRUE
+    ) THEN
+        RETURN FALSE;
+    END IF;
+
+    -- Start the trial
+    UPDATE public.profiles 
+    SET 
+        trial_plan = plan_name,
+        trial_start_date = NOW(),
+        trial_end_date = NOW() + INTERVAL '14 days',
+        trial_used = TRUE,
+        plan = plan_name,
+        updated_at = NOW()
+    WHERE id = user_uuid;
+
+    -- Create a trialing subscription record
+    INSERT INTO public.subscriptions (
+        user_id,
+        plan,
+        status,
+        trial_start,
+        trial_end,
+        current_period_start,
+        current_period_end
+    ) VALUES (
+        user_uuid,
+        plan_name,
+        'trialing',
+        NOW(),
+        NOW() + INTERVAL '14 days',
+        NOW(),
+        NOW() + INTERVAL '14 days'
+    );
+
+    RETURN TRUE;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
 -- Create indexes for better performance
 CREATE INDEX IF NOT EXISTS idx_profiles_user_id ON public.profiles(id);
 CREATE INDEX IF NOT EXISTS idx_profiles_email ON public.profiles(email);
+CREATE INDEX IF NOT EXISTS idx_profiles_trial_end ON public.profiles(trial_end_date);
 CREATE INDEX IF NOT EXISTS idx_subscriptions_user_id ON public.subscriptions(user_id);
 CREATE INDEX IF NOT EXISTS idx_subscriptions_paypal_id ON public.subscriptions(paypal_subscription_id);
 CREATE INDEX IF NOT EXISTS idx_subscriptions_status ON public.subscriptions(status);
