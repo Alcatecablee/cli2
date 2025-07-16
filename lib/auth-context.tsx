@@ -17,6 +17,12 @@ interface User {
   plan: string;
   emailConfirmed: boolean;
   createdAt?: string;
+  trialPlan?: string;
+  trialStartDate?: string;
+  trialEndDate?: string;
+  trialUsed?: boolean;
+  isOnTrial?: boolean;
+  trialDaysRemaining?: number;
 }
 
 interface Session {
