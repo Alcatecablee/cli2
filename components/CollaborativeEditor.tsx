@@ -688,61 +688,70 @@ export default function CollaborativeEditor({
             onMouseEnter={(e) => {
               e.currentTarget.style.background = "rgba(255, 255, 255, 0.1)";
               e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.3)";
+              e.currentTarget.style.transform = "translateY(-2px)";
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.background = "rgba(255, 255, 255, 0.05)";
               e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.15)";
+              e.currentTarget.style.transform = "translateY(0)";
             }}
           >
-            💬 Comment
+            Comment
           </button>
 
           <button
             onClick={() => runNeuroLint(true)}
             style={{
               padding: "0.5rem 1rem",
-              background: "rgba(33, 150, 243, 0.12)",
+              background:
+                "linear-gradient(135deg, rgba(33, 150, 243, 0.2) 0%, rgba(33, 150, 243, 0.15) 50%, rgba(255, 255, 255, 0.1) 100%)",
               border: "1px solid rgba(33, 150, 243, 0.4)",
               borderRadius: "6px",
-              color: "#2196f3",
+              color: "#ffffff",
               fontSize: "0.875rem",
               cursor: "pointer",
-              transition: "all 0.2s ease",
+              transition: "all 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
+              boxShadow:
+                "0 8px 32px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 0 12px rgba(33, 150, 243, 0.2)",
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.background = "rgba(33, 150, 243, 0.2)";
-              e.currentTarget.style.borderColor = "rgba(33, 150, 243, 0.6)";
+              e.currentTarget.style.transform = "translateY(-2px)";
+              e.currentTarget.style.boxShadow =
+                "0 8px 32px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 0 16px rgba(33, 150, 243, 0.3)";
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.background = "rgba(33, 150, 243, 0.12)";
-              e.currentTarget.style.borderColor = "rgba(33, 150, 243, 0.4)";
+              e.currentTarget.style.transform = "translateY(0)";
+              e.currentTarget.style.boxShadow =
+                "0 8px 32px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 0 12px rgba(33, 150, 243, 0.2)";
             }}
           >
-            🔧 Analyze
+            Analyze
           </button>
 
           <button
             onClick={handleSave}
             style={{
               padding: "0.5rem 1rem",
-              background: "rgba(76, 175, 80, 0.12)",
-              border: "1px solid rgba(76, 175, 80, 0.4)",
+              background: "rgba(255, 255, 255, 0.05)",
+              border: "1px solid rgba(255, 255, 255, 0.15)",
               borderRadius: "6px",
-              color: "#4caf50",
+              color: "rgba(255, 255, 255, 0.9)",
               fontSize: "0.875rem",
               cursor: "pointer",
-              transition: "all 0.2s ease",
+              transition: "all 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.background = "rgba(76, 175, 80, 0.2)";
-              e.currentTarget.style.borderColor = "rgba(76, 175, 80, 0.6)";
+              e.currentTarget.style.background = "rgba(255, 255, 255, 0.1)";
+              e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.3)";
+              e.currentTarget.style.transform = "translateY(-2px)";
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.background = "rgba(76, 175, 80, 0.12)";
-              e.currentTarget.style.borderColor = "rgba(76, 175, 80, 0.4)";
+              e.currentTarget.style.background = "rgba(255, 255, 255, 0.05)";
+              e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.15)";
+              e.currentTarget.style.transform = "translateY(0)";
             }}
           >
-            💾 Save
+            Save
           </button>
         </div>
       </div>
