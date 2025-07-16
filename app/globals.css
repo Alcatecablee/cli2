@@ -198,29 +198,31 @@ a {
 }
 
 .nav .btn {
-  background: var(--primary);
-  color: var(--primary-foreground);
-  font-weight: 600;
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 500;
   padding: 0.5rem 1.25rem;
   border: 1px solid var(--border);
   border-radius: 6px;
   cursor: pointer;
-  transition:
-    background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-    color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-    transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: var(--transition-smooth);
   margin-left: 0.5rem;
   min-height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
+  overflow: hidden;
+  touch-action: manipulation;
 }
 
 .nav .btn:hover,
 .nav .btn:focus {
-  background: var(--background);
-  color: var(--foreground);
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  border-color: var(--border-subtle);
   transform: translateY(-1px);
+  box-shadow: var(--shadow-subtle);
   outline: none;
 }
 
