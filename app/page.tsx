@@ -1297,11 +1297,13 @@ function ImageGallery({ images }) {
                   <div className="layer-architecture">
                     <h4 className="section-heading">Six-Layer Architecture</h4>
                     <div className="architecture-grid">
-                      <div className="layer-info">
-                        <span className="layer-number">1</span>
-                        <div className="layer-details">
-                          <strong>Configuration</strong>
-                          <p>TypeScript/Next.js config modernization</p>
+                      <div className="layer-block">
+                        <div className="layer-number">01</div>
+                        <div className="layer-content">
+                          <h6>Configuration Layer</h6>
+                          <p>
+                            TypeScript and Next.js configuration optimization
+                          </p>
                         </div>
                       </div>
                       <div className="layer-info">
