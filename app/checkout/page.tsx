@@ -67,24 +67,52 @@ function CheckoutContent() {
     setLoading(true);
 
     try {
-      // Simulate payment processing
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      // Get auth token from localStorage
+      const sessionData = localStorage.getItem("supabase_session");
+      if (!sessionData) {
+        alert("Please log in to start your trial");
+        window.location.href = "/login";
+        return;
+      }
 
-      // In a real implementation, you would:
-      // 1. Create a customer in your payment processor (Stripe, PayPal, etc.)
-      // 2. Set up the subscription
-      // 3. Handle payment confirmation
-      // 4. Create user account in your system
-      // 5. Redirect to dashboard with active subscription
+      const session = JSON.parse(sessionData);
 
-      // For demo purposes, redirect to dashboard
+      // Start the free trial
+      const response = await fetch("/api/trial/start", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify({
+          planId: selectedPlan.id,
+          fullName: formData.fullName,
+          email: formData.email,
+          company: formData.company,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || "Failed to start trial");
+      }
+
+      // Update localStorage with new user data
+      if (result.user) {
+        localStorage.setItem("user_data", JSON.stringify(result.user));
+      }
+
+      // Show success message and redirect
       alert(
-        `Success! Welcome to NeuroLint Pro ${selectedPlan.name} plan. Redirecting to dashboard...`,
+        `Success! Your 14-day free trial of ${selectedPlan.name} has started. Welcome to NeuroLint Pro!`,
       );
       window.location.href = "/dashboard";
     } catch (error) {
-      alert("Payment failed. Please try again.");
-      console.error("Checkout error:", error);
+      const errorMessage =
+        error instanceof Error ? error.message : "Failed to start trial";
+      alert(`Trial start failed: ${errorMessage}`);
+      console.error("Trial start error:", error);
     } finally {
       setLoading(false);
     }
