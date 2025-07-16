@@ -28,6 +28,13 @@ export async function POST(request: NextRequest) {
   let authenticatedUser = null;
 
   try {
+    // Early check for build-time environment
+    if (process.env.NEXT_PHASE === "phase-production-build") {
+      return NextResponse.json(
+        { error: "Service not available during build" },
+        { status: 503 },
+      );
+    }
     // Check for authentication - either API key or session token
     const apiKeyHeader = request.headers.get("x-api-key");
     const authHeader = request.headers.get("authorization");
