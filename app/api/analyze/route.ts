@@ -368,6 +368,15 @@ export async function POST(request: NextRequest) {
 }
 
 export async function GET(request: NextRequest) {
+  // Check for build-time environment
+  if (process.env.NEXT_PHASE === "phase-production-build") {
+    return NextResponse.json({
+      status: "building",
+      service: "NeuroLint Pro Analysis API",
+      message: "Service not available during build",
+    });
+  }
+
   // API health check and documentation link
   return NextResponse.json({
     status: "healthy",
