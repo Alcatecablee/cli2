@@ -1601,6 +1601,51 @@ legend {
   box-shadow: var(--shadow-subtle);
 }
 
+/* Danger and Warning Button Variants */
+.btn.btn-danger {
+  background: var(--error-glow);
+  border-color: rgba(229, 62, 62, 0.4);
+  color: var(--status-error);
+  box-shadow:
+    0 0 0 1px rgba(229, 62, 62, 0.3),
+    0 4px 12px rgba(229, 62, 62, 0.15);
+  transform: translateY(-1px);
+  font-weight: 600;
+}
+
+.btn.btn-danger:hover,
+.btn.btn-danger:focus {
+  background: rgba(229, 62, 62, 0.2);
+  border-color: rgba(229, 62, 62, 0.6);
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow:
+    0 0 0 1px rgba(229, 62, 62, 0.4),
+    0 6px 16px rgba(229, 62, 62, 0.25);
+}
+
+.btn.btn-warning {
+  background: rgba(255, 215, 0, 0.08);
+  border-color: rgba(255, 215, 0, 0.4);
+  color: var(--status-warning);
+  box-shadow:
+    0 0 0 1px rgba(255, 215, 0, 0.3),
+    0 4px 12px rgba(255, 215, 0, 0.15);
+  transform: translateY(-1px);
+  font-weight: 600;
+}
+
+.btn.btn-warning:hover,
+.btn.btn-warning:focus {
+  background: rgba(255, 215, 0, 0.15);
+  border-color: rgba(255, 215, 0, 0.6);
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow:
+    0 0 0 1px rgba(255, 215, 0, 0.4),
+    0 6px 16px rgba(255, 215, 0, 0.25);
+}
+
 /* Button Sizes */
 .btn.btn-sm {
   padding: 0.5rem 1rem;
@@ -1612,6 +1657,17 @@ legend {
   padding: 1.25rem 2rem;
   font-size: 1.1rem;
   min-height: 52px;
+}
+
+/* Button States */
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+  background: rgba(255, 255, 255, 0.03) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  color: rgba(255, 255, 255, 0.4) !important;
+  box-shadow: none !important;
 }
 
 .btn.full-width {
