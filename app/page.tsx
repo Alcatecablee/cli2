@@ -1310,7 +1310,7 @@ function ImageGallery({ images }) {
                   </div>
 
                   <div className="guidance-tips">
-                    <h4 className="tips-title">💡 Pro Tips</h4>
+                    <h4 className="tips-title">Best Practices</h4>
                     <ul className="tips-list">
                       <li>
                         Start with <strong>Dry-Run</strong> mode to explore
