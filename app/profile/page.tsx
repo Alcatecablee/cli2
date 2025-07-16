@@ -95,15 +95,15 @@ export default function ProfilePage() {
 
   const getStatusBadge = (status: string) => {
     const colors = {
-      active: "bg-green-100 text-green-800",
-      cancelled: "bg-red-100 text-red-800",
-      expired: "bg-gray-100 text-gray-800",
-      pending: "bg-yellow-100 text-yellow-800",
+      active: "status-active",
+      cancelled: "status-cancelled",
+      expired: "status-expired",
+      pending: "status-pending",
     };
 
     return (
       <span
-        className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${colors[status as keyof typeof colors] || colors.pending}`}
+        className={`status-badge ${colors[status as keyof typeof colors] || colors.pending}`}
       >
         {status.charAt(0).toUpperCase() + status.slice(1)}
       </span>
