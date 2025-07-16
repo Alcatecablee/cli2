@@ -408,7 +408,7 @@ export default function Dashboard() {
 
   // Save analysis to history
   const saveToHistory = useCallback(
-    (
+    async (
       filename: string,
       result: DemoResult,
       layers: number[],
@@ -423,13 +423,22 @@ export default function Dashboard() {
         executionTime,
       };
 
+      // Use hybrid approach: save to both Supabase and localStorage
+      await dataService.saveAnalysisHistoryHybrid(user?.id || null, {
+        filename,
+        timestamp: new Date().toISOString(),
+        result,
+        layers,
+        execution_time: executionTime,
+      });
+
+      // Update local state
       setDashboardState((prev) => {
-        const newHistory = [historyItem, ...prev.analysisHistory].slice(0, 50); // Keep last 50
-        localStorage.setItem("neurolint-history", JSON.stringify(newHistory));
+        const newHistory = [historyItem, ...prev.analysisHistory].slice(0, 50);
         return { ...prev, analysisHistory: newHistory };
       });
     },
-    [],
+    [user?.id],
   );
 
   const analyzecode = useCallback(
