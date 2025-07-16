@@ -1942,18 +1942,47 @@ export default function Dashboard() {
                         <button className="btn btn-sm">Open</button>
                         <button
                           className="btn btn-sm btn-danger"
-                          onClick={() => {
+                          onClick={async () => {
                             if (confirm("Delete this project?")) {
-                              setDashboardState((prev) => {
-                                const projects = prev.projects.filter(
-                                  (p) => p.id !== project.id,
+                              try {
+                                if (user?.id) {
+                                  // Delete from Supabase
+                                  const success =
+                                    await dataService.deleteProject(
+                                      user.id,
+                                      project.id,
+                                    );
+                                  if (success) {
+                                    setDashboardState((prev) => ({
+                                      ...prev,
+                                      projects: prev.projects.filter(
+                                        (p) => p.id !== project.id,
+                                      ),
+                                    }));
+                                  } else {
+                                    alert(
+                                      "Failed to delete project. Please try again.",
+                                    );
+                                  }
+                                } else {
+                                  // Fallback to localStorage for non-authenticated users
+                                  setDashboardState((prev) => {
+                                    const projects = prev.projects.filter(
+                                      (p) => p.id !== project.id,
+                                    );
+                                    localStorage.setItem(
+                                      "neurolint-projects",
+                                      JSON.stringify(projects),
+                                    );
+                                    return { ...prev, projects };
+                                  });
+                                }
+                              } catch (error) {
+                                console.error("Error deleting project:", error);
+                                alert(
+                                  "Failed to delete project. Please try again.",
                                 );
-                                localStorage.setItem(
-                                  "neurolint-projects",
-                                  JSON.stringify(projects),
-                                );
-                                return { ...prev, projects };
-                              });
+                              }
                             }
                           }}
                         >
