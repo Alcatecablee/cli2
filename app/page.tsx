@@ -1244,20 +1244,55 @@ function ImageGallery({ images }) {
                       <div className="guidance-card-header">
                         <h4>Operational Modes</h4>
                       </div>
-                      <div className="guidance-card-content">
-                        <div className="guidance-option">
-                          <strong>Dry-Run (Recommended for beginners)</strong>
-                          <p>
-                            Preview what issues would be fixed without modifying
-                            code. See confidence scores and impact estimates.
-                          </p>
+                      <div className="modes-grid">
+                        <div className="mode-card analysis-mode">
+                          <div className="mode-header">
+                            <div className="mode-indicator"></div>
+                            <h5>Analysis Mode</h5>
+                          </div>
+                          <div className="mode-content">
+                            <p>
+                              Comprehensive code inspection without
+                              modification. Generates detailed reports with
+                              confidence scoring and impact analysis.
+                            </p>
+                            <div className="mode-features">
+                              <span className="feature-tag">
+                                Non-destructive
+                              </span>
+                              <span className="feature-tag">
+                                Confidence scoring
+                              </span>
+                              <span className="feature-tag">
+                                Impact assessment
+                              </span>
+                            </div>
+                          </div>
                         </div>
-                        <div className="guidance-option">
-                          <strong>Apply Fixes</strong>
-                          <p>
-                            Actually transforms your code. Best for seeing
-                            before/after comparisons and testing fix quality.
-                          </p>
+
+                        <div className="mode-card transformation-mode">
+                          <div className="mode-header">
+                            <div className="mode-indicator"></div>
+                            <h5>Transformation Mode</h5>
+                          </div>
+                          <div className="mode-content">
+                            <p>
+                              Active code transformation with real-time
+                              validation. Each change is verified for syntax
+                              correctness and logical integrity.
+                            </p>
+                            <div className="mode-features">
+                              <span className="feature-tag">
+                                Real-time validation
+                              </span>
+                              <span className="feature-tag">
+                                Incremental processing
+                              </span>
+                              <span className="feature-tag">
+                                Rollback protection
+                              </span>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
