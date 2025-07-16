@@ -1856,24 +1856,63 @@ export default function Dashboard() {
                 <h3>Your Projects</h3>
                 <button
                   className="btn btn-primary"
-                  onClick={() => {
+                  onClick={async () => {
                     const name = prompt("Project name:");
                     if (name) {
-                      const newProject: Project = {
-                        id: Date.now().toString(),
-                        name,
-                        description: "",
-                        files: [],
-                        createdAt: new Date(),
-                      };
-                      setDashboardState((prev) => {
-                        const projects = [...prev.projects, newProject];
-                        localStorage.setItem(
-                          "neurolint-projects",
-                          JSON.stringify(projects),
-                        );
-                        return { ...prev, projects };
-                      });
+                      try {
+                        if (user?.id) {
+                          // Save to Supabase
+                          const savedProject = await dataService.saveProject(
+                            user.id,
+                            {
+                              name,
+                              description: "",
+                              files: [],
+                              created_at: new Date().toISOString(),
+                            },
+                          );
+
+                          if (savedProject) {
+                            const newProject: Project = {
+                              id: savedProject.id,
+                              name: savedProject.name,
+                              description: savedProject.description,
+                              files: Array.isArray(savedProject.files)
+                                ? savedProject.files
+                                : [],
+                              createdAt: new Date(savedProject.created_at),
+                            };
+                            setDashboardState((prev) => ({
+                              ...prev,
+                              projects: [...prev.projects, newProject],
+                            }));
+                          } else {
+                            alert(
+                              "Failed to create project. Please try again.",
+                            );
+                          }
+                        } else {
+                          // Fallback to localStorage for non-authenticated users
+                          const newProject: Project = {
+                            id: Date.now().toString(),
+                            name,
+                            description: "",
+                            files: [],
+                            createdAt: new Date(),
+                          };
+                          setDashboardState((prev) => {
+                            const projects = [...prev.projects, newProject];
+                            localStorage.setItem(
+                              "neurolint-projects",
+                              JSON.stringify(projects),
+                            );
+                            return { ...prev, projects };
+                          });
+                        }
+                      } catch (error) {
+                        console.error("Error creating project:", error);
+                        alert("Failed to create project. Please try again.");
+                      }
                     }
                   }}
                 >
