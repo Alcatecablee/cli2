@@ -1201,13 +1201,11 @@ function ImageGallery({ images }) {
                 {/* Enterprise Platform Section */}
                 <div className="enterprise-platform">
                   <div className="platform-container">
-                    <div className="overview-header">
-                      <h3 className="platform-title">
-                        Enterprise Code Analysis Platform
-                      </h3>
-                      <p className="platform-subtitle">
-                        Production-ready automated code transformation with
-                        enterprise-grade safety mechanisms
+                    <div className="platform-hero">
+                      <h3>Enterprise-Grade Analysis Engine</h3>
+                      <p>
+                        Six-layer automated transformation with enterprise
+                        safety
                       </p>
                     </div>
 
