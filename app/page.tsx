@@ -1199,40 +1199,29 @@ function ImageGallery({ images }) {
             <section id="demo" className="demo-section">
               <div className="demo-header">
                 {/* Enterprise Platform Section */}
-                <div className="enterprise-platform">
+                                <div className="enterprise-platform">
                   <div className="platform-container">
-                    <div className="platform-hero">
+                                        <div className="platform-hero">
                       <h3>Enterprise-Grade Analysis Engine</h3>
-                      <p>
-                        Six-layer automated transformation with enterprise
-                        safety
-                      </p>
+                      <p>Six-layer automated transformation with enterprise safety</p>
                     </div>
 
-                    <div className="technical-specs">
-                      <div className="spec-grid">
-                        <div className="spec-item">
-                          <div className="spec-label">Processing Time</div>
-                          <div className="spec-value">Sub-minute execution</div>
-                        </div>
-                        <div className="spec-item">
-                          <div className="spec-label">Safety Rating</div>
-                          <div className="spec-value">
-                            100% rollback capability
-                          </div>
-                        </div>
-                        <div className="spec-item">
-                          <div className="spec-label">File Support</div>
-                          <div className="spec-value">
-                            TypeScript, JavaScript, React
-                          </div>
-                        </div>
-                        <div className="spec-item">
-                          <div className="spec-label">Validation</div>
-                          <div className="spec-value">
-                            AST-based syntax verification
-                          </div>
-                        </div>
+                                        <div className="platform-metrics">
+                      <div className="metric-card">
+                        <div className="metric-value">< 60s</div>
+                        <div className="metric-label">Processing</div>
+                      </div>
+                      <div className="metric-card">
+                        <div className="metric-value">100%</div>
+                        <div className="metric-label">Rollback</div>
+                      </div>
+                      <div className="metric-card">
+                        <div className="metric-value">6</div>
+                        <div className="metric-label">Layers</div>
+                      </div>
+                      <div className="metric-card">
+                        <div className="metric-value">AST</div>
+                        <div className="metric-label">Engine</div>
                       </div>
                     </div>
                   </div>
