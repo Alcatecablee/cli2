@@ -43,7 +43,7 @@ export default function ProfilePage() {
       });
       loadSubscriptions();
     }
-  }, [user]);
+  }, [user, loadSubscriptions]);
 
   const loadSubscriptions = useCallback(async () => {
     if (!session?.access_token) return;
