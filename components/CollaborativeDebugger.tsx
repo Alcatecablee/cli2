@@ -229,7 +229,7 @@ export default function CollaborativeDebugger({
             gap: "0.5rem",
           }}
         >
-          🔧 Collaborative Debugger
+          Collaborative Debugger
           {isRunning && (
             <div
               style={{
