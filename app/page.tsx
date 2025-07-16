@@ -1196,13 +1196,8 @@ function ImageGallery({ images }) {
             </section>
 
             {/* Demo Section */}
-            <section
-              id="demo"
-              className="demo-section"
-              
-            >
-              
-
+            <section id="demo" className="demo-section">
+              <div className="demo-header">
                 {/* User Guidance Section */}
                 <div className="demo-guidance">
                   <div className="guidance-intro">
@@ -1253,8 +1248,8 @@ function ImageGallery({ images }) {
                           <strong>All Layers</strong>
                           <p>
                             Comprehensive analysis across all 6 layers:
-                            Configuration → Patterns → Components ��� Hydration →
-                            Next.js → Testing
+                            Configuration → Patterns → Components ��� Hydration
+                            → Next.js → Testing
                           </p>
                         </div>
                         <div className="guidance-option">
@@ -1349,10 +1344,7 @@ function ImageGallery({ images }) {
 
               <div className="demo-container">
                 {/* Advanced Demo Controls */}
-                                <div
-                  className="demo-controls"
-                  role="region"
-                >
+                <div className="demo-controls" role="region">
                   <div className="controls-grid">
                     <fieldset className="control-group">
                       <legend className="control-label">Mode</legend>
