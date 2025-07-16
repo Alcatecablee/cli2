@@ -1770,8 +1770,36 @@ async function NeuroLintPro(
   requestedLayers = null,
   options = {},
 ) {
+  // Try enhanced AST engine first if available and not explicitly disabled
+  if (NeuroLintProEnhanced && options.useEnhancedAST !== false) {
+    try {
+      console.log(
+        "[NEUROLINT PRO] Using enhanced AST engine with semantic analysis",
+      );
+      const enhancedOptions = {
+        ...options,
+        filename: filePath,
+        dryRun,
+        verbose: options.verbose || false,
+      };
+      return await NeuroLintProEnhanced(
+        code,
+        filePath,
+        dryRun,
+        requestedLayers,
+        enhancedOptions,
+      );
+    } catch (error) {
+      console.warn(
+        "[NEUROLINT PRO] Enhanced AST engine failed, falling back to standard engine:",
+        error.message,
+      );
+      // Continue with standard execution below
+    }
+  }
+
   console.log(
-    "%c🧠 NEUROLINT PRO ENGINE STARTED",
+    "%c🧠 NEUROLINT PRO ENGINE STARTED (Standard Mode)",
     "color: #ff6b35; font-weight: bold; font-size: 18px; background: #000; padding: 4px;",
   );
   console.log(
@@ -1879,7 +1907,7 @@ async function NeuroLintPro(
         "🔍 [DRY RUN] Detected issues:",
         analysis ? analysis.detectedIssues : "none",
       );
-      console.log("�� [DRY RUN] Recommended layers:", layersToExecute);
+      console.log("🔍 [DRY RUN] Recommended layers:", layersToExecute);
       console.log(
         "🔍 [DRY RUN] Confidence:",
         analysis ? analysis.confidence : "no analysis",
