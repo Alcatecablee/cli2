@@ -1202,7 +1202,7 @@ function ImageGallery({ images }) {
                     <p className="guidance-text">
                       Configure your analysis settings below, then upload code
                       or try our sample files. Perfect for exploring NeuroLint
-                      Pro's capabilities risk-free.
+                      Pro&apos;s capabilities risk-free.
                     </p>
                   </div>
 
@@ -1296,7 +1296,10 @@ function ImageGallery({ images }) {
                         <span className="layer-number">5</span>
                         <div className="layer-details">
                           <strong>Next.js</strong>
-                          <p>App Router compliance, 'use client' directives</p>
+                          <p>
+                            App Router compliance, &apos;use client&apos;
+                            directives
+                          </p>
                         </div>
                       </div>
                       <div className="layer-info">
