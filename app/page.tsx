@@ -1386,8 +1386,8 @@ function ImageGallery({ images }) {
                       >
                         {!demoState.applyFixes && (
                           <p>
-                            ✨ Safe preview mode - see what would be fixed
-                            without changing your code
+                            Safe preview mode - see what would be fixed without
+                            changing your code
                           </p>
                         )}
                       </div>
@@ -1397,7 +1397,7 @@ function ImageGallery({ images }) {
                       >
                         {demoState.applyFixes && (
                           <p>
-                            🚀 Active mode - transforms your code with automated
+                            Active mode - transforms your code with automated
                             fixes
                           </p>
                         )}
