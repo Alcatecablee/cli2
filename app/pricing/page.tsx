@@ -888,14 +888,6 @@ export default function PricingPage() {
                     textAlign: "center",
                   }}
                 >
-                  <div
-                    style={{
-                      fontSize: "2rem",
-                      marginBottom: "1rem",
-                    }}
-                  >
-                    ⚡
-                  </div>
                   <h4
                     style={{
                       fontSize: "1rem",
