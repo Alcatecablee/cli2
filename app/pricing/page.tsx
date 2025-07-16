@@ -68,7 +68,10 @@ export default function PricingPage() {
         "Bulk file processing",
         "Project management",
       ],
-      ctaText: "Start Free Trial",
+      ctaText:
+        user && !user.trialUsed
+          ? "Start 14-Day Free Trial"
+          : "Start Free Trial",
     },
     {
       id: "professional",
@@ -92,7 +95,10 @@ export default function PricingPage() {
         "Git repository integration",
         "Slack/Teams notifications",
       ],
-      ctaText: "Start Free Trial",
+      ctaText:
+        user && !user.trialUsed
+          ? "Start 14-Day Free Trial"
+          : "Start Free Trial",
       badge: "Most Popular",
     },
     {
