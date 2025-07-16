@@ -789,23 +789,31 @@ async function executeASTLayer(layerId, code, filename, engines) {
  * Execute regex-based layer transformation (original method)
  */
 async function executeRegexLayer(layerId, code, options) {
-  const layerFiles = {
-    1: "fix-layer-1-config.js",
-    2: "fix-layer-2-patterns.js",
-    3: "fix-layer-3-components.js",
-    4: "fix-layer-4-hydration.js",
-    5: "fix-layer-5-nextjs.js",
-    6: "fix-layer-6-testing.js",
-  };
+  // Delegate to standard engine for regex-based transformations
+  try {
+    const NeuroLintPro = require("./neurolint-pro.js");
 
-  const layerFile = layerFiles[layerId];
-  if (!layerFile || !fs.existsSync(layerFile)) {
-    throw new Error(`Layer ${layerId} script not found: ${layerFile}`);
+    // Import the layer transformation functions from standard engine
+    if (NeuroLintPro.applyLayerTransformations) {
+      const result = await NeuroLintPro.applyLayerTransformations(
+        code,
+        [layerId],
+        options,
+      );
+      return result.code || code;
+    }
+
+    console.warn(
+      `[ENHANCED] Standard engine delegation failed for layer ${layerId}`,
+    );
+    return code;
+  } catch (error) {
+    console.warn(
+      `[ENHANCED] Failed to delegate layer ${layerId} to standard engine:`,
+      error.message,
+    );
+    return code;
   }
-
-  // For now, return original code since we don't have the original layer scripts integrated
-  // In the full implementation, we would execute the layer scripts here
-  return code;
 }
 
 // Helper functions
