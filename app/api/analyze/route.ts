@@ -199,6 +199,13 @@ export async function POST(request: NextRequest) {
     // Get the analysis engine
     const engine = await getNeuroLintEngine();
 
+    if (!engine) {
+      return NextResponse.json(
+        { error: "Analysis engine not available during build time" },
+        { status: 503 },
+      );
+    }
+
     // Parse layers parameter
     let layersToUse: null = null;
     if (layers === "auto") {
