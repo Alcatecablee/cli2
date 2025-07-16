@@ -53,13 +53,24 @@ function recordLoginAttempt(identifier: string, success: boolean) {
   }
 }
 
-const supabase = createClient(
-  process.env.SUPABASE_URL!,
-  process.env.SUPABASE_ANON_KEY!,
-);
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
+
+if (!supabaseUrl || !supabaseAnonKey) {
+  console.error("Missing Supabase environment variables");
+}
+
+const supabase = createClient(supabaseUrl || "", supabaseAnonKey || "");
 
 export async function POST(request: NextRequest) {
   try {
+    if (!supabaseUrl || !supabaseAnonKey) {
+      return NextResponse.json(
+        { error: "Service configuration error" },
+        { status: 500 },
+      );
+    }
+
     const body = await request.json();
     const { email, password } = body;
 
