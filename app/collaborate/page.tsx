@@ -230,10 +230,7 @@ export default function CollaboratePage() {
               fontSize: "2.5rem",
               fontWeight: 900,
               marginBottom: "1rem",
-              background: "linear-gradient(45deg, #2196f3, #4caf50)",
-              backgroundClip: "text",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
+              color: "#ffffff",
             }}
           >
             NeuroLint Pro Collaborate
@@ -342,10 +339,7 @@ export default function CollaboratePage() {
               fontSize: "3rem",
               fontWeight: 900,
               marginBottom: "1rem",
-              background: "linear-gradient(45deg, #2196f3, #4caf50)",
-              backgroundClip: "text",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
+              color: "#ffffff",
             }}
           >
             NeuroLint Pro Collaborate
