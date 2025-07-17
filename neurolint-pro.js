@@ -824,6 +824,16 @@ function applyLayerTransformations(layerId, code, options = {}) {
         appliedFixes.push("HTML Entity: Converted &gt; to greater-than");
         console.log(`🛠️  [FALLBACK] Fixed HTML entities: &gt;`);
       }
+      if (transformedCode.includes("&#36;")) {
+        transformedCode = transformedCode.replace(/&#36;/g, "$");
+        appliedFixes.push("HTML Entity: Converted &#36; to dollar sign");
+        console.log(`🛠️  [FALLBACK] Fixed HTML entities: &#36;`);
+      }
+      if (transformedCode.includes("&amp;#36;")) {
+        transformedCode = transformedCode.replace(/&amp;#36;/g, "$");
+        appliedFixes.push("HTML Entity: Converted &amp;#36; to dollar sign");
+        console.log(`🛠️  [FALLBACK] Fixed HTML entities: &amp;#36;`);
+      }
 
       // Clean up console statements - convert to console.debug (per documentation)
       if (transformedCode.includes("console.log")) {
