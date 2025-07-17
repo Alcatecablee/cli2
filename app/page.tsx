@@ -173,6 +173,16 @@ export default function HomePage() {
   );
   const [isHydrated, setIsHydrated] = useState(false);
 
+  // Debug state for development
+  if (typeof window !== "undefined" && process.env.NODE_ENV === "development") {
+    console.log("HomePage state:", {
+      isHydrated,
+      completedOnboarding: onboardingData.completedOnboarding,
+      onboardingStep,
+      onboardingData,
+    });
+  }
+
   // Load data from localStorage after hydration to prevent SSR mismatch
   useEffect(() => {
     // Always set hydrated to true first to prevent infinite loading
