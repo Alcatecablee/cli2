@@ -112,6 +112,7 @@ export default function PricingPage() {
         "2000 analyses per month",
         "Everything in Professional",
         "50MB file size limit",
+        "GitHub integration (100 repositories)",
         "Unlimited team members",
         "Advanced webhooks",
         "Custom integrations",
