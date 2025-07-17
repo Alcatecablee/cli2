@@ -145,15 +145,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           clearTimeout(timeoutId);
 
           if (response.ok) {
-            const { user: currentUser } = await response.json();
+            try {
+              const { user: currentUser } = await response.json();
 
-            // Additional validation on user data
-            if (currentUser && currentUser.id && currentUser.email) {
-              console.log("[AUTH] Setting user and session");
-              setUser(currentUser);
-              setSession(sessionData);
-            } else {
-              console.error("Invalid user data received", currentUser);
+              // Additional validation on user data
+              if (currentUser && currentUser.id && currentUser.email) {
+                console.log("[AUTH] Setting user and session");
+                setUser(currentUser);
+                setSession(sessionData);
+              } else {
+                console.error("Invalid user data received", currentUser);
+                clearSession();
+              }
+            } catch (jsonError) {
+              console.error("Failed to parse user data:", jsonError);
               clearSession();
             }
           } else if (response.status === 401) {
