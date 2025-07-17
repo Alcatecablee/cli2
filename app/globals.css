@@ -1002,79 +1002,121 @@ body {
 }
 
 .layer-stack {
-  margin-bottom: 48px;
+  margin-bottom: 80px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  padding: 48px;
+  backdrop-filter: blur(20px);
+  box-shadow:
+    0 16px 64px rgba(0, 0, 0, 0.25),
+    inset 0 2px 0 rgba(255, 255, 255, 0.1);
 }
 
 .stack-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 32px;
+  margin-bottom: 48px;
 }
 
 .stack-header h4 {
-  font-size: 24px;
-  font-weight: 600;
+  font-size: 32px;
+  font-weight: 700;
   color: #fff;
+  line-height: 1.2;
 }
 
 .stack-progress {
   flex-grow: 1;
-  margin-left: 32px;
-  max-width: 300px;
+  margin-left: 48px;
+  max-width: 400px;
 }
 
 .stack-progress .progress-bar {
   background: rgba(255, 255, 255, 0.1);
-  border-radius: 2px;
-  height: 4px;
+  border-radius: 8px;
+  height: 8px;
   margin-bottom: 16px;
   overflow: hidden;
   position: relative;
   width: 100%;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.stack-progress .progress-bar::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 75%;
+  background: linear-gradient(
+    90deg,
+    rgba(33, 150, 243, 0.8) 0%,
+    rgba(33, 150, 243, 0.6) 50%,
+    rgba(33, 150, 243, 0.4) 100%
+  );
+  border-radius: 8px;
+  box-shadow: 0 0 16px rgba(33, 150, 243, 0.3);
 }
 
 .layer-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 24px;
 }
 
 .layer-item {
   background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  padding: 24px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 16px;
+  padding: 32px 20px;
   text-align: center;
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   display: flex;
   flex-direction: column;
   align-items: center;
+  backdrop-filter: blur(10px);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .layer-item:hover {
   background: rgba(255, 255, 255, 0.08);
-  transform: translateY(-2px);
+  border-color: rgba(33, 150, 243, 0.3);
+  transform: translateY(-4px);
+  box-shadow:
+    0 16px 48px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15),
+    0 0 20px rgba(33, 150, 243, 0.2);
 }
 
 .layer-badge {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 6px;
-  color: rgba(255, 255, 255, 0.9);
+  background: linear-gradient(
+    135deg,
+    rgba(33, 150, 243, 0.2) 0%,
+    rgba(33, 150, 243, 0.15) 50%,
+    rgba(255, 255, 255, 0.1) 100%
+  );
+  border: 1px solid rgba(33, 150, 243, 0.4);
+  border-radius: 8px;
+  color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 12px;
-  font-weight: 600;
-  height: 28px;
-  margin-bottom: 12px;
-  width: 28px;
+  font-size: 14px;
+  font-weight: 700;
+  height: 36px;
+  margin-bottom: 16px;
+  width: 36px;
   font-family: "JetBrains Mono", monospace;
+  box-shadow: 0 0 12px rgba(33, 150, 243, 0.2);
 }
 
 .layer-item h5 {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 600;
   color: #fff;
 }
