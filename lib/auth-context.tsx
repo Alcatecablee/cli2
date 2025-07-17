@@ -372,22 +372,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       body: JSON.stringify({ firstName, lastName }),
     });
 
-    // Clone the response to avoid body stream issues
-    const responseClone = response.clone();
-
     let data;
     try {
-      data = await responseClone.json();
+      data = await response.json();
     } catch (jsonError) {
       console.error("Failed to parse profile update response:", jsonError);
-      // Try to get error text if JSON parsing fails
-      try {
-        const errorText = await response.text();
-        console.error("Response text:", errorText);
-        throw new Error("Server returned invalid response");
-      } catch (textError) {
-        throw new Error("Unable to read server response");
-      }
+      throw new Error("Server returned invalid response");
     }
 
     if (!response.ok) {
