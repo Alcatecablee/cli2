@@ -122,7 +122,11 @@ class LayerDependencyManager {
     reasons.push("Configuration layer provides essential foundation");
 
     // Check for HTML entities or old patterns
-    if (/&quot;|&amp;|&lt;|&gt;|&#36;|&amp;#36;|console\.log/.test(code)) {
+    if (
+      /&quot;|&amp;|&lt;|&gt;|&#36;|&amp;#36;|&nbsp;|&copy;|&reg;|&trade;|&#39;|&apos;|&ndash;|&mdash;|&hellip;|&euro;|&pound;|console\.log/.test(
+        code,
+      )
+    ) {
       recommended.push(2);
       reasons.push("Entity cleanup needed for HTML entities and old patterns");
     }
