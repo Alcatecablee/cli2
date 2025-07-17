@@ -1,6 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
 import { dataStore } from "../../../../lib/data-store";
 
+// Initialize collaboration data stores if not exists
+if (!dataStore.collaborationSessions) {
+  dataStore.collaborationSessions = new Map();
+}
+if (!dataStore.collaborationParticipants) {
+  dataStore.collaborationParticipants = new Map();
+}
+if (!dataStore.collaborationComments) {
+  dataStore.collaborationComments = new Map();
+}
+if (!dataStore.collaborationAnalysis) {
+  dataStore.collaborationAnalysis = new Map();
+}
+
 // Import the neurolint engine
 const getNeuroLintEngine = async () => {
   // Always return null during any build phase to avoid webpack issues
