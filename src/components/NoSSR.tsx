@@ -1,12 +1,7 @@
-import React from 'react';
-import { useEffect, useState } from 'react';
+"use client";
 
-
-'use client';
-
-
-
-
+import React from "react";
+import { useEffect, useState } from "react";
 
 interface NoSSRProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
