@@ -2217,7 +2217,7 @@ export default function Dashboard() {
                             {new Date(item.timestamp).toLocaleString()}
                           </span>
                           <span className="execution-time">
-                            {item.executionTime}ms
+                            {formatProcessingTime(item.executionTime)}
                           </span>
                           <span
                             className={`status ${item.result.success ? "success" : "error"}`}
