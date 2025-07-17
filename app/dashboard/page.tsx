@@ -2687,6 +2687,10 @@ export default function Dashboard() {
                     ...prev,
                     showResults: false,
                     result: null,
+                    currentFile: null,
+                    isLoading: false,
+                    progressStatus: "",
+                    uploadProgress: 0,
                   }))
                 }
                 aria-label="Clear analysis results and start over"
