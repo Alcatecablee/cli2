@@ -137,10 +137,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
             // Additional validation on user data
             if (currentUser && currentUser.id && currentUser.email) {
+              console.log("[AUTH] Setting user and session");
               setUser(currentUser);
               setSession(sessionData);
             } else {
-              console.error("Invalid user data received");
+              console.error("Invalid user data received", currentUser);
               clearSession();
             }
           } else if (response.status === 401) {
