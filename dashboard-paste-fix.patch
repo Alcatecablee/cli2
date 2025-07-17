@@ -1,0 +1,32 @@
+--- a/app/dashboard/page.tsx
++++ b/app/dashboard/page.tsx
+@@ -1827,6 +1827,7 @@
+                   <h3>Paste Your Code</h3>
+                   <div className="paste-code-container">
+                     <textarea
++                      id="dashboard-paste-textarea"
+                       className="code-textarea"
+                       placeholder="Paste your React/Next.js code here..."
+                       rows={12}
+@@ -1867,8 +1868,8 @@
+                       <button
+                         className="btn btn-primary"
+                         onClick={() => {
+-                          const textarea = document.querySelector(
+-                            ".code-textarea",
++                          const textarea = document.getElementById(
++                            "dashboard-paste-textarea",
+                           ) as HTMLTextAreaElement;
+                           const code = textarea?.value.trim();
+                           if (!code) {
+@@ -1918,8 +1919,8 @@
+                       <button
+                         className="btn btn-secondary"
+                         onClick={() => {
+-                          const textarea = document.querySelector(
+-                            ".code-textarea",
++                          const textarea = document.getElementById(
++                            "dashboard-paste-textarea",
+                           ) as HTMLTextAreaElement;
+                           if (textarea) {
+                             textarea.value = "";
