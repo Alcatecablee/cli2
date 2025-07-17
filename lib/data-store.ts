@@ -31,6 +31,12 @@ export const dataStore = {
   // Dashboard Sessions
   dashboardSessions: new Map(),
 
+  // Collaboration System
+  collaborationSessions: new Map(),
+  collaborationParticipants: new Map(),
+  collaborationComments: new Map(),
+  collaborationAnalysis: new Map(),
+
   // Demo rate limiting
   requestCounts: new Map(),
 };
