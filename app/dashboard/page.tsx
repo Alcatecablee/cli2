@@ -207,6 +207,17 @@ export default function BlogPost({ post }) {
 export default function Dashboard() {
   const { user, session, loading: authLoading, signOut } = useAuth();
   const router = useRouter();
+  const [forceBypassLoading, setForceBypassLoading] = useState(false);
+
+  // Force bypass loading after 5 seconds
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      console.log("Forcing bypass of loading state");
+      setForceBypassLoading(true);
+    }, 5000);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   // Redirect to login if not authenticated
   useEffect(() => {
