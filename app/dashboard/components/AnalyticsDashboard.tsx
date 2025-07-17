@@ -173,7 +173,9 @@ export default function AnalyticsDashboard({
   };
 
   const formatExecutionTime = (ms: number) => {
-    if (ms < 1000) return `${ms}ms`;
+    if (ms < 10) return `${ms.toFixed(1)}ms`;
+    if (ms < 100) return `${ms.toFixed(0)}ms`;
+    if (ms < 1000) return `${ms.toFixed(0)}ms`;
     return `${(ms / 1000).toFixed(1)}s`;
   };
 
