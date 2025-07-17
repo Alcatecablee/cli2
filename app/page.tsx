@@ -1319,6 +1319,17 @@ function ImageGallery({ images }) {
                 </div>
               </div>
 
+              {/* Interactive Demo Section Header */}
+              <div className="demo-section-header">
+                <div className="demo-section-container">
+                  <h3>Try NeuroLint Pro Live</h3>
+                  <p>
+                    Experience our 6-layer automated fixing system with your own
+                    code or our curated samples
+                  </p>
+                </div>
+              </div>
+
               <div className="demo-container">
                 {/* Advanced Demo Controls */}
                 <div className="demo-controls" role="region">
