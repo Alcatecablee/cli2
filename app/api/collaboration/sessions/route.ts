@@ -24,71 +24,66 @@ export async function GET(request: NextRequest) {
 
     if (sessionId) {
       // Get specific session
-      const { data: session, error } = await supabase
-        .from("collaboration_sessions")
-        .select(
-          `
-          *,
-          collaboration_participants!inner(
-            id,
-            user_name,
-            user_color,
-            user_avatar,
-            joined_at,
-            is_active,
-            is_host
-          )
-        `,
-        )
-        .eq("id", sessionId)
-        .eq("collaboration_participants.user_id", userId)
-        .single();
+      const session = dataStore.collaborationSessions.get(sessionId);
 
-      if (error) {
+      if (!session) {
         return NextResponse.json(
           { error: "Session not found" },
           { status: 404 },
         );
       }
 
-      // Get all participants
-      const { data: participants } = await supabase
-        .from("collaboration_participants")
-        .select("*")
-        .eq("session_id", sessionId)
-        .eq("is_active", true);
+      // Check if user is a participant
+      const participantKey = `${sessionId}_${userId}`;
+      const isParticipant =
+        dataStore.collaborationParticipants.has(participantKey);
+
+      if (!isParticipant) {
+        return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      }
+
+      // Get all active participants for this session
+      const participants = [];
+      for (const [
+        key,
+        participant,
+      ] of dataStore.collaborationParticipants.entries()) {
+        if (key.startsWith(`${sessionId}_`) && participant.is_active) {
+          participants.push(participant);
+        }
+      }
 
       return NextResponse.json({
         session: {
           ...session,
-          participants: participants || [],
+          participants,
         },
       });
     } else {
       // Get user's sessions
-      const { data: sessions, error } = await supabase
-        .from("collaboration_sessions")
-        .select(
-          `
-          *,
-          collaboration_participants!inner(
-            user_id,
-            is_active
-          )
-        `,
-        )
-        .eq("collaboration_participants.user_id", userId)
-        .eq("collaboration_participants.is_active", true)
-        .order("last_activity", { ascending: false });
+      const userSessions = [];
 
-      if (error) {
-        return NextResponse.json(
-          { error: "Failed to fetch sessions" },
-          { status: 500 },
-        );
+      for (const [
+        sessionId,
+        session,
+      ] of dataStore.collaborationSessions.entries()) {
+        const participantKey = `${sessionId}_${userId}`;
+        const participant =
+          dataStore.collaborationParticipants.get(participantKey);
+
+        if (participant && participant.is_active) {
+          userSessions.push(session);
+        }
       }
 
-      return NextResponse.json({ sessions: sessions || [] });
+      // Sort by last activity
+      userSessions.sort(
+        (a, b) =>
+          new Date(b.last_activity).getTime() -
+          new Date(a.last_activity).getTime(),
+      );
+
+      return NextResponse.json({ sessions: userSessions });
     }
   } catch (error) {
     console.error("Sessions API error:", error);
