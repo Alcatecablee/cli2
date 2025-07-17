@@ -136,6 +136,7 @@ export default function PricingPage() {
         "Unlimited analyses",
         "Everything in Team",
         "Unlimited file sizes",
+        "GitHub integration (unlimited repositories)",
         "On-premise deployment",
         "Custom layer development",
         "White-label solution",
