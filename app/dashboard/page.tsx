@@ -405,6 +405,7 @@ export default function Dashboard() {
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [rateLimitInfo, setRateLimitInfo] = useState<any>(null);
   const [userExpandedSidebar, setUserExpandedSidebar] = useState(false);
+  const [useEnhanced, setUseEnhanced] = useState(false);
 
   // Save analysis to history
   const saveToHistory = useCallback(
@@ -477,6 +478,7 @@ export default function Dashboard() {
             filename,
             layers,
             applyFixes,
+            enhanced: useEnhanced,
           }),
         });
 
@@ -1297,6 +1299,40 @@ export default function Dashboard() {
                 </fieldset>
 
                 <fieldset className="control-group">
+                  <legend className="control-label">ENGINE TYPE</legend>
+                  <div
+                    className="control-options"
+                    role="radiogroup"
+                    aria-labelledby="engine-legend"
+                  >
+                    <button
+                      className={`control-btn ${!useEnhanced ? "active" : ""}`}
+                      onClick={() => setUseEnhanced(false)}
+                      role="radio"
+                      aria-checked={!useEnhanced}
+                      aria-describedby="standard-engine-description"
+                    >
+                      Standard Engine
+                    </button>
+                    <button
+                      className={`control-btn ${useEnhanced ? "active" : ""}`}
+                      onClick={() => setUseEnhanced(true)}
+                      role="radio"
+                      aria-checked={useEnhanced}
+                      aria-describedby="enhanced-engine-description"
+                    >
+                      Enhanced AST Engine
+                    </button>
+                  </div>
+                  <div id="standard-engine-description" className="sr-only">
+                    Standard regex-based pattern matching engine
+                  </div>
+                  <div id="enhanced-engine-description" className="sr-only">
+                    Advanced AST analysis with semantic understanding
+                  </div>
+                </fieldset>
+
+                <fieldset className="control-group">
                   <legend className="control-label">LAYER SELECTION</legend>
                   <div
                     className="layer-controls"
@@ -1427,6 +1463,10 @@ export default function Dashboard() {
                   : dashboardState.selectedLayers.length === 6
                     ? "All 6 Layers"
                     : `Custom Layers [${dashboardState.selectedLayers.join(",")}]`}
+              </span>
+              {" • "}
+              <span style={{ color: "rgba(255, 255, 255, 0.8)" }}>
+                {useEnhanced ? "Enhanced AST Engine" : "Standard Engine"}
               </span>
             </div>
           )}
