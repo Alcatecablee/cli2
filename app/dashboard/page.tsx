@@ -213,12 +213,9 @@ export default function Dashboard() {
   // Initialize hydration and bypass loading
   useEffect(() => {
     setIsHydrated(true);
-    const timer = setTimeout(() => {
-      console.log("Forcing bypass of loading state");
-      setForceBypassLoading(true);
-    }, 3000); // Reduced timeout
-
-    return () => clearTimeout(timer);
+    // Immediate bypass for dashboard
+    setForceBypassLoading(true);
+    console.log("Dashboard hydrated and bypass enabled");
   }, []);
 
   // Redirect to login if not authenticated
