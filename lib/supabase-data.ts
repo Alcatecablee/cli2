@@ -178,7 +178,7 @@ export const dataService = {
 
   async clearAnalysisHistory(userId: string): Promise<boolean> {
     try {
-      const client = await createAuthenticatedClient();
+      const client = createAuthenticatedClient();
       const { error } = await client
         .from("analysis_history")
         .delete()
