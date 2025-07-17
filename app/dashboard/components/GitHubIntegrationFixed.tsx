@@ -362,35 +362,6 @@ export default function GitHubIntegrationFixed() {
               {state.isConnecting ? "Connecting..." : "Connect GitHub"}
             </button>
           </div>
-
-          <div className="demo-section">
-            <h4>Repository Preview</h4>
-            <p>Your repositories will appear here after connecting:</p>
-            <div className="repositories-grid">
-              {demoRepositories.map((repo) => (
-                <div key={repo.id} className="repository-card demo">
-                  <div className="repo-header">
-                    <span className="repo-icon">
-                      {getRepositoryIcon(repo.language, repo.private)}
-                    </span>
-                    <div className="repo-info">
-                      <h5>{repo.name}</h5>
-                      <p>{repo.description}</p>
-                    </div>
-                    <div className="repo-meta">
-                      <span className="language">{repo.language}</span>
-                      <span className="size">
-                        {formatFileSize(repo.size * 1024)}
-                      </span>
-                    </div>
-                  </div>
-                  <button className="scan-btn demo" disabled>
-                    Analyze Repository
-                  </button>
-                </div>
-              ))}
-            </div>
-          </div>
         </div>
       ) : (
         <div className="connected-section">
