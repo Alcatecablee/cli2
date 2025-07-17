@@ -308,106 +308,71 @@ export default function CollaboratePage() {
     setComments([]);
   }, [currentSession, apiCall]);
 
-  // Setup real-time subscriptions
+  // Setup polling for real-time updates
   const setupRealtimeSubscriptions = useCallback(
     (sessionId: string) => {
-      // Subscribe to session changes
-      const channel = supabase
-        .channel("collaboration")
-        .on(
-          "postgres_changes",
-          {
-            event: "*",
-            schema: "public",
-            table: "collaboration_sessions",
-            filter: `id=eq.${sessionId}`,
-          },
-          (payload) => {
-            if (payload.eventType === "UPDATE") {
-              setCurrentSession((prev) =>
-                prev ? { ...prev, ...payload.new } : null,
-              );
-              setCode(payload.new.document_content);
-            }
-          },
-        )
-        .on(
-          "postgres_changes",
-          {
-            event: "*",
-            schema: "public",
-            table: "collaboration_participants",
-            filter: `session_id=eq.${sessionId}`,
-          },
-          (payload) => {
-            // Update participants list
-            if (currentSession) {
-              setCurrentSession((prev) => {
-                if (!prev) return null;
-                const participants = [...prev.participants];
-                const index = participants.findIndex(
-                  (p) => p.user_id === payload.new?.user_id,
-                );
+      // Poll for updates every 2 seconds
+      const pollInterval = setInterval(async () => {
+        try {
+          // Get updated session data
+          const { session } = await apiCall(
+            `/api/collaboration/sessions?sessionId=${sessionId}`,
+          );
 
-                if (payload.eventType === "INSERT" && index === -1) {
-                  participants.push(payload.new);
-                } else if (payload.eventType === "UPDATE" && index !== -1) {
-                  participants[index] = payload.new;
-                } else if (payload.eventType === "DELETE") {
-                  participants.splice(index, 1);
-                }
+          if (session) {
+            setCurrentSession((prev) => {
+              if (!prev) return session;
 
-                return { ...prev, participants };
-              });
-            }
-          },
-        )
-        .on(
-          "postgres_changes",
-          {
-            event: "INSERT",
-            schema: "public",
-            table: "collaboration_comments",
-            filter: `session_id=eq.${sessionId}`,
-          },
-          (payload) => {
-            setComments((prev) => [...prev, payload.new]);
-          },
-        )
-        .on(
-          "postgres_changes",
-          {
-            event: "INSERT",
-            schema: "public",
-            table: "collaboration_analysis",
-            filter: `session_id=eq.${sessionId}`,
-          },
-          (payload) => {
-            // Add new analysis result
-            const newResult: AnalysisResult = {
-              id: payload.new.id,
-              success: payload.new.success,
-              dryRun: payload.new.dry_run,
-              layers: payload.new.layers_executed,
-              originalCode: payload.new.input_code,
-              transformed: payload.new.output_code,
-              totalExecutionTime: payload.new.execution_time,
-              successfulLayers: payload.new.layers_executed.length,
-              analysis: payload.new.analysis_results,
-              triggeredBy: payload.new.triggered_by,
-              timestamp: payload.new.created_at,
-              error: payload.new.error_message,
-            };
+              // Only update if content changed
+              if (prev.document_content !== session.document_content) {
+                setCode(session.document_content);
+              }
 
-            setAnalysisResults((prev) => [newResult, ...prev]);
-            setSelectedResult(newResult);
-          },
-        );
+              return session;
+            });
+          }
 
-      channel.subscribe();
-      subscriptionRef.current = channel;
+          // Get comments
+          const { comments: newComments } = await apiCall(
+            `/api/collaboration/comments?sessionId=${sessionId}`,
+          );
+          if (newComments) {
+            setComments(newComments);
+          }
+
+          // Get analysis results
+          const { analyses } = await apiCall(
+            `/api/collaboration/analyze?sessionId=${sessionId}`,
+          );
+          if (analyses) {
+            setAnalysisResults(
+              analyses.map((analysis: any) => ({
+                id: analysis.id,
+                success: analysis.success,
+                dryRun: analysis.dry_run,
+                layers: analysis.layers_executed,
+                originalCode: analysis.input_code,
+                transformed: analysis.output_code,
+                totalExecutionTime: analysis.execution_time,
+                successfulLayers: analysis.layers_executed.length,
+                analysis: analysis.analysis_results,
+                triggeredBy: analysis.triggered_by,
+                triggeredByName: analysis.triggered_by_name,
+                timestamp: analysis.created_at,
+                error: analysis.error_message,
+              })),
+            );
+          }
+        } catch (error) {
+          console.error("Polling error:", error);
+        }
+      }, 2000);
+
+      subscriptionRef.current = {
+        unsubscribe: () => clearInterval(pollInterval),
+      };
     },
-    [currentSession],
+    [apiCall],
   );
 
   // Run analysis
