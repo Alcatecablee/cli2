@@ -414,7 +414,7 @@ export default function BulkProcessor({
             </div>
           )}
 
-                    <div className="bulk-file-list">
+          <div className="bulk-file-list">
             {bulkState.results.map((result, index) => (
               <div key={index} className="bulk-file-item">
                 <div
@@ -459,7 +459,8 @@ export default function BulkProcessor({
                     <div className="file-error">{result.error}</div>
                   )}
                 </div>
-                {(result.status === "completed" || result.status === "error") && (
+                {(result.status === "completed" ||
+                  result.status === "error") && (
                   <button
                     className="expand-btn"
                     onClick={() => toggleResultExpansion(index)}
@@ -475,15 +476,23 @@ export default function BulkProcessor({
                           <div className="issues-section">
                             <h4>Detected Issues</h4>
                             <div className="issues-list">
-                              {result.result.analysis.detectedIssues.map((issue: any, idx: number) => (
-                                <div key={idx} className="issue-item">
-                                  <span className={`issue-severity ${issue.severity}`}>
-                                    {issue.severity}
-                                  </span>
-                                  <span className="issue-type">{issue.type}</span>
-                                  <span className="issue-description">{issue.description}</span>
-                                </div>
-                              ))}
+                              {result.result.analysis.detectedIssues.map(
+                                (issue: any, idx: number) => (
+                                  <div key={idx} className="issue-item">
+                                    <span
+                                      className={`issue-severity ${issue.severity}`}
+                                    >
+                                      {issue.severity}
+                                    </span>
+                                    <span className="issue-type">
+                                      {issue.type}
+                                    </span>
+                                    <span className="issue-description">
+                                      {issue.description}
+                                    </span>
+                                  </div>
+                                ),
+                              )}
                             </div>
                           </div>
                         )}
@@ -491,15 +500,28 @@ export default function BulkProcessor({
                           <div className="layers-section">
                             <h4>Layer Execution</h4>
                             <div className="layers-list">
-                              {result.result.layers.map((layer: any, idx: number) => (
-                                <div key={idx} className={`layer-item ${layer.success ? 'success' : 'failed'}`}>
-                                  <span className="layer-name">Layer {layer.layerId}</span>
-                                  <span className="layer-time">{formatProcessingTime(layer.executionTime)}</span>
-                                  <span className={`layer-status ${layer.success ? 'success' : 'failed'}`}>
-                                    {layer.success ? 'SUCCESS' : 'FAILED'}
-                                  </span>
-                                </div>
-                              ))}
+                              {result.result.layers.map(
+                                (layer: any, idx: number) => (
+                                  <div
+                                    key={idx}
+                                    className={`layer-item ${layer.success ? "success" : "failed"}`}
+                                  >
+                                    <span className="layer-name">
+                                      Layer {layer.layerId}
+                                    </span>
+                                    <span className="layer-time">
+                                      {formatProcessingTime(
+                                        layer.executionTime,
+                                      )}
+                                    </span>
+                                    <span
+                                      className={`layer-status ${layer.success ? "success" : "failed"}`}
+                                    >
+                                      {layer.success ? "SUCCESS" : "FAILED"}
+                                    </span>
+                                  </div>
+                                ),
+                              )}
                             </div>
                           </div>
                         )}
@@ -510,7 +532,10 @@ export default function BulkProcessor({
                         <h4>Error Details</h4>
                         <p>{result.error}</p>
                         {result.processingTime && (
-                          <p>Processing time: {formatProcessingTime(result.processingTime)}</p>
+                          <p>
+                            Processing time:{" "}
+                            {formatProcessingTime(result.processingTime)}
+                          </p>
                         )}
                       </div>
                     )}
@@ -544,26 +569,32 @@ export default function BulkProcessor({
               <div className="summary-label">Failed Files</div>
             </div>
             <div className="summary-card">
-              <div className="summary-value">{getSummaryStats().totalIssues}</div>
+              <div className="summary-value">
+                {getSummaryStats().totalIssues}
+              </div>
               <div className="summary-label">Total Issues Found</div>
             </div>
             <div className="summary-card">
-              <div className="summary-value">{Math.round(getSummaryStats().avgConfidence * 100)}%</div>
+              <div className="summary-value">
+                {Math.round(getSummaryStats().avgConfidence * 100)}%
+              </div>
               <div className="summary-label">Avg Confidence</div>
             </div>
             <div className="summary-card">
-              <div className="summary-value">{formatProcessingTime(getSummaryStats().totalTime)}</div>
+              <div className="summary-value">
+                {formatProcessingTime(getSummaryStats().totalTime)}
+              </div>
               <div className="summary-label">Total Processing Time</div>
             </div>
             <div className="summary-card">
               <div className="summary-value">
-                {bulkState.completedAt ? bulkState.completedAt.toLocaleTimeString() : "N/A"}
+                {bulkState.completedAt
+                  ? bulkState.completedAt.toLocaleTimeString()
+                  : "N/A"}
               </div>
               <div className="summary-label">Completed At</div>
             </div>
           </div>
-        </div>
-      )}
         </div>
       )}
 
@@ -765,9 +796,10 @@ export default function BulkProcessor({
         }
 
         .bulk-file-item {
-          display: flex;
-          align-items: center;
+          display: grid;
+          grid-template-columns: auto 1fr auto auto;
           gap: 12px;
+          align-items: center;
           padding: 12px;
           background: rgba(255, 255, 255, 0.03);
           border-radius: 6px;
@@ -851,26 +883,6 @@ export default function BulkProcessor({
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
-        }
-
-        @media (max-width: 768px) {
-          .upload-options {
-            grid-template-columns: 1fr;
-          }
-
-          .bulk-summary-header {
-            flex-direction: column;
-            gap: 12px;
-            align-items: stretch;
-          }
-
-          .bulk-actions {
-            justify-content: stretch;
-          }
-
-                    .btn {
-            flex: 1;
-          }
         }
 
         .expand-btn {
@@ -1103,11 +1115,35 @@ export default function BulkProcessor({
           letter-spacing: 0.5px;
         }
 
-        .bulk-file-item {
-          display: grid;
-          grid-template-columns: auto 1fr auto auto;
-          gap: 12px;
-          align-items: center;
+        @media (max-width: 768px) {
+          .upload-options {
+            grid-template-columns: 1fr;
+          }
+
+          .bulk-summary-header {
+            flex-direction: column;
+            gap: 12px;
+            align-items: stretch;
+          }
+
+          .bulk-actions {
+            justify-content: stretch;
+          }
+
+          .btn {
+            flex: 1;
+          }
+
+          .bulk-file-item {
+            grid-template-columns: auto 1fr;
+            gap: 8px;
+          }
+
+          .expand-btn {
+            grid-column: 1 / -1;
+            margin-top: 8px;
+            justify-self: center;
+          }
         }
       `}</style>
     </div>
