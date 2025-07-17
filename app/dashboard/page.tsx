@@ -412,6 +412,13 @@ export default function Dashboard() {
     );
   };
 
+  const formatProcessingTime = (ms: number) => {
+    if (ms < 10) return `${ms.toFixed(1)}ms`;
+    if (ms < 100) return `${ms.toFixed(0)}ms`;
+    if (ms < 1000) return `${ms.toFixed(0)}ms`;
+    return `${(ms / 1000).toFixed(1)}s`;
+  };
+
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [rateLimitInfo, setRateLimitInfo] = useState<any>(null);
