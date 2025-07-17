@@ -817,7 +817,7 @@ function applyLayerTransformations(layerId, code, options = {}) {
       if (transformedCode.includes("&lt;")) {
         transformedCode = transformedCode.replace(/&lt;/g, "<");
         appliedFixes.push("HTML Entity: Converted &lt; to less-than");
-        console.log(`🛠️  [FALLBACK] Fixed HTML entities: &lt;`);
+        console.log(`����️  [FALLBACK] Fixed HTML entities: &lt;`);
       }
       if (transformedCode.includes("&gt;")) {
         transformedCode = transformedCode.replace(/&gt;/g, ">");
@@ -1253,6 +1253,7 @@ class SmartLayerSelector {
       { pattern: /&quot;/g, name: "HTML quote entities" },
       { pattern: /&amp;/g, name: "HTML ampersand entities" },
       { pattern: /&lt;|&gt;/g, name: "HTML bracket entities" },
+      { pattern: /&#36;|&amp;#36;/g, name: "HTML dollar sign entities" },
       { pattern: /console\.log\(/g, name: "Console.log usage" },
       { pattern: /\bvar\s+/g, name: "Var declarations" },
     ];
