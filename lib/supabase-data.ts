@@ -277,7 +277,7 @@ export const dataService = {
 
   async deleteProject(userId: string, projectId: string): Promise<boolean> {
     try {
-      const client = await createAuthenticatedClient();
+      const client = createAuthenticatedClient();
       const { error } = await client
         .from("projects")
         .delete()
