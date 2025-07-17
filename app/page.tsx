@@ -308,7 +308,12 @@ export default function HomePage() {
                 }}
               >
                 <button
-                  onClick={() => handleOnboardingNext()}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log("Get Started button clicked");
+                    handleOnboardingNext();
+                  }}
                   style={{
                     padding: "0.75rem 2rem",
                     backgroundColor: "rgba(33,150,243,0.2)",
@@ -323,7 +328,12 @@ export default function HomePage() {
                   Get Started
                 </button>
                 <button
-                  onClick={skipOnboarding}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log("Skip to Demo button clicked");
+                    skipOnboarding();
+                  }}
                   style={{
                     padding: "0.75rem 2rem",
                     backgroundColor: "rgba(255,255,255,0.1)",
