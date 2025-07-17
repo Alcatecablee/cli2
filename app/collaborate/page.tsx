@@ -1,446 +1,617 @@
 "use client";
 
-import React, { useState, useEffect, useRef, useCallback } from "react";
-import CollaborativeEditor from "../../components/CollaborativeEditor";
+import React, { useState, useEffect, useCallback, useRef } from "react";
+import { createClient } from "@supabase/supabase-js";
 
-interface ChatMessage {
-  id: string;
-  authorId: string;
-  author: string;
-  content: string;
-  timestamp: string;
-  type: "message" | "system" | "neurolint";
-}
-
-interface SessionInfo {
+// Types
+interface Session {
   id: string;
   name: string;
-  filename: string;
-  language: string;
-  participantCount: number;
-  createdAt: string;
-  lastActivity: string;
+  document_content: string;
+  document_filename: string;
+  document_language: string;
+  host_user_id: string;
+  created_at: string;
+  updated_at: string;
+  last_activity: string;
+  is_locked: boolean;
+  max_participants: number;
+  expires_at: string;
+  participants: Participant[];
 }
 
+interface Participant {
+  user_id: string;
+  user_name: string;
+  user_color: string;
+  user_avatar?: string;
+  joined_at: string;
+  is_active: boolean;
+  is_host: boolean;
+}
+
+interface AnalysisResult {
+  id: string;
+  success: boolean;
+  dryRun: boolean;
+  layers: number[];
+  originalCode: string;
+  transformed: string;
+  totalExecutionTime: number;
+  successfulLayers: number;
+  analysis: {
+    recommendedLayers: number[];
+    detectedIssues: any[];
+    confidence: number;
+    estimatedImpact: {
+      level: string;
+      description: string;
+      estimatedFixTime: string;
+    };
+  };
+  triggeredBy: string;
+  triggeredByName?: string;
+  timestamp: string;
+  error?: string;
+}
+
+interface Comment {
+  id: string;
+  author_name: string;
+  content: string;
+  line_number: number;
+  is_resolved: boolean;
+  comment_type: "comment" | "chat" | "system";
+  created_at: string;
+}
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+);
+
 export default function CollaboratePage() {
+  // User state
+  const [userName, setUserName] = useState("");
+  const [userId, setUserId] = useState("");
+  const [userSetup, setUserSetup] = useState(false);
+
   // Session state
-  const [sessionId, setSessionId] = useState<string | null>(null);
-  const [sessionName, setSessionName] = useState("");
+  const [currentSession, setCurrentSession] = useState<Session | null>(null);
   const [isCreatingSession, setIsCreatingSession] = useState(false);
   const [isJoiningSession, setIsJoiningSession] = useState(false);
   const [joinSessionId, setJoinSessionId] = useState("");
-
-  // User state
-  const [userName, setUserName] = useState("");
-  const [userSetup, setUserSetup] = useState(false);
-
-  // Chat state
-  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
-  const [newMessage, setNewMessage] = useState("");
-  const [showChat, setShowChat] = useState(true);
-  const [unreadCount, setUnreadCount] = useState(0);
+  const [sessionName, setSessionName] = useState("");
 
   // Editor state
   const [code, setCode] = useState("");
-  const [filename, setFilename] = useState("untitled.tsx");
+  const [filename, setFilename] = useState("example.tsx");
+  const [language, setLanguage] = useState("typescript");
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [selectedLayers, setSelectedLayers] = useState<number[]>([]);
+  const [dryRun, setDryRun] = useState(true);
 
-  // WebSocket for chat
-  const chatWsRef = useRef<WebSocket | null>(null);
-  const chatContainerRef = useRef<HTMLDivElement>(null);
+  // Analysis state
+  const [analysisResults, setAnalysisResults] = useState<AnalysisResult[]>([]);
+  const [selectedResult, setSelectedResult] = useState<AnalysisResult | null>(
+    null,
+  );
 
-  // Generate user data
-  const userData = {
-    id: `user-${Math.random().toString(36).substr(2, 9)}`,
-    name: userName || "Anonymous",
-    color: "#2196f3",
+  // Chat state
+  const [comments, setComments] = useState<Comment[]>([]);
+  const [newComment, setNewComment] = useState("");
+  const [showChat, setShowChat] = useState(true);
+
+  // UI state
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [showAdvanced, setShowAdvanced] = useState(false);
+
+  const editorRef = useRef<HTMLTextAreaElement>(null);
+  const subscriptionRef = useRef<any>(null);
+
+  // Layer information
+  const layerInfo = {
+    1: {
+      name: "Configuration",
+      color: "#2196f3",
+      description: "TypeScript/Next.js config modernization",
+    },
+    2: {
+      name: "Patterns",
+      color: "#ff9800",
+      description: "HTML entities, imports, console cleanup",
+    },
+    3: {
+      name: "Components",
+      color: "#4caf50",
+      description: "Missing keys, React imports, accessibility",
+    },
+    4: {
+      name: "Hydration",
+      color: "#e91e63",
+      description: "SSR safety guards, localStorage protection",
+    },
+    5: {
+      name: "Next.js",
+      color: "#9c27b0",
+      description: "App Router compliance, use client directives",
+    },
+    6: {
+      name: "Testing",
+      color: "#00bcd4",
+      description: "TypeScript props, error handling, exports",
+    },
   };
 
-  // Robust copy function with fallbacks
-  const copyToClipboard = async (text: string, description: string) => {
-    try {
-      // First try the modern Clipboard API
-      if (navigator.clipboard && window.isSecureContext) {
-        await navigator.clipboard.writeText(text);
-        alert(`${description} copied to clipboard!`);
-        return;
-      }
-    } catch (err) {
-      console.warn("Clipboard API failed, trying fallback:", err);
-    }
-
-    // Fallback method using textarea
-    try {
-      const textArea = document.createElement("textarea");
-      textArea.value = text;
-      textArea.style.position = "fixed";
-      textArea.style.left = "-999999px";
-      textArea.style.top = "-999999px";
-      document.body.appendChild(textArea);
-      textArea.focus();
-      textArea.select();
-
-      const successful = document.execCommand("copy");
-      document.body.removeChild(textArea);
-
-      if (successful) {
-        alert(`${description} copied to clipboard!`);
-      } else {
-        throw new Error("execCommand failed");
-      }
-    } catch (fallbackErr) {
-      console.error("All copy methods failed:", fallbackErr);
-      // Show user a manual copy option
-      const modal = document.createElement("div");
-      modal.style.cssText = `
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background: rgba(0, 0, 0, 0.9);
-        color: white;
-        padding: 20px;
-        border-radius: 8px;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        z-index: 10000;
-        max-width: 90vw;
-        max-height: 80vh;
-        overflow: auto;
-        backdrop-filter: blur(10px);
-      `;
-
-      const content = document.createElement("div");
-      content.innerHTML = `
-        <h3 style="margin-top: 0; color: rgba(33, 150, 243, 0.9);">Copy ${description} Manually</h3>
-        <p style="color: rgba(255, 255, 255, 0.8);">Please copy the link below manually:</p>
-        <textarea readonly style="
-          width: 100%;
-          height: 100px;
-          background: rgba(255, 255, 255, 0.05);
-          border: 1px solid rgba(255, 255, 255, 0.2);
-          color: white;
-          padding: 10px;
-          border-radius: 4px;
-          font-family: monospace;
-          font-size: 12px;
-          resize: vertical;
-        ">${text}</textarea>
-        <button onclick="this.parentElement.parentElement.remove()" style="
-          margin-top: 10px;
-          padding: 8px 16px;
-          background: rgba(33, 150, 243, 0.2);
-          border: 1px solid rgba(33, 150, 243, 0.4);
-          color: rgba(33, 150, 243, 0.9);
-          border-radius: 4px;
-          cursor: pointer;
-          font-weight: 500;
-        ">Close</button>
-      `;
-
-      modal.appendChild(content);
-      document.body.appendChild(modal);
-
-      // Auto-select the text in the textarea
-      const textarea = modal.querySelector("textarea") as HTMLTextAreaElement;
-      if (textarea) {
-        textarea.select();
-        textarea.focus();
-      }
-    }
-  };
-
-  /**
-   * Create new collaboration session
-   */
-  const createSession = useCallback(() => {
-    if (!userName.trim()) {
-      alert("Please enter your name first");
-      return;
-    }
-
-    const newSessionId = `session-${Math.random().toString(36).substr(2, 9)}`;
-    setSessionId(newSessionId);
-    setIsCreatingSession(false);
-
-    // Copy session link to clipboard
-    const sessionLink = `${window.location.origin}/collaborate?session=${newSessionId}`;
-    copyToClipboard(sessionLink, "Session link");
-  }, [userName]);
-
-  /**
-   * Join existing session
-   */
-  const joinSession = useCallback(() => {
-    if (!userName.trim()) {
-      alert("Please enter your name first");
-      return;
-    }
-
-    if (!joinSessionId.trim()) {
-      alert("Please enter a session ID");
-      return;
-    }
-
-    setSessionId(joinSessionId);
-    setIsJoiningSession(false);
-  }, [userName, joinSessionId]);
-
-  /**
-   * Leave current session
-   */
-  const leaveSession = useCallback(() => {
-    setSessionId(null);
-    setChatMessages([]);
-    setCode("");
-    if (chatWsRef.current) {
-      chatWsRef.current.close();
-    }
-  }, []);
-
-  /**
-   * Send chat message
-   */
-  const sendChatMessage = useCallback(() => {
-    if (!newMessage.trim() || !chatWsRef.current) return;
-
-    chatWsRef.current.send(
-      JSON.stringify({
-        type: "chat-message",
-        data: {
-          content: newMessage,
-          type: "message",
-        },
-      }),
-    );
-
-    setNewMessage("");
-  }, [newMessage]);
-
-  /**
-   * Setup chat WebSocket when session starts
-   */
-  useEffect(() => {
-    if (sessionId && userData.name) {
-      // Use environment-aware WebSocket URL
-      const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-      const host =
-        process.env.NODE_ENV === "production"
-          ? window.location.host
-          : "localhost:8080";
-      const wsUrl = `${protocol}//${host}`;
-
-      const ws = new WebSocket(wsUrl);
-      chatWsRef.current = ws;
-
-      ws.onopen = () => {
-        console.log("[COLLABORATION] WebSocket connected");
-        ws.send(
-          JSON.stringify({
-            type: "join-session",
-            data: {
-              sessionId,
-              userData,
-            },
-          }),
-        );
-      };
-
-      ws.onmessage = (event) => {
-        try {
-          const message = JSON.parse(event.data);
-
-          if (message.type === "chat-message") {
-            setChatMessages((prev) => [...prev, message.data]);
-
-            if (!showChat && message.data.authorId !== userData.id) {
-              setUnreadCount((prev) => prev + 1);
-            }
-          }
-
-          if (message.type === "error") {
-            console.error("[COLLABORATION] Server error:", message.data);
-            alert(`Collaboration error: ${message.data.error}`);
-          }
-        } catch (error) {
-          console.error("[CHAT] Failed to parse message:", error);
-        }
-      };
-
-      ws.onerror = (error) => {
-        console.error("[COLLABORATION] WebSocket error:", error);
-      };
-
-      ws.onclose = (event) => {
-        console.log(
-          "[COLLABORATION] WebSocket closed:",
-          event.code,
-          event.reason,
-        );
-        if (event.code !== 1000) {
-          // Unexpected close, attempt reconnection after delay
-          setTimeout(() => {
-            if (sessionId) {
-              console.log("[COLLABORATION] Attempting to reconnect...");
-              // Trigger effect to recreate connection
-              setSessionId((prev) => prev);
-            }
-          }, 3000);
-        }
-      };
-
-      return () => {
-        ws.close(1000, "Component unmounting");
-      };
-    }
-  }, [sessionId, userData, showChat]);
-
-  /**
-   * Scroll chat to bottom
-   */
-  useEffect(() => {
-    if (chatContainerRef.current) {
-      chatContainerRef.current.scrollTop =
-        chatContainerRef.current.scrollHeight;
-    }
-  }, [chatMessages]);
-
-  /**
-   * Reset unread count when chat is opened
-   */
-  useEffect(() => {
-    if (showChat) {
-      setUnreadCount(0);
-    }
-  }, [showChat]);
-
-  /**
-   * Check for session ID in URL
-   */
+  // Initialize user
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const sessionFromUrl = urlParams.get("session");
+
     if (sessionFromUrl) {
       setJoinSessionId(sessionFromUrl);
       setIsJoiningSession(true);
     }
+
+    // Generate user ID if not exists
+    let storedUserId = localStorage.getItem("neurolint-user-id");
+    if (!storedUserId) {
+      storedUserId =
+        "user_" +
+        Math.random().toString(36).substr(2, 9) +
+        Date.now().toString(36);
+      localStorage.setItem("neurolint-user-id", storedUserId);
+    }
+    setUserId(storedUserId);
+
+    const storedUserName = localStorage.getItem("neurolint-user-name");
+    if (storedUserName) {
+      setUserName(storedUserName);
+      setUserSetup(true);
+    }
   }, []);
 
+  // Save user name
+  const handleUserSetup = useCallback(() => {
+    if (!userName.trim()) {
+      setError("Please enter your name");
+      return;
+    }
+
+    localStorage.setItem("neurolint-user-name", userName);
+    setUserSetup(true);
+    setError("");
+  }, [userName]);
+
+  // API call helper
+  const apiCall = useCallback(
+    async (endpoint: string, options: RequestInit = {}) => {
+      const response = await fetch(endpoint, {
+        ...options,
+        headers: {
+          "Content-Type": "application/json",
+          "x-user-id": userId,
+          "x-user-name": userName,
+          ...options.headers,
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response
+          .json()
+          .catch(() => ({ error: "Network error" }));
+        throw new Error(errorData.error || `HTTP ${response.status}`);
+      }
+
+      return response.json();
+    },
+    [userId, userName],
+  );
+
+  // Create session
+  const createSession = useCallback(async () => {
+    if (!sessionName.trim()) {
+      setError("Please enter a session name");
+      return;
+    }
+
+    setLoading(true);
+    setError("");
+
+    try {
+      const { session } = await apiCall("/api/collaboration/sessions", {
+        method: "POST",
+        body: JSON.stringify({
+          name: sessionName,
+          filename,
+          language,
+          initialCode: code,
+        }),
+      });
+
+      setCurrentSession(session);
+      setCode(session.document_content);
+      setIsCreatingSession(false);
+
+      // Copy session link
+      const sessionLink = `${window.location.origin}/collaborate?session=${session.id}`;
+      try {
+        await navigator.clipboard.writeText(sessionLink);
+        alert("Session link copied to clipboard!");
+      } catch {
+        prompt("Copy this session link:", sessionLink);
+      }
+
+      // Setup real-time subscriptions
+      setupRealtimeSubscriptions(session.id);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to create session");
+    } finally {
+      setLoading(false);
+    }
+  }, [sessionName, filename, language, code, apiCall]);
+
+  // Join session
+  const joinSession = useCallback(async () => {
+    if (!joinSessionId.trim()) {
+      setError("Please enter a session ID");
+      return;
+    }
+
+    setLoading(true);
+    setError("");
+
+    try {
+      const { session } = await apiCall("/api/collaboration/join", {
+        method: "POST",
+        body: JSON.stringify({
+          sessionId: joinSessionId,
+          userName,
+        }),
+      });
+
+      setCurrentSession(session);
+      setCode(session.document_content);
+      setFilename(session.document_filename);
+      setLanguage(session.document_language);
+      setIsJoiningSession(false);
+
+      // Setup real-time subscriptions
+      setupRealtimeSubscriptions(session.id);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to join session");
+    } finally {
+      setLoading(false);
+    }
+  }, [joinSessionId, userName, apiCall]);
+
+  // Leave session
+  const leaveSession = useCallback(async () => {
+    if (!currentSession) return;
+
+    try {
+      await apiCall(`/api/collaboration/join?sessionId=${currentSession.id}`, {
+        method: "DELETE",
+      });
+    } catch (err) {
+      console.error("Error leaving session:", err);
+    }
+
+    // Cleanup subscriptions
+    if (subscriptionRef.current) {
+      subscriptionRef.current.unsubscribe();
+      subscriptionRef.current = null;
+    }
+
+    setCurrentSession(null);
+    setCode("");
+    setAnalysisResults([]);
+    setSelectedResult(null);
+    setComments([]);
+  }, [currentSession, apiCall]);
+
+  // Setup real-time subscriptions
+  const setupRealtimeSubscriptions = useCallback(
+    (sessionId: string) => {
+      // Subscribe to session changes
+      const channel = supabase
+        .channel("collaboration")
+        .on(
+          "postgres_changes",
+          {
+            event: "*",
+            schema: "public",
+            table: "collaboration_sessions",
+            filter: `id=eq.${sessionId}`,
+          },
+          (payload) => {
+            if (payload.eventType === "UPDATE") {
+              setCurrentSession((prev) =>
+                prev ? { ...prev, ...payload.new } : null,
+              );
+              setCode(payload.new.document_content);
+            }
+          },
+        )
+        .on(
+          "postgres_changes",
+          {
+            event: "*",
+            schema: "public",
+            table: "collaboration_participants",
+            filter: `session_id=eq.${sessionId}`,
+          },
+          (payload) => {
+            // Update participants list
+            if (currentSession) {
+              setCurrentSession((prev) => {
+                if (!prev) return null;
+                const participants = [...prev.participants];
+                const index = participants.findIndex(
+                  (p) => p.user_id === payload.new?.user_id,
+                );
+
+                if (payload.eventType === "INSERT" && index === -1) {
+                  participants.push(payload.new);
+                } else if (payload.eventType === "UPDATE" && index !== -1) {
+                  participants[index] = payload.new;
+                } else if (payload.eventType === "DELETE") {
+                  participants.splice(index, 1);
+                }
+
+                return { ...prev, participants };
+              });
+            }
+          },
+        )
+        .on(
+          "postgres_changes",
+          {
+            event: "INSERT",
+            schema: "public",
+            table: "collaboration_comments",
+            filter: `session_id=eq.${sessionId}`,
+          },
+          (payload) => {
+            setComments((prev) => [...prev, payload.new]);
+          },
+        )
+        .on(
+          "postgres_changes",
+          {
+            event: "INSERT",
+            schema: "public",
+            table: "collaboration_analysis",
+            filter: `session_id=eq.${sessionId}`,
+          },
+          (payload) => {
+            // Add new analysis result
+            const newResult: AnalysisResult = {
+              id: payload.new.id,
+              success: payload.new.success,
+              dryRun: payload.new.dry_run,
+              layers: payload.new.layers_executed,
+              originalCode: payload.new.input_code,
+              transformed: payload.new.output_code,
+              totalExecutionTime: payload.new.execution_time,
+              successfulLayers: payload.new.layers_executed.length,
+              analysis: payload.new.analysis_results,
+              triggeredBy: payload.new.triggered_by,
+              timestamp: payload.new.created_at,
+              error: payload.new.error_message,
+            };
+
+            setAnalysisResults((prev) => [newResult, ...prev]);
+            setSelectedResult(newResult);
+          },
+        );
+
+      channel.subscribe();
+      subscriptionRef.current = channel;
+    },
+    [currentSession],
+  );
+
+  // Run analysis
+  const runAnalysis = useCallback(
+    async (customLayers?: number[], customDryRun?: boolean) => {
+      if (!currentSession || !code.trim()) {
+        setError("No code to analyze");
+        return;
+      }
+
+      const layers =
+        customLayers || selectedLayers.length > 0 ? selectedLayers : undefined;
+      const isDryRun = customDryRun !== undefined ? customDryRun : dryRun;
+
+      setIsAnalyzing(true);
+      setError("");
+
+      try {
+        const { result } = await apiCall("/api/collaboration/analyze", {
+          method: "POST",
+          body: JSON.stringify({
+            sessionId: currentSession.id,
+            layers,
+            dryRun: isDryRun,
+          }),
+        });
+
+        // Result will be received via real-time subscription
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Analysis failed");
+      } finally {
+        setIsAnalyzing(false);
+      }
+    },
+    [currentSession, code, selectedLayers, dryRun, apiCall],
+  );
+
+  // Quick analysis presets
+  const quickAnalysis = {
+    "Quick Scan": () => runAnalysis([1, 2, 3], true),
+    "Full Analysis": () => runAnalysis([1, 2, 3, 4, 5, 6], true),
+    "Component Focus": () => runAnalysis([3, 6], true),
+    "Next.js Focus": () => runAnalysis([4, 5], true),
+    "Auto-Detect": () => runAnalysis(undefined, true),
+  };
+
+  // Handle code changes
+  const handleCodeChange = useCallback(
+    (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+      const newCode = e.target.value;
+      setCode(newCode);
+
+      // TODO: Implement real-time operational transforms here
+      // For now, we'll just update locally
+    },
+    [],
+  );
+
+  // Add comment/chat
+  const addComment = useCallback(async () => {
+    if (!newComment.trim() || !currentSession) return;
+
+    try {
+      await apiCall("/api/collaboration/comments", {
+        method: "POST",
+        body: JSON.stringify({
+          sessionId: currentSession.id,
+          content: newComment,
+          lineNumber: 0,
+          commentType: "chat",
+        }),
+      });
+
+      setNewComment("");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to add comment");
+    }
+  }, [newComment, currentSession, apiCall]);
+
+  // User setup screen
   if (!userSetup) {
     return (
-      <div
-        style={{
-          minHeight: "100vh",
-          background: "#000000",
-          color: "#ffffff",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          fontFamily: "Inter, system-ui, sans-serif",
-        }}
-      >
-        <div
-          style={{
-            background:
-              "linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 50%, rgba(0, 0, 0, 0.9) 100%)",
-            border: "1px solid rgba(255, 255, 255, 0.15)",
-            borderRadius: "16px",
-            padding: "3rem",
-            maxWidth: "500px",
-            width: "90%",
-            textAlign: "center",
-            boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3)",
-          }}
-        >
-          <h1
-            style={{
-              fontSize: "2.5rem",
-              fontWeight: 900,
-              marginBottom: "1rem",
-              color: "#ffffff",
-            }}
-          >
-            NeuroLint Pro Collaborate
-          </h1>
+      <div className="onboarding-section">
+        <div className="onboarding-container">
+          <div className="onboarding-content">
+            <div className="onboarding-card">
+              <h1 className="onboarding-title">NeuroLint Pro Collaborate</h1>
 
-          <p
-            style={{
-              fontSize: "1.1rem",
-              color: "rgba(255, 255, 255, 0.8)",
-              marginBottom: "2rem",
-              lineHeight: 1.6,
-            }}
-          >
-            Real-time collaborative code editing with live NeuroLint Pro
-            analysis
-          </p>
+              <p
+                style={{
+                  fontSize: "1.1rem",
+                  color: "rgba(255, 255, 255, 0.8)",
+                  marginBottom: "2rem",
+                  lineHeight: 1.6,
+                  textAlign: "center",
+                }}
+              >
+                Real-time collaborative code editing with live NeuroLint Pro
+                analysis
+              </p>
 
-          <div style={{ marginBottom: "2rem" }}>
-            <label
-              style={{
-                display: "block",
-                fontSize: "0.875rem",
-                fontWeight: 500,
-                color: "rgba(255, 255, 255, 0.9)",
-                marginBottom: "0.5rem",
-                textAlign: "left",
-              }}
-            >
-              Your Name
-            </label>
-            <input
-              type="text"
-              value={userName}
-              onChange={(e) => setUserName(e.target.value)}
-              placeholder="Enter your name"
-              style={{
-                width: "100%",
-                padding: "0.875rem",
-                background: "rgba(255, 255, 255, 0.08)",
-                border: "1px solid rgba(255, 255, 255, 0.15)",
-                borderRadius: "8px",
-                color: "#ffffff",
-                fontSize: "1rem",
-                transition: "border-color 0.2s ease",
-              }}
-              onFocus={(e) => {
-                e.target.style.borderColor = "rgba(33, 150, 243, 0.4)";
-              }}
-              onBlur={(e) => {
-                e.target.style.borderColor = "rgba(255, 255, 255, 0.15)";
-              }}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && userName.trim()) {
-                  setUserSetup(true);
-                }
-              }}
-            />
+              <div style={{ marginBottom: "2rem" }}>
+                <label
+                  style={{
+                    display: "block",
+                    fontSize: "0.875rem",
+                    fontWeight: 500,
+                    color: "rgba(255, 255, 255, 0.9)",
+                    marginBottom: "0.5rem",
+                  }}
+                >
+                  Your Name
+                </label>
+                <input
+                  type="text"
+                  value={userName}
+                  onChange={(e) => setUserName(e.target.value)}
+                  placeholder="Enter your name"
+                  style={{
+                    width: "100%",
+                    padding: "0.875rem 1rem",
+                    background: "rgba(255, 255, 255, 0.05)",
+                    border: "1px solid rgba(255, 255, 255, 0.15)",
+                    borderRadius: "8px",
+                    color: "#ffffff",
+                    fontSize: "1rem",
+                    outline: "none",
+                    transition: "all 0.2s ease",
+                  }}
+                  onFocus={(e) => {
+                    e.target.style.borderColor = "rgba(33, 150, 243, 0.4)";
+                    e.target.style.boxShadow =
+                      "0 0 12px rgba(33, 150, 243, 0.2)";
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.borderColor = "rgba(255, 255, 255, 0.15)";
+                    e.target.style.boxShadow = "none";
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && userName.trim()) {
+                      handleUserSetup();
+                    }
+                  }}
+                />
+              </div>
+
+              {error && (
+                <div
+                  style={{
+                    background: "rgba(229, 62, 62, 0.12)",
+                    border: "1px solid rgba(229, 62, 62, 0.4)",
+                    borderRadius: "6px",
+                    padding: "0.75rem",
+                    marginBottom: "1rem",
+                    color: "#e53e3e",
+                    fontSize: "0.875rem",
+                  }}
+                >
+                  {error}
+                </div>
+              )}
+
+              <button
+                onClick={handleUserSetup}
+                disabled={!userName.trim() || loading}
+                className="onboarding-btn primary"
+                style={{
+                  width: "100%",
+                  padding: "1rem 2rem",
+                  background:
+                    userName.trim() && !loading
+                      ? "linear-gradient(135deg, rgba(33, 150, 243, 0.2) 0%, rgba(33, 150, 243, 0.15) 50%, rgba(255, 255, 255, 0.1) 100%)"
+                      : "rgba(255, 255, 255, 0.05)",
+                  border: `1px solid ${userName.trim() && !loading ? "rgba(33, 150, 243, 0.4)" : "rgba(255, 255, 255, 0.15)"}`,
+                  borderRadius: "8px",
+                  color:
+                    userName.trim() && !loading
+                      ? "#2196f3"
+                      : "rgba(255, 255, 255, 0.5)",
+                  fontSize: "1rem",
+                  fontWeight: 600,
+                  cursor:
+                    userName.trim() && !loading ? "pointer" : "not-allowed",
+                  transition: "all 0.2s ease",
+                  boxShadow:
+                    userName.trim() && !loading
+                      ? "0 8px 32px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 0 12px rgba(33, 150, 243, 0.2)"
+                      : "none",
+                }}
+              >
+                {loading ? "Setting up..." : "Continue"}
+              </button>
+            </div>
           </div>
-
-          <button
-            onClick={() => setUserSetup(true)}
-            disabled={!userName.trim()}
-            style={{
-              width: "100%",
-              padding: "1rem 2rem",
-              background: userName.trim()
-                ? "rgba(33, 150, 243, 0.12)"
-                : "rgba(255, 255, 255, 0.05)",
-              border: `1px solid ${userName.trim() ? "rgba(33, 150, 243, 0.4)" : "rgba(255, 255, 255, 0.15)"}`,
-              borderRadius: "8px",
-              color: userName.trim() ? "#2196f3" : "rgba(255, 255, 255, 0.5)",
-              fontSize: "1rem",
-              fontWeight: 600,
-              cursor: userName.trim() ? "pointer" : "not-allowed",
-              transition: "all 0.2s ease",
-            }}
-          >
-            Continue
-          </button>
         </div>
       </div>
     );
   }
 
-  if (!sessionId) {
+  // Session lobby screen
+  if (!currentSession) {
     return (
       <div
         style={{
@@ -483,6 +654,29 @@ export default function CollaboratePage() {
           </p>
         </div>
 
+        {/* Error display */}
+        {error && (
+          <div
+            style={{
+              maxWidth: "800px",
+              margin: "1rem auto",
+              padding: "0 2rem",
+            }}
+          >
+            <div
+              style={{
+                background: "rgba(229, 62, 62, 0.12)",
+                border: "1px solid rgba(229, 62, 62, 0.4)",
+                borderRadius: "8px",
+                padding: "1rem",
+                color: "#e53e3e",
+              }}
+            >
+              {error}
+            </div>
+          </div>
+        )}
+
         {/* Main Content */}
         <div
           style={{
@@ -503,16 +697,6 @@ export default function CollaboratePage() {
               borderRadius: "20px",
               padding: "2rem",
               transition: "all 0.3s ease",
-              cursor: "pointer",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = "translateY(-4px)";
-              e.currentTarget.style.boxShadow =
-                "0 8px 32px rgba(33, 150, 243, 0.15)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = "translateY(0)";
-              e.currentTarget.style.boxShadow = "none";
             }}
           >
             <div
@@ -560,7 +744,7 @@ export default function CollaboratePage() {
                   type="text"
                   value={sessionName}
                   onChange={(e) => setSessionName(e.target.value)}
-                  placeholder="Session name (optional)"
+                  placeholder="Session name"
                   style={{
                     width: "100%",
                     padding: "0.75rem",
@@ -569,29 +753,47 @@ export default function CollaboratePage() {
                     borderRadius: "6px",
                     color: "#ffffff",
                     marginBottom: "1rem",
+                    outline: "none",
+                  }}
+                />
+                <input
+                  type="text"
+                  value={filename}
+                  onChange={(e) => setFilename(e.target.value)}
+                  placeholder="Filename (e.g., component.tsx)"
+                  style={{
+                    width: "100%",
+                    padding: "0.75rem",
+                    background: "rgba(255, 255, 255, 0.08)",
+                    border: "1px solid rgba(255, 255, 255, 0.15)",
+                    borderRadius: "6px",
+                    color: "#ffffff",
+                    marginBottom: "1rem",
+                    outline: "none",
                   }}
                 />
                 <div style={{ display: "flex", gap: "0.5rem" }}>
                   <button
                     onClick={createSession}
+                    disabled={loading}
                     style={{
                       flex: 1,
                       padding: "0.75rem",
-                      background:
-                        "linear-gradient(135deg, rgba(33, 150, 243, 0.2) 0%, rgba(33, 150, 243, 0.15) 50%, rgba(255, 255, 255, 0.1) 100%)",
-                      border: "1px solid rgba(33, 150, 243, 0.4)",
+                      background: loading
+                        ? "rgba(255, 255, 255, 0.05)"
+                        : "linear-gradient(135deg, rgba(33, 150, 243, 0.2) 0%, rgba(33, 150, 243, 0.15) 50%, rgba(255, 255, 255, 0.1) 100%)",
+                      border: `1px solid ${loading ? "rgba(255, 255, 255, 0.15)" : "rgba(33, 150, 243, 0.4)"}`,
                       borderRadius: "6px",
-                      color: "#ffffff",
+                      color: loading ? "rgba(255, 255, 255, 0.5)" : "#ffffff",
                       fontWeight: 600,
-                      cursor: "pointer",
-                      boxShadow:
-                        "0 8px 32px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 0 12px rgba(33, 150, 243, 0.2)",
+                      cursor: loading ? "not-allowed" : "pointer",
                     }}
                   >
-                    Create
+                    {loading ? "Creating..." : "Create"}
                   </button>
                   <button
                     onClick={() => setIsCreatingSession(false)}
+                    disabled={loading}
                     style={{
                       flex: 1,
                       padding: "0.75rem",
@@ -599,7 +801,7 @@ export default function CollaboratePage() {
                       border: "1px solid rgba(255, 255, 255, 0.15)",
                       borderRadius: "6px",
                       color: "rgba(255, 255, 255, 0.7)",
-                      cursor: "pointer",
+                      cursor: loading ? "not-allowed" : "pointer",
                     }}
                   >
                     Cancel
@@ -609,30 +811,22 @@ export default function CollaboratePage() {
             ) : (
               <button
                 onClick={() => setIsCreatingSession(true)}
+                disabled={loading}
                 style={{
                   width: "100%",
                   padding: "1rem",
-                  background:
-                    "linear-gradient(135deg, rgba(33, 150, 243, 0.2) 0%, rgba(33, 150, 243, 0.15) 50%, rgba(255, 255, 255, 0.1) 100%)",
-                  border: "1px solid rgba(33, 150, 243, 0.4)",
+                  background: loading
+                    ? "rgba(255, 255, 255, 0.05)"
+                    : "linear-gradient(135deg, rgba(33, 150, 243, 0.2) 0%, rgba(33, 150, 243, 0.15) 50%, rgba(255, 255, 255, 0.1) 100%)",
+                  border: `1px solid ${loading ? "rgba(255, 255, 255, 0.15)" : "rgba(33, 150, 243, 0.4)"}`,
                   borderRadius: "8px",
-                  color: "#ffffff",
+                  color: loading ? "rgba(255, 255, 255, 0.5)" : "#ffffff",
                   fontSize: "1rem",
                   fontWeight: 600,
-                  cursor: "pointer",
-                  transition: "all 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
-                  boxShadow:
-                    "0 8px 32px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 0 12px rgba(33, 150, 243, 0.2)",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = "translateY(-2px)";
-                  e.currentTarget.style.boxShadow =
-                    "0 8px 32px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 0 16px rgba(33, 150, 243, 0.3)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = "translateY(0)";
-                  e.currentTarget.style.boxShadow =
-                    "0 8px 32px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 0 12px rgba(33, 150, 243, 0.2)";
+                  cursor: loading ? "not-allowed" : "pointer",
+                  boxShadow: loading
+                    ? "none"
+                    : "0 8px 32px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 0 12px rgba(33, 150, 243, 0.2)",
                 }}
               >
                 Start New Session
@@ -649,16 +843,6 @@ export default function CollaboratePage() {
               borderRadius: "20px",
               padding: "2rem",
               transition: "all 0.3s ease",
-              cursor: "pointer",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = "translateY(-4px)";
-              e.currentTarget.style.boxShadow =
-                "0 8px 32px rgba(76, 175, 80, 0.15)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = "translateY(0)";
-              e.currentTarget.style.boxShadow = "none";
             }}
           >
             <div
@@ -715,34 +899,41 @@ export default function CollaboratePage() {
                     borderRadius: "6px",
                     color: "#ffffff",
                     marginBottom: "1rem",
+                    outline: "none",
                   }}
                 />
                 <div style={{ display: "flex", gap: "0.5rem" }}>
                   <button
                     onClick={joinSession}
-                    disabled={!joinSessionId.trim()}
+                    disabled={!joinSessionId.trim() || loading}
                     style={{
                       flex: 1,
                       padding: "0.75rem",
-                      background: joinSessionId.trim()
-                        ? "rgba(76, 175, 80, 0.12)"
-                        : "rgba(255, 255, 255, 0.05)",
-                      border: `1px solid ${joinSessionId.trim() ? "rgba(76, 175, 80, 0.4)" : "rgba(255, 255, 255, 0.15)"}`,
+                      background:
+                        joinSessionId.trim() && !loading
+                          ? "rgba(76, 175, 80, 0.12)"
+                          : "rgba(255, 255, 255, 0.05)",
+                      border: `1px solid ${joinSessionId.trim() && !loading ? "rgba(76, 175, 80, 0.4)" : "rgba(255, 255, 255, 0.15)"}`,
                       borderRadius: "6px",
-                      color: joinSessionId.trim()
-                        ? "#4caf50"
-                        : "rgba(255, 255, 255, 0.5)",
+                      color:
+                        joinSessionId.trim() && !loading
+                          ? "#4caf50"
+                          : "rgba(255, 255, 255, 0.5)",
                       fontWeight: 600,
-                      cursor: joinSessionId.trim() ? "pointer" : "not-allowed",
+                      cursor:
+                        joinSessionId.trim() && !loading
+                          ? "pointer"
+                          : "not-allowed",
                     }}
                   >
-                    Join
+                    {loading ? "Joining..." : "Join"}
                   </button>
                   <button
                     onClick={() => {
                       setIsJoiningSession(false);
                       setJoinSessionId("");
                     }}
+                    disabled={loading}
                     style={{
                       flex: 1,
                       padding: "0.75rem",
@@ -750,7 +941,7 @@ export default function CollaboratePage() {
                       border: "1px solid rgba(255, 255, 255, 0.15)",
                       borderRadius: "6px",
                       color: "rgba(255, 255, 255, 0.7)",
-                      cursor: "pointer",
+                      cursor: loading ? "not-allowed" : "pointer",
                     }}
                   >
                     Cancel
@@ -760,25 +951,20 @@ export default function CollaboratePage() {
             ) : (
               <button
                 onClick={() => setIsJoiningSession(true)}
+                disabled={loading}
                 style={{
                   width: "100%",
                   padding: "1rem",
-                  background: "rgba(76, 175, 80, 0.12)",
-                  border: "1px solid rgba(76, 175, 80, 0.4)",
+                  background: loading
+                    ? "rgba(255, 255, 255, 0.05)"
+                    : "rgba(76, 175, 80, 0.12)",
+                  border: `1px solid ${loading ? "rgba(255, 255, 255, 0.15)" : "rgba(76, 175, 80, 0.4)"}`,
                   borderRadius: "8px",
-                  color: "#4caf50",
+                  color: loading ? "rgba(255, 255, 255, 0.5)" : "#4caf50",
                   fontSize: "1rem",
                   fontWeight: 600,
-                  cursor: "pointer",
+                  cursor: loading ? "not-allowed" : "pointer",
                   transition: "all 0.2s ease",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = "rgba(76, 175, 80, 0.2)";
-                  e.currentTarget.style.borderColor = "rgba(76, 175, 80, 0.6)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = "rgba(76, 175, 80, 0.12)";
-                  e.currentTarget.style.borderColor = "rgba(76, 175, 80, 0.4)";
                 }}
               >
                 Join Existing Session
@@ -786,163 +972,224 @@ export default function CollaboratePage() {
             )}
           </div>
         </div>
-
-        {/* Features */}
-        <div
-          style={{
-            maxWidth: "1200px",
-            margin: "0 auto",
-            padding: "2rem",
-            borderTop: "1px solid rgba(255, 255, 255, 0.1)",
-          }}
-        >
-          <h2
-            style={{
-              textAlign: "center",
-              fontSize: "2rem",
-              fontWeight: 700,
-              marginBottom: "3rem",
-              color: "#ffffff",
-            }}
-          >
-            Collaboration Features
-          </h2>
-
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
-              gap: "2rem",
-            }}
-          >
-            {[
-              {
-                icon: "→",
-                title: "Real-time Editing",
-                description:
-                  "See changes instantly with live cursors and selections",
-              },
-              {
-                icon: "⚡",
-                title: "Live NeuroLint Pro",
-                description:
-                  "Run collaborative code analysis and fixes in real-time",
-              },
-              {
-                icon: "↔",
-                title: "Comments & Chat",
-                description: "Add contextual comments and chat with your team",
-              },
-              {
-                icon: "+",
-                title: "Conflict Resolution",
-                description:
-                  "Advanced operational transforms prevent editing conflicts",
-              },
-            ].map((feature, index) => (
-              <div
-                key={index}
-                style={{
-                  padding: "1.5rem",
-                  background: "rgba(255, 255, 255, 0.03)",
-                  border: "1px solid rgba(255, 255, 255, 0.1)",
-                  borderRadius: "12px",
-                  textAlign: "center",
-                }}
-              >
-                <div style={{ fontSize: "2rem", marginBottom: "1rem" }}>
-                  {feature.icon}
-                </div>
-                <h3
-                  style={{
-                    fontSize: "1.1rem",
-                    fontWeight: 600,
-                    marginBottom: "0.5rem",
-                    color: "#ffffff",
-                  }}
-                >
-                  {feature.title}
-                </h3>
-                <p
-                  style={{
-                    color: "rgba(255, 255, 255, 0.7)",
-                    fontSize: "0.9rem",
-                    lineHeight: 1.5,
-                  }}
-                >
-                  {feature.description}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
       </div>
     );
   }
 
+  // Main collaboration interface
   return (
-    <div style={{ display: "flex", height: "100vh" }}>
-      {/* Main Editor */}
-      <div style={{ flex: 1 }}>
-        <CollaborativeEditor
-          sessionId={sessionId}
-          initialCode={code}
-          filename={filename}
-          userData={userData}
-          onCodeChange={setCode}
-          onSave={(code) => {
-            console.log("Saving code:", code);
-            // Implement save logic
-          }}
-        />
-      </div>
-
-      {/* Chat Sidebar */}
-      {showChat && (
-        <div
-          style={{
-            width: "350px",
-            borderLeft: "1px solid rgba(255, 255, 255, 0.1)",
-            background: "rgba(255, 255, 255, 0.02)",
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
-          {/* Chat Header */}
-          <div
+    <div
+      style={{
+        background: "#000000",
+        color: "#ffffff",
+        minHeight: "100vh",
+        fontFamily: "Inter, system-ui, sans-serif",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
+      {/* Header */}
+      <div
+        style={{
+          borderBottom: "1px solid rgba(255, 255, 255, 0.1)",
+          padding: "1rem 2rem",
+          background: "rgba(255, 255, 255, 0.02)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+          <h1
             style={{
-              padding: "1rem",
-              borderBottom: "1px solid rgba(255, 255, 255, 0.1)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
+              margin: 0,
+              fontSize: "1.25rem",
+              fontWeight: 600,
+              color: "#ffffff",
             }}
           >
-            <h3
+            {currentSession.name}
+          </h1>
+
+          <div
+            style={{
+              fontSize: "0.75rem",
+              color: "rgba(255, 255, 255, 0.6)",
+            }}
+          >
+            {currentSession.document_filename}
+          </div>
+
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "0.5rem",
+              padding: "0.25rem 0.75rem",
+              borderRadius: "4px",
+              background: "rgba(76, 175, 80, 0.12)",
+              border: "1px solid rgba(76, 175, 80, 0.3)",
+              fontSize: "0.75rem",
+              color: "#4caf50",
+            }}
+          >
+            <div
               style={{
-                margin: 0,
-                fontSize: "1rem",
-                fontWeight: 600,
-                color: "#ffffff",
+                width: "6px",
+                height: "6px",
+                borderRadius: "50%",
+                background: "#4caf50",
+              }}
+            />
+            {currentSession.participants?.filter((p) => p.is_active).length ||
+              0}{" "}
+            online
+          </div>
+        </div>
+
+        <div style={{ display: "flex", gap: "0.75rem" }}>
+          <button
+            onClick={() => runAnalysis([1, 2, 3], true)}
+            disabled={isAnalyzing || !code.trim()}
+            style={{
+              padding: "0.5rem 1rem",
+              background:
+                isAnalyzing || !code.trim()
+                  ? "rgba(255, 255, 255, 0.05)"
+                  : "linear-gradient(135deg, rgba(33, 150, 243, 0.2) 0%, rgba(33, 150, 243, 0.15) 50%, rgba(255, 255, 255, 0.1) 100%)",
+              border: `1px solid ${isAnalyzing || !code.trim() ? "rgba(255, 255, 255, 0.15)" : "rgba(33, 150, 243, 0.4)"}`,
+              borderRadius: "6px",
+              color:
+                isAnalyzing || !code.trim()
+                  ? "rgba(255, 255, 255, 0.5)"
+                  : "#ffffff",
+              fontSize: "0.875rem",
+              cursor: isAnalyzing || !code.trim() ? "not-allowed" : "pointer",
+              fontWeight: 600,
+            }}
+          >
+            {isAnalyzing ? "Analyzing..." : "Quick Analyze"}
+          </button>
+
+          <button
+            onClick={leaveSession}
+            style={{
+              padding: "0.5rem 1rem",
+              background: "rgba(229, 62, 62, 0.12)",
+              border: "1px solid rgba(229, 62, 62, 0.4)",
+              borderRadius: "6px",
+              color: "#e53e3e",
+              fontSize: "0.875rem",
+              cursor: "pointer",
+            }}
+          >
+            Leave
+          </button>
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div style={{ flex: 1, display: "flex" }}>
+        {/* Editor */}
+        <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+          <textarea
+            ref={editorRef}
+            value={code}
+            onChange={handleCodeChange}
+            placeholder="Start typing your React/TypeScript code..."
+            style={{
+              flex: 1,
+              width: "100%",
+              background: "transparent",
+              border: "none",
+              outline: "none",
+              resize: "none",
+              padding: "1.5rem",
+              fontSize: "14px",
+              lineHeight: "1.6",
+              fontFamily: "JetBrains Mono, Consolas, monospace",
+              color: "#ffffff",
+            }}
+          />
+
+          {/* Analysis Results */}
+          {selectedResult && (
+            <div
+              style={{
+                borderTop: "1px solid rgba(255, 255, 255, 0.1)",
+                padding: "1rem",
+                background: "rgba(255, 255, 255, 0.02)",
+                maxHeight: "200px",
+                overflowY: "auto",
               }}
             >
-              Team Chat
-            </h3>
-            <div style={{ display: "flex", gap: "0.5rem" }}>
-              <button
-                onClick={leaveSession}
+              <div
                 style={{
-                  padding: "0.5rem",
-                  background: "rgba(229, 62, 62, 0.12)",
-                  border: "1px solid rgba(229, 62, 62, 0.4)",
-                  borderRadius: "4px",
-                  color: "#e53e3e",
-                  cursor: "pointer",
-                  fontSize: "0.75rem",
+                  fontSize: "0.875rem",
+                  color: "rgba(255, 255, 255, 0.8)",
+                  marginBottom: "0.5rem",
                 }}
               >
-                Leave
-              </button>
+                Analysis by {selectedResult.triggeredByName || "Unknown"}:{" "}
+                {selectedResult.analysis?.detectedIssues?.length || 0} issues
+                found
+              </div>
+              {selectedResult.analysis?.detectedIssues?.map(
+                (issue: any, index: number) => (
+                  <div
+                    key={index}
+                    style={{
+                      padding: "0.5rem",
+                      marginBottom: "0.5rem",
+                      background: "rgba(255, 255, 255, 0.05)",
+                      borderRadius: "4px",
+                      fontSize: "0.8rem",
+                    }}
+                  >
+                    <div style={{ color: "#ff9800", fontWeight: 500 }}>
+                      {issue.type} ({issue.severity})
+                    </div>
+                    <div style={{ color: "rgba(255, 255, 255, 0.7)" }}>
+                      {issue.description}
+                    </div>
+                  </div>
+                ),
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* Chat Sidebar */}
+        {showChat && (
+          <div
+            style={{
+              width: "350px",
+              borderLeft: "1px solid rgba(255, 255, 255, 0.1)",
+              background: "rgba(255, 255, 255, 0.02)",
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
+            {/* Chat Header */}
+            <div
+              style={{
+                padding: "1rem",
+                borderBottom: "1px solid rgba(255, 255, 255, 0.1)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <h3
+                style={{
+                  margin: 0,
+                  fontSize: "1rem",
+                  fontWeight: 600,
+                  color: "#ffffff",
+                }}
+              >
+                Team Chat
+              </h3>
               <button
                 onClick={() => setShowChat(false)}
                 style={{
@@ -958,192 +1205,138 @@ export default function CollaboratePage() {
                 ×
               </button>
             </div>
-          </div>
 
-          {/* Messages */}
-          <div
-            ref={chatContainerRef}
-            style={{
-              flex: 1,
-              padding: "1rem",
-              overflowY: "auto",
-              display: "flex",
-              flexDirection: "column",
-              gap: "0.75rem",
-            }}
-          >
-            {chatMessages.length === 0 ? (
-              <div
-                style={{
-                  textAlign: "center",
-                  color: "rgba(255, 255, 255, 0.5)",
-                  fontSize: "0.875rem",
-                  fontStyle: "italic",
-                  marginTop: "2rem",
-                }}
-              >
-                No messages yet. Start the conversation!
-              </div>
-            ) : (
-              chatMessages.map((message) => (
-                <div
-                  key={message.id}
-                  style={{
-                    padding: "0.75rem",
-                    borderRadius: "8px",
-                    background:
-                      message.authorId === userData.id
-                        ? "rgba(33, 150, 243, 0.12)"
-                        : "rgba(255, 255, 255, 0.05)",
-                    border: `1px solid ${
-                      message.authorId === userData.id
-                        ? "rgba(33, 150, 243, 0.3)"
-                        : "rgba(255, 255, 255, 0.1)"
-                    }`,
-                    marginLeft: message.authorId === userData.id ? "2rem" : "0",
-                    marginRight:
-                      message.authorId === userData.id ? "0" : "2rem",
-                  }}
-                >
-                  <div
-                    style={{
-                      fontSize: "0.75rem",
-                      fontWeight: 500,
-                      color:
-                        message.authorId === userData.id
-                          ? "#2196f3"
-                          : "#ffffff",
-                      marginBottom: "0.25rem",
-                    }}
-                  >
-                    {message.author}
-                  </div>
-                  <div
-                    style={{
-                      fontSize: "0.875rem",
-                      color: "rgba(255, 255, 255, 0.9)",
-                      lineHeight: 1.4,
-                    }}
-                  >
-                    {message.content}
-                  </div>
-                  <div
-                    style={{
-                      fontSize: "0.75rem",
-                      color: "rgba(255, 255, 255, 0.5)",
-                      marginTop: "0.25rem",
-                    }}
-                  >
-                    {new Date(message.timestamp).toLocaleTimeString()}
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
-
-          {/* Message Input */}
-          <div
-            style={{
-              padding: "1rem",
-              borderTop: "1px solid rgba(255, 255, 255, 0.1)",
-              display: "flex",
-              gap: "0.5rem",
-            }}
-          >
-            <input
-              type="text"
-              value={newMessage}
-              onChange={(e) => setNewMessage(e.target.value)}
-              placeholder="Type a message..."
-              style={{
-                flex: 1,
-                padding: "0.75rem",
-                background: "rgba(255, 255, 255, 0.08)",
-                border: "1px solid rgba(255, 255, 255, 0.15)",
-                borderRadius: "6px",
-                color: "#ffffff",
-                fontSize: "0.875rem",
-              }}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && !e.shiftKey) {
-                  e.preventDefault();
-                  sendChatMessage();
-                }
-              }}
-            />
-            <button
-              onClick={sendChatMessage}
-              disabled={!newMessage.trim()}
-              style={{
-                padding: "0.75rem",
-                background: newMessage.trim()
-                  ? "rgba(33, 150, 243, 0.12)"
-                  : "rgba(255, 255, 255, 0.05)",
-                border: `1px solid ${newMessage.trim() ? "rgba(33, 150, 243, 0.4)" : "rgba(255, 255, 255, 0.15)"}`,
-                borderRadius: "6px",
-                color: newMessage.trim()
-                  ? "#2196f3"
-                  : "rgba(255, 255, 255, 0.5)",
-                cursor: newMessage.trim() ? "pointer" : "not-allowed",
-                fontSize: "0.875rem",
-              }}
-            >
-              Send
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Chat Toggle (when hidden) */}
-      {!showChat && (
-        <button
-          onClick={() => setShowChat(true)}
-          style={{
-            position: "fixed",
-            bottom: "2rem",
-            right: "2rem",
-            width: "56px",
-            height: "56px",
-            borderRadius: "28px",
-            background:
-              "linear-gradient(135deg, rgba(33, 150, 243, 0.2) 0%, rgba(33, 150, 243, 0.15) 50%, rgba(255, 255, 255, 0.1) 100%)",
-            border: "1px solid rgba(33, 150, 243, 0.4)",
-            color: "#ffffff",
-            boxShadow:
-              "0 8px 32px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 0 12px rgba(33, 150, 243, 0.2)",
-            fontSize: "1.25rem",
-            cursor: "pointer",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            boxShadow: "0 4px 16px rgba(0, 0, 0, 0.3)",
-            zIndex: 1000,
-          }}
-        >
-          ↔
-          {unreadCount > 0 && (
+            {/* Messages */}
             <div
               style={{
-                position: "absolute",
-                top: "-4px",
-                right: "-4px",
-                background: "#e53e3e",
-                color: "#ffffff",
-                borderRadius: "10px",
-                width: "20px",
-                height: "20px",
+                flex: 1,
+                padding: "1rem",
+                overflowY: "auto",
                 display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: "0.75rem",
-                fontWeight: 600,
+                flexDirection: "column",
+                gap: "0.75rem",
               }}
             >
-              {unreadCount > 9 ? "9+" : unreadCount}
+              {comments.length === 0 ? (
+                <div
+                  style={{
+                    textAlign: "center",
+                    color: "rgba(255, 255, 255, 0.5)",
+                    fontSize: "0.875rem",
+                    fontStyle: "italic",
+                    marginTop: "2rem",
+                  }}
+                >
+                  No messages yet. Start the conversation!
+                </div>
+              ) : (
+                comments.map((comment) => (
+                  <div
+                    key={comment.id}
+                    style={{
+                      padding: "0.75rem",
+                      borderRadius: "8px",
+                      background:
+                        comment.comment_type === "system"
+                          ? "rgba(255, 193, 7, 0.12)"
+                          : "rgba(255, 255, 255, 0.05)",
+                      border: `1px solid ${
+                        comment.comment_type === "system"
+                          ? "rgba(255, 193, 7, 0.3)"
+                          : "rgba(255, 255, 255, 0.1)"
+                      }`,
+                    }}
+                  >
+                    <div
+                      style={{
+                        fontSize: "0.75rem",
+                        fontWeight: 500,
+                        color:
+                          comment.comment_type === "system"
+                            ? "#ffc107"
+                            : "#ffffff",
+                        marginBottom: "0.25rem",
+                      }}
+                    >
+                      {comment.author_name}
+                    </div>
+                    <div
+                      style={{
+                        fontSize: "0.875rem",
+                        color: "rgba(255, 255, 255, 0.9)",
+                        lineHeight: 1.4,
+                      }}
+                    >
+                      {comment.content}
+                    </div>
+                    <div
+                      style={{
+                        fontSize: "0.75rem",
+                        color: "rgba(255, 255, 255, 0.5)",
+                        marginTop: "0.25rem",
+                      }}
+                    >
+                      {new Date(comment.created_at).toLocaleTimeString()}
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
-          )}
-        </button>
-      )}
+
+            {/* Message Input */}
+            <div
+              style={{
+                padding: "1rem",
+                borderTop: "1px solid rgba(255, 255, 255, 0.1)",
+                display: "flex",
+                gap: "0.5rem",
+              }}
+            >
+              <input
+                type="text"
+                value={newComment}
+                onChange={(e) => setNewComment(e.target.value)}
+                placeholder="Type a message..."
+                style={{
+                  flex: 1,
+                  padding: "0.75rem",
+                  background: "rgba(255, 255, 255, 0.08)",
+                  border: "1px solid rgba(255, 255, 255, 0.15)",
+                  borderRadius: "6px",
+                  color: "#ffffff",
+                  fontSize: "0.875rem",
+                  outline: "none",
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    addComment();
+                  }
+                }}
+              />
+              <button
+                onClick={addComment}
+                disabled={!newComment.trim()}
+                style={{
+                  padding: "0.75rem",
+                  background: newComment.trim()
+                    ? "rgba(33, 150, 243, 0.12)"
+                    : "rgba(255, 255, 255, 0.05)",
+                  border: `1px solid ${newComment.trim() ? "rgba(33, 150, 243, 0.4)" : "rgba(255, 255, 255, 0.15)"}`,
+                  borderRadius: "6px",
+                  color: newComment.trim()
+                    ? "#2196f3"
+                    : "rgba(255, 255, 255, 0.5)",
+                  cursor: newComment.trim() ? "pointer" : "not-allowed",
+                  fontSize: "0.875rem",
+                }}
+              >
+                Send
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
