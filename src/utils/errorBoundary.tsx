@@ -1,10 +1,6 @@
-import React from 'react';
+"use client";
 
-
-'use client';
-
-
-
+import React from "react";
 
 interface ErrorBoundaryState {
   hasError: boolean;
@@ -16,7 +12,10 @@ interface ErrorBoundaryProps {
   fallback?: React.ReactNode;
 }
 
-class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
+class ErrorBoundary extends React.Component<
+  ErrorBoundaryProps,
+  ErrorBoundaryState
+> {
   constructor(props: ErrorBoundaryProps) {
     super(props);
     this.state = { hasError: false };
@@ -27,16 +26,18 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    console.error('Error caught by boundary:', error, errorInfo);
+    console.error("Error caught by boundary:", error, errorInfo);
   }
 
   render() {
     if (this.state.hasError) {
-      return this.props.fallback || (
-        <div className="p-4 text-red-600 bg-red-50 rounded-lg">
-          <h2 className="text-lg font-semibold mb-2">Something went wrong</h2>
-          <p>Please refresh the page or try again later.</p>
-        </div>
+      return (
+        this.props.fallback || (
+          <div className="p-4 text-red-600 bg-red-50 rounded-lg">
+            <h2 className="text-lg font-semibold mb-2">Something went wrong</h2>
+            <p>Please refresh the page or try again later.</p>
+          </div>
+        )
       );
     }
 
