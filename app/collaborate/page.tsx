@@ -358,6 +358,21 @@ export default ExampleComponent;`,
             }
           } catch (sessionError) {
             console.warn("Session polling error:", sessionError.message);
+            // If session is lost, try to recreate our participant entry
+            if (sessionError.message.includes("Session not found")) {
+              console.log("Session lost, attempting to rejoin...");
+              try {
+                await apiCall("/api/collaboration/join", {
+                  method: "POST",
+                  body: JSON.stringify({
+                    sessionId: sessionId,
+                    userName: userName,
+                  }),
+                });
+              } catch (rejoinError) {
+                console.error("Failed to rejoin session:", rejoinError);
+              }
+            }
           }
 
           // Get comments
