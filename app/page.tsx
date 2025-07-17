@@ -155,24 +155,8 @@ export default function HomePage() {
     setOnboardingData((prev) => ({ ...prev, completedOnboarding: true }));
   };
 
-  // Layer 4 hydration safe rendering
-  if (!isHydrated) {
-    return (
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          minHeight: "100vh",
-          background: "#000000",
-          color: "#ffffff",
-          fontSize: "1rem",
-        }}
-      >
-        Loading...
-      </div>
-    );
-  }
+  // Layer 4 hydration safe rendering - render content immediately to prevent blank screen
+  // Use isHydrated for localStorage operations but always show content
 
   if (!onboardingData.completedOnboarding) {
     return (
