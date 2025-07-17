@@ -461,9 +461,48 @@ export default ExampleComponent;`,
           }),
         });
 
-        // Result will be received via real-time subscription
+        console.log("[RUN ANALYSIS] Got result:", result);
+
+        // Create formatted result for immediate display
+        if (result) {
+          const formattedResult: AnalysisResult = {
+            id: result.analysisId || `analysis_${Date.now()}`,
+            success: result.success || false,
+            dryRun: isDryRun,
+            layers: layers || result.analysis?.recommendedLayers || [],
+            originalCode: code,
+            transformed: result.transformed || code,
+            totalExecutionTime: result.totalExecutionTime || 0,
+            successfulLayers: (
+              layers ||
+              result.analysis?.recommendedLayers ||
+              []
+            ).length,
+            analysis: result.analysis || {
+              recommendedLayers: [],
+              detectedIssues: [],
+              confidence: 0,
+              estimatedImpact: {
+                level: "unknown",
+                description: "No analysis available",
+                estimatedFixTime: "unknown",
+              },
+            },
+            triggeredBy: userId,
+            triggeredByName: userName,
+            timestamp: new Date().toISOString(),
+            error: result.error || undefined,
+          };
+
+          // Immediately show the result
+          setSelectedResult(formattedResult);
+          console.log("[RUN ANALYSIS] Set selected result:", formattedResult);
+        }
+
+        // Result will also be received via real-time subscription
       } catch (err) {
         setError(err instanceof Error ? err.message : "Analysis failed");
+        console.error("[RUN ANALYSIS] Error:", err);
       } finally {
         setIsAnalyzing(false);
       }
