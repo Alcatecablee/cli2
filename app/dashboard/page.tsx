@@ -3101,7 +3101,7 @@ export default function Dashboard() {
                                   Layer {layer.layerId}
                                 </span>
                                 <span className="layer-time">
-                                  {layer.executionTime}ms
+                                  {formatProcessingTime(layer.executionTime)}
                                 </span>
                                 <span
                                   className={`layer-status ${layer.success ? "success" : "failed"}`}
