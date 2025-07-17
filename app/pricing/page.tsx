@@ -565,80 +565,175 @@ export default function PricingPage() {
                   </div>
 
                   <div style={{ marginBottom: "2rem" }}>
-                    <ul
-                      style={{ listStyle: "none", padding: "0", margin: "0" }}
+                    {/* Key Features Grid */}
+                    <div
+                      style={{
+                        display: "grid",
+                        gridTemplateColumns: "1fr 1fr",
+                        gap: "0.75rem",
+                        marginBottom: "1.5rem",
+                      }}
                     >
-                      {plan.features.map((feature, index) => (
-                        <li
+                      {plan.features.slice(0, 6).map((feature, index) => (
+                        <div
                           key={index}
                           style={{
+                            background: "rgba(255, 255, 255, 0.03)",
+                            border: "1px solid rgba(255, 255, 255, 0.08)",
+                            borderRadius: "8px",
+                            padding: "0.75rem",
                             display: "flex",
                             alignItems: "center",
-                            gap: "0.75rem",
-                            marginBottom: "0.75rem",
-                            color: "rgba(255, 255, 255, 0.9)",
-                            fontSize: "0.875rem",
+                            gap: "0.5rem",
+                            transition: "all 0.3s ease",
+                          }}
+                        >
+                          <div
+                            style={{
+                              width: "20px",
+                              height: "20px",
+                              background: "rgba(33, 150, 243, 0.2)",
+                              borderRadius: "50%",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              flexShrink: 0,
+                            }}
+                          >
+                            <span
+                              style={{
+                                color: "rgba(33, 150, 243, 0.9)",
+                                fontSize: "0.75rem",
+                                fontWeight: "600",
+                              }}
+                            >
+                              ✓
+                            </span>
+                          </div>
+                          <span
+                            style={{
+                              color: "rgba(255, 255, 255, 0.9)",
+                              fontSize: "0.8rem",
+                              fontWeight: "500",
+                              lineHeight: "1.3",
+                            }}
+                          >
+                            {feature}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Additional Features */}
+                    {plan.features.length > 6 && (
+                      <div
+                        style={{
+                          background: "rgba(255, 255, 255, 0.02)",
+                          border: "1px solid rgba(255, 255, 255, 0.05)",
+                          borderRadius: "12px",
+                          padding: "1rem",
+                          marginBottom: "1rem",
+                        }}
+                      >
+                        <h6
+                          style={{
+                            color: "rgba(255, 255, 255, 0.8)",
+                            fontSize: "0.8rem",
+                            fontWeight: "600",
+                            textTransform: "uppercase",
+                            letterSpacing: "0.5px",
+                            margin: "0 0 0.75rem 0",
+                          }}
+                        >
+                          Additional Features
+                        </h6>
+                        <div
+                          style={{
+                            display: "flex",
+                            flexWrap: "wrap",
+                            gap: "0.5rem",
+                          }}
+                        >
+                          {plan.features.slice(6).map((feature, index) => (
+                            <span
+                              key={index}
+                              style={{
+                                background: "rgba(255, 255, 255, 0.05)",
+                                color: "rgba(255, 255, 255, 0.8)",
+                                padding: "0.4rem 0.75rem",
+                                borderRadius: "6px",
+                                fontSize: "0.75rem",
+                                fontWeight: "500",
+                                border: "1px solid rgba(255, 255, 255, 0.1)",
+                              }}
+                            >
+                              {feature}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Limitations */}
+                    {plan.limitations && (
+                      <div
+                        style={{
+                          background: "rgba(255, 193, 7, 0.05)",
+                          border: "1px solid rgba(255, 193, 7, 0.15)",
+                          borderRadius: "8px",
+                          padding: "0.75rem",
+                        }}
+                      >
+                        <h6
+                          style={{
+                            color: "rgba(255, 193, 7, 0.9)",
+                            fontSize: "0.75rem",
+                            fontWeight: "600",
+                            textTransform: "uppercase",
+                            letterSpacing: "0.5px",
+                            margin: "0 0 0.5rem 0",
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "0.5rem",
                           }}
                         >
                           <span
                             style={{
-                              color: "rgba(33, 150, 243, 0.9)",
-                              fontWeight: "600",
-                              fontSize: "1rem",
+                              width: "16px",
+                              height: "16px",
+                              background: "rgba(255, 193, 7, 0.2)",
+                              borderRadius: "50%",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              fontSize: "0.6rem",
                             }}
                           >
-                            ✓
+                            !
                           </span>
-                          <span>{feature}</span>
-                        </li>
-                      ))}
-                    </ul>
-
-                    {plan.limitations && (
-                      <div style={{ marginTop: "1.5rem" }}>
-                        <h5
+                          Plan Limitations
+                        </h6>
+                        <div
                           style={{
-                            fontSize: "0.875rem",
-                            fontWeight: "600",
-                            color: "rgba(255, 255, 255, 0.7)",
-                            margin: "0 0 0.75rem 0",
-                            textTransform: "uppercase",
-                            letterSpacing: "0.5px",
-                          }}
-                        >
-                          Limitations:
-                        </h5>
-                        <ul
-                          style={{
-                            listStyle: "none",
-                            padding: "0",
-                            margin: "0",
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: "0.25rem",
                           }}
                         >
                           {plan.limitations.map((limitation, index) => (
-                            <li
+                            <span
                               key={index}
                               style={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: "0.75rem",
-                                marginBottom: "0.5rem",
-                                color: "rgba(255, 255, 255, 0.6)",
-                                fontSize: "0.8rem",
+                                color: "rgba(255, 255, 255, 0.7)",
+                                fontSize: "0.75rem",
+                                fontWeight: "400",
+                                lineHeight: "1.4",
                               }}
                             >
-                              <span
-                                style={{
-                                  color: "rgba(255, 255, 255, 0.4)",
-                                  fontSize: "0.875rem",
-                                }}
-                              >
-                                •
-                              </span>
-                              <span>{limitation}</span>
-                            </li>
+                              {limitation}
+                            </span>
                           ))}
-                        </ul>
+                        </div>
                       </div>
                     )}
                   </div>
