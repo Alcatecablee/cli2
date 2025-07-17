@@ -21,7 +21,14 @@ export async function GET(request: NextRequest) {
     const sessionId = searchParams.get("sessionId");
     const userId = request.headers.get("x-user-id");
 
+    console.log("[COLLAB GET] Request:", {
+      sessionId,
+      userId,
+      hasDataStore: !!dataStore,
+    });
+
     if (!userId) {
+      console.log("[COLLAB GET] No user ID provided");
       return NextResponse.json(
         { error: "Authentication required" },
         { status: 401 },
