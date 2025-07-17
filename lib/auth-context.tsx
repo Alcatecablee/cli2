@@ -208,6 +208,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         clearSession();
       }
     } finally {
+      console.log("[AUTH] checkSession setting loading to false");
       setLoading(false);
     }
   }, [clearSession]); // Include clearSession in dependencies
