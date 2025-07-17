@@ -865,23 +865,24 @@ body {
 }
 
 .metric-value {
-  color: rgba(255, 255, 255, 1);
+  color: rgb(33, 150, 243);
   font-family: "JetBrains Mono", "Fira Code", consolas, monospace;
-  font-size: 32px;
-  font-weight: 700;
-  margin-bottom: 8px;
+  font-size: 48px;
+  font-weight: 800;
+  margin-bottom: 16px;
+  text-shadow: 0 0 20px rgba(33, 150, 243, 0.3);
 }
 
 .metric-label {
-  color: rgba(255, 255, 255, 0.6);
-  font-size: 14px;
-  font-weight: 500;
-  letter-spacing: 0.5px;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 1px;
   text-transform: uppercase;
 }
 
 .operation-modes {
-  margin-bottom: 48px;
+  margin-bottom: 80px;
 }
 
 .mode-selector {
