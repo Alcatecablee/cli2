@@ -1537,33 +1537,7 @@ export default function Dashboard() {
           {dashboardState.activeSection === "bulk" && (
             <div className="tab-content">
               <ErrorBoundary>
-                <BulkProcessor
-                  onAnalysisComplete={(results) => {
-                    // Save bulk results to history
-                    results.forEach((result, index) => {
-                      if (result.success) {
-                        saveToHistory(
-                          result.filename || `bulk-file-${index}`,
-                          result,
-                          Array.isArray(dashboardState.selectedLayers)
-                            ? dashboardState.selectedLayers
-                            : [],
-                          result.metadata?.processingTimeMs || 0,
-                        );
-                      }
-                    });
-
-                    // Show summary
-                    const successCount = results.filter(
-                      (r) => r.success,
-                    ).length;
-                    alert(
-                      `Bulk processing complete! ${successCount}/${results.length} files processed successfully.`,
-                    );
-                  }}
-                  selectedLayers={dashboardState.selectedLayers}
-                  applyFixes={dashboardState.applyFixes}
-                />
+                <GitHubIntegration />
               </ErrorBoundary>
             </div>
           )}
