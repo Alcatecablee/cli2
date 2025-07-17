@@ -202,7 +202,7 @@ export const dataService = {
     projectData: Omit<Project, "id" | "user_id" | "created_at" | "updated_at">,
   ): Promise<Project | null> {
     try {
-      const client = await createAuthenticatedClient();
+      const client = createAuthenticatedClient();
       const { data, error } = await client
         .from("projects")
         .insert({
