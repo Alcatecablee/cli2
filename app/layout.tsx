@@ -33,7 +33,7 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body>
+      <body suppressHydrationWarning={true}>
         <ScrollToTop />
         <AuthProvider>{children}</AuthProvider>
         <Script
