@@ -1369,26 +1369,22 @@ body {
 }
 
 .sample-code-section {
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.08),
-    rgba(255, 255, 255, 0.04) 50%,
-    rgba(255, 255, 255, 0.02)
-  );
+  background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 20px;
-  padding: 40px 32px;
+  border-radius: 24px;
+  padding: 64px 40px;
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   animation: 0.8s ease-out 1.2s 1 normal both running slideinright;
+  backdrop-filter: blur(20px);
   box-shadow:
-    rgba(0, 0, 0, 0.2) 0px 8px 32px,
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    0 16px 64px rgba(0, 0, 0, 0.25),
+    inset 0 2px 0 rgba(255, 255, 255, 0.1);
 }
 
 .sample-code-section h3 {
-  font-size: 20px;
-  font-weight: 600;
-  margin-bottom: 16px;
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 24px;
   color: #fff;
 }
 
