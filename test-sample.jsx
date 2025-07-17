@@ -1,19 +1,19 @@
 const items = [
-  { id: 1, name: &quot;React Component&quot; },
-  { id: 2, name: &quot;Next.js App&quot; },
-  { id: 3, name: &quot;TypeScript Fix&quot; }
+  { id: 1, name: "React Component" },
+  { id: 2, name: "Next.js App" },
+  { id: 3, name: "TypeScript Fix" },
 ];
 
 function ItemList() {
   return (
     <ul>
-      {items.map(item =>
+      {items.map((item) => (
         <li>{item.name}</li>
-      )}
+      ))}
     </ul>
   );
 }
 
-console.log(&quot;Debug info&quot;);
+console.log("Debug info");
 
 export default ItemList;
