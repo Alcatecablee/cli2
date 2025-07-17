@@ -446,31 +446,6 @@ export default function HomePage() {
         padding: "2rem",
         textAlign: "center",
       }}
-    >
-      <h1 style={{ fontSize: "3rem", marginBottom: "2rem" }}>NeuroLint Pro</h1>
-      <p style={{ fontSize: "1.2rem", marginBottom: "2rem" }}>
-        Welcome to the Demo Experience!
-      </p>
-      <p style={{ color: "rgba(255,255,255,0.7)", marginBottom: "2rem" }}>
-        Your Setup: {onboardingData.projectType} •{" "}
-        {onboardingData.experienceLevel}
-      </p>
-      <button
-        onClick={() => {
-          setOnboardingData(getDefaultOnboardingState());
-          setOnboardingStep(0);
-        }}
-        style={{
-          padding: "0.75rem 2rem",
-          backgroundColor: "rgba(255,255,255,0.1)",
-          border: "1px solid rgba(255,255,255,0.2)",
-          borderRadius: "8px",
-          color: "#ffffff",
-          cursor: "pointer",
-        }}
-      >
-        Reset Onboarding
-      </button>
-    </div>
+    ></div>
   );
 }
