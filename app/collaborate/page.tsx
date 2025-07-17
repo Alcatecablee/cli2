@@ -220,7 +220,15 @@ export default function CollaboratePage() {
    */
   useEffect(() => {
     if (sessionId && userData.name) {
-      const ws = new WebSocket("ws://localhost:8080");
+      // Use environment-aware WebSocket URL
+      const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+      const host =
+        process.env.NODE_ENV === "production"
+          ? window.location.host
+          : "localhost:8080";
+      const wsUrl = `${protocol}//${host}`;
+
+      const ws = new WebSocket(wsUrl);
       chatWsRef.current = ws;
 
       ws.onopen = () => {
