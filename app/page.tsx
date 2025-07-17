@@ -179,11 +179,11 @@ export default function HomePage() {
       isHydrated,
       completedOnboarding: onboardingData.completedOnboarding,
       onboardingStep,
-      onboardingData,
+      onboardingData
     });
   }
 
-  // Load data from localStorage after hydration to prevent SSR mismatch
+    // Load data from localStorage after hydration to prevent SSR mismatch
   useEffect(() => {
     // Always set hydrated to true first to prevent infinite loading
     setIsHydrated(true);
@@ -227,7 +227,7 @@ export default function HomePage() {
     }
   }, []);
 
-  // Save onboarding data whenever it changes (but only after hydration and on client)
+    // Save onboarding data whenever it changes (but only after hydration and on client)
   useEffect(() => {
     if (isHydrated && typeof window !== "undefined") {
       saveOnboardingData(onboardingData);
@@ -666,7 +666,7 @@ function ImageGallery({ images }) {
     setOnboardingData((prev) => ({ ...prev, completedOnboarding: true }));
   };
 
-  // Reset onboarding function (useful for testing or user preference)
+    // Reset onboarding function (useful for testing or user preference)
   const resetOnboarding = () => {
     setOnboardingData({
       projectType: "",
@@ -1020,7 +1020,7 @@ function ImageGallery({ images }) {
         Skip to main content
       </a>
 
-      <main id="main-content" role="main">
+            <main id="main-content" role="main">
         {!isHydrated ? (
           /* Minimal loading state during hydration */
           <div
@@ -1035,40 +1035,31 @@ function ImageGallery({ images }) {
           >
             Loading...
           </div>
-        ) : !onboardingData.completedOnboarding ? (
+                        ) : !onboardingData.completedOnboarding ? (
           /* Onboarding Experience */
-          <section
+                    <section
             className="onboarding-section"
-            style={{
-              minHeight: "100vh",
-              background: "#000000",
-              color: "#ffffff",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
+            style={{ minHeight: "100vh", background: "#000000", color: "#ffffff", display: "flex", alignItems: "center", justifyContent: "center" }}
             aria-labelledby="onboarding-title"
           >
-            <div
-              className="onboarding-container"
-              style={{ width: "100%", maxWidth: "500px", margin: "0 auto" }}
-            >
-              <div className="onboarding-progress">
-                <div className="progress-bar">
+                        <div style={{ width: "100%", maxWidth: "500px", margin: "0 auto", padding: "2rem", backgroundColor: "rgba(255,255,255,0.1)", borderRadius: "16px" }}>
+              <div style={{ marginBottom: "2rem" }}>
+                <div style={{ height: "4px", backgroundColor: "rgba(255,255,255,0.2)", borderRadius: "2px", marginBottom: "1rem" }}>
                   <div
-                    className="progress-fill"
                     style={{
+                      height: "100%",
+                      backgroundColor: "#2196f3",
+                      borderRadius: "2px",
                       width: `${((onboardingStep + 1) / onboardingSteps.length) * 100}%`,
                     }}
                   ></div>
                 </div>
-                <div className="progress-text">
+                <div style={{ textAlign: "center", fontSize: "0.9rem", color: "rgba(255,255,255,0.7)" }}>
                   Step {onboardingStep + 1} of {onboardingSteps.length}
                 </div>
               </div>
 
-              <div className="onboarding-content">
-                <div className="onboarding-card">
+              <div style={{ textAlign: "center", padding: "2rem" }}>
                   {onboardingSteps[onboardingStep].type === "welcome" && (
                     <div className="onboarding-logo">
                       <img
