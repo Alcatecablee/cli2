@@ -1068,22 +1068,20 @@ body {
 }
 
 .execution-card.recommended {
-  background: rgba(33, 150, 243, 0.1);
-  border-color: rgb(33, 150, 243);
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.3);
 }
 
 .execution-card:hover {
   background: rgba(255, 255, 255, 0.08);
-  transform: translateY(-2px);
 }
 
 .card-indicator {
-  background: rgb(33, 150, 243);
+  background: rgba(255, 255, 255, 0.6);
   border-radius: 50%;
-  box-shadow: rgba(33, 150, 243, 0.5) 0px 0px 8px;
-  height: 8px;
+  height: 6px;
   margin-bottom: 16px;
-  width: 8px;
+  width: 6px;
 }
 
 .execution-card h5 {
