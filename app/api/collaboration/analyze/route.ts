@@ -176,10 +176,11 @@ export async function GET(request: NextRequest) {
 
     // Get analysis results for session
     const analyses = [];
-    for (const [key, analysis] of dataStore.collaborationAnalysis?.entries() ||
-      []) {
-      if (key.startsWith(`${sessionId}_`)) {
-        analyses.push(analysis);
+    if (dataStore.collaborationAnalysis) {
+      for (const [key, analysis] of dataStore.collaborationAnalysis.entries()) {
+        if (key.startsWith(`${sessionId}_`)) {
+          analyses.push(analysis);
+        }
       }
     }
 
@@ -189,6 +190,7 @@ export async function GET(request: NextRequest) {
         new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
     );
 
+    console.log("[ANALYZE GET] Returning analyses:", analyses.length);
     return NextResponse.json({ analyses });
   } catch (error) {
     console.error("Collaboration analyze GET error:", error);
