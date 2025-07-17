@@ -132,7 +132,7 @@ export const dataService = {
     limit = 50,
   ): Promise<AnalysisHistory[]> {
     try {
-      const client = await createAuthenticatedClient();
+      const client = createAuthenticatedClient();
       const { data, error } = await client
         .from("analysis_history")
         .select("*")
