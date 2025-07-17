@@ -11,8 +11,7 @@ const getNeuroLintEngine = async () => {
   if (
     typeof window === "undefined" &&
     (process.env.NEXT_PHASE === "phase-production-build" ||
-      process.env.NODE_ENV === "test" ||
-      !process.env.VERCEL_ENV)
+      process.env.NODE_ENV === "test")
   ) {
     console.log("Skipping engine import during build/test time");
     return null;
