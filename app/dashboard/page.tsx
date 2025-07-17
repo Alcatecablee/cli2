@@ -800,7 +800,7 @@ export default function Dashboard() {
   ]);
 
   // Show loading screen while checking authentication
-  if (authLoading) {
+  if (authLoading && !user) {
     return (
       <div className="onboarding-section">
         <div className="onboarding-container">
