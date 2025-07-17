@@ -173,6 +173,11 @@ export async function POST(request: NextRequest) {
     // Store participant in data store
     const participantKey = `${sessionId}_${userId}`;
     dataStore.collaborationParticipants.set(participantKey, participant);
+    console.log("[SESSION CREATE] Stored participant:", participantKey);
+    console.log(
+      "[SESSION CREATE] Total participants:",
+      dataStore.collaborationParticipants.size,
+    );
     const participantError = null;
 
     return NextResponse.json({
