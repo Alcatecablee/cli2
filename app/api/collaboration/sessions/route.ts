@@ -1,10 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
+import { dataStore } from "../../../../lib/data-store";
 
-const supabase = createClient(
-  process.env.SUPABASE_URL!,
-  process.env.SUPABASE_ANON_KEY!,
-);
+// Initialize collaboration data stores if not exists
+if (!dataStore.collaborationSessions) {
+  dataStore.collaborationSessions = new Map();
+  dataStore.collaborationParticipants = new Map();
+  dataStore.collaborationComments = new Map();
+  dataStore.collaborationAnalysis = new Map();
+}
 
 export async function GET(request: NextRequest) {
   try {
