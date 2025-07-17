@@ -655,6 +655,16 @@ function ImageGallery({ images }) {
     }
   };
 
+  // Add reset onboarding to window for easy testing (development only)
+  useEffect(() => {
+    if (
+      typeof window !== "undefined" &&
+      process.env.NODE_ENV === "development"
+    ) {
+      (window as any).resetOnboarding = resetOnboarding;
+    }
+  }, []);
+
   useEffect(() => {
     const typewriterEffect = () => {
       const currentFullText = texts[currentIndex];
