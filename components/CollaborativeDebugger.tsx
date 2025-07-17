@@ -659,7 +659,7 @@ export default function CollaborativeDebugger({
                       marginTop: "0.25rem",
                     }}
                   >
-                    {result.totalExecutionTime}ms • Layers:{" "}
+                    {formatProcessingTime(result.totalExecutionTime)} • Layers:{" "}
                     {result.layers?.join(", ") || "Auto"}
                   </div>
                 </div>
