@@ -928,35 +928,56 @@ body {
 }
 
 .mode-icon {
-  width: 32px;
-  height: 32px;
-  border-radius: 6px;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: linear-gradient(
+    135deg,
+    rgba(33, 150, 243, 0.2) 0%,
+    rgba(33, 150, 243, 0.15) 50%,
+    rgba(255, 255, 255, 0.1) 100%
+  );
+  border: 1px solid rgba(33, 150, 243, 0.3);
+  box-shadow: 0 0 16px rgba(33, 150, 243, 0.2);
 }
 
 .mode-icon.analysis {
-  background: rgba(255, 255, 255, 0.1);
+  background: linear-gradient(
+    135deg,
+    rgba(76, 175, 80, 0.2) 0%,
+    rgba(76, 175, 80, 0.15) 50%,
+    rgba(255, 255, 255, 0.1) 100%
+  );
+  border-color: rgba(76, 175, 80, 0.3);
+  box-shadow: 0 0 16px rgba(76, 175, 80, 0.2);
 }
 
 .mode-icon.transform {
-  background: rgba(255, 255, 255, 0.1);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 152, 0, 0.2) 0%,
+    rgba(255, 152, 0, 0.15) 50%,
+    rgba(255, 255, 255, 0.1) 100%
+  );
+  border-color: rgba(255, 152, 0, 0.3);
+  box-shadow: 0 0 16px rgba(255, 152, 0, 0.2);
 }
 
 .mode-info h4 {
-  font-size: 20px;
-  font-weight: 600;
-  margin-bottom: 4px;
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 8px;
   color: #fff;
 }
 
 .mode-info span {
-  color: rgba(255, 255, 255, 0.6);
-  font-size: 14px;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 16px;
+  font-weight: 500;
 }
 
 .layer-stack {
