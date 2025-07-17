@@ -105,7 +105,8 @@ export default function BulkProcessor({
       try {
         const code = await file.text();
 
-        const response = await fetch("/api/dashboard", {
+        // Use the correct API endpoint for bulk processing
+        const response = await fetch("/api/analyze", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -180,30 +181,30 @@ export default function BulkProcessor({
   const getStatusIcon = (status: string) => {
     switch (status) {
       case "pending":
-        return "●";
+        return "○";
       case "processing":
-        return "●";
+        return "◐";
       case "completed":
         return "●";
       case "error":
-        return "●";
+        return "✕";
       default:
-        return "●";
+        return "○";
     }
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
       case "pending":
-        return "#666666";
+        return "rgba(255, 255, 255, 0.5)";
       case "processing":
-        return "#ff9800";
+        return "rgba(33, 150, 243, 0.9)";
       case "completed":
-        return "#4caf50";
+        return "rgba(76, 175, 80, 0.9)";
       case "error":
-        return "#e53e3e";
+        return "rgba(229, 62, 62, 0.9)";
       default:
-        return "#666666";
+        return "rgba(255, 255, 255, 0.5)";
     }
   };
 
@@ -450,6 +451,7 @@ export default function BulkProcessor({
           font-weight: 500;
           cursor: pointer;
           transition: all 0.2s ease;
+          font-size: 0.875rem;
         }
 
         .btn:disabled {
@@ -473,7 +475,6 @@ export default function BulkProcessor({
             inset 0 1px 0 rgba(255, 255, 255, 0.1),
             0 0 12px rgba(33, 150, 243, 0.2);
           color: #ffffff;
-          font-size: 14px;
           font-weight: 500;
           text-transform: uppercase;
           letter-spacing: 0.5px;
@@ -495,13 +496,15 @@ export default function BulkProcessor({
         }
 
         .btn-secondary {
-          background: rgba(255, 255, 255, 0.1);
-          color: #ffffff;
-          border: 1px solid rgba(255, 255, 255, 0.2);
+          background: rgba(255, 255, 255, 0.05);
+          color: rgba(255, 255, 255, 0.9);
+          border: 1px solid rgba(255, 255, 255, 0.15);
         }
 
         .btn-secondary:hover:not(:disabled) {
-          background: rgba(255, 255, 255, 0.15);
+          background: rgba(255, 255, 255, 0.1);
+          border-color: rgba(255, 255, 255, 0.3);
+          transform: translateY(-2px);
         }
 
         .bulk-progress {
@@ -596,7 +599,7 @@ export default function BulkProcessor({
         .mini-progress-fill {
           width: 100%;
           height: 100%;
-          background: #ff9800;
+          background: rgba(33, 150, 243, 0.9);
           animation: indeterminate 2s infinite linear;
         }
 
@@ -623,7 +626,7 @@ export default function BulkProcessor({
 
         .file-error {
           font-size: 0.8rem;
-          color: #e53e3e;
+          color: rgba(229, 62, 62, 0.9);
           max-width: 150px;
           white-space: nowrap;
           overflow: hidden;
