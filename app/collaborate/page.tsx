@@ -394,7 +394,12 @@ export default function CollaboratePage() {
   // Run analysis
   const runAnalysis = useCallback(
     async (customLayers?: number[], customDryRun?: boolean) => {
+      console.log("[RUN ANALYSIS] Starting analysis...");
+      console.log("[RUN ANALYSIS] Current session:", currentSession?.id);
+      console.log("[RUN ANALYSIS] Code length:", code.length);
+
       if (!currentSession || !code.trim()) {
+        console.log("[RUN ANALYSIS] Missing session or code");
         setError("No code to analyze");
         return;
       }
