@@ -1533,20 +1533,85 @@ body {
 }
 
 @media (max-width: 480px) {
+  .nav-center {
+    gap: 12px;
+  }
+
+  .nav-link {
+    padding: 10px 16px;
+    min-height: 44px;
+  }
+
+  .platform-hero h3 {
+    font-size: 20px;
+  }
+
   .platform-metrics {
     grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .metric-card {
+    padding: 16px 12px;
+  }
+
+  .metric-value {
+    font-size: 20px;
+  }
+
+  .mode-option {
+    padding: 16px 20px;
+  }
+
+  .control-btn {
+    padding: 12px 16px;
+    font-size: 14px;
   }
 
   .layer-grid {
     grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  .layer-item {
+    padding: 12px 8px;
   }
 
   .layer-checkboxes {
     grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+  }
+
+  .layer-checkbox {
+    padding: 10px 8px;
   }
 
   .sample-buttons {
     grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .sample-btn {
+    padding: 12px 16px;
+    font-size: 14px;
+  }
+
+  .execution-card {
+    padding: 20px 16px;
+  }
+
+  .onboarding-card {
+    padding: 2rem 1.5rem;
+  }
+
+  .onboarding-title {
+    font-size: 1.75rem;
+  }
+
+  .onboarding-btn {
+    padding: 12px 20px;
+    font-size: 14px;
+    min-height: 48px;
   }
 }
 
