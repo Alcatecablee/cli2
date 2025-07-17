@@ -1311,6 +1311,15 @@ class SmartLayerSelector {
       { pattern: /&amp;/g, name: "HTML ampersand entities" },
       { pattern: /&lt;|&gt;/g, name: "HTML bracket entities" },
       { pattern: /&#36;|&amp;#36;/g, name: "HTML dollar sign entities" },
+      {
+        pattern: /&nbsp;|&copy;|&reg;|&trade;|&#39;|&apos;/g,
+        name: "HTML symbol entities",
+      },
+      {
+        pattern: /&ndash;|&mdash;|&hellip;/g,
+        name: "HTML punctuation entities",
+      },
+      { pattern: /&euro;|&pound;/g, name: "HTML currency entities" },
       { pattern: /console\.log\(/g, name: "Console.log usage" },
       { pattern: /\bvar\s+/g, name: "Var declarations" },
     ];
