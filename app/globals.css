@@ -1237,7 +1237,7 @@ body {
   margin: 0 auto;
   padding: 0 40px;
   display: grid;
-  gap: 80px;
+  gap: 48px;
   grid-template-columns: 1fr;
 }
 
@@ -1246,8 +1246,8 @@ body {
   background: rgba(255, 255, 255, 0.02);
   border: none;
   border-radius: 20px;
-  padding: 48px;
-  margin-bottom: 48px;
+  padding: 40px;
+  margin-bottom: 32px;
   backdrop-filter: blur(20px);
   box-shadow:
     0 16px 64px rgba(0, 0, 0, 0.25),
