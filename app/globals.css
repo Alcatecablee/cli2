@@ -1411,10 +1411,10 @@ body {
 .upload-area {
   background: rgba(255, 255, 255, 0.05);
   border: 2px dashed rgba(255, 255, 255, 0.25);
-  border-radius: 24px;
-  padding: 64px 40px;
+  border-radius: 20px;
+  padding: 48px 32px;
   text-align: center;
-  min-height: 320px;
+  min-height: 280px;
   display: flex;
   flex-direction: column;
   align-items: center;
