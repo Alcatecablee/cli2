@@ -134,6 +134,7 @@ export default function HomePage() {
   ];
 
   const handleOnboardingNext = (value?: string) => {
+    console.log("handleOnboardingNext called with value:", value);
     const currentStep = onboardingSteps[onboardingStep];
 
     if (currentStep.type === "select" && value) {
@@ -152,6 +153,7 @@ export default function HomePage() {
   };
 
   const skipOnboarding = () => {
+    console.log("skipOnboarding called");
     setOnboardingData((prev) => ({ ...prev, completedOnboarding: true }));
   };
 
