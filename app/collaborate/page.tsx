@@ -64,10 +64,8 @@ interface Comment {
   created_at: string;
 }
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-);
+// Real-time updates will be handled via polling for now
+// In production, you'd implement WebSocket connections or Server-Sent Events
 
 export default function CollaboratePage() {
   // User state
