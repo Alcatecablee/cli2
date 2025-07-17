@@ -1526,7 +1526,7 @@ export default function Dashboard() {
           {dashboardState.activeSection === "bulk" && (
             <div className="tab-content">
               <ErrorBoundary>
-                <GitHubIntegration />
+                <GitHubIntegrationFixed />
               </ErrorBoundary>
             </div>
           )}
