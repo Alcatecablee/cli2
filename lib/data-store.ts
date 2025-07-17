@@ -2,7 +2,8 @@
 // In production, replace with actual database (PostgreSQL, MongoDB, etc.)
 
 // Global data stores - shared across all API routes
-export const dataStore = {
+// Use globalThis to persist across hot reloads in development
+const initDataStore = () => ({
   // Authentication & API Keys
   apiKeys: new Map(),
   userApiKeys: new Map(),
@@ -39,7 +40,11 @@ export const dataStore = {
 
   // Demo rate limiting
   requestCounts: new Map(),
-};
+});
+
+export const dataStore =
+  (globalThis as any).dataStore ||
+  ((globalThis as any).dataStore = initDataStore());
 
 // Utility functions for data operations
 export const dataUtils = {
