@@ -1124,67 +1124,111 @@ body {
 .execution-panel {
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 16px;
-  padding: 32px;
+  border-radius: 20px;
+  padding: 48px;
+  backdrop-filter: blur(20px);
+  box-shadow:
+    0 16px 64px rgba(0, 0, 0, 0.25),
+    inset 0 2px 0 rgba(255, 255, 255, 0.1);
 }
 
 .panel-header {
-  margin-bottom: 24px;
+  margin-bottom: 48px;
   text-align: center;
 }
 
 .panel-header h4 {
-  font-size: 24px;
-  font-weight: 600;
+  font-size: 32px;
+  font-weight: 700;
   color: #fff;
+  line-height: 1.2;
 }
 
 .execution-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 32px;
 }
 
 .execution-card {
   background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  padding: 32px 24px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 16px;
+  padding: 40px 32px;
   text-align: center;
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
+  backdrop-filter: blur(10px);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .execution-card.recommended {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.3);
+  background: linear-gradient(
+    135deg,
+    rgba(33, 150, 243, 0.15) 0%,
+    rgba(33, 150, 243, 0.1) 50%,
+    rgba(255, 255, 255, 0.05) 100%
+  );
+  border: 1px solid rgba(33, 150, 243, 0.4);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 0 24px rgba(33, 150, 243, 0.3);
 }
 
 .execution-card:hover {
   background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateY(-4px);
+  box-shadow:
+    0 16px 48px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+.execution-card.recommended:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(33, 150, 243, 0.2) 0%,
+    rgba(33, 150, 243, 0.15) 50%,
+    rgba(255, 255, 255, 0.08) 100%
+  );
+  border-color: rgba(33, 150, 243, 0.5);
+  transform: translateY(-4px);
+  box-shadow:
+    0 16px 48px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15),
+    0 0 32px rgba(33, 150, 243, 0.4);
 }
 
 .card-indicator {
-  background: rgba(255, 255, 255, 0.6);
+  background: linear-gradient(
+    135deg,
+    rgba(33, 150, 243, 0.8) 0%,
+    rgba(33, 150, 243, 0.6) 100%
+  );
   border-radius: 50%;
-  height: 6px;
-  margin-bottom: 16px;
-  width: 6px;
+  height: 12px;
+  margin-bottom: 24px;
+  width: 12px;
+  box-shadow: 0 0 16px rgba(33, 150, 243, 0.5);
 }
 
 .execution-card h5 {
-  font-size: 18px;
-  font-weight: 600;
-  margin-bottom: 8px;
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 12px;
   color: #fff;
 }
 
 .execution-card p {
-  color: rgba(255, 255, 255, 0.6);
-  font-size: 14px;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 16px;
+  font-weight: 500;
 }
 
 /* Demo Container */
