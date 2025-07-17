@@ -111,6 +111,7 @@ export default function BulkProcessor({
 
     for (let i = 0; i < bulkState.files.length; i++) {
       const file = bulkState.files[i];
+      const startTime = Date.now();
 
       // Update current file status
       setBulkState((prev) => ({
@@ -136,6 +137,7 @@ export default function BulkProcessor({
         });
 
         const result = await response.json();
+        const processingTime = Date.now() - startTime;
 
         if (response.ok) {
           results.push(result);
@@ -143,7 +145,13 @@ export default function BulkProcessor({
             ...prev,
             results: prev.results.map((r, idx) =>
               idx === i
-                ? { ...r, status: "completed", progress: 100, result }
+                ? {
+                    ...r,
+                    status: "completed",
+                    progress: 100,
+                    result,
+                    processingTime,
+                  }
                 : r,
             ),
             overallProgress: ((i + 1) / totalFiles) * 100,
@@ -153,13 +161,20 @@ export default function BulkProcessor({
             ...prev,
             results: prev.results.map((r, idx) =>
               idx === i
-                ? { ...r, status: "error", progress: 0, error: result.error }
+                ? {
+                    ...r,
+                    status: "error",
+                    progress: 0,
+                    error: result.error,
+                    processingTime,
+                  }
                 : r,
             ),
             overallProgress: ((i + 1) / totalFiles) * 100,
           }));
         }
       } catch (error) {
+        const processingTime = Date.now() - startTime;
         setBulkState((prev) => ({
           ...prev,
           results: prev.results.map((r, idx) =>
@@ -170,6 +185,7 @@ export default function BulkProcessor({
                   progress: 0,
                   error:
                     error instanceof Error ? error.message : "Unknown error",
+                  processingTime,
                 }
               : r,
           ),
@@ -183,7 +199,12 @@ export default function BulkProcessor({
       }
     }
 
-    setBulkState((prev) => ({ ...prev, processing: false }));
+    setBulkState((prev) => ({
+      ...prev,
+      processing: false,
+      showSummary: true,
+      completedAt: new Date(),
+    }));
     onAnalysisComplete(results);
   };
 
