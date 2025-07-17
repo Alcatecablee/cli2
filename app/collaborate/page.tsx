@@ -276,8 +276,10 @@ export default function CollaboratePage() {
       setLanguage(session.document_language);
       setIsJoiningSession(false);
 
-      // Setup real-time subscriptions
-      setupRealtimeSubscriptions(session.id);
+      // Setup real-time subscriptions (with delay to allow session creation to complete)
+      setTimeout(() => {
+        setupRealtimeSubscriptions(session.id);
+      }, 1000);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to join session");
     } finally {
