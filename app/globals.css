@@ -690,6 +690,699 @@ body {
   min-width: 140px;
 }
 
+/* Enterprise Platform Section */
+.demo-section {
+  background: #000;
+  padding: 64px 0 96px;
+  animation: 1s ease-out 1s 1 normal both running fadeinup;
+}
+
+.demo-header {
+  margin-bottom: 48px;
+}
+
+.enterprise-platform {
+  background: #000;
+  padding: 48px 0;
+  text-align: center;
+}
+
+.platform-container {
+  margin: 0 auto;
+  max-width: 1200px;
+  padding: 0 32px;
+}
+
+.platform-hero {
+  margin-bottom: 48px;
+  text-align: center;
+}
+
+.platform-hero h3 {
+  background: linear-gradient(
+    135deg,
+    rgb(255, 255, 255),
+    rgba(255, 255, 255, 0.8)
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  font-size: 40px;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.platform-hero p {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 20px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.platform-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 24px;
+  margin-bottom: 48px;
+}
+
+.metric-card {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0.05) 50%,
+    rgba(0, 0, 0, 0.9)
+  );
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 32px 24px;
+  text-align: center;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  backdrop-filter: blur(20px);
+}
+
+.metric-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.metric-value {
+  color: rgb(33, 150, 243);
+  font-family: "JetBrains Mono", "Fira Code", consolas, monospace;
+  font-size: 40px;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.metric-label {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.operation-modes {
+  margin-bottom: 48px;
+}
+
+.mode-selector {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.mode-option {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 24px 32px;
+  min-width: 200px;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.mode-option.active {
+  background: rgba(33, 150, 243, 0.1);
+  border-color: rgb(33, 150, 243);
+  box-shadow: 0 0 20px rgba(33, 150, 243, 0.2);
+}
+
+.mode-option:hover:not(.active) {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.mode-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.mode-icon.analysis {
+  background: linear-gradient(135deg, rgb(76, 175, 80), rgb(56, 142, 60));
+}
+
+.mode-icon.transform {
+  background: linear-gradient(135deg, rgb(255, 152, 0), rgb(245, 124, 0));
+}
+
+.mode-info h4 {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: #fff;
+}
+
+.mode-info span {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 14px;
+}
+
+.layer-stack {
+  margin-bottom: 48px;
+}
+
+.stack-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 32px;
+}
+
+.stack-header h4 {
+  font-size: 24px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.stack-progress {
+  flex-grow: 1;
+  margin-left: 32px;
+  max-width: 300px;
+}
+
+.stack-progress .progress-bar {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  height: 4px;
+  margin-bottom: 16px;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+}
+
+.layer-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 16px;
+}
+
+.layer-item {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 24px 16px;
+  text-align: center;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.layer-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateY(-2px);
+}
+
+.layer-badge {
+  background: rgb(33, 150, 243);
+  border-radius: 8px;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  height: 32px;
+  margin-bottom: 12px;
+  width: 32px;
+}
+
+.layer-item h5 {
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.execution-panel {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 32px;
+}
+
+.panel-header {
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.panel-header h4 {
+  font-size: 24px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.execution-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 24px;
+}
+
+.execution-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 32px 24px;
+  text-align: center;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.execution-card.recommended {
+  background: rgba(33, 150, 243, 0.1);
+  border-color: rgb(33, 150, 243);
+}
+
+.execution-card:hover {
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateY(-2px);
+}
+
+.card-indicator {
+  background: rgb(33, 150, 243);
+  border-radius: 50%;
+  box-shadow: rgba(33, 150, 243, 0.5) 0px 0px 8px;
+  height: 8px;
+  margin-bottom: 16px;
+  width: 8px;
+}
+
+.execution-card h5 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #fff;
+}
+
+.execution-card p {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 14px;
+}
+
+/* Demo Container */
+.demo-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 32px;
+  display: grid;
+  gap: 48px;
+  grid-template-columns: 1fr;
+}
+
+/* Demo Controls */
+.demo-controls {
+  background: #000;
+  border: 1px solid rgb(74, 74, 74);
+  border-radius: 12px;
+  padding: 32px;
+  margin-bottom: 32px;
+}
+
+.controls-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+}
+
+.control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: min-content;
+}
+
+.control-label {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.control-options {
+  display: flex;
+  gap: 8px;
+}
+
+.control-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1;
+  flex-basis: 0%;
+  padding: 12px 20px;
+  border-radius: 8px;
+  border: 1px solid rgb(74, 74, 74);
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  min-height: 44px;
+}
+
+.control-btn.active {
+  background: rgba(33, 150, 243, 0.12);
+  border-color: rgba(33, 150, 243, 0.4);
+  color: rgb(33, 150, 243);
+  font-weight: 600;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    0 4px 12px rgba(33, 150, 243, 0.15);
+}
+
+.control-btn:hover:not(.active) {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.mode-description {
+  margin-top: 12px;
+}
+
+.mode-description p {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  padding: 8px 12px;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 12.8px;
+  text-align: center;
+  animation: 0.3s ease-out 0s 1 normal none running fadeinup;
+}
+
+.layer-checkboxes {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.layer-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+}
+
+.layer-checkbox:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.layer-checkbox input {
+  accent-color: rgb(33, 150, 243);
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+}
+
+.layer-label {
+  color: rgba(255, 255, 255, 0.8);
+  font-family: "JetBrains Mono", "Fira Code", consolas, monospace;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+/* Demo Upload Section */
+.demo-upload-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  margin-bottom: 32px;
+  animation: 0.8s ease-out 1.2s 1 normal both running slideinleft;
+}
+
+.upload-area {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.08),
+    rgba(255, 255, 255, 0.04) 50%,
+    rgba(255, 255, 255, 0.02)
+  );
+  border: 2px dashed rgba(255, 255, 255, 0.3);
+  border-radius: 20px;
+  padding: 48px 32px;
+  text-align: center;
+  min-height: 240px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+  box-shadow:
+    rgba(0, 0, 0, 0.15) 0px 8px 32px,
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.upload-area:hover {
+  border-color: rgba(255, 255, 255, 0.5);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.12),
+    rgba(255, 255, 255, 0.06) 50%,
+    rgba(255, 255, 255, 0.03)
+  );
+}
+
+.upload-area h3 {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #fff;
+}
+
+.upload-area p {
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 16px;
+}
+
+.file-input {
+  display: none;
+}
+
+.sample-code-section {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.08),
+    rgba(255, 255, 255, 0.04) 50%,
+    rgba(255, 255, 255, 0.02)
+  );
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
+  padding: 40px 32px;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: 0.8s ease-out 1.2s 1 normal both running slideinright;
+  box-shadow:
+    rgba(0, 0, 0, 0.2) 0px 8px 32px,
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.sample-code-section h3 {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #fff;
+}
+
+.sample-buttons {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.recommended-label {
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.recommended-label span {
+  color: rgb(102, 102, 102);
+  font-family: "JetBrains Mono", "Fira Code", consolas, monospace;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.sample-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 20px;
+  border-radius: 8px;
+  border: 1px solid rgb(74, 74, 74);
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 14.4px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  min-height: 44px;
+  overflow: hidden;
+}
+
+.sample-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+}
+
+.sample-btn.recommended {
+  background: rgb(255, 255, 255);
+  border-color: rgba(0, 0, 0, 0.2);
+  color: rgb(0, 0, 0);
+}
+
+.sample-btn.loading {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.sample-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Animations */
+@keyframes fadeinup {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideinleft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideinright {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Screen reader utilities */
+.sr-only {
+  clip: rect(0, 0, 0, 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
+/* Skip to content link */
+.skip-to-content {
+  clip: rect(0, 0, 0, 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
+.skip-to-content:focus {
+  background: #000;
+  border: 1px solid #fff;
+  border-radius: 4px;
+  clip: auto;
+  color: #fff;
+  height: auto;
+  left: 8px;
+  padding: 8px 16px;
+  position: fixed;
+  text-decoration: none;
+  top: 8px;
+  width: auto;
+  z-index: 10000;
+}
+
+/* Responsive Design for Demo Section */
+@media (max-width: 768px) {
+  .platform-metrics {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .mode-selector {
+    flex-direction: column;
+  }
+
+  .controls-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .demo-upload-section {
+    grid-template-columns: 1fr;
+  }
+
+  .layer-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .execution-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .platform-metrics {
+    grid-template-columns: 1fr;
+  }
+
+  .layer-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .layer-checkboxes {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .sample-buttons {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* Utilities */
 .text-center {
   text-align: center;
