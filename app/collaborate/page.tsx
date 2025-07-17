@@ -264,7 +264,7 @@ export default function CollaboratePage() {
         method: "POST",
         body: JSON.stringify({
           sessionId: joinSessionId,
-          userName,
+          userName: userName,
         }),
       });
 
