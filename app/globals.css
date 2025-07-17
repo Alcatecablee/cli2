@@ -871,10 +871,10 @@ body {
 }
 
 .metric-value {
-  color: rgb(33, 150, 243);
+  color: rgba(255, 255, 255, 1);
   font-family: "JetBrains Mono", "Fira Code", consolas, monospace;
-  font-size: 40px;
-  font-weight: 800;
+  font-size: 32px;
+  font-weight: 700;
   margin-bottom: 8px;
 }
 
