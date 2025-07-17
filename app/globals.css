@@ -859,8 +859,8 @@ body {
 .platform-metrics {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 32px;
-  margin-bottom: 80px;
+  gap: 24px;
+  margin-bottom: 48px;
 }
 
 .metric-card {
