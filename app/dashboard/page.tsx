@@ -818,6 +818,19 @@ export default function Dashboard() {
                 }}
               ></div>
               <p className="onboarding-subtitle">Loading dashboard...</p>
+              <button
+                onClick={() => window.location.reload()}
+                style={{
+                  marginTop: "1rem",
+                  padding: "0.5rem 1rem",
+                  background: "#007bff",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "4px",
+                }}
+              >
+                Refresh Page
+              </button>
             </div>
           </div>
         </div>
