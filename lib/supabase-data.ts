@@ -226,7 +226,7 @@ export const dataService = {
 
   async getProjects(userId: string): Promise<Project[]> {
     try {
-      const client = await createAuthenticatedClient();
+      const client = createAuthenticatedClient();
       const { data, error } = await client
         .from("projects")
         .select("*")
