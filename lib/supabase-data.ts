@@ -85,7 +85,7 @@ export const dataService = {
     >,
   ): Promise<AnalysisHistory | null> {
     try {
-      const client = await createAuthenticatedClient();
+      const client = createAuthenticatedClient();
 
       // Double-check authentication
       const {
