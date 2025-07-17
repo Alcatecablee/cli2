@@ -314,11 +314,34 @@ export default function CollaborativeEditor({
         }
       } catch (error) {
         console.error("NeuroLint analysis failed:", error);
+
+        // Retry logic for network errors
+        if (
+          retryCount < 2 &&
+          error instanceof Error &&
+          (error.name === "AbortError" ||
+            error.message.includes("fetch") ||
+            error.message.includes("network"))
+        ) {
+          console.log(`Retrying analysis (attempt ${retryCount + 1}/3)`);
+          setTimeout(
+            () => {
+              runNeuroLint(dryRun, layers, retryCount + 1);
+            },
+            1000 * (retryCount + 1),
+          ); // Exponential backoff
+          return;
+        }
+
+        const errorMessage =
+          error instanceof Error ? error.message : "Unknown error";
         alert(
-          `Analysis failed: ${error instanceof Error ? error.message : "Unknown error"}`,
+          `Analysis failed: ${errorMessage}${retryCount > 0 ? ` (after ${retryCount + 1} attempts)` : ""}`,
         );
       } finally {
-        setIsAnalyzing(false);
+        if (retryCount === 0) {
+          setIsAnalyzing(false);
+        }
       }
     },
     [code, filename, onCodeChange],
