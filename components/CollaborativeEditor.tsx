@@ -451,10 +451,25 @@ export default function CollaborativeEditor({
               gap: "0.5rem",
               padding: "0.25rem 0.75rem",
               borderRadius: "4px",
-              background: "rgba(76, 175, 80, 0.12)",
-              border: "1px solid rgba(76, 175, 80, 0.3)",
+              background:
+                connectionStatus === "connected"
+                  ? "rgba(76, 175, 80, 0.12)"
+                  : connectionStatus === "connecting"
+                    ? "rgba(255, 193, 7, 0.12)"
+                    : "rgba(229, 62, 62, 0.12)",
+              border:
+                connectionStatus === "connected"
+                  ? "1px solid rgba(76, 175, 80, 0.3)"
+                  : connectionStatus === "connecting"
+                    ? "1px solid rgba(255, 193, 7, 0.3)"
+                    : "1px solid rgba(229, 62, 62, 0.3)",
               fontSize: "0.75rem",
-              color: "#4caf50",
+              color:
+                connectionStatus === "connected"
+                  ? "#4caf50"
+                  : connectionStatus === "connecting"
+                    ? "#ffc107"
+                    : "#e53e3e",
             }}
           >
             <div
@@ -462,10 +477,19 @@ export default function CollaborativeEditor({
                 width: "6px",
                 height: "6px",
                 borderRadius: "50%",
-                background: "#4caf50",
+                background:
+                  connectionStatus === "connected"
+                    ? "#4caf50"
+                    : connectionStatus === "connecting"
+                      ? "#ffc107"
+                      : "#e53e3e",
               }}
             />
-            Connected
+            {connectionStatus === "connected"
+              ? "Connected"
+              : connectionStatus === "connecting"
+                ? "Connecting..."
+                : "Disconnected"}
           </div>
 
           {/* Collaborator Count */}
