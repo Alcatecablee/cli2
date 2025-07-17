@@ -192,41 +192,45 @@ export async function PUT(request: NextRequest) {
       );
     }
 
+    const session = dataStore.collaborationSessions.get(sessionId);
+    if (!session) {
+      return NextResponse.json({ error: "Session not found" }, { status: 404 });
+    }
+
     switch (action) {
       case "update_document":
         const { content } = data;
-        const { error: updateError } = await supabase
-          .from("collaboration_sessions")
-          .update({
-            document_content: content,
-            updated_at: new Date().toISOString(),
-            last_activity: new Date().toISOString(),
-          })
-          .eq("id", sessionId)
-          .eq("host_user_id", userId);
 
-        if (updateError) {
-          return NextResponse.json(
-            { error: "Failed to update document" },
-            { status: 500 },
-          );
+        // Check if user is host or participant
+        const participantKey = `${sessionId}_${userId}`;
+        const participant =
+          dataStore.collaborationParticipants.get(participantKey);
+
+        if (!participant || !participant.is_active) {
+          return NextResponse.json({ error: "Access denied" }, { status: 403 });
         }
+
+        // Update session document
+        session.document_content = content;
+        session.updated_at = new Date().toISOString();
+        session.last_activity = new Date().toISOString();
+
+        dataStore.collaborationSessions.set(sessionId, session);
 
         return NextResponse.json({ success: true });
 
       case "lock_session":
-        const { error: lockError } = await supabase
-          .from("collaboration_sessions")
-          .update({ is_locked: data.locked })
-          .eq("id", sessionId)
-          .eq("host_user_id", userId);
-
-        if (lockError) {
+        // Only host can lock session
+        if (session.host_user_id !== userId) {
           return NextResponse.json(
-            { error: "Failed to lock session" },
-            { status: 500 },
+            { error: "Only host can lock session" },
+            { status: 403 },
           );
         }
+
+        session.is_locked = data.locked;
+        session.updated_at = new Date().toISOString();
+        dataStore.collaborationSessions.set(sessionId, session);
 
         return NextResponse.json({ success: true });
 
