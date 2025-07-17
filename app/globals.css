@@ -137,38 +137,26 @@ body {
 }
 
 .onboarding-btn.primary {
-  background: linear-gradient(
-    135deg,
-    var(--onboarding-accent-glow) 0%,
-    rgba(33, 150, 243, 0.1) 50%,
-    rgba(255, 255, 255, 0.05) 100%
-  );
-  border-color: var(--onboarding-accent);
-  color: var(--onboarding-accent);
-  box-shadow:
-    0 8px 32px rgba(0, 0, 0, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1),
-    0 0 12px var(--onboarding-accent-glow);
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 1);
+  font-weight: 600;
 }
 
 .onboarding-btn.primary:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow:
-    0 12px 40px rgba(0, 0, 0, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1),
-    0 0 20px var(--onboarding-accent-glow);
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.5);
 }
 
 .onboarding-btn.secondary {
-  background: var(--glass-background);
-  border-color: var(--glass-border);
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
   color: rgba(255, 255, 255, 0.9);
 }
 
 .onboarding-btn.secondary:hover:not(:disabled) {
-  background: var(--glass-hover);
+  background: rgba(255, 255, 255, 0.15);
   border-color: rgba(255, 255, 255, 0.3);
-  transform: translateY(-1px);
 }
 
 /* Form Styles */
