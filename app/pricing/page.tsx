@@ -482,35 +482,54 @@ export default function PricingPage() {
                       )}
                   </div>
 
-                  <div style={{ marginBottom: "2rem" }}>
-                    <h3
+                  {/* Plan Header */}
+                  <div
+                    style={{
+                      textAlign: "center",
+                      marginBottom: "2rem",
+                      paddingBottom: "1.5rem",
+                      borderBottom: "1px solid rgba(255, 255, 255, 0.08)",
+                    }}
+                  >
+                    <div
                       style={{
-                        fontSize: "1.5rem",
-                        fontWeight: "600",
-                        color: "#ffffff",
-                        margin: "0 0 0.5rem 0",
                         display: "flex",
                         alignItems: "center",
-                        gap: "0.5rem",
+                        justifyContent: "center",
+                        gap: "0.75rem",
+                        marginBottom: "1rem",
                       }}
                     >
-                      {plan.name}
+                      <h3
+                        style={{
+                          fontSize: "1.25rem",
+                          fontWeight: "600",
+                          color: "#ffffff",
+                          margin: "0",
+                          textTransform: "uppercase",
+                          letterSpacing: "0.5px",
+                        }}
+                      >
+                        {plan.name}
+                      </h3>
                       {getCurrentPlanBadge(plan.id)}
-                    </h3>
+                    </div>
 
                     <div style={{ marginBottom: "1rem" }}>
                       <div
                         style={{
                           display: "flex",
                           alignItems: "baseline",
+                          justifyContent: "center",
                           gap: "0.25rem",
                         }}
                       >
                         <span
                           style={{
-                            fontSize: "2.5rem",
+                            fontSize: "2.75rem",
                             fontWeight: "700",
                             color: "#ffffff",
+                            lineHeight: "1",
                           }}
                         >
                           ${plan.price}
@@ -519,6 +538,7 @@ export default function PricingPage() {
                           style={{
                             fontSize: "1rem",
                             color: "rgba(255, 255, 255, 0.7)",
+                            fontWeight: "500",
                           }}
                         >
                           /{plan.period}
@@ -539,9 +559,14 @@ export default function PricingPage() {
                       {billingPeriod === "yearly" && plan.originalPrice && (
                         <div
                           style={{
-                            fontSize: "0.875rem",
+                            background: "rgba(33, 150, 243, 0.15)",
                             color: "rgba(33, 150, 243, 0.9)",
-                            marginTop: "0.5rem",
+                            padding: "0.3rem 0.75rem",
+                            borderRadius: "12px",
+                            fontSize: "0.8rem",
+                            fontWeight: "600",
+                            marginTop: "0.75rem",
+                            display: "inline-block",
                           }}
                         >
                           Save{" "}
@@ -557,8 +582,10 @@ export default function PricingPage() {
                     <p
                       style={{
                         color: "rgba(255, 255, 255, 0.8)",
-                        margin: "0 0 1.5rem 0",
+                        margin: "0",
                         lineHeight: "1.5",
+                        fontSize: "0.9rem",
+                        fontStyle: "italic",
                       }}
                     >
                       {plan.description}
