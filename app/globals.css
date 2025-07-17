@@ -1314,23 +1314,18 @@ body {
 .demo-upload-section {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 40px;
-  margin-bottom: 32px;
+  gap: 60px;
+  margin-bottom: 64px;
   animation: 0.8s ease-out 1.2s 1 normal both running slideinleft;
 }
 
 .upload-area {
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.08),
-    rgba(255, 255, 255, 0.04) 50%,
-    rgba(255, 255, 255, 0.02)
-  );
-  border: 2px dashed rgba(255, 255, 255, 0.3);
-  border-radius: 20px;
-  padding: 48px 32px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px dashed rgba(255, 255, 255, 0.25);
+  border-radius: 24px;
+  padding: 64px 40px;
   text-align: center;
-  min-height: 240px;
+  min-height: 320px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1339,19 +1334,20 @@ body {
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
   overflow: hidden;
+  backdrop-filter: blur(20px);
   box-shadow:
-    rgba(0, 0, 0, 0.15) 0px 8px 32px,
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    0 16px 64px rgba(0, 0, 0, 0.25),
+    inset 0 2px 0 rgba(255, 255, 255, 0.1);
 }
 
 .upload-area:hover {
-  border-color: rgba(255, 255, 255, 0.5);
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.12),
-    rgba(255, 255, 255, 0.06) 50%,
-    rgba(255, 255, 255, 0.03)
-  );
+  border-color: rgba(33, 150, 243, 0.5);
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateY(-4px);
+  box-shadow:
+    0 24px 80px rgba(0, 0, 0, 0.3),
+    inset 0 2px 0 rgba(255, 255, 255, 0.15),
+    0 0 24px rgba(33, 150, 243, 0.2);
 }
 
 .upload-area h3 {
