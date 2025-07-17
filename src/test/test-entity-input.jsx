@@ -1,10 +1,11 @@
+
 function TestComponent() {
-  const text = "Hello &amp; Welcome!";
-  const quote = "&quot;test&quot;";
-  const html = "&lt;HTML&gt;";
-  const price = "Price: &#36;99.99";
-  const copyright = "Copyright &copy; 2024 &ndash; All rights reserved.";
-  const special = "Special chars: &sect; &para; &bull; &deg; &trade;";
+  const text = "Hello & Welcome!";
+  const quote = ""test"";
+  const html = "<HTML>";
+  const price = "Price: $99.99";
+  const copyright = "Copyright © 2024 – All rights reserved.";
+  const special = "Special chars: § ¶ • ° ™";
 
   return (
     <div>
