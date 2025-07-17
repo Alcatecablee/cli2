@@ -246,19 +246,24 @@ export default function CollaborativeEditor({
   }, [code, onSave]);
 
   /**
-   * Run NeuroLint Pro analysis using real API
+   * Run NeuroLint Pro analysis using real API with retry logic
    */
   const runNeuroLint = useCallback(
-    async (dryRun = true, layers?: number[]) => {
+    async (dryRun = true, layers?: number[], retryCount = 0) => {
       if (!code.trim()) {
         alert("Please enter some code to analyze");
         return;
       }
 
       setIsAnalyzing(true);
-      setAnalysisResult(null);
+      if (retryCount === 0) {
+        setAnalysisResult(null);
+      }
 
       try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+
         const response = await fetch("/api/analyze", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -268,8 +273,10 @@ export default function CollaborativeEditor({
             layers: layers || "auto",
             applyFixes: !dryRun,
           }),
+          signal: controller.signal,
         });
 
+        clearTimeout(timeoutId);
         const result = await response.json();
 
         if (!response.ok) {
