@@ -67,6 +67,33 @@ function formatError(error: any): string {
   return String(error);
 }
 
+// Helper function to create authenticated Supabase client
+async function createAuthenticatedClient() {
+  // Get the current session from localStorage if available
+  if (typeof window !== "undefined") {
+    try {
+      const savedSession = localStorage.getItem("supabase_session");
+      if (savedSession) {
+        const sessionData = JSON.parse(savedSession);
+        if (sessionData?.access_token && sessionData?.refresh_token) {
+          // Set the session for the client
+          const { error } = await supabase.auth.setSession({
+            access_token: sessionData.access_token,
+            refresh_token: sessionData.refresh_token,
+          });
+
+          if (error) {
+            console.error("Error setting Supabase session:", error);
+          }
+        }
+      }
+    } catch (error) {
+      console.error("Error reading session from localStorage:", error);
+    }
+  }
+  return supabase;
+}
+
 // Data service functions
 export const dataService = {
   // Analysis History
@@ -78,7 +105,28 @@ export const dataService = {
     >,
   ): Promise<AnalysisHistory | null> {
     try {
-      const { data, error } = await supabase
+      const client = await createAuthenticatedClient();
+
+      // Double-check authentication
+      const {
+        data: { user },
+      } = await client.auth.getUser();
+      if (!user) {
+        console.error("No authenticated user found for Supabase operation");
+        return null;
+      }
+
+      if (user.id !== userId) {
+        console.error(
+          "User ID mismatch - authenticated user:",
+          user.id,
+          "vs requested:",
+          userId,
+        );
+        return null;
+      }
+
+      const { data, error } = await client
         .from("analysis_history")
         .insert({
           user_id: userId,
@@ -104,7 +152,8 @@ export const dataService = {
     limit = 50,
   ): Promise<AnalysisHistory[]> {
     try {
-      const { data, error } = await supabase
+      const client = await createAuthenticatedClient();
+      const { data, error } = await client
         .from("analysis_history")
         .select("*")
         .eq("user_id", userId)
@@ -128,7 +177,8 @@ export const dataService = {
     historyId: string,
   ): Promise<boolean> {
     try {
-      const { error } = await supabase
+      const client = await createAuthenticatedClient();
+      const { error } = await client
         .from("analysis_history")
         .delete()
         .eq("id", historyId)
@@ -148,7 +198,8 @@ export const dataService = {
 
   async clearAnalysisHistory(userId: string): Promise<boolean> {
     try {
-      const { error } = await supabase
+      const client = await createAuthenticatedClient();
+      const { error } = await client
         .from("analysis_history")
         .delete()
         .eq("user_id", userId);
@@ -171,7 +222,8 @@ export const dataService = {
     projectData: Omit<Project, "id" | "user_id" | "created_at" | "updated_at">,
   ): Promise<Project | null> {
     try {
-      const { data, error } = await supabase
+      const client = await createAuthenticatedClient();
+      const { data, error } = await client
         .from("projects")
         .insert({
           user_id: userId,
@@ -194,7 +246,8 @@ export const dataService = {
 
   async getProjects(userId: string): Promise<Project[]> {
     try {
-      const { data, error } = await supabase
+      const client = await createAuthenticatedClient();
+      const { data, error } = await client
         .from("projects")
         .select("*")
         .eq("user_id", userId)
@@ -218,7 +271,8 @@ export const dataService = {
     updates: Partial<Omit<Project, "id" | "user_id" | "created_at">>,
   ): Promise<Project | null> {
     try {
-      const { data, error } = await supabase
+      const client = await createAuthenticatedClient();
+      const { data, error } = await client
         .from("projects")
         .update({
           ...updates,
@@ -243,7 +297,8 @@ export const dataService = {
 
   async deleteProject(userId: string, projectId: string): Promise<boolean> {
     try {
-      const { error } = await supabase
+      const client = await createAuthenticatedClient();
+      const { error } = await client
         .from("projects")
         .delete()
         .eq("id", projectId)
@@ -264,7 +319,8 @@ export const dataService = {
   // User Settings
   async getUserSettings(userId: string): Promise<UserSettings | null> {
     try {
-      const { data, error } = await supabase
+      const client = await createAuthenticatedClient();
+      const { data, error } = await client
         .from("user_settings")
         .select("*")
         .eq("user_id", userId)
@@ -301,7 +357,8 @@ export const dataService = {
     >,
   ): Promise<UserSettings | null> {
     try {
-      const { data, error } = await supabase
+      const client = await createAuthenticatedClient();
+      const { data, error } = await client
         .from("user_settings")
         .upsert({
           user_id: userId,
@@ -333,16 +390,21 @@ export const dataService = {
   ): Promise<void> {
     // Always save to localStorage for immediate access
     try {
-      const localHistory = JSON.parse(
-        localStorage.getItem("neurolint-history") || "[]",
-      );
-      const newItem = {
-        id: Date.now().toString(),
-        ...analysisData,
-        timestamp: analysisData.timestamp || new Date().toISOString(),
-      };
-      const updatedHistory = [newItem, ...localHistory].slice(0, 50);
-      localStorage.setItem("neurolint-history", JSON.stringify(updatedHistory));
+      if (typeof window !== "undefined") {
+        const localHistory = JSON.parse(
+          localStorage.getItem("neurolint-history") || "[]",
+        );
+        const newItem = {
+          id: Date.now().toString(),
+          ...analysisData,
+          timestamp: analysisData.timestamp || new Date().toISOString(),
+        };
+        const updatedHistory = [newItem, ...localHistory].slice(0, 50);
+        localStorage.setItem(
+          "neurolint-history",
+          JSON.stringify(updatedHistory),
+        );
+      }
     } catch (error) {
       console.error("Error saving to localStorage:", formatError(error));
     }
@@ -350,7 +412,10 @@ export const dataService = {
     // If user is authenticated, also save to Supabase
     if (userId) {
       try {
-        await this.saveAnalysisHistory(userId, analysisData);
+        const result = await this.saveAnalysisHistory(userId, analysisData);
+        if (result) {
+          console.log("Successfully saved analysis history to Supabase");
+        }
       } catch (error) {
         console.error("Error saving to Supabase:", formatError(error));
         // Continue execution - localStorage backup is available
@@ -366,10 +431,12 @@ export const dataService = {
         if (supabaseHistory.length > 0) {
           // Also update localStorage with Supabase data
           try {
-            localStorage.setItem(
-              "neurolint-history",
-              JSON.stringify(supabaseHistory),
-            );
+            if (typeof window !== "undefined") {
+              localStorage.setItem(
+                "neurolint-history",
+                JSON.stringify(supabaseHistory),
+              );
+            }
           } catch (error) {
             console.error("Error updating localStorage:", formatError(error));
           }
@@ -385,10 +452,13 @@ export const dataService = {
 
     // Fallback to localStorage
     try {
-      const localHistory = JSON.parse(
-        localStorage.getItem("neurolint-history") || "[]",
-      );
-      return localHistory;
+      if (typeof window !== "undefined") {
+        const localHistory = JSON.parse(
+          localStorage.getItem("neurolint-history") || "[]",
+        );
+        return localHistory;
+      }
+      return [];
     } catch (error) {
       console.error("Error reading from localStorage:", formatError(error));
       return [];
