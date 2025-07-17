@@ -1,66 +1,57 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
+import { dataStore } from "../../../../lib/data-store";
 
-const supabase = createClient(
-  process.env.SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE!,
-);
+// Initialize collaboration data stores if not exists
+if (!dataStore.collaborationComments) {
+  dataStore.collaborationComments = new Map();
+}
 
-export async function POST(request: NextRequest) {
+export async function GET(request: NextRequest) {
   try {
-    const body = await request.json();
-    const { sessionId, content, lineNumber, commentType = "comment" } = body;
+    const { searchParams } = new URL(request.url);
+    const sessionId = searchParams.get("sessionId");
     const userId = request.headers.get("x-user-id");
-    const userName = request.headers.get("x-user-name") || "Anonymous";
 
-    if (!userId || !sessionId || !content) {
+    if (!userId) {
       return NextResponse.json(
-        { error: "Invalid request data" },
+        { error: "Authentication required" },
+        { status: 401 },
+      );
+    }
+
+    if (!sessionId) {
+      return NextResponse.json(
+        { error: "Session ID required" },
         { status: 400 },
       );
     }
 
-    // Verify user is active participant
-    const { data: participant, error: participantError } = await supabase
-      .from("collaboration_participants")
-      .select("is_active")
-      .eq("session_id", sessionId)
-      .eq("user_id", userId)
-      .eq("is_active", true)
-      .single();
+    // Check if user is participant
+    const participantKey = `${sessionId}_${userId}`;
+    const participant =
+      dataStore.collaborationParticipants?.get(participantKey);
 
-    if (participantError || !participant) {
-      return NextResponse.json(
-        { error: "Not an active participant" },
-        { status: 403 },
-      );
+    if (!participant || !participant.is_active) {
+      return NextResponse.json({ error: "Access denied" }, { status: 403 });
     }
 
-    // Add comment
-    const { data: newComment, error: commentError } = await supabase
-      .from("collaboration_comments")
-      .insert({
-        session_id: sessionId,
-        user_id: userId,
-        author_name: userName,
-        content: content.trim(),
-        line_number: lineNumber || 0,
-        comment_type: commentType,
-      })
-      .select()
-      .single();
-
-    if (commentError) {
-      console.error("Comment creation error:", commentError);
-      return NextResponse.json(
-        { error: "Failed to add comment" },
-        { status: 500 },
-      );
+    // Get comments for session
+    const comments = [];
+    for (const [key, comment] of dataStore.collaborationComments.entries()) {
+      if (key.startsWith(`${sessionId}_`)) {
+        comments.push(comment);
+      }
     }
 
-    return NextResponse.json({ comment: newComment });
+    // Sort by creation time
+    comments.sort(
+      (a, b) =>
+        new Date(a.created_at).getTime() - new Date(b.created_at).getTime(),
+    );
+
+    return NextResponse.json({ comments });
   } catch (error) {
-    console.error("Comments API error:", error);
+    console.error("Comments GET error:", error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 },
@@ -68,51 +59,66 @@ export async function POST(request: NextRequest) {
   }
 }
 
-export async function GET(request: NextRequest) {
+export async function POST(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url);
-    const sessionId = searchParams.get("sessionId");
-    const limit = parseInt(searchParams.get("limit") || "50");
+    const body = await request.json();
+    const { sessionId, content, lineNumber, commentType } = body;
     const userId = request.headers.get("x-user-id");
+    const userName = request.headers.get("x-user-name") || "Anonymous";
 
-    if (!userId || !sessionId) {
-      return NextResponse.json({ error: "Invalid request" }, { status: 400 });
-    }
-
-    // Verify user is participant
-    const { data: participant } = await supabase
-      .from("collaboration_participants")
-      .select("is_active")
-      .eq("session_id", sessionId)
-      .eq("user_id", userId)
-      .eq("is_active", true)
-      .single();
-
-    if (!participant) {
+    if (!userId) {
       return NextResponse.json(
-        { error: "Not an active participant" },
-        { status: 403 },
+        { error: "Authentication required" },
+        { status: 401 },
       );
     }
 
-    // Get comments
-    const { data: comments, error } = await supabase
-      .from("collaboration_comments")
-      .select("*")
-      .eq("session_id", sessionId)
-      .order("created_at", { ascending: true })
-      .limit(limit);
-
-    if (error) {
+    if (!sessionId || !content) {
       return NextResponse.json(
-        { error: "Failed to fetch comments" },
-        { status: 500 },
+        { error: "Session ID and content required" },
+        { status: 400 },
       );
     }
 
-    return NextResponse.json({ comments: comments || [] });
+    // Check if user is participant
+    const participantKey = `${sessionId}_${userId}`;
+    const participant =
+      dataStore.collaborationParticipants?.get(participantKey);
+
+    if (!participant || !participant.is_active) {
+      return NextResponse.json({ error: "Access denied" }, { status: 403 });
+    }
+
+    // Create comment
+    const commentId = `comment_${Date.now()}_${Math.random().toString(36).substring(2)}`;
+    const comment = {
+      id: commentId,
+      session_id: sessionId,
+      user_id: userId,
+      author_name: userName,
+      content: content.trim(),
+      line_number: lineNumber || 0,
+      column_number: 0,
+      is_resolved: false,
+      comment_type: commentType || "chat",
+      created_at: new Date().toISOString(),
+      resolved_at: null,
+      resolved_by: null,
+    };
+
+    const commentKey = `${sessionId}_${commentId}`;
+    dataStore.collaborationComments.set(commentKey, comment);
+
+    // Update session activity
+    const session = dataStore.collaborationSessions?.get(sessionId);
+    if (session) {
+      session.last_activity = new Date().toISOString();
+      dataStore.collaborationSessions.set(sessionId, session);
+    }
+
+    return NextResponse.json({ comment });
   } catch (error) {
-    console.error("Get comments error:", error);
+    console.error("Comments POST error:", error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 },
@@ -123,76 +129,57 @@ export async function GET(request: NextRequest) {
 export async function PUT(request: NextRequest) {
   try {
     const body = await request.json();
-    const { commentId, action } = body;
+    const { commentId, action, data } = body;
     const userId = request.headers.get("x-user-id");
 
-    if (!userId || !commentId || !action) {
+    if (!userId) {
       return NextResponse.json(
-        { error: "Invalid request data" },
-        { status: 400 },
+        { error: "Authentication required" },
+        { status: 401 },
       );
+    }
+
+    // Find comment
+    let comment = null;
+    let commentKey = null;
+
+    for (const [key, c] of dataStore.collaborationComments.entries()) {
+      if (c.id === commentId) {
+        comment = c;
+        commentKey = key;
+        break;
+      }
+    }
+
+    if (!comment) {
+      return NextResponse.json({ error: "Comment not found" }, { status: 404 });
+    }
+
+    // Check if user can modify comment
+    if (comment.user_id !== userId) {
+      return NextResponse.json({ error: "Access denied" }, { status: 403 });
     }
 
     switch (action) {
       case "resolve":
-        const { error: resolveError } = await supabase
-          .from("collaboration_comments")
-          .update({
-            is_resolved: true,
-            resolved_at: new Date().toISOString(),
-            resolved_by: userId,
-          })
-          .eq("id", commentId)
-          .eq("user_id", userId); // Only author can resolve their own comments
+        comment.is_resolved = data.resolved;
+        comment.resolved_at = data.resolved ? new Date().toISOString() : null;
+        comment.resolved_by = data.resolved ? userId : null;
+        break;
 
-        if (resolveError) {
-          return NextResponse.json(
-            { error: "Failed to resolve comment" },
-            { status: 500 },
-          );
-        }
-
-        return NextResponse.json({ success: true });
+      case "edit":
+        comment.content = data.content;
+        break;
 
       default:
         return NextResponse.json({ error: "Invalid action" }, { status: 400 });
     }
+
+    dataStore.collaborationComments.set(commentKey, comment);
+
+    return NextResponse.json({ success: true, comment });
   } catch (error) {
-    console.error("Update comment error:", error);
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 },
-    );
-  }
-}
-
-export async function DELETE(request: NextRequest) {
-  try {
-    const { searchParams } = new URL(request.url);
-    const commentId = searchParams.get("commentId");
-    const userId = request.headers.get("x-user-id");
-
-    if (!commentId || !userId) {
-      return NextResponse.json({ error: "Invalid request" }, { status: 400 });
-    }
-
-    // Only author can delete their comment
-    const { error } = await supabase
-      .from("collaboration_comments")
-      .delete()
-      .eq("id", commentId)
-      .eq("user_id", userId);
-
-    if (error) {
-      return NextResponse.json(
-        { error: "Failed to delete comment" },
-        { status: 500 },
-      );
-    }
-
-    return NextResponse.json({ success: true });
-  } catch (error) {
-    console.error("Delete comment error:", error);
+    console.error("Comments PUT error:", error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 },
