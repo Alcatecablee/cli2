@@ -65,7 +65,7 @@ export default function PricingPage() {
         "Basic API access (100 req/hour)",
         "Email support",
         "Analytics dashboard",
-        "Bulk file processing",
+        "GitHub integration (5 repositories)",
         "Project management",
       ],
       ctaText:
