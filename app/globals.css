@@ -815,16 +815,16 @@ body {
 /* Enterprise Platform Section */
 .demo-section {
   background: #000;
-  padding: 64px 0 120px;
+  padding: 48px 0 80px;
 }
 
 .demo-header {
-  margin-bottom: 80px;
+  margin-bottom: 48px;
 }
 
 .enterprise-platform {
   background: #000;
-  padding: 80px 0;
+  padding: 48px 0;
   text-align: center;
 }
 
