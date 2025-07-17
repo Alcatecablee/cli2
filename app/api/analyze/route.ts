@@ -35,7 +35,10 @@ export async function POST(request: NextRequest) {
 
   try {
     // Early check for build-time environment
-    if (process.env.NEXT_PHASE === "phase-production-build") {
+    if (
+      process.env.NEXT_PHASE === "phase-production-build" ||
+      (process.env.NODE_ENV === "production" && !process.env.VERCEL_ENV)
+    ) {
       return NextResponse.json(
         { error: "Service not available during build" },
         { status: 503 },
