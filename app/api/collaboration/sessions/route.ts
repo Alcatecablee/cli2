@@ -145,6 +145,11 @@ export async function POST(request: NextRequest) {
       "[SESSION CREATE] Total sessions:",
       dataStore.collaborationSessions.size,
     );
+    console.log("[SESSION CREATE] DataStore reference:", typeof dataStore);
+    console.log(
+      "[SESSION CREATE] Session stored successfully:",
+      dataStore.collaborationSessions.has(sessionId),
+    );
     const sessionError = null;
 
     if (sessionError) {
