@@ -796,7 +796,7 @@ function applyLayerTransformations(layerId, code, options = {}) {
 
   switch (layerId) {
     case 1: // Configuration Layer
-      console.log(`🛠️  [FALLBACK] Layer 1: Configuration fixes`);
+      console.log(`����️  [FALLBACK] Layer 1: Configuration fixes`);
       // No direct code transformations for config layer in individual files
       break;
 
@@ -1700,6 +1700,11 @@ function generateSimulatedFixes(code, detectedIssues) {
         break;
       case "HTML bracket entities":
         previewCode = previewCode.replace(/&lt;/g, "<").replace(/&gt;/g, ">");
+        break;
+      case "HTML dollar sign entities":
+        previewCode = previewCode
+          .replace(/&#36;/g, "$")
+          .replace(/&amp;#36;/g, "$");
         break;
       case "Console.log usage":
         previewCode = previewCode.replace(/console\.log\(/g, "console.debug(");
