@@ -53,7 +53,10 @@ export async function GET(request: NextRequest) {
       .single();
 
     if (profileError) {
-      console.error("Profile fetch error:", profileError);
+      // Only log unexpected errors, not missing profile records
+      if (profileError.code !== "PGRST116") {
+        console.error("Profile fetch error:", profileError);
+      }
       // Return basic user data if profile doesn't exist
       return NextResponse.json({
         user: {
