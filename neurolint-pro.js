@@ -122,7 +122,7 @@ class LayerDependencyManager {
     reasons.push("Configuration layer provides essential foundation");
 
     // Check for HTML entities or old patterns
-    if (/&quot;|&amp;|&lt;|&gt;|console\.log/.test(code)) {
+    if (/&quot;|&amp;|&lt;|&gt;|&#36;|&amp;#36;|console\.log/.test(code)) {
       recommended.push(2);
       reasons.push("Entity cleanup needed for HTML entities and old patterns");
     }
@@ -817,7 +817,7 @@ function applyLayerTransformations(layerId, code, options = {}) {
       if (transformedCode.includes("&lt;")) {
         transformedCode = transformedCode.replace(/&lt;/g, "<");
         appliedFixes.push("HTML Entity: Converted &lt; to less-than");
-        console.log(`����️  [FALLBACK] Fixed HTML entities: &lt;`);
+        console.log(`🛠️  [FALLBACK] Fixed HTML entities: &lt;`);
       }
       if (transformedCode.includes("&gt;")) {
         transformedCode = transformedCode.replace(/&gt;/g, ">");
