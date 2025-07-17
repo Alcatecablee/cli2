@@ -550,6 +550,26 @@ export default function GitHubIntegration() {
         </div>
       )}
 
+      {/* GitHub Repository Scanner Modal */}
+      {state.showScanner && state.selectedRepo && (
+        <GitHubRepositoryScanner
+          repositoryName={state.selectedRepo.fullName}
+          files={state.scannerFiles}
+          onScanComplete={handleScanComplete}
+          onClose={() => setState((prev) => ({ ...prev, showScanner: false }))}
+        />
+      )}
+
+      {/* Enhanced Pricing Tiers Modal */}
+      {state.showPricingModal && (
+        <GitHubPricingTiers
+          onUpgrade={handleUpgrade}
+          onClose={() =>
+            setState((prev) => ({ ...prev, showPricingModal: false }))
+          }
+        />
+      )}
+
       {state.error && (
         <div className="error-message">
           <span className="error-icon">⚠️</span>
