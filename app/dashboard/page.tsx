@@ -1811,43 +1811,20 @@ export default function Dashboard() {
                   role="button"
                   tabIndex={0}
                   aria-label="Upload React or Next.js files for analysis"
-                  aria-describedby="upload-instructions"
                 >
                   <h3>Upload Your Files</h3>
-                  <p id="upload-instructions">
-                    Drop React/Next.js files here or click to browse
-                  </p>
-                  <p style={{ fontSize: "0.85rem", opacity: 0.7 }}>
-                    Supports .jsx, .tsx, .js, .ts files
-                  </p>
+                  <p>Drop React/Next.js files here or click to browse</p>
                   <input
                     ref={fileInputRef}
                     type="file"
                     className="file-input"
                     accept=".jsx,.tsx,.js,.ts"
                     onChange={handleFileUpload}
-                    aria-describedby="file-types"
                   />
-                  <span id="file-types" className="sr-only">
-                    Accepted file types: JavaScript JSX, TypeScript TSX,
-                    JavaScript, and TypeScript files
-                  </span>
                 </div>
 
-                <div
-                  className="paste-code-section"
-                  role="region"
-                  aria-labelledby="paste-title"
-                >
-                  <h3 id="paste-title">Paste Your Code</h3>
-                  <p
-                    style={{
-                      color: "rgba(255, 255, 255, 0.7)",
-                      marginBottom: "1.5rem",
-                    }}
-                  >
-                    Paste React/Next.js code directly for instant analysis
-                  </p>
+                <div className="upload-area" role="region">
+                  <h3>Paste Your Code</h3>
                   <div className="paste-code-container">
                     <textarea
                       className="code-textarea"
