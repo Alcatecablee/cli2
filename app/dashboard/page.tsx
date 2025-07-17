@@ -908,8 +908,8 @@ export default function Dashboard() {
           <path d="M10 9H8" />
         </svg>
       ),
-      label: "Bulk Processing",
-      description: "Process multiple files",
+      label: "GitHub Integration",
+      description: "Connect & scan repositories",
     },
     {
       id: "analytics",
