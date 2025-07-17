@@ -1799,6 +1799,45 @@ export default function PricingPage() {
             transform: rotate(360deg);
           }
         }
+
+        /* Professional Table Responsive Design */
+        @media (min-width: 769px) {
+          .mobile-comparison {
+            display: none !important;
+          }
+        }
+
+        @media (max-width: 768px) {
+          /* Hide table on mobile, show cards */
+          .mobile-comparison {
+            display: grid !important;
+          }
+
+          /* Adjust pricing card features grid for mobile */
+          .pricing-features-grid {
+            grid-template-columns: 1fr !important;
+          }
+
+          /* Stack feature comparison table elements */
+          .comparison-table {
+            display: none;
+          }
+        }
+
+        /* Hover effects for professional cards */
+        .feature-card {
+          transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+          background: rgba(255, 255, 255, 0.05) !important;
+          transform: translateY(-1px);
+        }
+
+        /* Professional table hover effects */
+        .feature-row:hover {
+          background: rgba(255, 255, 255, 0.02);
+        }
       `}</style>
     </div>
   );
