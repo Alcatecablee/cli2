@@ -414,7 +414,7 @@ export default function BulkProcessor({
             </div>
           )}
 
-          <div className="bulk-file-list">
+                    <div className="bulk-file-list">
             {bulkState.results.map((result, index) => (
               <div key={index} className="bulk-file-item">
                 <div
@@ -448,15 +448,122 @@ export default function BulkProcessor({
                         )}
                         % confidence
                       </span>
+                      {result.processingTime && (
+                        <span className="metric">
+                          {formatProcessingTime(result.processingTime)}
+                        </span>
+                      )}
                     </div>
                   )}
                   {result.status === "error" && (
                     <div className="file-error">{result.error}</div>
                   )}
                 </div>
+                {(result.status === "completed" || result.status === "error") && (
+                  <button
+                    className="expand-btn"
+                    onClick={() => toggleResultExpansion(index)}
+                  >
+                    {result.expanded ? "▲" : "▼"}
+                  </button>
+                )}
+                {result.expanded && (
+                  <div className="expanded-results">
+                    {result.status === "completed" && result.result && (
+                      <div className="detailed-results">
+                        {result.result.analysis?.detectedIssues?.length > 0 && (
+                          <div className="issues-section">
+                            <h4>Detected Issues</h4>
+                            <div className="issues-list">
+                              {result.result.analysis.detectedIssues.map((issue: any, idx: number) => (
+                                <div key={idx} className="issue-item">
+                                  <span className={`issue-severity ${issue.severity}`}>
+                                    {issue.severity}
+                                  </span>
+                                  <span className="issue-type">{issue.type}</span>
+                                  <span className="issue-description">{issue.description}</span>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                        {result.result.layers && (
+                          <div className="layers-section">
+                            <h4>Layer Execution</h4>
+                            <div className="layers-list">
+                              {result.result.layers.map((layer: any, idx: number) => (
+                                <div key={idx} className={`layer-item ${layer.success ? 'success' : 'failed'}`}>
+                                  <span className="layer-name">Layer {layer.layerId}</span>
+                                  <span className="layer-time">{formatProcessingTime(layer.executionTime)}</span>
+                                  <span className={`layer-status ${layer.success ? 'success' : 'failed'}`}>
+                                    {layer.success ? 'SUCCESS' : 'FAILED'}
+                                  </span>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                    {result.status === "error" && (
+                      <div className="error-details">
+                        <h4>Error Details</h4>
+                        <p>{result.error}</p>
+                        {result.processingTime && (
+                          <p>Processing time: {formatProcessingTime(result.processingTime)}</p>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             ))}
           </div>
+        </div>
+      )}
+
+      {/* Summary Statistics */}
+      {bulkState.showSummary && (
+        <div className="bulk-summary-stats">
+          <div className="summary-header">
+            <h3>Bulk Analysis Summary</h3>
+            <div className="summary-actions">
+              <button className="btn btn-secondary" onClick={exportResults}>
+                Export Results
+              </button>
+            </div>
+          </div>
+
+          <div className="summary-grid">
+            <div className="summary-card">
+              <div className="summary-value">{getSummaryStats().completed}</div>
+              <div className="summary-label">Files Processed</div>
+            </div>
+            <div className="summary-card">
+              <div className="summary-value">{getSummaryStats().failed}</div>
+              <div className="summary-label">Failed Files</div>
+            </div>
+            <div className="summary-card">
+              <div className="summary-value">{getSummaryStats().totalIssues}</div>
+              <div className="summary-label">Total Issues Found</div>
+            </div>
+            <div className="summary-card">
+              <div className="summary-value">{Math.round(getSummaryStats().avgConfidence * 100)}%</div>
+              <div className="summary-label">Avg Confidence</div>
+            </div>
+            <div className="summary-card">
+              <div className="summary-value">{formatProcessingTime(getSummaryStats().totalTime)}</div>
+              <div className="summary-label">Total Processing Time</div>
+            </div>
+            <div className="summary-card">
+              <div className="summary-value">
+                {bulkState.completedAt ? bulkState.completedAt.toLocaleTimeString() : "N/A"}
+              </div>
+              <div className="summary-label">Completed At</div>
+            </div>
+          </div>
+        </div>
+      )}
         </div>
       )}
 
