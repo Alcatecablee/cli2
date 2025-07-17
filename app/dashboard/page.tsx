@@ -8,7 +8,7 @@ import dataService from "../../lib/supabase-data";
 import "./dashboard.css";
 import "./integrations.css";
 import "./collaboration-styles.css";
-import GitHubIntegration from "./components/GitHubIntegration";
+import GitHubIntegrationFixed from "./components/GitHubIntegrationFixed";
 import AnalyticsDashboard from "./components/AnalyticsDashboard";
 import ApiKeysManager from "./components/ApiKeysManager";
 import SystemStatus from "./components/SystemStatus";
