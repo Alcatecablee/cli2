@@ -393,23 +393,28 @@ export default ExampleComponent;`,
               `/api/collaboration/analyze?sessionId=${sessionId}`,
             );
             if (analyses && Array.isArray(analyses)) {
-              setAnalysisResults(
-                analyses.map((analysis: any) => ({
-                  id: analysis.id,
-                  success: analysis.success,
-                  dryRun: analysis.dry_run,
-                  layers: analysis.layers_executed,
-                  originalCode: analysis.input_code,
-                  transformed: analysis.output_code,
-                  totalExecutionTime: analysis.execution_time,
-                  successfulLayers: analysis.layers_executed.length,
-                  analysis: analysis.analysis_results,
-                  triggeredBy: analysis.triggered_by,
-                  triggeredByName: analysis.triggered_by_name,
-                  timestamp: analysis.created_at,
-                  error: analysis.error_message,
-                })),
-              );
+              const formattedAnalyses = analyses.map((analysis: any) => ({
+                id: analysis.id,
+                success: analysis.success,
+                dryRun: analysis.dry_run,
+                layers: analysis.layers_executed,
+                originalCode: analysis.input_code,
+                transformed: analysis.output_code,
+                totalExecutionTime: analysis.execution_time,
+                successfulLayers: analysis.layers_executed.length,
+                analysis: analysis.analysis_results,
+                triggeredBy: analysis.triggered_by,
+                triggeredByName: analysis.triggered_by_name,
+                timestamp: analysis.created_at,
+                error: analysis.error_message,
+              }));
+
+              setAnalysisResults(formattedAnalyses);
+
+              // Auto-select the latest result if none is selected
+              if (formattedAnalyses.length > 0 && !selectedResult) {
+                setSelectedResult(formattedAnalyses[0]);
+              }
             }
           } catch (analysisError) {
             console.warn("Analysis polling error:", analysisError.message);
