@@ -2664,23 +2664,7 @@ export default function Dashboard() {
                     >
                       Export Data
                     </button>
-                    <button
-                      className="btn btn-warning"
-                      onClick={() => {
-                        if (
-                          confirm(
-                            "This will reset the onboarding experience so it shows again on your next visit to the homepage. Continue?",
-                          )
-                        ) {
-                          localStorage.removeItem("neurolint-onboarding");
-                          alert(
-                            "Onboarding has been reset. Visit the homepage to see it again.",
-                          );
-                        }
-                      }}
-                    >
-                      Reset Onboarding
-                    </button>
+
                     <button
                       className="btn btn-danger"
                       onClick={() => {
