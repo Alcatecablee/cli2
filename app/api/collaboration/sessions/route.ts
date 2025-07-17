@@ -115,7 +115,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create session with a simplified structure for now
+    // Create session
     const sessionId = `session_${Date.now()}_${Math.random().toString(36).substring(2)}`;
     const session = {
       id: sessionId,
@@ -132,8 +132,8 @@ export async function POST(request: NextRequest) {
       expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
     };
 
-    // For now, store in memory/temporary storage
-    // In production, you'd want to properly create Supabase tables that work with your auth system
+    // Store session in data store
+    dataStore.collaborationSessions.set(sessionId, session);
     const sessionError = null;
 
     if (sessionError) {
