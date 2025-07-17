@@ -130,7 +130,10 @@ export async function authenticateRequest(
       .single();
 
     if (profileError) {
-      console.error("Profile fetch error:", profileError.message);
+      // Only log unexpected errors, not missing profile records
+      if (profileError.code !== "PGRST116") {
+        console.error("Profile fetch error:", profileError.message);
+      }
     }
 
     return {
