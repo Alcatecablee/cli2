@@ -214,7 +214,81 @@ export default function BulkProcessor({
       processing: false,
       results: [],
       overallProgress: 0,
+      showSummary: false,
     });
+  };
+
+  const toggleResultExpansion = (index: number) => {
+    setBulkState((prev) => ({
+      ...prev,
+      results: prev.results.map((result, idx) =>
+        idx === index ? { ...result, expanded: !result.expanded } : result,
+      ),
+    }));
+  };
+
+  const exportResults = () => {
+    const completedResults = bulkState.results.filter(
+      (r) => r.status === "completed",
+    );
+    const summary = {
+      timestamp: new Date().toISOString(),
+      totalFiles: bulkState.results.length,
+      successfulFiles: completedResults.length,
+      failedFiles: bulkState.results.filter((r) => r.status === "error").length,
+      totalIssuesFound: completedResults.reduce(
+        (sum, r) => sum + (r.result?.analysis?.detectedIssues?.length || 0),
+        0,
+      ),
+      averageConfidence:
+        completedResults.reduce(
+          (sum, r) => sum + (r.result?.analysis?.confidence || 0),
+          0,
+        ) / (completedResults.length || 1),
+      totalProcessingTime: bulkState.results.reduce(
+        (sum, r) => sum + (r.processingTime || 0),
+        0,
+      ),
+      results: bulkState.results,
+    };
+
+    const blob = new Blob([JSON.stringify(summary, null, 2)], {
+      type: "application/json",
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `neurolint-bulk-analysis-${new Date().toISOString().split("T")[0]}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const getSummaryStats = () => {
+    const completed = bulkState.results.filter((r) => r.status === "completed");
+    const failed = bulkState.results.filter((r) => r.status === "error");
+    const totalIssues = completed.reduce(
+      (sum, r) => sum + (r.result?.analysis?.detectedIssues?.length || 0),
+      0,
+    );
+    const avgConfidence =
+      completed.length > 0
+        ? completed.reduce(
+            (sum, r) => sum + (r.result?.analysis?.confidence || 0),
+            0,
+          ) / completed.length
+        : 0;
+    const totalTime = bulkState.results.reduce(
+      (sum, r) => sum + (r.processingTime || 0),
+      0,
+    );
+
+    return {
+      completed: completed.length,
+      failed: failed.length,
+      totalIssues,
+      avgConfidence,
+      totalTime,
+    };
   };
 
   const getStatusIcon = (status: string) => {
