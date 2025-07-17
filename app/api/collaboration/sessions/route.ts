@@ -256,18 +256,41 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: "Invalid request" }, { status: 400 });
     }
 
-    // Only host can delete session
-    const { error } = await supabase
-      .from("collaboration_sessions")
-      .delete()
-      .eq("id", sessionId)
-      .eq("host_user_id", userId);
+    const session = dataStore.collaborationSessions.get(sessionId);
+    if (!session) {
+      return NextResponse.json({ error: "Session not found" }, { status: 404 });
+    }
 
-    if (error) {
+    // Only host can delete session
+    if (session.host_user_id !== userId) {
       return NextResponse.json(
-        { error: "Failed to delete session" },
-        { status: 500 },
+        { error: "Only host can delete session" },
+        { status: 403 },
       );
+    }
+
+    // Remove session and all related data
+    dataStore.collaborationSessions.delete(sessionId);
+
+    // Remove all participants
+    for (const [key] of dataStore.collaborationParticipants.entries()) {
+      if (key.startsWith(`${sessionId}_`)) {
+        dataStore.collaborationParticipants.delete(key);
+      }
+    }
+
+    // Remove all comments
+    for (const [key] of dataStore.collaborationComments.entries()) {
+      if (key.startsWith(`${sessionId}_`)) {
+        dataStore.collaborationComments.delete(key);
+      }
+    }
+
+    // Remove all analysis
+    for (const [key] of dataStore.collaborationAnalysis.entries()) {
+      if (key.startsWith(`${sessionId}_`)) {
+        dataStore.collaborationAnalysis.delete(key);
+      }
     }
 
     return NextResponse.json({ success: true });
