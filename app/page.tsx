@@ -17,7 +17,7 @@ const getDefaultOnboardingState = (): OnboardingData => ({
 });
 
 export default function HomePage() {
-  const [onboardingStep, setOnboardingStep] = useState(0);
+  const [onboardingStep, setOnboardingStep] = useState(1);
   const [onboardingData, setOnboardingData] = useState<OnboardingData>(
     getDefaultOnboardingState(),
   );
