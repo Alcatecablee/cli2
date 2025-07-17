@@ -1390,21 +1390,22 @@ body {
 
 .sample-buttons {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 16px;
-  margin-bottom: 32px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 24px;
+  margin-bottom: 48px;
 }
 
 .recommended-label {
-  margin-bottom: 16px;
+  margin-bottom: 32px;
   text-align: center;
 }
 
 .recommended-label span {
-  color: rgb(102, 102, 102);
+  color: rgba(255, 255, 255, 0.8);
   font-family: "JetBrains Mono", "Fira Code", consolas, monospace;
-  font-size: 14px;
-  letter-spacing: 0.5px;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 1px;
   text-transform: uppercase;
 }
 
