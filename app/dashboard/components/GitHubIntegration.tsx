@@ -227,6 +227,13 @@ export default function GitHubIntegration() {
         // Check if user needs to upgrade for this scan
         if (data.scanCost.credits > 10 && user?.plan === "free") {
           setState((prev) => ({ ...prev, showPricingModal: true }));
+        } else {
+          // Show scanner for this repository
+          setState((prev) => ({
+            ...prev,
+            showScanner: true,
+            scannerFiles: data.files,
+          }));
         }
       } else {
         setState((prev) => ({
