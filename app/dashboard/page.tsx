@@ -2676,7 +2676,7 @@ export default function Dashboard() {
                           localStorage.removeItem("neurolint-history");
                           localStorage.removeItem("neurolint-projects");
                           localStorage.removeItem("neurolint-settings");
-                          localStorage.removeItem("neurolint-onboarding");
+
                           setDashboardState((prev) => ({
                             ...prev,
                             analysisHistory: [],
