@@ -11,7 +11,8 @@ export default function HomePage() {
     setIsHydrated(true);
   }, []);
 
-  if (!isHydrated) {
+  // Always render the main content - bypass loading state
+  if (false) {
     return (
       <div
         style={{
