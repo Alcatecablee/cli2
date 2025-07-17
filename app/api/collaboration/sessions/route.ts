@@ -167,15 +167,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       session: {
         ...session,
-        participants: [
-          {
-            user_id: userId,
-            user_name: userName,
-            user_color: userColor,
-            is_host: true,
-            is_active: true,
-          },
-        ],
+        participants: [participant],
       },
     });
   } catch (error) {
