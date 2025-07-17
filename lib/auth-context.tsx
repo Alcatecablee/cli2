@@ -146,9 +146,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
           if (response.ok) {
             try {
-              // Clone the response to avoid body stream issues
-              const responseClone = response.clone();
-              const { user: currentUser } = await responseClone.json();
+              const { user: currentUser } = await response.json();
 
               // Additional validation on user data
               if (currentUser && currentUser.id && currentUser.email) {
