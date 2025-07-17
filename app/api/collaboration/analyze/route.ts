@@ -54,10 +54,19 @@ export async function POST(request: NextRequest) {
     }
 
     // Get session
+    console.log("[ANALYZE] Looking for session:", sessionId);
+    console.log(
+      "[ANALYZE] Available sessions:",
+      Array.from(dataStore.collaborationSessions.keys()),
+    );
+
     const session = dataStore.collaborationSessions?.get(sessionId);
     if (!session) {
+      console.log("[ANALYZE] Session not found!");
       return NextResponse.json({ error: "Session not found" }, { status: 404 });
     }
+
+    console.log("[ANALYZE] Found session:", session.name);
 
     const code = session.document_content;
     if (!code || !code.trim()) {
