@@ -1281,7 +1281,7 @@ body {
 
 .control-options {
   display: flex;
-  gap: 8px;
+  gap: 16px;
 }
 
 .control-btn {
