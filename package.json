@@ -27,7 +27,8 @@
     "lint": "next lint",
     "lint:fix": "next lint --fix",
     "type-check": "tsc --noEmit",
-    "clean": "rm -rf .next out dist"
+    "clean": "rm -rf .next out dist",
+    "db:setup": "psql $SUPABASE_URL -f supabase-collaboration-schema.sql"
   },
   "keywords": [
     "react",
@@ -39,7 +40,9 @@
     "ssr",
     "hydration",
     "saas",
-    "premium-service"
+    "premium-service",
+    "collaboration",
+    "real-time"
   ],
   "author": "NeuroLint Pro",
   "license": "MIT",
