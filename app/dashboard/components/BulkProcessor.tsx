@@ -2,17 +2,23 @@
 
 import React, { useState, useCallback, useRef } from "react";
 
+interface BulkResult {
+  filename: string;
+  status: "pending" | "processing" | "completed" | "error";
+  result?: any;
+  error?: string;
+  progress: number;
+  processingTime?: number;
+  expanded?: boolean;
+}
+
 interface BulkProcessingState {
   files: File[];
   processing: boolean;
-  results: Array<{
-    filename: string;
-    status: "pending" | "processing" | "completed" | "error";
-    result?: any;
-    error?: string;
-    progress: number;
-  }>;
+  results: BulkResult[];
   overallProgress: number;
+  showSummary: boolean;
+  completedAt?: Date;
 }
 
 interface BulkProcessorProps {
