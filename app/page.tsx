@@ -68,7 +68,7 @@ const clearDemoState = () => ({
 
 // Helper function to save onboarding data with auth-aware persistence
 const saveOnboardingData = async (data: OnboardingData) => {
-  // Always save to localStorage for immediate persistence
+  // Guard against SSR - only save to localStorage on client
   if (typeof window !== "undefined") {
     try {
       localStorage.setItem("neurolint-onboarding", JSON.stringify(data));
@@ -118,7 +118,7 @@ const loadOnboardingData = async (): Promise<OnboardingData> => {
   //   }
   // }
 
-  // Fall back to localStorage
+  // Guard against SSR - only access localStorage on client
   if (typeof window !== "undefined") {
     try {
       const savedOnboarding = localStorage.getItem("neurolint-onboarding");
@@ -140,12 +140,14 @@ const loadOnboardingData = async (): Promise<OnboardingData> => {
       }
     } catch (error) {
       console.warn("Failed to load onboarding data from localStorage:", error);
-      // Clear corrupted data
-      localStorage.removeItem("neurolint-onboarding");
+      // Clear corrupted data only on client
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("neurolint-onboarding");
+      }
     }
   }
 
-  // Return default state if no valid saved data
+  // Return default state if no valid saved data or on server
   return {
     projectType: "",
     experienceLevel: "",
@@ -173,28 +175,36 @@ export default function HomePage() {
 
   // Load data from localStorage after hydration to prevent SSR mismatch
   useEffect(() => {
+    // Always set hydrated to true first to prevent infinite loading
+    setIsHydrated(true);
+
     try {
       // Scroll to top when page loads
       if (typeof window !== "undefined") {
         window.scrollTo({ top: 0, behavior: "smooth" });
       }
 
-      // Synchronous localStorage loading to avoid async complications
+      // Load onboarding data from localStorage only on client
       if (typeof window !== "undefined") {
         const savedOnboarding = localStorage.getItem("neurolint-onboarding");
         if (savedOnboarding) {
-          const parsed = JSON.parse(savedOnboarding);
-          if (
-            parsed &&
-            typeof parsed === "object" &&
-            typeof parsed.completedOnboarding === "boolean"
-          ) {
-            setOnboardingData({
-              projectType: parsed.projectType || "",
-              experienceLevel: parsed.experienceLevel || "",
-              hasCode: parsed.hasCode || false,
-              completedOnboarding: parsed.completedOnboarding,
-            });
+          try {
+            const parsed = JSON.parse(savedOnboarding);
+            if (
+              parsed &&
+              typeof parsed === "object" &&
+              typeof parsed.completedOnboarding === "boolean"
+            ) {
+              setOnboardingData({
+                projectType: parsed.projectType || "",
+                experienceLevel: parsed.experienceLevel || "",
+                hasCode: parsed.hasCode || false,
+                completedOnboarding: parsed.completedOnboarding,
+              });
+            }
+          } catch (parseError) {
+            console.warn("Failed to parse onboarding data:", parseError);
+            localStorage.removeItem("neurolint-onboarding");
           }
         }
       }
@@ -204,14 +214,12 @@ export default function HomePage() {
       if (typeof window !== "undefined") {
         localStorage.removeItem("neurolint-onboarding");
       }
-    } finally {
-      setIsHydrated(true);
     }
   }, []);
 
-  // Save onboarding data whenever it changes (but only after hydration)
+  // Save onboarding data whenever it changes (but only after hydration and on client)
   useEffect(() => {
-    if (isHydrated) {
+    if (isHydrated && typeof window !== "undefined") {
       saveOnboardingData(onboardingData);
     }
   }, [onboardingData, isHydrated]);
