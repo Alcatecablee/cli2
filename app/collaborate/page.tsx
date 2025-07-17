@@ -240,8 +240,10 @@ export default function CollaboratePage() {
         prompt("Copy this session link:", sessionLink);
       }
 
-      // Setup real-time subscriptions
-      setupRealtimeSubscriptions(session.id);
+      // Setup real-time subscriptions (with delay to allow session creation to complete)
+      setTimeout(() => {
+        setupRealtimeSubscriptions(session.id);
+      }, 1000);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to create session");
     } finally {
