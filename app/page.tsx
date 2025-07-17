@@ -1049,7 +1049,15 @@ function ImageGallery({ images }) {
             }}
             aria-labelledby="onboarding-title"
           >
-            <div className="onboarding-container">
+            <div style={{ textAlign: "center", padding: "2rem" }}>
+              <h1 style={{ fontSize: "2rem", marginBottom: "1rem" }}>
+                Welcome to NeuroLint Pro
+              </h1>
+              <p style={{ marginBottom: "2rem" }}>
+                Loading onboarding experience...
+              </p>
+            </div>
+            <div className="onboarding-container" style={{ display: "none" }}>
               <div className="onboarding-progress">
                 <div className="progress-bar">
                   <div
