@@ -1780,6 +1780,26 @@ function generateSimulatedFixes(code, detectedIssues) {
           .replace(/&#36;/g, "$")
           .replace(/&amp;#36;/g, "$");
         break;
+      case "HTML symbol entities":
+        previewCode = previewCode
+          .replace(/&nbsp;/g, " ")
+          .replace(/&copy;/g, "©")
+          .replace(/&reg;/g, "®")
+          .replace(/&trade;/g, "™")
+          .replace(/&#39;/g, "'")
+          .replace(/&apos;/g, "'");
+        break;
+      case "HTML punctuation entities":
+        previewCode = previewCode
+          .replace(/&ndash;/g, "–")
+          .replace(/&mdash;/g, "—")
+          .replace(/&hellip;/g, "…");
+        break;
+      case "HTML currency entities":
+        previewCode = previewCode
+          .replace(/&euro;/g, "€")
+          .replace(/&pound;/g, "£");
+        break;
       case "Console.log usage":
         previewCode = previewCode.replace(/console\.log\(/g, "console.debug(");
         break;
