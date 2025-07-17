@@ -378,7 +378,10 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   // Check for build-time environment
-  if (process.env.NEXT_PHASE === "phase-production-build") {
+  if (
+    process.env.NEXT_PHASE === "phase-production-build" ||
+    (process.env.NODE_ENV === "production" && !process.env.VERCEL_ENV)
+  ) {
     return NextResponse.json({
       status: "building",
       service: "NeuroLint Pro Analysis API",
