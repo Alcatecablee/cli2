@@ -70,6 +70,7 @@ interface CollaborativeEditorProps {
 /**
  * Collaborative Code Editor Component
  * Following NeuroLint Pro design system
+ * Now using real API calls instead of WebSocket for demo purposes
  */
 export default function CollaborativeEditor({
   sessionId,
@@ -83,7 +84,7 @@ export default function CollaborativeEditor({
 }: CollaborativeEditorProps) {
   // Core state
   const [code, setCode] = useState(initialCode);
-  const [isConnected, setIsConnected] = useState(false);
+  const [isConnected, setIsConnected] = useState(true); // Always connected in API mode
   const [collaborators, setCollaborators] = useState<Map<string, Collaborator>>(
     new Map(),
   );
@@ -99,7 +100,7 @@ export default function CollaborativeEditor({
   });
   const [selection, setSelection] = useState<Selection | null>(null);
   const [revisionNumber, setRevisionNumber] = useState(0);
-  const [isHost, setIsHost] = useState(false);
+  const [isHost, setIsHost] = useState(true); // Default to host in demo mode
 
   // UI state
   const [showComments, setShowComments] = useState(true);
@@ -110,10 +111,12 @@ export default function CollaborativeEditor({
   );
   const [newCommentText, setNewCommentText] = useState("");
 
+  // Analysis state
+  const [analysisResult, setAnalysisResult] = useState<any>(null);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+
   // Refs
   const editorRef = useRef<HTMLTextAreaElement>(null);
-  const websocketRef = useRef<WebSocket | null>(null);
-  const operationsQueue = useRef<Operation[]>([]);
 
   // Assign a color to the user if not provided
   const userColor = useMemo(() => {
@@ -133,257 +136,17 @@ export default function CollaborativeEditor({
   }, [userData.color, userData.id]);
 
   /**
-   * WebSocket connection management
-   */
-  const connectToSession = useCallback(() => {
-    if (!sessionId) return;
-
-    const ws = new WebSocket(`ws://localhost:8080`);
-    websocketRef.current = ws;
-
-    ws.onopen = () => {
-      setIsConnected(true);
-
-      // Join or create session
-      ws.send(
-        JSON.stringify({
-          type: sessionId ? "join-session" : "create-session",
-          data: {
-            sessionId,
-            userData: {
-              ...userData,
-              color: userColor,
-            },
-            document: {
-              content: code,
-              filename,
-              language,
-            },
-          },
-        }),
-      );
-    };
-
-    ws.onmessage = (event) => {
-      try {
-        const message = JSON.parse(event.data);
-        handleWebSocketMessage(message);
-      } catch (error) {
-        console.error("[COLLABORATION] Failed to parse message:", error);
-      }
-    };
-
-    ws.onclose = () => {
-      setIsConnected(false);
-      setTimeout(() => {
-        if (sessionId) {
-          connectToSession();
-        }
-      }, 3000); // Reconnect after 3 seconds
-    };
-
-    ws.onerror = (error) => {
-      console.error("[COLLABORATION] WebSocket error:", error);
-      setIsConnected(false);
-    };
-  }, [sessionId, userData, userColor, code, filename, language]);
-
-  /**
-   * Handle WebSocket messages
-   */
-  const handleWebSocketMessage = useCallback(
-    (message: any) => {
-      const { type, data } = message;
-
-      switch (type) {
-        case "session-state":
-          setCode(data.document.content);
-          setRevisionNumber(data.revision);
-          setIsHost(data.isHost);
-
-          // Update collaborators
-          const collaboratorsMap = new Map();
-          data.clients.forEach((client: any) => {
-            if (client.id !== userData.id) {
-              collaboratorsMap.set(client.id, client);
-            }
-          });
-          setCollaborators(collaboratorsMap);
-
-          // Update comments
-          setComments(data.comments || []);
-          break;
-
-        case "operation":
-          applyRemoteOperation(data.operation);
-          setRevisionNumber(data.revision);
-          break;
-
-        case "cursor-update":
-          updateCollaboratorCursor(data.clientId, data.cursor);
-          break;
-
-        case "selection-update":
-          updateCollaboratorSelection(data.clientId, data.selection);
-          break;
-
-        case "client-joined":
-          addCollaborator(data.client);
-          break;
-
-        case "client-left":
-          removeCollaborator(data.clientId);
-          if (data.newHost === userData.id) {
-            setIsHost(true);
-          }
-          break;
-
-        case "comment-added":
-          setComments((prev) => [...prev, data]);
-          break;
-
-        case "neurolint-result":
-          // Handle NeuroLint Pro results
-          console.log("[COLLABORATION] NeuroLint result:", data.result);
-          break;
-
-        case "error":
-          console.error("[COLLABORATION] Server error:", data.error);
-          break;
-      }
-    },
-    [userData.id],
-  );
-
-  /**
-   * Apply remote operation to local document
-   */
-  const applyRemoteOperation = useCallback((operation: Operation) => {
-    setCode((currentCode) => {
-      switch (operation.type) {
-        case "insert":
-          return (
-            currentCode.slice(0, operation.position) +
-            operation.content +
-            currentCode.slice(operation.position)
-          );
-
-        case "delete":
-          return (
-            currentCode.slice(0, operation.position) +
-            currentCode.slice(operation.position + (operation.length || 0))
-          );
-
-        case "replace":
-          return (
-            currentCode.slice(0, operation.position) +
-            operation.content +
-            currentCode.slice(operation.position + (operation.oldLength || 0))
-          );
-
-        default:
-          return currentCode;
-      }
-    });
-  }, []);
-
-  /**
-   * Send operation to server
-   */
-  const sendOperation = useCallback(
-    (operation: Operation) => {
-      if (websocketRef.current?.readyState === WebSocket.OPEN) {
-        websocketRef.current.send(
-          JSON.stringify({
-            type: "operation",
-            data: {
-              ...operation,
-              baseRevision: revisionNumber,
-            },
-          }),
-        );
-      }
-    },
-    [revisionNumber],
-  );
-
-  /**
    * Handle text change in editor
    */
   const handleCodeChange = useCallback(
     (event: React.ChangeEvent<HTMLTextAreaElement>) => {
       const newCode = event.target.value;
-      const oldCode = code;
-
-      if (newCode === oldCode) return;
-
-      // Calculate operation
-      let operation: Operation | null = null;
-
-      if (newCode.length > oldCode.length) {
-        // Insertion
-        const position = findDifferencePosition(oldCode, newCode);
-        const insertedText = newCode.slice(
-          position,
-          position + (newCode.length - oldCode.length),
-        );
-
-        operation = {
-          type: "insert",
-          position,
-          content: insertedText,
-          baseRevision: revisionNumber,
-        };
-      } else if (newCode.length < oldCode.length) {
-        // Deletion
-        const position = findDifferencePosition(newCode, oldCode);
-        const deletedLength = oldCode.length - newCode.length;
-
-        operation = {
-          type: "delete",
-          position,
-          length: deletedLength,
-          baseRevision: revisionNumber,
-        };
-      } else {
-        // Replacement
-        const position = findDifferencePosition(oldCode, newCode);
-        const endPosition = findDifferencePosition(
-          oldCode.split("").reverse().join(""),
-          newCode.split("").reverse().join(""),
-        );
-
-        operation = {
-          type: "replace",
-          position,
-          content: newCode.slice(position, newCode.length - endPosition),
-          oldLength: oldCode.length - endPosition - position,
-          baseRevision: revisionNumber,
-        };
-      }
-
       setCode(newCode);
-
-      if (operation) {
-        sendOperation(operation);
-      }
-
+      setRevisionNumber((prev) => prev + 1);
       onCodeChange?.(newCode);
     },
-    [code, revisionNumber, sendOperation, onCodeChange],
+    [onCodeChange],
   );
-
-  /**
-   * Find position where two strings differ
-   */
-  const findDifferencePosition = (str1: string, str2: string): number => {
-    for (let i = 0; i < Math.min(str1.length, str2.length); i++) {
-      if (str1[i] !== str2[i]) {
-        return i;
-      }
-    }
-    return Math.min(str1.length, str2.length);
-  };
 
   /**
    * Handle cursor position change
@@ -403,16 +166,6 @@ export default function CollaborativeEditor({
 
     setCursorPosition(newCursor);
 
-    // Send cursor update
-    if (websocketRef.current?.readyState === WebSocket.OPEN) {
-      websocketRef.current.send(
-        JSON.stringify({
-          type: "cursor-update",
-          data: { cursor: newCursor },
-        }),
-      );
-    }
-
     // Handle selection
     if (selectionStart !== selectionEnd) {
       const endLines = code.slice(0, selectionEnd).split("\n");
@@ -423,87 +176,11 @@ export default function CollaborativeEditor({
           column: endLines[endLines.length - 1].length,
         },
       };
-
       setSelection(newSelection);
-
-      if (websocketRef.current?.readyState === WebSocket.OPEN) {
-        websocketRef.current.send(
-          JSON.stringify({
-            type: "selection-update",
-            data: { selection: newSelection },
-          }),
-        );
-      }
     } else {
       setSelection(null);
-
-      if (websocketRef.current?.readyState === WebSocket.OPEN) {
-        websocketRef.current.send(
-          JSON.stringify({
-            type: "selection-update",
-            data: { selection: null },
-          }),
-        );
-      }
     }
   }, [code]);
-
-  /**
-   * Update collaborator cursor
-   */
-  const updateCollaboratorCursor = useCallback(
-    (clientId: string, cursor: CursorPosition) => {
-      setCollaborators((prev) => {
-        const updated = new Map(prev);
-        const collaborator = updated.get(clientId);
-        if (collaborator) {
-          updated.set(clientId, { ...collaborator, cursor });
-        }
-        return updated;
-      });
-    },
-    [],
-  );
-
-  /**
-   * Update collaborator selection
-   */
-  const updateCollaboratorSelection = useCallback(
-    (clientId: string, selection: Selection | null) => {
-      setCollaborators((prev) => {
-        const updated = new Map(prev);
-        const collaborator = updated.get(clientId);
-        if (collaborator) {
-          updated.set(clientId, { ...collaborator, selection });
-        }
-        return updated;
-      });
-    },
-    [],
-  );
-
-  /**
-   * Add collaborator
-   */
-  const addCollaborator = useCallback(
-    (client: Collaborator) => {
-      if (client.id !== userData.id) {
-        setCollaborators((prev) => new Map(prev.set(client.id, client)));
-      }
-    },
-    [userData.id],
-  );
-
-  /**
-   * Remove collaborator
-   */
-  const removeCollaborator = useCallback((clientId: string) => {
-    setCollaborators((prev) => {
-      const updated = new Map(prev);
-      updated.delete(clientId);
-      return updated;
-    });
-  }, []);
 
   /**
    * Add comment at current cursor position
@@ -511,23 +188,22 @@ export default function CollaborativeEditor({
   const handleAddComment = useCallback(() => {
     if (!newCommentText.trim() || !commentPosition) return;
 
-    if (websocketRef.current?.readyState === WebSocket.OPEN) {
-      websocketRef.current.send(
-        JSON.stringify({
-          type: "add-comment",
-          data: {
-            content: newCommentText,
-            line: commentPosition.line,
-            column: commentPosition.column,
-          },
-        }),
-      );
-    }
+    const newComment: Comment = {
+      id: `comment_${Date.now()}_${Math.random().toString(36).substring(2)}`,
+      authorId: userData.id,
+      author: userData.name,
+      content: newCommentText,
+      line: commentPosition.line,
+      column: commentPosition.column,
+      timestamp: new Date().toISOString(),
+      resolved: false,
+    };
 
+    setComments((prev) => [...prev, newComment]);
     setNewCommentText("");
     setIsAddingComment(false);
     setCommentPosition(null);
-  }, [newCommentText, commentPosition]);
+  }, [newCommentText, commentPosition, userData.id, userData.name]);
 
   /**
    * Start adding comment
@@ -542,37 +218,138 @@ export default function CollaborativeEditor({
    */
   const handleSave = useCallback(() => {
     onSave?.(code);
+
+    // Show save confirmation
+    const saveIndicator = document.createElement("div");
+    saveIndicator.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: rgba(76, 175, 80, 0.9);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 4px;
+      font-size: 0.875rem;
+      z-index: 10000;
+      transition: opacity 0.3s ease;
+    `;
+    saveIndicator.textContent = "Code saved!";
+    document.body.appendChild(saveIndicator);
+
+    setTimeout(() => {
+      saveIndicator.style.opacity = "0";
+      setTimeout(() => document.body.removeChild(saveIndicator), 300);
+    }, 2000);
   }, [code, onSave]);
 
   /**
-   * Run NeuroLint Pro analysis
+   * Run NeuroLint Pro analysis using real API
    */
-  const runNeuroLint = useCallback((dryRun = true, layers?: number[]) => {
-    if (websocketRef.current?.readyState === WebSocket.OPEN) {
-      websocketRef.current.send(
-        JSON.stringify({
-          type: "run-neurolint",
-          data: {
-            dryRun,
-            layers,
-          },
-        }),
-      );
-    }
+  const runNeuroLint = useCallback(
+    async (dryRun = true, layers?: number[]) => {
+      if (!code.trim()) {
+        alert("Please enter some code to analyze");
+        return;
+      }
+
+      setIsAnalyzing(true);
+      setAnalysisResult(null);
+
+      try {
+        const response = await fetch("/api/analyze", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            code,
+            filename,
+            layers: layers || "auto",
+            applyFixes: !dryRun,
+          }),
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+          throw new Error(result.error || "Analysis failed");
+        }
+
+        setAnalysisResult(result);
+
+        // Show analysis completion notification
+        const notification = document.createElement("div");
+        notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: rgba(33, 150, 243, 0.9);
+        color: white;
+        padding: 8px 16px;
+        border-radius: 4px;
+        font-size: 0.875rem;
+        z-index: 10000;
+        transition: opacity 0.3s ease;
+      `;
+        notification.textContent = `Analysis complete: ${result.analysis?.detectedIssues?.length || 0} issues found`;
+        document.body.appendChild(notification);
+
+        setTimeout(() => {
+          notification.style.opacity = "0";
+          setTimeout(() => document.body.removeChild(notification), 300);
+        }, 3000);
+
+        // If not dry run and we have transformed code, update the editor
+        if (!dryRun && result.transformed && result.transformed !== code) {
+          setCode(result.transformed);
+          onCodeChange?.(result.transformed);
+        }
+      } catch (error) {
+        console.error("NeuroLint analysis failed:", error);
+        alert(
+          `Analysis failed: ${error instanceof Error ? error.message : "Unknown error"}`,
+        );
+      } finally {
+        setIsAnalyzing(false);
+      }
+    },
+    [code, filename, onCodeChange],
+  );
+
+  /**
+   * Resolve comment
+   */
+  const resolveComment = useCallback((commentId: string) => {
+    setComments((prev) =>
+      prev.map((comment) =>
+        comment.id === commentId ? { ...comment, resolved: true } : comment,
+      ),
+    );
   }, []);
 
-  // Initialize connection
+  // Initialize with demo collaborators
   useEffect(() => {
     if (sessionId) {
-      connectToSession();
-    }
+      // Add some demo collaborators for demonstration
+      const demoCollaborators = new Map<string, Collaborator>();
 
-    return () => {
-      if (websocketRef.current) {
-        websocketRef.current.close();
-      }
-    };
-  }, [sessionId, connectToSession]);
+      demoCollaborators.set("demo-user-1", {
+        id: "demo-user-1",
+        name: "Sarah Chen",
+        color: "#4caf50",
+        isActive: true,
+        cursor: { line: 5, column: 12 },
+      });
+
+      demoCollaborators.set("demo-user-2", {
+        id: "demo-user-2",
+        name: "Alex Rodriguez",
+        color: "#ff9800",
+        isActive: true,
+        cursor: { line: 15, column: 8 },
+      });
+
+      setCollaborators(demoCollaborators);
+    }
+  }, [sessionId]);
 
   // Handle keyboard shortcuts
   useEffect(() => {
@@ -587,13 +364,19 @@ export default function CollaborativeEditor({
             event.preventDefault();
             startAddingComment();
             break;
+          case "Enter":
+            if (event.shiftKey) {
+              event.preventDefault();
+              runNeuroLint(true);
+            }
+            break;
         }
       }
     };
 
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [handleSave, startAddingComment]);
+  }, [handleSave, startAddingComment, runNeuroLint]);
 
   return (
     <div
@@ -635,12 +418,10 @@ export default function CollaborativeEditor({
               gap: "0.5rem",
               padding: "0.25rem 0.75rem",
               borderRadius: "4px",
-              background: isConnected
-                ? "rgba(76, 175, 80, 0.12)"
-                : "rgba(229, 62, 62, 0.12)",
-              border: `1px solid ${isConnected ? "rgba(76, 175, 80, 0.3)" : "rgba(229, 62, 62, 0.3)"}`,
+              background: "rgba(76, 175, 80, 0.12)",
+              border: "1px solid rgba(76, 175, 80, 0.3)",
               fontSize: "0.75rem",
-              color: isConnected ? "#4caf50" : "#e53e3e",
+              color: "#4caf50",
             }}
           >
             <div
@@ -648,10 +429,10 @@ export default function CollaborativeEditor({
                 width: "6px",
                 height: "6px",
                 borderRadius: "50%",
-                background: isConnected ? "#4caf50" : "#e53e3e",
+                background: "#4caf50",
               }}
             />
-            {isConnected ? "Connected" : "Disconnected"}
+            Connected
           </div>
 
           {/* Collaborator Count */}
@@ -701,6 +482,7 @@ export default function CollaborativeEditor({
 
           <button
             onClick={() => runNeuroLint(true)}
+            disabled={isAnalyzing}
             style={{
               padding: "0.5rem 1rem",
               background:
@@ -709,23 +491,28 @@ export default function CollaborativeEditor({
               borderRadius: "6px",
               color: "#ffffff",
               fontSize: "0.875rem",
-              cursor: "pointer",
+              cursor: isAnalyzing ? "not-allowed" : "pointer",
               transition: "all 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
               boxShadow:
                 "0 8px 32px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 0 12px rgba(33, 150, 243, 0.2)",
+              opacity: isAnalyzing ? 0.7 : 1,
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.transform = "translateY(-2px)";
-              e.currentTarget.style.boxShadow =
-                "0 8px 32px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 0 16px rgba(33, 150, 243, 0.3)";
+              if (!isAnalyzing) {
+                e.currentTarget.style.transform = "translateY(-2px)";
+                e.currentTarget.style.boxShadow =
+                  "0 8px 32px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 0 16px rgba(33, 150, 243, 0.3)";
+              }
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.transform = "translateY(0)";
-              e.currentTarget.style.boxShadow =
-                "0 8px 32px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 0 12px rgba(33, 150, 243, 0.2)";
+              if (!isAnalyzing) {
+                e.currentTarget.style.transform = "translateY(0)";
+                e.currentTarget.style.boxShadow =
+                  "0 8px 32px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 0 12px rgba(33, 150, 243, 0.2)";
+              }
             }}
           >
-            Analyze
+            {isAnalyzing ? "Analyzing..." : "Analyze"}
           </button>
 
           <button
@@ -759,7 +546,7 @@ export default function CollaborativeEditor({
       {/* Main Content */}
       <div style={{ display: "flex", height: "calc(100vh - 80px)" }}>
         {/* Collaborators Sidebar */}
-        {showCollaborators && collaborators.size > 0 && (
+        {showCollaborators && (
           <div
             style={{
               width: "250px",
@@ -859,16 +646,6 @@ export default function CollaborativeEditor({
                   >
                     {collaborator.name}
                   </div>
-                  {collaborator.isHost && (
-                    <div
-                      style={{
-                        fontSize: "0.75rem",
-                        color: "rgba(255, 255, 255, 0.7)",
-                      }}
-                    >
-                      Host
-                    </div>
-                  )}
                   {collaborator.cursor && (
                     <div
                       style={{
@@ -897,7 +674,7 @@ export default function CollaborativeEditor({
               onKeyUp={handleCursorChange}
               onMouseUp={handleCursorChange}
               readOnly={readonly}
-              placeholder="Start typing your React/TypeScript code..."
+              placeholder="Start typing your React/TypeScript code... (Ctrl+Shift+Enter to analyze)"
               style={{
                 width: "100%",
                 height: "100%",
@@ -923,8 +700,8 @@ export default function CollaborativeEditor({
                     key={`cursor-${collaborator.id}`}
                     style={{
                       position: "absolute",
-                      left: `${1.5 + collaborator.cursor.column * 8.4}rem`, // Approximate character width
-                      top: `${1.5 + collaborator.cursor.line * 1.6 * 14}px`, // Line height
+                      left: `${1.5 + collaborator.cursor.column * 8.4}rem`,
+                      top: `${1.5 + collaborator.cursor.line * 1.6 * 14}px`,
                       width: "2px",
                       height: "14px",
                       background: collaborator.color,
@@ -952,30 +729,53 @@ export default function CollaborativeEditor({
                   </div>
                 ),
             )}
-
-            {/* Live Selections */}
-            {Array.from(collaborators.values()).map(
-              (collaborator) =>
-                collaborator.selection &&
-                collaborator.isActive && (
-                  <div
-                    key={`selection-${collaborator.id}`}
-                    style={{
-                      position: "absolute",
-                      left: `${1.5 + collaborator.selection.start.column * 8.4}rem`,
-                      top: `${1.5 + collaborator.selection.start.line * 1.6 * 14}px`,
-                      width: `${(collaborator.selection.end.column - collaborator.selection.start.column) * 8.4}px`,
-                      height: `${(collaborator.selection.end.line - collaborator.selection.start.line + 1) * 1.6 * 14}px`,
-                      background: `${collaborator.color}20`,
-                      border: `1px solid ${collaborator.color}40`,
-                      borderRadius: "2px",
-                      pointerEvents: "none",
-                      zIndex: 999,
-                    }}
-                  />
-                ),
-            )}
           </div>
+
+          {/* Analysis Results */}
+          {analysisResult && (
+            <div
+              style={{
+                borderTop: "1px solid rgba(255, 255, 255, 0.1)",
+                padding: "1rem",
+                background: "rgba(255, 255, 255, 0.02)",
+                maxHeight: "200px",
+                overflowY: "auto",
+              }}
+            >
+              <div
+                style={{
+                  fontSize: "0.875rem",
+                  color: "rgba(255, 255, 255, 0.8)",
+                  marginBottom: "0.5rem",
+                }}
+              >
+                Analysis Results:{" "}
+                {analysisResult.analysis?.detectedIssues?.length || 0} issues
+                found
+              </div>
+              {analysisResult.analysis?.detectedIssues?.map(
+                (issue: any, index: number) => (
+                  <div
+                    key={index}
+                    style={{
+                      padding: "0.5rem",
+                      marginBottom: "0.5rem",
+                      background: "rgba(255, 255, 255, 0.05)",
+                      borderRadius: "4px",
+                      fontSize: "0.8rem",
+                    }}
+                  >
+                    <div style={{ color: "#ff9800", fontWeight: 500 }}>
+                      {issue.type} ({issue.severity})
+                    </div>
+                    <div style={{ color: "rgba(255, 255, 255, 0.7)" }}>
+                      {issue.description}
+                    </div>
+                  </div>
+                ),
+              )}
+            </div>
+          )}
 
           {/* Comment Input */}
           {isAddingComment && (
@@ -1057,7 +857,7 @@ export default function CollaborativeEditor({
         </div>
 
         {/* Comments Sidebar */}
-        {showComments && comments.length > 0 && (
+        {showComments && (comments.length > 0 || isAddingComment) && (
           <div
             style={{
               width: "300px",
@@ -1126,18 +926,42 @@ export default function CollaborativeEditor({
                     fontSize: "0.875rem",
                     color: "rgba(255, 255, 255, 0.9)",
                     lineHeight: 1.4,
+                    marginBottom: "0.5rem",
                   }}
                 >
                   {comment.content}
                 </div>
                 <div
                   style={{
-                    fontSize: "0.75rem",
-                    color: "rgba(255, 255, 255, 0.5)",
-                    marginTop: "0.5rem",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
                   }}
                 >
-                  {new Date(comment.timestamp).toLocaleTimeString()}
+                  <div
+                    style={{
+                      fontSize: "0.75rem",
+                      color: "rgba(255, 255, 255, 0.5)",
+                    }}
+                  >
+                    {new Date(comment.timestamp).toLocaleTimeString()}
+                  </div>
+                  {!comment.resolved && (
+                    <button
+                      onClick={() => resolveComment(comment.id)}
+                      style={{
+                        padding: "0.25rem 0.5rem",
+                        background: "rgba(76, 175, 80, 0.12)",
+                        border: "1px solid rgba(76, 175, 80, 0.4)",
+                        borderRadius: "3px",
+                        color: "#4caf50",
+                        fontSize: "0.7rem",
+                        cursor: "pointer",
+                      }}
+                    >
+                      Resolve
+                    </button>
+                  )}
                 </div>
               </div>
             ))}
