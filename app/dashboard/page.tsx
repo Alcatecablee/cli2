@@ -208,13 +208,15 @@ export default function Dashboard() {
   const { user, session, loading: authLoading, signOut } = useAuth();
   const router = useRouter();
   const [forceBypassLoading, setForceBypassLoading] = useState(false);
+  const [isHydrated, setIsHydrated] = useState(false);
 
-  // Force bypass loading after 5 seconds
+  // Initialize hydration and bypass loading
   useEffect(() => {
+    setIsHydrated(true);
     const timer = setTimeout(() => {
       console.log("Forcing bypass of loading state");
       setForceBypassLoading(true);
-    }, 5000);
+    }, 3000); // Reduced timeout
 
     return () => clearTimeout(timer);
   }, []);
@@ -531,10 +533,12 @@ export default function Dashboard() {
         if (result.sessionInfo) {
           setSessionId(result.sessionInfo.sessionId);
           setRateLimitInfo(result.sessionInfo.rateLimitInfo);
-          localStorage.setItem(
-            "neurolint-session-id",
-            result.sessionInfo.sessionId,
-          );
+          if (typeof window !== "undefined") {
+            localStorage.setItem(
+              "neurolint-session-id",
+              result.sessionInfo.sessionId,
+            );
+          }
         }
 
         // Save to history if settings allow
@@ -729,8 +733,14 @@ export default function Dashboard() {
           } catch (error) {
             console.error("Error loading Supabase data:", error);
             // Fall back to localStorage
-            const savedProjects = localStorage.getItem("neurolint-projects");
-            const savedSettings = localStorage.getItem("neurolint-settings");
+            const savedProjects =
+              typeof window !== "undefined"
+                ? localStorage.getItem("neurolint-projects")
+                : null;
+            const savedSettings =
+              typeof window !== "undefined"
+                ? localStorage.getItem("neurolint-settings")
+                : null;
 
             if (savedProjects) {
               try {
@@ -755,8 +765,14 @@ export default function Dashboard() {
           }
         } else {
           // For non-authenticated users, use localStorage
-          const savedProjects = localStorage.getItem("neurolint-projects");
-          const savedSettings = localStorage.getItem("neurolint-settings");
+          const savedProjects =
+            typeof window !== "undefined"
+              ? localStorage.getItem("neurolint-projects")
+              : null;
+          const savedSettings =
+            typeof window !== "undefined"
+              ? localStorage.getItem("neurolint-settings")
+              : null;
 
           if (savedProjects) {
             try {
@@ -781,7 +797,10 @@ export default function Dashboard() {
         }
 
         // Load session info
-        const savedSessionId = localStorage.getItem("neurolint-session-id");
+        const savedSessionId =
+          typeof window !== "undefined"
+            ? localStorage.getItem("neurolint-session-id")
+            : null;
         if (savedSessionId) {
           setSessionId(savedSessionId);
           fetch(`/api/dashboard?sessionId=${savedSessionId}`)
@@ -798,8 +817,10 @@ export default function Dashboard() {
       }
     };
 
-    loadDashboardData();
-  }, [user?.id]);
+    if (isHydrated) {
+      loadDashboardData();
+    }
+  }, [user?.id, isHydrated]);
 
   // Load subscription data when account section is opened
   useEffect(() => {
@@ -818,7 +839,7 @@ export default function Dashboard() {
   ]);
 
   // Show loading screen while checking authentication
-  if (authLoading && !user && !forceBypassLoading) {
+  if (!isHydrated || (authLoading && !user && !forceBypassLoading)) {
     return (
       <div className="onboarding-section">
         <div className="onboarding-container">
