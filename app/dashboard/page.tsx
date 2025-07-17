@@ -2861,8 +2861,10 @@ export default function Dashboard() {
                           </div>
                           <div className="stat">
                             <span className="stat-value">
-                              {dashboardState.result.metadata?.processingTimeMs}
-                              ms
+                              {formatProcessingTime(
+                                dashboardState.result.metadata
+                                  ?.processingTimeMs || 0,
+                              )}
                             </span>
                             <span className="stat-label">Processing Time</span>
                           </div>
