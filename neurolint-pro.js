@@ -796,7 +796,7 @@ function applyLayerTransformations(layerId, code, options = {}) {
 
   switch (layerId) {
     case 1: // Configuration Layer
-      console.log(`����️  [FALLBACK] Layer 1: Configuration fixes`);
+      console.log(`🛠️  [FALLBACK] Layer 1: Configuration fixes`);
       // No direct code transformations for config layer in individual files
       break;
 
@@ -833,6 +833,63 @@ function applyLayerTransformations(layerId, code, options = {}) {
         transformedCode = transformedCode.replace(/&amp;#36;/g, "$");
         appliedFixes.push("HTML Entity: Converted &amp;#36; to dollar sign");
         console.log(`🛠️  [FALLBACK] Fixed HTML entities: &amp;#36;`);
+      }
+      if (transformedCode.includes("&nbsp;")) {
+        transformedCode = transformedCode.replace(/&nbsp;/g, " ");
+        appliedFixes.push("HTML Entity: Converted &nbsp; to space");
+        console.log(`🛠️  [FALLBACK] Fixed HTML entities: &nbsp;`);
+      }
+      if (transformedCode.includes("&copy;")) {
+        transformedCode = transformedCode.replace(/&copy;/g, "©");
+        appliedFixes.push("HTML Entity: Converted &copy; to copyright symbol");
+        console.log(`🛠️  [FALLBACK] Fixed HTML entities: &copy;`);
+      }
+      if (transformedCode.includes("&reg;")) {
+        transformedCode = transformedCode.replace(/&reg;/g, "®");
+        appliedFixes.push(
+          "HTML Entity: Converted &reg; to registered trademark",
+        );
+        console.log(`🛠️  [FALLBACK] Fixed HTML entities: &reg;`);
+      }
+      if (transformedCode.includes("&trade;")) {
+        transformedCode = transformedCode.replace(/&trade;/g, "™");
+        appliedFixes.push("HTML Entity: Converted &trade; to trademark symbol");
+        console.log(`🛠️  [FALLBACK] Fixed HTML entities: &trade;`);
+      }
+      if (transformedCode.includes("&#39;")) {
+        transformedCode = transformedCode.replace(/&#39;/g, "'");
+        appliedFixes.push("HTML Entity: Converted &#39; to apostrophe");
+        console.log(`🛠️  [FALLBACK] Fixed HTML entities: &#39;`);
+      }
+      if (transformedCode.includes("&apos;")) {
+        transformedCode = transformedCode.replace(/&apos;/g, "'");
+        appliedFixes.push("HTML Entity: Converted &apos; to apostrophe");
+        console.log(`🛠️  [FALLBACK] Fixed HTML entities: &apos;`);
+      }
+      if (transformedCode.includes("&ndash;")) {
+        transformedCode = transformedCode.replace(/&ndash;/g, "–");
+        appliedFixes.push("HTML Entity: Converted &ndash; to en dash");
+        console.log(`🛠️  [FALLBACK] Fixed HTML entities: &ndash;`);
+      }
+      if (transformedCode.includes("&mdash;")) {
+        transformedCode = transformedCode.replace(/&mdash;/g, "—");
+        appliedFixes.push("HTML Entity: Converted &mdash; to em dash");
+        console.log(`🛠️  [FALLBACK] Fixed HTML entities: &mdash;`);
+      }
+      if (transformedCode.includes("&hellip;")) {
+        transformedCode = transformedCode.replace(/&hellip;/g, "…");
+        appliedFixes.push("HTML Entity: Converted &hellip; to ellipsis");
+        console.log(`🛠️  [FALLBACK] Fixed HTML entities: &hellip;`);
+      }
+      if (transformedCode.includes("&euro;")) {
+        transformedCode = transformedCode.replace(/&euro;/g, "€");
+        appliedFixes.push("HTML Entity: Converted &euro; to euro symbol");
+        console.log(`🛠️  [FALLBACK] Fixed HTML entities: &euro;`);
+      }
+      if (transformedCode.includes("&pound;")) {
+        transformedCode = transformedCode.replace(/&pound;/g, "£");
+        appliedFixes.push("HTML Entity: Converted &pound; to pound symbol");
+        console.log(`🛠️  [FALLBACK] Fixed HTML entities: &pound;`);
       }
 
       // Clean up console statements - convert to console.debug (per documentation)
