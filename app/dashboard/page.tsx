@@ -488,11 +488,12 @@ export default function Dashboard() {
           uploadProgress: 75,
         }));
 
-        const result = await response.json();
-
         if (!response.ok) {
-          throw new Error(result.error || "Analysis failed");
+          const errorResult = await response.json();
+          throw new Error(errorResult.error || "Analysis failed");
         }
+
+        const result = await response.json();
 
         const normalizedResult = {
           ...result,
