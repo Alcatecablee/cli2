@@ -509,47 +509,6 @@ export default function GitHubIntegration() {
         </div>
       )}
 
-      {state.showPricingModal && (
-        <div className="pricing-modal-overlay">
-          <div className="pricing-modal">
-            <h3>Upgrade Required</h3>
-            <p>
-              This repository requires {state.scanResult?.scanCost.credits}{" "}
-              credits to scan. Your current plan (FREE) includes only 10 credits
-              per scan.
-            </p>
-            <div className="upgrade-options">
-              <div className="plan-option">
-                <h4>Pro Plan - $29/month</h4>
-                <ul>
-                  <li>Unlimited file scanning</li>
-                  <li>Up to 50 repositories</li>
-                  <li>Priority support</li>
-                </ul>
-                <button className="upgrade-btn">Upgrade to Pro</button>
-              </div>
-              <div className="plan-option">
-                <h4>Enterprise - $99/month</h4>
-                <ul>
-                  <li>Unlimited everything</li>
-                  <li>Advanced integrations</li>
-                  <li>Custom rules</li>
-                </ul>
-                <button className="upgrade-btn">Upgrade to Enterprise</button>
-              </div>
-            </div>
-            <button
-              className="modal-close"
-              onClick={() =>
-                setState((prev) => ({ ...prev, showPricingModal: false }))
-              }
-            >
-              ✕
-            </button>
-          </div>
-        </div>
-      )}
-
       {/* GitHub Repository Scanner Modal */}
       {state.showScanner && state.selectedRepo && (
         <GitHubRepositoryScanner
