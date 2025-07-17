@@ -604,11 +604,7 @@ body {
 .option-card:hover,
 .option-card:focus {
   background: rgba(255, 255, 255, 0.08);
-  border-color: var(--onboarding-accent);
-  transform: translateY(-2px);
-  box-shadow:
-    0 8px 32px rgba(0, 0, 0, 0.3),
-    0 0 20px var(--onboarding-accent-glow);
+  border-color: rgba(255, 255, 255, 0.3);
 }
 
 .option-card:active {
