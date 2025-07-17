@@ -1265,6 +1265,9 @@ body {
   flex-direction: column;
   gap: 24px;
   min-width: min-content;
+  border: none;
+  margin: 0;
+  padding: 0;
 }
 
 .control-label {
