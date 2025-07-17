@@ -1460,8 +1460,8 @@ body {
 .sample-code-section {
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 24px;
-  padding: 64px 40px;
+  border-radius: 20px;
+  padding: 48px 32px;
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   animation: 0.8s ease-out 1.2s 1 normal both running slideinright;
   backdrop-filter: blur(20px);
