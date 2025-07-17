@@ -1009,17 +1009,19 @@ body {
 }
 
 .layer-badge {
-  background: rgb(33, 150, 243);
-  border-radius: 8px;
-  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  color: rgba(255, 255, 255, 0.9);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
-  font-weight: 700;
-  height: 32px;
+  font-size: 12px;
+  font-weight: 600;
+  height: 28px;
   margin-bottom: 12px;
-  width: 32px;
+  width: 28px;
+  font-family: "JetBrains Mono", monospace;
 }
 
 .layer-item h5 {
