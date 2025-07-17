@@ -1403,8 +1403,8 @@ body {
 .demo-upload-section {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 60px;
-  margin-bottom: 64px;
+  gap: 40px;
+  margin-bottom: 40px;
   animation: 0.8s ease-out 1.2s 1 normal both running slideinleft;
 }
 
