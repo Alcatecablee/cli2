@@ -824,27 +824,205 @@ export default function PricingPage() {
               ))}
             </div>
 
-            {/* Feature Comparison */}
+            {/* Feature Comparison Table */}
             <div style={{ marginBottom: "3rem" }}>
               <h2
                 style={{
-                  fontSize: "1.5rem",
+                  fontSize: "2rem",
                   fontWeight: "600",
                   color: "#ffffff",
-                  margin: "0 0 2rem 0",
+                  margin: "0 0 1rem 0",
                   textAlign: "center",
                 }}
               >
-                Feature Comparison
+                Detailed Feature Comparison
               </h2>
+              <p
+                style={{
+                  color: "rgba(255, 255, 255, 0.7)",
+                  textAlign: "center",
+                  margin: "0 0 3rem 0",
+                  fontSize: "1rem",
+                }}
+              >
+                Compare features across all plans to find the perfect fit for
+                your needs
+              </p>
 
-              {/* Mobile-First Feature Comparison */}
+              {/* Professional Comparison Table */}
+              <div
+                style={{
+                  background: "rgba(255, 255, 255, 0.02)",
+                  border: "1px solid rgba(255, 255, 255, 0.1)",
+                  borderRadius: "16px",
+                  padding: "2rem",
+                  overflow: "hidden",
+                }}
+              >
+                {/* Table Header */}
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "2fr repeat(4, 1fr)",
+                    gap: "1rem",
+                    marginBottom: "1.5rem",
+                    paddingBottom: "1rem",
+                    borderBottom: "2px solid rgba(255, 255, 255, 0.1)",
+                  }}
+                >
+                  <div
+                    style={{
+                      color: "rgba(255, 255, 255, 0.8)",
+                      fontWeight: "600",
+                      fontSize: "0.9rem",
+                      textTransform: "uppercase",
+                      letterSpacing: "0.5px",
+                    }}
+                  >
+                    Features
+                  </div>
+                  <div
+                    style={{
+                      textAlign: "center",
+                      color: "#ffffff",
+                      fontWeight: "600",
+                      fontSize: "0.9rem",
+                    }}
+                  >
+                    Free
+                  </div>
+                  <div
+                    style={{
+                      textAlign: "center",
+                      color: "#ffffff",
+                      fontWeight: "600",
+                      fontSize: "0.9rem",
+                    }}
+                  >
+                    Developer
+                  </div>
+                  <div
+                    style={{
+                      textAlign: "center",
+                      color: "rgba(33, 150, 243, 0.9)",
+                      fontWeight: "600",
+                      fontSize: "0.9rem",
+                      position: "relative",
+                    }}
+                  >
+                    Professional
+                    <div
+                      style={{
+                        position: "absolute",
+                        top: "-8px",
+                        right: "0",
+                        background: "rgba(33, 150, 243, 0.2)",
+                        color: "rgba(33, 150, 243, 0.9)",
+                        padding: "0.2rem 0.4rem",
+                        borderRadius: "4px",
+                        fontSize: "0.6rem",
+                        fontWeight: "600",
+                      }}
+                    >
+                      POPULAR
+                    </div>
+                  </div>
+                  <div
+                    style={{
+                      textAlign: "center",
+                      color: "rgba(255, 215, 0, 0.9)",
+                      fontWeight: "600",
+                      fontSize: "0.9rem",
+                    }}
+                  >
+                    Enterprise
+                  </div>
+                </div>
+
+                {/* Feature Rows */}
+                {[
+                  {
+                    feature: "Monthly Analyses",
+                    values: ["5", "50", "500", "Unlimited"],
+                  },
+                  {
+                    feature: "File Size Limit",
+                    values: ["200KB", "1MB", "10MB", "Unlimited"],
+                  },
+                  { feature: "6-Layer System", values: ["✓", "✓", "✓", "✓"] },
+                  { feature: "Apply Fixes", values: ["×", "✓", "✓", "✓"] },
+                  {
+                    feature: "API Access",
+                    values: ["×", "Basic", "Advanced", "Unlimited"],
+                  },
+                  {
+                    feature: "GitHub Integration",
+                    values: ["×", "5 repos", "25 repos", "Unlimited"],
+                  },
+                  {
+                    feature: "Team Features",
+                    values: ["×", "×", "5 members", "Unlimited"],
+                  },
+                  {
+                    feature: "Priority Support",
+                    values: ["×", "Email", "Email & Chat", "24/7 Phone"],
+                  },
+                ].map((row, index) => (
+                  <div
+                    key={index}
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "2fr repeat(4, 1fr)",
+                      gap: "1rem",
+                      padding: "1rem 0",
+                      borderBottom: "1px solid rgba(255, 255, 255, 0.05)",
+                      alignItems: "center",
+                    }}
+                  >
+                    <div
+                      style={{
+                        color: "rgba(255, 255, 255, 0.9)",
+                        fontWeight: "500",
+                        fontSize: "0.9rem",
+                      }}
+                    >
+                      {row.feature}
+                    </div>
+                    {row.values.map((value, valueIndex) => (
+                      <div
+                        key={valueIndex}
+                        style={{
+                          textAlign: "center",
+                          color:
+                            value === "×"
+                              ? "rgba(255, 255, 255, 0.3)"
+                              : value === "✓"
+                                ? "rgba(76, 175, 80, 0.9)"
+                                : "#ffffff",
+                          fontWeight:
+                            value === "×" || value === "✓" ? "600" : "500",
+                          fontSize:
+                            value === "×" || value === "✓"
+                              ? "1.1rem"
+                              : "0.85rem",
+                        }}
+                      >
+                        {value}
+                      </div>
+                    ))}
+                  </div>
+                ))}
+              </div>
+
+              {/* Mobile Fallback Cards */}
               <div
                 style={{
                   display: "grid",
-                  gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+                  gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
                   gap: "1.5rem",
+                  marginTop: "2rem",
                 }}
+                className="mobile-comparison"
               >
                 {/* Free Plan */}
                 <div
