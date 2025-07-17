@@ -1,14 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { dataStore } from "../../../../lib/data-store";
 
-// Initialize collaboration data stores if not exists
-if (!dataStore.collaborationSessions) {
-  dataStore.collaborationSessions = new Map();
-  dataStore.collaborationParticipants = new Map();
-  dataStore.collaborationComments = new Map();
-  dataStore.collaborationAnalysis = new Map();
-}
-
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
