@@ -1171,22 +1171,23 @@ body {
 .controls-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 32px;
+  gap: 48px;
 }
 
 .control-group {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 24px;
   min-width: min-content;
 }
 
 .control-label {
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 14px;
-  font-weight: 600;
-  letter-spacing: 0.5px;
+  color: rgba(255, 255, 255, 1);
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 1px;
   text-transform: uppercase;
+  margin-bottom: 8px;
 }
 
 .control-options {
