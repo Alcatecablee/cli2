@@ -44,7 +44,16 @@ const initDataStore = () => ({
 
 export const dataStore =
   (globalThis as any).dataStore ||
-  ((globalThis as any).dataStore = initDataStore());
+  ((globalThis as any).dataStore = (() => {
+    console.log("[DATA STORE] Initializing new data store");
+    return initDataStore();
+  })());
+
+// Log current state for debugging
+console.log(
+  "[DATA STORE] Current sessions:",
+  dataStore.collaborationSessions.size,
+);
 
 // Utility functions for data operations
 export const dataUtils = {
