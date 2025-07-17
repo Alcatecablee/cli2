@@ -13,6 +13,8 @@ const nextConfig = {
     NEXT_PUBLIC_SUPABASE_URL: process.env.SUPABASE_URL,
     NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY,
   },
+  // Allow cross-origin requests from Builder.io development environment
+  allowedDevOrigins: ["*.fly.dev", "*.builder.io"],
   // Experimental features for better stability
   experimental: {
     serverComponentsExternalPackages: [],
