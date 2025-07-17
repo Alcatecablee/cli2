@@ -161,7 +161,7 @@ const getDefaultOnboardingState = (): OnboardingData => ({
   projectType: "",
   experienceLevel: "",
   hasCode: false,
-  completedOnboarding: false,
+  completedOnboarding: false, // Always start with onboarding for new users
 });
 
 export default function HomePage() {
