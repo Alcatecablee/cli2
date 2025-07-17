@@ -499,6 +499,197 @@ body {
   border-color: var(--onboarding-accent);
 }
 
+/* Onboarding Modal Components */
+.onboarding-logo {
+  margin-bottom: 1.5rem;
+}
+
+.modal-logo {
+  width: 80px;
+  height: 80px;
+  border-radius: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.onboarding-progress {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--onboarding-accent), #4caf50);
+  border-radius: 2px;
+  transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 0 10px var(--onboarding-accent-glow);
+}
+
+.progress-text {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 500;
+}
+
+.onboarding-description {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+.onboarding-welcome {
+  text-align: center;
+}
+
+.feature-highlights {
+  display: grid;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+}
+
+.highlight-item {
+  text-align: center;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.highlight-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.highlight-icon {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--onboarding-accent);
+  margin-bottom: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  background: rgba(33, 150, 243, 0.15);
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.highlight-text {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 500;
+}
+
+.onboarding-options {
+  display: grid;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  grid-template-columns: 1fr;
+}
+
+.option-card {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 1.25rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  color: #ffffff;
+  text-decoration: none;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.option-card:hover,
+.option-card:focus {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--onboarding-accent);
+  transform: translateY(-2px);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    0 0 20px var(--onboarding-accent-glow);
+}
+
+.option-card:active {
+  transform: translateY(0);
+}
+
+.option-label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 0.5rem;
+}
+
+.option-description {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.4;
+}
+
+.onboarding-transition {
+  text-align: center;
+}
+
+.transition-highlights {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+}
+
+.transition-item {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+.transition-item:last-child {
+  margin-bottom: 0;
+}
+
+.transition-item strong {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+/* Button spacing for onboarding */
+.onboarding-btn + .onboarding-btn {
+  margin-top: 1rem;
+}
+
+.onboarding-btn.primary + .onboarding-btn.secondary {
+  margin-top: 1rem;
+}
+
+/* Size variations */
+.onboarding-btn {
+  padding: 0.875rem 2rem;
+  font-size: 1rem;
+  min-width: 120px;
+}
+
+.onboarding-btn.large {
+  padding: 1rem 2.5rem;
+  font-size: 1.1rem;
+  min-width: 140px;
+}
+
 /* Utilities */
 .text-center {
   text-align: center;
