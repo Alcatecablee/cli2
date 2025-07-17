@@ -1002,11 +1002,11 @@ body {
 }
 
 .layer-stack {
-  margin-bottom: 80px;
+  margin-bottom: 48px;
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 20px;
-  padding: 48px;
+  padding: 40px;
   backdrop-filter: blur(20px);
   box-shadow:
     0 16px 64px rgba(0, 0, 0, 0.25),
