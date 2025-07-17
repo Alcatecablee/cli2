@@ -468,6 +468,13 @@ export default function HomePage() {
     );
   };
 
+  const formatProcessingTime = (ms: number) => {
+    if (ms < 10) return `${ms.toFixed(1)}ms`;
+    if (ms < 100) return `${ms.toFixed(0)}ms`;
+    if (ms < 1000) return `${ms.toFixed(0)}ms`;
+    return `${(ms / 1000).toFixed(1)}s`;
+  };
+
   // Sophisticated demo state management
   const [demoState, setDemoState] = useState<DemoState>({
     isLoading: false,
