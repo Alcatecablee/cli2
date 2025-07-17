@@ -1039,6 +1039,14 @@ function ImageGallery({ images }) {
           /* Onboarding Experience */
           <section
             className="onboarding-section"
+            style={{
+              minHeight: "100vh",
+              background: "#000000",
+              color: "#ffffff",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
             aria-labelledby="onboarding-title"
           >
             <div className="onboarding-container">
