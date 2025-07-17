@@ -1428,30 +1428,107 @@ body {
   z-index: 10000;
 }
 
-/* Responsive Design for Demo Section */
+/* Enhanced Mobile Responsiveness */
 @media (max-width: 768px) {
+  .hero-nav {
+    padding: 12px 16px;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .nav-center {
+    gap: 16px;
+    order: 3;
+    width: 100%;
+    justify-content: center;
+    margin-top: 12px;
+  }
+
+  .nav-link {
+    font-size: 14px;
+    padding: 8px 12px;
+  }
+
+  .hero-desc {
+    padding: 32px 16px;
+    font-size: 16px;
+  }
+
+  .platform-container {
+    padding: 0 16px;
+  }
+
+  .platform-hero h3 {
+    font-size: 24px;
+  }
+
+  .platform-hero p {
+    font-size: 16px;
+  }
+
   .platform-metrics {
     grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .metric-card {
+    padding: 20px 16px;
+  }
+
+  .metric-value {
+    font-size: 24px;
   }
 
   .mode-selector {
     flex-direction: column;
+    gap: 16px;
+  }
+
+  .mode-option {
+    padding: 20px 24px;
+    min-width: auto;
   }
 
   .controls-grid {
     grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .demo-container {
+    padding: 0 16px;
+    gap: 32px;
   }
 
   .demo-upload-section {
     grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .upload-area {
+    padding: 32px 20px;
+    min-height: 200px;
+  }
+
+  .sample-code-section {
+    padding: 32px 20px;
   }
 
   .layer-grid {
     grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+
+  .layer-item {
+    padding: 16px 12px;
   }
 
   .execution-grid {
     grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .execution-card {
+    padding: 24px 20px;
   }
 }
 
