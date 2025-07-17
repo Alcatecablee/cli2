@@ -214,6 +214,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // Check for existing session on mount
   useEffect(() => {
     checkSession();
+
+    // Fallback timeout to prevent infinite loading
+    const fallbackTimeout = setTimeout(() => {
+      console.warn("[AUTH] Forcing loading state to false after 15 seconds");
+      setLoading(false);
+    }, 15000);
+
+    return () => clearTimeout(fallbackTimeout);
   }, [checkSession]);
 
   const signIn = async (email: string, password: string) => {
