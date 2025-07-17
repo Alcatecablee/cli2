@@ -665,6 +665,7 @@ function ImageGallery({ images }) {
       completedOnboarding: false,
     });
     setOnboardingStep(0);
+    // Guard against SSR - only access localStorage on client
     if (typeof window !== "undefined") {
       localStorage.removeItem("neurolint-onboarding");
     }
