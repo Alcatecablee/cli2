@@ -868,9 +868,246 @@ export default function BulkProcessor({
             justify-content: stretch;
           }
 
-          .btn {
+                    .btn {
             flex: 1;
           }
+        }
+
+        .expand-btn {
+          background: rgba(255, 255, 255, 0.1);
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          border-radius: 4px;
+          color: rgba(255, 255, 255, 0.8);
+          cursor: pointer;
+          padding: 4px 8px;
+          font-size: 0.8rem;
+          transition: all 0.2s ease;
+          margin-left: 8px;
+        }
+
+        .expand-btn:hover {
+          background: rgba(255, 255, 255, 0.15);
+          color: #ffffff;
+        }
+
+        .expanded-results {
+          grid-column: 1 / -1;
+          margin-top: 12px;
+          padding: 16px;
+          background: rgba(255, 255, 255, 0.03);
+          border-radius: 8px;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .detailed-results {
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+        }
+
+        .issues-section h4,
+        .layers-section h4 {
+          color: #ffffff;
+          font-size: 0.95rem;
+          font-weight: 600;
+          margin: 0 0 8px 0;
+        }
+
+        .issues-list {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+        }
+
+        .issue-item {
+          display: flex;
+          gap: 8px;
+          align-items: center;
+          padding: 8px;
+          background: rgba(255, 255, 255, 0.05);
+          border-radius: 4px;
+          font-size: 0.85rem;
+        }
+
+        .issue-severity {
+          padding: 2px 6px;
+          border-radius: 3px;
+          font-size: 0.75rem;
+          font-weight: 600;
+          text-transform: uppercase;
+        }
+
+        .issue-severity.critical {
+          background: rgba(220, 38, 38, 0.2);
+          color: #fca5a5;
+        }
+
+        .issue-severity.high {
+          background: rgba(234, 88, 12, 0.2);
+          color: #fdba74;
+        }
+
+        .issue-severity.medium {
+          background: rgba(217, 119, 6, 0.2);
+          color: #fed7aa;
+        }
+
+        .issue-severity.low {
+          background: rgba(101, 163, 13, 0.2);
+          color: #bef264;
+        }
+
+        .issue-type {
+          color: rgba(33, 150, 243, 0.9);
+          font-weight: 500;
+          min-width: 80px;
+        }
+
+        .issue-description {
+          color: rgba(255, 255, 255, 0.8);
+          flex: 1;
+        }
+
+        .layers-list {
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+        }
+
+        .layers-list .layer-item {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 8px 12px;
+          background: rgba(255, 255, 255, 0.05);
+          border-radius: 4px;
+          font-size: 0.85rem;
+        }
+
+        .layers-list .layer-item.success {
+          border-left: 3px solid #22c55e;
+        }
+
+        .layers-list .layer-item.failed {
+          border-left: 3px solid #ef4444;
+        }
+
+        .layer-name {
+          color: #ffffff;
+          font-weight: 500;
+        }
+
+        .layer-time {
+          color: rgba(255, 255, 255, 0.7);
+          font-family: "JetBrains Mono", "Fira Code", consolas, monospace;
+        }
+
+        .layers-list .layer-status {
+          padding: 2px 6px;
+          border-radius: 3px;
+          font-size: 0.75rem;
+          font-weight: 600;
+          text-transform: uppercase;
+        }
+
+        .layers-list .layer-status.success {
+          background: rgba(34, 197, 94, 0.2);
+          color: #86efac;
+        }
+
+        .layers-list .layer-status.failed {
+          background: rgba(239, 68, 68, 0.2);
+          color: #fca5a5;
+        }
+
+        .error-details {
+          padding: 12px;
+          background: rgba(239, 68, 68, 0.1);
+          border: 1px solid rgba(239, 68, 68, 0.3);
+          border-radius: 6px;
+        }
+
+        .error-details h4 {
+          color: #fca5a5;
+          font-size: 0.95rem;
+          font-weight: 600;
+          margin: 0 0 8px 0;
+        }
+
+        .error-details p {
+          color: rgba(255, 255, 255, 0.9);
+          font-size: 0.85rem;
+          margin: 0;
+        }
+
+        .bulk-summary-stats {
+          margin-top: 32px;
+          padding: 24px;
+          background: rgba(255, 255, 255, 0.05);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 12px;
+        }
+
+        .summary-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 24px;
+        }
+
+        .summary-header h3 {
+          color: #ffffff;
+          font-size: 1.25rem;
+          font-weight: 600;
+          margin: 0;
+        }
+
+        .summary-actions {
+          display: flex;
+          gap: 12px;
+        }
+
+        .summary-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+          gap: 16px;
+        }
+
+        .summary-card {
+          background: rgba(255, 255, 255, 0.05);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 8px;
+          padding: 20px;
+          text-align: center;
+          transition: all 0.3s ease;
+        }
+
+        .summary-card:hover {
+          background: rgba(255, 255, 255, 0.08);
+          transform: translateY(-2px);
+        }
+
+        .summary-value {
+          color: #ffffff;
+          font-size: 1.5rem;
+          font-weight: 700;
+          font-family: "JetBrains Mono", "Fira Code", consolas, monospace;
+          margin-bottom: 8px;
+        }
+
+        .summary-label {
+          color: rgba(255, 255, 255, 0.7);
+          font-size: 0.875rem;
+          font-weight: 500;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+
+        .bulk-file-item {
+          display: grid;
+          grid-template-columns: auto 1fr auto auto;
+          gap: 12px;
+          align-items: center;
         }
       `}</style>
     </div>
