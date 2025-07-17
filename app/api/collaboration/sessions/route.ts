@@ -37,9 +37,16 @@ export async function GET(request: NextRequest) {
 
     if (sessionId) {
       // Get specific session
+      console.log("[COLLAB GET] Looking for session:", sessionId);
+      console.log(
+        "[COLLAB GET] Available sessions:",
+        Array.from(dataStore.collaborationSessions.keys()),
+      );
+
       const session = dataStore.collaborationSessions.get(sessionId);
 
       if (!session) {
+        console.log("[COLLAB GET] Session not found:", sessionId);
         return NextResponse.json(
           { error: "Session not found" },
           { status: 404 },
