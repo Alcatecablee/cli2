@@ -1390,7 +1390,7 @@ body {
   }
 }
 
-/* Screen reader utilities */
+/* Enhanced Accessibility and Focus Management */
 .sr-only {
   clip: rect(0, 0, 0, 0);
   height: 1px;
@@ -1401,7 +1401,6 @@ body {
   width: 1px;
 }
 
-/* Skip to content link */
 .skip-to-content {
   clip: rect(0, 0, 0, 0);
   height: 1px;
@@ -1410,22 +1409,150 @@ body {
   position: absolute;
   white-space: nowrap;
   width: 1px;
+  background: rgba(0, 0, 0, 0.9);
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-weight: 600;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  transition: all 0.2s ease;
 }
 
 .skip-to-content:focus {
-  background: #000;
-  border: 1px solid #fff;
-  border-radius: 4px;
   clip: auto;
-  color: #fff;
   height: auto;
   left: 8px;
-  padding: 8px 16px;
   position: fixed;
   text-decoration: none;
   top: 8px;
   width: auto;
   z-index: 10000;
+}
+
+/* Enhanced Focus Styles */
+*:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.8);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Improved keyboard navigation */
+.nav-link:focus-visible,
+.control-btn:focus-visible,
+.sample-btn:focus-visible,
+.onboarding-btn:focus-visible,
+.option-card:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.8);
+  outline-offset: 2px;
+  transform: none;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .metric-card,
+  .mode-option,
+  .layer-item,
+  .execution-card,
+  .upload-area,
+  .sample-code-section,
+  .onboarding-card {
+    border-color: rgba(255, 255, 255, 0.8);
+  }
+
+  .nav-link,
+  .control-btn,
+  .sample-btn,
+  .onboarding-btn {
+    border-color: rgba(255, 255, 255, 0.8);
+    color: rgba(255, 255, 255, 1);
+  }
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .hero-nav,
+  .metric-card,
+  .mode-option,
+  .control-btn,
+  .sample-btn,
+  .onboarding-btn,
+  .option-card,
+  .layer-item,
+  .execution-card {
+    transition: none;
+  }
+}
+
+/* Enhanced loading states */
+.sample-btn.loading::after {
+  content: "";
+  width: 12px;
+  height: 12px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: rgba(255, 255, 255, 0.8);
+  animation: spin 1s linear infinite;
+  margin-left: 8px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Improved interaction feedback */
+.control-btn:active,
+.sample-btn:active,
+.onboarding-btn:active {
+  transform: scale(0.98);
+}
+
+.nav-link:active {
+  transform: scale(0.95);
+}
+
+/* Better touch targets for mobile */
+@media (max-width: 768px) {
+  .nav-link,
+  .control-btn,
+  .sample-btn,
+  .onboarding-btn,
+  .layer-checkbox {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* Improved text contrast */
+.platform-hero p,
+.hero-desc,
+.metric-label,
+.mode-info span,
+.execution-card p,
+.recommended-label span {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Enhanced error states */
+.upload-area.error {
+  border-color: rgba(239, 68, 68, 0.5);
+  background: rgba(239, 68, 68, 0.05);
+}
+
+.control-btn:disabled,
+.sample-btn:disabled,
+.onboarding-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.5);
 }
 
 /* Enhanced Mobile Responsiveness */
