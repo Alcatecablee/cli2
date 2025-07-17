@@ -251,7 +251,7 @@ export const dataService = {
     updates: Partial<Omit<Project, "id" | "user_id" | "created_at">>,
   ): Promise<Project | null> {
     try {
-      const client = await createAuthenticatedClient();
+      const client = createAuthenticatedClient();
       const { data, error } = await client
         .from("projects")
         .update({
