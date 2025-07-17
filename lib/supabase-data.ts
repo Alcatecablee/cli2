@@ -337,7 +337,7 @@ export const dataService = {
     >,
   ): Promise<UserSettings | null> {
     try {
-      const client = await createAuthenticatedClient();
+      const client = createAuthenticatedClient();
       const { data, error } = await client
         .from("user_settings")
         .upsert({
