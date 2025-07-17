@@ -27,6 +27,13 @@ interface BulkProcessorProps {
   applyFixes: boolean;
 }
 
+const formatProcessingTime = (ms: number) => {
+  if (ms < 10) return `${ms.toFixed(1)}ms`;
+  if (ms < 100) return `${ms.toFixed(0)}ms`;
+  if (ms < 1000) return `${ms.toFixed(0)}ms`;
+  return `${(ms / 1000).toFixed(1)}s`;
+};
+
 export default function BulkProcessor({
   onAnalysisComplete,
   selectedLayers,
@@ -37,6 +44,7 @@ export default function BulkProcessor({
     processing: false,
     results: [],
     overallProgress: 0,
+    showSummary: false,
   });
 
   const folderInputRef = useRef<HTMLInputElement>(null);
