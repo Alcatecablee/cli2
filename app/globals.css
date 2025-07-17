@@ -1334,42 +1334,41 @@ body {
 }
 
 .sample-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 14px 20px;
-  border-radius: 8px;
-  border: 1px solid rgb(74, 74, 74);
-  background: rgba(255, 255, 255, 0.05);
+  padding: 10px 20px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.1);
   color: rgba(255, 255, 255, 0.9);
-  font-size: 14.4px;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  position: relative;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 0.9rem;
   min-height: 44px;
-  overflow: hidden;
+}
+
+.sample-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .sample-btn:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.3);
-  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.15);
 }
 
 .sample-btn.recommended {
-  background: rgb(255, 255, 255);
-  border-color: rgba(0, 0, 0, 0.2);
-  color: rgb(0, 0, 0);
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 1);
+  font-weight: 600;
 }
 
 .sample-btn.loading {
   opacity: 0.7;
-  cursor: not-allowed;
-}
-
-.sample-btn:disabled {
-  opacity: 0.6;
   cursor: not-allowed;
 }
 
