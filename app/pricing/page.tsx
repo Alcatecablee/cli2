@@ -92,7 +92,7 @@ export default function PricingPage() {
         "Priority support",
         "Custom reporting",
         "Advanced analytics",
-        "Git repository integration",
+        "GitHub integration (25 repositories)",
         "Slack/Teams notifications",
       ],
       ctaText:
