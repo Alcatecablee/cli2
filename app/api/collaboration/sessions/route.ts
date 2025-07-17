@@ -140,6 +140,11 @@ export async function POST(request: NextRequest) {
 
     // Store session in data store
     dataStore.collaborationSessions.set(sessionId, session);
+    console.log("[SESSION CREATE] Stored session:", sessionId);
+    console.log(
+      "[SESSION CREATE] Total sessions:",
+      dataStore.collaborationSessions.size,
+    );
     const sessionError = null;
 
     if (sessionError) {
