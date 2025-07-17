@@ -71,6 +71,8 @@ export default function GitHubIntegration() {
     loading: false,
     error: null,
     showPricingModal: false,
+    showScanner: false,
+    scannerFiles: [],
     accessToken: null,
   });
 
