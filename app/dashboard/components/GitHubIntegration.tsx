@@ -949,10 +949,6 @@ export default function GitHubIntegration() {
             grid-template-columns: 1fr;
           }
 
-          .upgrade-options {
-            grid-template-columns: 1fr;
-          }
-
           .results-summary {
             grid-template-columns: repeat(2, 1fr);
           }
