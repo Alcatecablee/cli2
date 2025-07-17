@@ -228,11 +228,27 @@ export default function PricingPage() {
 
   return (
     <div className="onboarding-section">
-      <div className="onboarding-container">
-        <div className="onboarding-content">
+      <div style={{ width: "100%", maxWidth: "none", margin: "0 auto" }}>
+        <div
+          style={{
+            background:
+              "linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 50%, rgba(0, 0, 0, 0.9) 100%)",
+            border: "1px solid rgba(255, 255, 255, 0.15)",
+            borderRadius: "16px",
+            padding: "0",
+            boxShadow:
+              "0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1)",
+            backdropFilter: "blur(10px)",
+            width: "100%",
+          }}
+        >
           <div
-            className="onboarding-card"
-            style={{ maxWidth: "1200px", width: "100%" }}
+            style={{
+              maxWidth: "1400px",
+              width: "100%",
+              margin: "0 auto",
+              padding: "0 2rem",
+            }}
           >
             {/* Header Navigation */}
             <div
