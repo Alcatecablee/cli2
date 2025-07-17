@@ -1179,43 +1179,142 @@ export default ExampleComponent;`,
             <div
               style={{
                 borderTop: "1px solid rgba(255, 255, 255, 0.1)",
-                padding: "1rem",
-                background: "rgba(255, 255, 255, 0.02)",
-                maxHeight: "200px",
+                padding: "1.5rem",
+                background: selectedResult.success
+                  ? "rgba(76, 175, 80, 0.08)"
+                  : selectedResult.error
+                    ? "rgba(229, 62, 62, 0.08)"
+                    : "rgba(255, 255, 255, 0.02)",
+                minHeight: "120px",
+                maxHeight: "300px",
                 overflowY: "auto",
               }}
             >
               <div
                 style={{
-                  fontSize: "0.875rem",
-                  color: "rgba(255, 255, 255, 0.8)",
-                  marginBottom: "0.5rem",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  marginBottom: "1rem",
                 }}
               >
-                Analysis by {selectedResult.triggeredByName || "Unknown"}:{" "}
-                {selectedResult.analysis?.detectedIssues?.length || 0} issues
-                found
+                <div
+                  style={{
+                    fontSize: "1rem",
+                    color: "#ffffff",
+                    fontWeight: 600,
+                  }}
+                >
+                  Latest Analysis Results
+                </div>
+                <div
+                  style={{
+                    fontSize: "0.75rem",
+                    color: "rgba(255, 255, 255, 0.6)",
+                  }}
+                >
+                  {new Date(selectedResult.timestamp).toLocaleTimeString()}
+                </div>
               </div>
-              {selectedResult.analysis?.detectedIssues?.map(
-                (issue: any, index: number) => (
+
+              <div
+                style={{
+                  fontSize: "0.875rem",
+                  color: "rgba(255, 255, 255, 0.8)",
+                  marginBottom: "1rem",
+                  padding: "0.75rem",
+                  background: "rgba(255, 255, 255, 0.05)",
+                  borderRadius: "6px",
+                  border: `1px solid ${
+                    selectedResult.success
+                      ? "rgba(76, 175, 80, 0.3)"
+                      : selectedResult.error
+                        ? "rgba(229, 62, 62, 0.3)"
+                        : "rgba(255, 255, 255, 0.15)"
+                  }`,
+                }}
+              >
+                <div style={{ marginBottom: "0.5rem" }}>
+                  <strong>Triggered by:</strong>{" "}
+                  {selectedResult.triggeredByName || "Unknown"}
+                </div>
+                <div style={{ marginBottom: "0.5rem" }}>
+                  <strong>Status:</strong>{" "}
+                  {selectedResult.error
+                    ? `❌ Error: ${selectedResult.error}`
+                    : selectedResult.success
+                      ? `✅ Success (${selectedResult.analysis?.detectedIssues?.length || 0} issues found)`
+                      : "⏳ Processing"}
+                </div>
+                <div style={{ marginBottom: "0.5rem" }}>
+                  <strong>Layers:</strong>{" "}
+                  {selectedResult.layers?.join(", ") || "Auto-detect"}
+                </div>
+                <div>
+                  <strong>Mode:</strong>{" "}
+                  {selectedResult.dryRun
+                    ? "🔍 Analysis Only"
+                    : "🔧 Apply Changes"}
+                </div>
+              </div>
+
+              {selectedResult.analysis?.detectedIssues &&
+              selectedResult.analysis.detectedIssues.length > 0 ? (
+                <div>
                   <div
-                    key={index}
                     style={{
-                      padding: "0.5rem",
+                      fontSize: "0.875rem",
+                      fontWeight: 600,
                       marginBottom: "0.5rem",
-                      background: "rgba(255, 255, 255, 0.05)",
-                      borderRadius: "4px",
-                      fontSize: "0.8rem",
+                      color: "#ffffff",
                     }}
                   >
-                    <div style={{ color: "#ff9800", fontWeight: 500 }}>
-                      {issue.type} ({issue.severity})
-                    </div>
-                    <div style={{ color: "rgba(255, 255, 255, 0.7)" }}>
-                      {issue.description}
-                    </div>
+                    Detected Issues:
                   </div>
-                ),
+                  {selectedResult.analysis.detectedIssues.map(
+                    (issue: any, index: number) => (
+                      <div
+                        key={index}
+                        style={{
+                          padding: "0.75rem",
+                          marginBottom: "0.5rem",
+                          background: "rgba(255, 255, 255, 0.05)",
+                          border: "1px solid rgba(255, 193, 7, 0.3)",
+                          borderRadius: "6px",
+                          fontSize: "0.8rem",
+                        }}
+                      >
+                        <div
+                          style={{
+                            color: "#ffc107",
+                            fontWeight: 500,
+                            marginBottom: "0.25rem",
+                          }}
+                        >
+                          {issue.type || "Issue"} ({issue.severity || "medium"})
+                        </div>
+                        <div style={{ color: "rgba(255, 255, 255, 0.7)" }}>
+                          {issue.description ||
+                            "Issue description not available"}
+                        </div>
+                      </div>
+                    ),
+                  )}
+                </div>
+              ) : (
+                <div
+                  style={{
+                    textAlign: "center",
+                    padding: "1rem",
+                    color: "rgba(255, 255, 255, 0.6)",
+                    fontSize: "0.875rem",
+                    fontStyle: "italic",
+                  }}
+                >
+                  {selectedResult.error
+                    ? "Analysis failed"
+                    : "✅ No issues detected"}
+                </div>
               )}
             </div>
           )}
