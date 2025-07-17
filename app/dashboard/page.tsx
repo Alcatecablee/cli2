@@ -1533,7 +1533,7 @@ export default function Dashboard() {
             </div>
           )}
 
-          {/* Bulk Processing Tab */}
+          {/* GitHub Integration Tab */}
           {dashboardState.activeSection === "bulk" && (
             <div className="tab-content">
               <ErrorBoundary>
