@@ -93,7 +93,9 @@ export default function BulkProcessor({
           filename: file.name,
           status: "pending",
           progress: 0,
+          expanded: false,
         })),
+        showSummary: false,
       }));
     },
     [],
