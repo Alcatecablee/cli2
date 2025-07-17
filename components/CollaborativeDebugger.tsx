@@ -729,7 +729,9 @@ export default function CollaborativeDebugger({
                   </span>
                   <span>
                     Duration:{" "}
-                    <strong>{selectedResult.totalExecutionTime}ms</strong>
+                    <strong>
+                      {formatProcessingTime(selectedResult.totalExecutionTime)}
+                    </strong>
                   </span>
                 </div>
               </div>
