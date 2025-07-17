@@ -7,24 +7,24 @@ export const dynamic = "force-dynamic";
 
 // Import the neurolint engine
 const getNeuroLintEngine = async () => {
+  // Always return null during any build phase to avoid webpack issues
+  if (
+    typeof window === "undefined" &&
+    (process.env.NEXT_PHASE === "phase-production-build" ||
+      process.env.NODE_ENV === "test" ||
+      !process.env.VERCEL_ENV)
+  ) {
+    console.log("Skipping engine import during build/test time");
+    return null;
+  }
+
   try {
-    // Check if we're in a build environment
-    if (
-      process.env.NEXT_PHASE === "phase-production-build" ||
-      process.env.NODE_ENV === "production"
-    ) {
-      console.log("Skipping engine import during build time");
-      return null;
-    }
-
-    // Use dynamic import with fallback
-    const engine = await import("../../../neurolint-pro.js").catch(() => null);
-    if (!engine) return null;
-
-    return engine.default || engine;
+    // Use require for CommonJS module
+    const engine = require("../../../neurolint-pro.js");
+    return engine;
   } catch (error) {
     console.error("Failed to load NeuroLint engine:", error);
-    return null; // Return null instead of throwing during build
+    return null;
   }
 };
 
