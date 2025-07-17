@@ -1821,7 +1821,9 @@ function ImageGallery({ images }) {
                                   Processing Time
                                 </div>
                                 <div className="analysis-value">
-                                  {demoState.result.totalExecutionTime || 0}ms
+                                  {formatProcessingTime(
+                                    demoState.result.totalExecutionTime || 0,
+                                  )}
                                 </div>
                               </div>
                             </div>
