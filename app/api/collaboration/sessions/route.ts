@@ -4,8 +4,14 @@ import { dataStore } from "../../../../lib/data-store";
 // Initialize collaboration data stores if not exists
 if (!dataStore.collaborationSessions) {
   dataStore.collaborationSessions = new Map();
+}
+if (!dataStore.collaborationParticipants) {
   dataStore.collaborationParticipants = new Map();
+}
+if (!dataStore.collaborationComments) {
   dataStore.collaborationComments = new Map();
+}
+if (!dataStore.collaborationAnalysis) {
   dataStore.collaborationAnalysis = new Map();
 }
 
