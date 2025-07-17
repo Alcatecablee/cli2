@@ -54,6 +54,8 @@ interface GitHubIntegrationState {
   loading: boolean;
   error: string | null;
   showPricingModal: boolean;
+  showScanner: boolean;
+  scannerFiles: any[];
   accessToken: string | null;
 }
 
