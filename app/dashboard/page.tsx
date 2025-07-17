@@ -1124,6 +1124,11 @@ export default function Dashboard() {
                 setDashboardState((prev) => ({
                   ...prev,
                   activeSection: item.id,
+                  // Auto-hide results when switching tabs
+                  showResults:
+                    item.id === "editor" || item.id === "samples"
+                      ? prev.showResults
+                      : false,
                 }))
               }
               role="menuitem"
