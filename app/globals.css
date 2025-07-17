@@ -1244,7 +1244,7 @@ body {
 /* Demo Controls */
 .demo-controls {
   background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: none;
   border-radius: 20px;
   padding: 48px;
   margin-bottom: 48px;
