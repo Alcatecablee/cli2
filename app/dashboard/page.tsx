@@ -489,8 +489,15 @@ export default function Dashboard() {
         }));
 
         if (!response.ok) {
-          const errorResult = await response.json();
-          throw new Error(errorResult.error || "Analysis failed");
+          let errorMessage = "Analysis failed";
+          try {
+            const errorResult = await response.json();
+            errorMessage = errorResult.error || errorMessage;
+          } catch (jsonError) {
+            // If response isn't JSON, use status text or default message
+            errorMessage = response.statusText || errorMessage;
+          }
+          throw new Error(errorMessage);
         }
 
         const result = await response.json();
