@@ -1908,7 +1908,9 @@ function ImageGallery({ images }) {
                                       </span>
                                     </div>
                                     <div className="layer-time">
-                                      {layer.executionTime.toFixed(0)}ms
+                                      {formatProcessingTime(
+                                        layer.executionTime,
+                                      )}
                                     </div>
                                     {layer.improvements &&
                                       layer.improvements.length > 0 && (
