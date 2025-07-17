@@ -1474,7 +1474,7 @@ export default function Dashboard() {
                   ? "Apply Fixes Mode"
                   : "Dry-Run Mode"}
               </span>
-              {" • "}
+              {" �� "}
               <span style={{ color: "rgba(33, 150, 243, 0.9)" }}>
                 {dashboardState.selectedLayers.length === 0
                   ? "Auto-Detect Layers"
@@ -2492,10 +2492,15 @@ export default function Dashboard() {
                           });
 
                           if (!response.ok) {
-                            const errorResult = await response.json();
-                            throw new Error(
-                              errorResult.error || "Export failed",
-                            );
+                            let errorMessage = "Export failed";
+                            try {
+                              const errorResult = await response.json();
+                              errorMessage = errorResult.error || errorMessage;
+                            } catch (jsonError) {
+                              errorMessage =
+                                response.statusText || errorMessage;
+                            }
+                            throw new Error(errorMessage);
                           }
 
                           const result = await response.json();
