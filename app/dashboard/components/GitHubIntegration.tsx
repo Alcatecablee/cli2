@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import { useAuth } from "../../../lib/auth-context";
+import GitHubRepositoryScanner from "./GitHubRepositoryScanner";
+import GitHubPricingTiers from "./GitHubPricingTiers";
 
 interface GitHubRepository {
   id: number;
