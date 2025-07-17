@@ -68,29 +68,9 @@ function formatError(error: any): string {
 }
 
 // Helper function to create authenticated Supabase client
-async function createAuthenticatedClient() {
-  // Get the current session from localStorage if available
-  if (typeof window !== "undefined") {
-    try {
-      const savedSession = localStorage.getItem("supabase_session");
-      if (savedSession) {
-        const sessionData = JSON.parse(savedSession);
-        if (sessionData?.access_token && sessionData?.refresh_token) {
-          // Set the session for the client
-          const { error } = await supabase.auth.setSession({
-            access_token: sessionData.access_token,
-            refresh_token: sessionData.refresh_token,
-          });
-
-          if (error) {
-            console.error("Error setting Supabase session:", error);
-          }
-        }
-      }
-    } catch (error) {
-      console.error("Error reading session from localStorage:", error);
-    }
-  }
+function createAuthenticatedClient() {
+  // Return the supabase client without trying to manually set session
+  // The client will use the session from the auth context automatically
   return supabase;
 }
 
