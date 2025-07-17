@@ -284,6 +284,24 @@ export default function GitHubIntegration() {
     return limits[user?.plan as keyof typeof limits] || limits.free;
   };
 
+  const handleScanComplete = (results: any[]) => {
+    setState((prev) => ({ ...prev, showScanner: false }));
+    // Here you could save results to history, show summary, etc.
+    console.log("Scan completed with results:", results);
+  };
+
+  const handleUpgrade = (tierId: string) => {
+    setState((prev) => ({ ...prev, showPricingModal: false }));
+    // Here you would integrate with your payment system
+    console.log("Upgrading to tier:", tierId);
+    // For demo, simulate an upgrade
+    if (tierId !== "free") {
+      alert(
+        `Upgrade to ${tierId} plan initiated! You'll be redirected to checkout.`,
+      );
+    }
+  };
+
   // Demo data for when not connected
   const demoRepositories: GitHubRepository[] = [
     {
