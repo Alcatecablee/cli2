@@ -146,9 +146,22 @@ export async function POST(request: NextRequest) {
 
     // Add creator as participant
     const userColor = generateUserColor(userId);
+    const participant = {
+      id: `participant_${Date.now()}_${Math.random().toString(36).substring(2)}`,
+      session_id: sessionId,
+      user_id: userId,
+      user_name: userName,
+      user_color: userColor,
+      user_avatar: null,
+      joined_at: new Date().toISOString(),
+      last_seen_at: new Date().toISOString(),
+      is_active: true,
+      is_host: true,
+    };
 
-    // For now, skip Supabase participant creation since the schema expects auth.users
-    // In production, you'd create custom tables that work with your auth system
+    // Store participant in data store
+    const participantKey = `${sessionId}_${userId}`;
+    dataStore.collaborationParticipants.set(participantKey, participant);
     const participantError = null;
 
     return NextResponse.json({
