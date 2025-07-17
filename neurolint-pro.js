@@ -1233,8 +1233,12 @@ function detectImprovements(before, after) {
 
   // Check for HTML entity fixes
   if (
-    /&quot;|&amp;|&lt;|&gt;|&#36;|&amp;#36;/.test(before) &&
-    !/&quot;|&amp;|&lt;|&gt;|&#36;|&amp;#36;/.test(after)
+    /&quot;|&amp;|&lt;|&gt;|&#36;|&amp;#36;|&nbsp;|&copy;|&reg;|&trade;|&#39;|&apos;|&ndash;|&mdash;|&hellip;|&euro;|&pound;/.test(
+      before,
+    ) &&
+    !/&quot;|&amp;|&lt;|&gt;|&#36;|&amp;#36;|&nbsp;|&copy;|&reg;|&trade;|&#39;|&apos;|&ndash;|&mdash;|&hellip;|&euro;|&pound;/.test(
+      after,
+    )
   ) {
     improvements.push("HTML entities converted to proper characters");
   }
