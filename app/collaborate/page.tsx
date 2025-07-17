@@ -232,6 +232,7 @@ export default function CollaboratePage() {
       chatWsRef.current = ws;
 
       ws.onopen = () => {
+        console.log("[COLLABORATION] WebSocket connected");
         ws.send(
           JSON.stringify({
             type: "join-session",
@@ -254,13 +255,40 @@ export default function CollaboratePage() {
               setUnreadCount((prev) => prev + 1);
             }
           }
+
+          if (message.type === "error") {
+            console.error("[COLLABORATION] Server error:", message.data);
+            alert(`Collaboration error: ${message.data.error}`);
+          }
         } catch (error) {
           console.error("[CHAT] Failed to parse message:", error);
         }
       };
 
+      ws.onerror = (error) => {
+        console.error("[COLLABORATION] WebSocket error:", error);
+      };
+
+      ws.onclose = (event) => {
+        console.log(
+          "[COLLABORATION] WebSocket closed:",
+          event.code,
+          event.reason,
+        );
+        if (event.code !== 1000) {
+          // Unexpected close, attempt reconnection after delay
+          setTimeout(() => {
+            if (sessionId) {
+              console.log("[COLLABORATION] Attempting to reconnect...");
+              // Trigger effect to recreate connection
+              setSessionId((prev) => prev);
+            }
+          }, 3000);
+        }
+      };
+
       return () => {
-        ws.close();
+        ws.close(1000, "Component unmounting");
       };
     }
   }, [sessionId, userData, showChat]);
