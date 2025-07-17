@@ -299,7 +299,7 @@ export const dataService = {
   // User Settings
   async getUserSettings(userId: string): Promise<UserSettings | null> {
     try {
-      const client = await createAuthenticatedClient();
+      const client = createAuthenticatedClient();
       const { data, error } = await client
         .from("user_settings")
         .select("*")
