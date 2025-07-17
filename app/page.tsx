@@ -60,7 +60,7 @@ export default function HomePage() {
   const onboardingSteps = [
     {
       id: 0,
-      title: "Welcome to NeuroLint Pro",
+      title: "",
       subtitle:
         "Ready to experience the most sophisticated React/Next.js fixing system ever built?",
       description:
