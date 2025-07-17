@@ -44,9 +44,11 @@ export async function GET(request: NextRequest) {
 
     // Get comments for session
     const comments = [];
-    for (const [key, comment] of dataStore.collaborationComments.entries()) {
-      if (key.startsWith(`${sessionId}_`)) {
-        comments.push(comment);
+    if (dataStore.collaborationComments) {
+      for (const [key, comment] of dataStore.collaborationComments.entries()) {
+        if (key.startsWith(`${sessionId}_`)) {
+          comments.push(comment);
+        }
       }
     }
 
@@ -56,6 +58,7 @@ export async function GET(request: NextRequest) {
         new Date(a.created_at).getTime() - new Date(b.created_at).getTime(),
     );
 
+    console.log("[COMMENTS GET] Returning comments:", comments.length);
     return NextResponse.json({ comments });
   } catch (error) {
     console.error("Comments GET error:", error);
