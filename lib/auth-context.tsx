@@ -321,12 +321,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         body: JSON.stringify({ firstName, lastName, email, password }),
       });
 
+      // Clone the response to avoid body stream issues
+      const responseClone = response.clone();
+
       let data;
       try {
-        data = await response.json();
+        data = await responseClone.json();
       } catch (jsonError) {
         console.error("Failed to parse signup response:", jsonError);
-        throw new Error("Invalid response from server");
+        // Try to get error text if JSON parsing fails
+        try {
+          const errorText = await response.text();
+          console.error("Response text:", errorText);
+          throw new Error("Server returned invalid response");
+        } catch (textError) {
+          throw new Error("Unable to read server response");
+        }
       }
 
       if (!response.ok) {
