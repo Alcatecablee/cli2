@@ -84,7 +84,10 @@ export default function CollaborativeEditor({
 }: CollaborativeEditorProps) {
   // Core state
   const [code, setCode] = useState(initialCode);
-  const [isConnected, setIsConnected] = useState(true); // Always connected in API mode
+  const [isConnected, setIsConnected] = useState(false); // Start as disconnected
+  const [connectionStatus, setConnectionStatus] = useState<
+    "connecting" | "connected" | "disconnected" | "error"
+  >("disconnected");
   const [collaborators, setCollaborators] = useState<Map<string, Collaborator>>(
     new Map(),
   );
