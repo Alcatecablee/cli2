@@ -835,8 +835,9 @@ export default function Dashboard() {
     loadSubscriptionData,
   ]);
 
-  // Show loading screen while checking authentication
-  if (!isHydrated || (authLoading && !user && !forceBypassLoading)) {
+  // Show loading screen while checking authentication (bypassed for dashboard)
+  if (!isHydrated && !forceBypassLoading && false) {
+    // Disabled loading condition
     return (
       <div className="onboarding-section">
         <div className="onboarding-container">
