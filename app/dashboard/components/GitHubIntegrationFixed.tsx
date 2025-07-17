@@ -297,52 +297,6 @@ export default function GitHubIntegrationFixed() {
     return limits[userPlan as keyof typeof limits] || limits.free;
   };
 
-  // Demo data for when not connected
-  const demoRepositories: GitHubRepository[] = [
-    {
-      id: 1,
-      name: "react-dashboard",
-      fullName: "demo-user/react-dashboard",
-      private: false,
-      description: "Modern React dashboard with TypeScript",
-      htmlUrl: "https://github.com/demo-user/react-dashboard",
-      language: "TypeScript",
-      size: 2048,
-      defaultBranch: "main",
-      updatedAt: "2024-01-15T10:30:00Z",
-      owner: { login: "demo-user", avatarUrl: "https://github.com/github.png" },
-      likelyHasReactFiles: true,
-    },
-    {
-      id: 2,
-      name: "nextjs-ecommerce",
-      fullName: "demo-user/nextjs-ecommerce",
-      private: true,
-      description: "E-commerce platform built with Next.js",
-      htmlUrl: "https://github.com/demo-user/nextjs-ecommerce",
-      language: "JavaScript",
-      size: 5120,
-      defaultBranch: "main",
-      updatedAt: "2024-01-10T14:20:00Z",
-      owner: { login: "demo-user", avatarUrl: "https://github.com/github.png" },
-      likelyHasReactFiles: true,
-    },
-    {
-      id: 3,
-      name: "component-library",
-      fullName: "demo-user/component-library",
-      private: false,
-      description: "Reusable React component library",
-      htmlUrl: "https://github.com/demo-user/component-library",
-      language: "TypeScript",
-      size: 1536,
-      defaultBranch: "main",
-      updatedAt: "2024-01-08T09:15:00Z",
-      owner: { login: "demo-user", avatarUrl: "https://github.com/github.png" },
-      likelyHasReactFiles: true,
-    },
-  ];
-
   return (
     <div className="github-integration">
       <div className="integration-header">
