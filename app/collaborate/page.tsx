@@ -223,7 +223,27 @@ export default function CollaboratePage() {
           name: sessionName,
           filename,
           language,
-          initialCode: code,
+          initialCode:
+            code ||
+            `// Welcome to NeuroLint Pro Collaboration!
+// Start typing your React/TypeScript code here...
+
+import React, { useState } from "react";
+
+function ExampleComponent() {
+  const [count, setCount] = useState(0);
+
+  return (
+    <div>
+      <h1>Count: {count}</h1>
+      <button onClick={() => setCount(count + 1)}>
+        Increment
+      </button>
+    </div>
+  );
+}
+
+export default ExampleComponent;`,
         }),
       });
 
