@@ -2484,6 +2484,13 @@ export default function Dashboard() {
                             body: JSON.stringify({ exportType: "complete" }),
                           });
 
+                          if (!response.ok) {
+                            const errorResult = await response.json();
+                            throw new Error(
+                              errorResult.error || "Export failed",
+                            );
+                          }
+
                           const result = await response.json();
 
                           if (result.success) {
