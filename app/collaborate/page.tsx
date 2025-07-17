@@ -311,62 +311,74 @@ export default function CollaboratePage() {
   // Setup polling for real-time updates
   const setupRealtimeSubscriptions = useCallback(
     (sessionId: string) => {
-      // Poll for updates every 2 seconds
+      // Poll for updates every 3 seconds (reduced frequency to avoid overwhelming)
       const pollInterval = setInterval(async () => {
         try {
           // Get updated session data
-          const { session } = await apiCall(
-            `/api/collaboration/sessions?sessionId=${sessionId}`,
-          );
+          try {
+            const { session } = await apiCall(
+              `/api/collaboration/sessions?sessionId=${sessionId}`,
+            );
 
-          if (session) {
-            setCurrentSession((prev) => {
-              if (!prev) return session;
+            if (session) {
+              setCurrentSession((prev) => {
+                if (!prev) return session;
 
-              // Only update if content changed
-              if (prev.document_content !== session.document_content) {
-                setCode(session.document_content);
-              }
+                // Only update if content changed
+                if (prev.document_content !== session.document_content) {
+                  setCode(session.document_content);
+                }
 
-              return session;
-            });
+                return session;
+              });
+            }
+          } catch (sessionError) {
+            console.warn("Session polling error:", sessionError.message);
           }
 
           // Get comments
-          const { comments: newComments } = await apiCall(
-            `/api/collaboration/comments?sessionId=${sessionId}`,
-          );
-          if (newComments) {
-            setComments(newComments);
+          try {
+            const { comments: newComments } = await apiCall(
+              `/api/collaboration/comments?sessionId=${sessionId}`,
+            );
+            if (newComments && Array.isArray(newComments)) {
+              setComments(newComments);
+            }
+          } catch (commentsError) {
+            console.warn("Comments polling error:", commentsError.message);
           }
 
           // Get analysis results
-          const { analyses } = await apiCall(
-            `/api/collaboration/analyze?sessionId=${sessionId}`,
-          );
-          if (analyses) {
-            setAnalysisResults(
-              analyses.map((analysis: any) => ({
-                id: analysis.id,
-                success: analysis.success,
-                dryRun: analysis.dry_run,
-                layers: analysis.layers_executed,
-                originalCode: analysis.input_code,
-                transformed: analysis.output_code,
-                totalExecutionTime: analysis.execution_time,
-                successfulLayers: analysis.layers_executed.length,
-                analysis: analysis.analysis_results,
-                triggeredBy: analysis.triggered_by,
-                triggeredByName: analysis.triggered_by_name,
-                timestamp: analysis.created_at,
-                error: analysis.error_message,
-              })),
+          try {
+            const { analyses } = await apiCall(
+              `/api/collaboration/analyze?sessionId=${sessionId}`,
             );
+            if (analyses && Array.isArray(analyses)) {
+              setAnalysisResults(
+                analyses.map((analysis: any) => ({
+                  id: analysis.id,
+                  success: analysis.success,
+                  dryRun: analysis.dry_run,
+                  layers: analysis.layers_executed,
+                  originalCode: analysis.input_code,
+                  transformed: analysis.output_code,
+                  totalExecutionTime: analysis.execution_time,
+                  successfulLayers: analysis.layers_executed.length,
+                  analysis: analysis.analysis_results,
+                  triggeredBy: analysis.triggered_by,
+                  triggeredByName: analysis.triggered_by_name,
+                  timestamp: analysis.created_at,
+                  error: analysis.error_message,
+                })),
+              );
+            }
+          } catch (analysisError) {
+            console.warn("Analysis polling error:", analysisError.message);
           }
         } catch (error) {
-          console.error("Polling error:", error);
+          console.error("General polling error:", error);
         }
-      }, 2000);
+      }, 3000);
 
       subscriptionRef.current = {
         unsubscribe: () => clearInterval(pollInterval),
