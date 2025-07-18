@@ -1122,10 +1122,35 @@ function CreateSessionModal({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.name.trim() || !formData.filename.trim()) {
-      alert("Please fill in all required fields");
+
+    // Validate session name
+    if (!formData.name.trim()) {
+      alert("Session name is required");
       return;
     }
+
+    if (formData.name.trim().length < 3) {
+      alert("Session name must be at least 3 characters long");
+      return;
+    }
+
+    // Validate filename
+    if (!formData.filename.trim()) {
+      alert("Filename is required");
+      return;
+    }
+
+    // Validate filename format
+    const validExtensions = [".ts", ".tsx", ".js", ".jsx"];
+    const hasValidExtension = validExtensions.some((ext) =>
+      formData.filename.toLowerCase().endsWith(ext),
+    );
+
+    if (!hasValidExtension) {
+      alert("Filename must end with .ts, .tsx, .js, or .jsx");
+      return;
+    }
+
     onCreateSession(formData);
   };
 
