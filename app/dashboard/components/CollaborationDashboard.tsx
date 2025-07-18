@@ -720,13 +720,14 @@ export default function CollaborationDashboard({
                       </button>
                       <button
                         className="btn btn-secondary btn-sm"
-                        onClick={async () => {
+                        onClick={async (event) => {
                           try {
                             await navigator.clipboard.writeText(
                               `${window.location.origin}/collaborate?session=${session.id}`,
                             );
                             // Show temporary success feedback
-                            const button = event?.target as HTMLButtonElement;
+                            const button =
+                              event.currentTarget as HTMLButtonElement;
                             if (button) {
                               const originalText = button.textContent;
                               button.textContent = "Copied!";
