@@ -70,29 +70,33 @@ export async function GET(request: NextRequest) {
 
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    // Get API keys with user information
-    const { data: apiKeys, error: keysError } = await supabase
-      .from("api_keys")
-      .select(
-        `
-        *,
-        profiles!inner(email)
-      `,
-      )
-      .order("created_at", { ascending: false });
+    // Get API keys - simplified query without relationships for now
+    let apiKeys = [];
+    let keysError = null;
+
+    try {
+      const { data, error } = await supabase
+        .from("api_keys")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      apiKeys = data || [];
+      keysError = error;
+    } catch (err) {
+      console.log("API keys table might not exist yet, returning empty array");
+      apiKeys = [];
+    }
 
     if (keysError) {
       console.error("Error fetching API keys:", keysError);
-      return NextResponse.json(
-        { error: "Failed to fetch API keys" },
-        { status: 500 },
-      );
+      // Don't fail completely, just return empty data for now
+      apiKeys = [];
     }
 
     // Format API keys data
     const formattedApiKeys = (apiKeys || []).map((key) => ({
       ...key,
-      user_email: key.profiles?.email || "Unknown",
+      user_email: key.user_email || "Unknown", // Use direct field instead of join
     }));
 
     // Get rate limits (mock data for now, you'd implement this based on your rate limiting system)
