@@ -162,6 +162,12 @@ export default function UserManagement() {
         throw new Error(errorData.error || `HTTP ${response.status}`);
       }
 
+      // Log successful user update
+      await logAdminAction("update_user", "user", state.selectedUser.id, {
+        updates,
+        userEmail: state.selectedUser.email,
+      });
+
       // Refresh users list
       fetchUsers(state.currentPage, state.searchTerm);
       closeEditModal();
