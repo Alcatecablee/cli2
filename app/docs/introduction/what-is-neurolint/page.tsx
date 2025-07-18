@@ -252,7 +252,20 @@ export default function WhatIsNeuroLintPage() {
 
           <div className="docs-advantages-grid">
             <div className="docs-advantage-item">
-              <div className="docs-advantage-icon">🎯</div>
+              <div className="docs-advantage-icon">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="32"
+                  height="32"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <circle cx="12" cy="12" r="6" />
+                  <circle cx="12" cy="12" r="2" />
+                </svg>
+              </div>
               <h4>Predictable Results</h4>
               <p>
                 Same input always produces the same output. No randomness or
@@ -357,7 +370,7 @@ export default function WhatIsNeuroLintPage() {
               href="/docs/getting-started/installation"
               className="docs-next-step-card primary"
             >
-              <div className="docs-next-step-icon">🛠️</div>
+              <div className="docs-next-step-icon">����️</div>
               <h4>Installation & Setup</h4>
               <p>Get NeuroLint Pro running on your system in minutes</p>
             </Link>
