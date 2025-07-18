@@ -411,13 +411,24 @@
 }
 
 .btn-danger {
-  background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(244, 67, 54, 0.2) 0%,
+    rgba(244, 67, 54, 0.15) 50%,
+    rgba(255, 255, 255, 0.1) 100%
+  );
+  border: 1px solid rgba(244, 67, 54, 0.4);
   color: #ffffff;
-  border: none;
 }
 
 .btn-danger:hover {
-  background: linear-gradient(135deg, #d32f2f 0%, #c62828 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(244, 67, 54, 0.3) 0%,
+    rgba(244, 67, 54, 0.22) 50%,
+    rgba(255, 255, 255, 0.12) 100%
+  );
+  transform: translateY(-2px);
 }
 
 /* Team Grid */
