@@ -178,26 +178,36 @@ program
     );
     console.log();
 
-    console.log(chalk.white("Layer System:"));
+    console.log(
+      chalk.white("Layer System (with automatic dependency management):"),
+    );
     console.log(
       chalk.gray(
         "  Layer 1: Configuration validation (tsconfig, package.json)",
       ),
     );
     console.log(
-      chalk.gray("  Layer 2: Pattern & entity fixes (HTML entities, patterns)"),
+      chalk.gray(
+        "  Layer 2: Pattern & entity fixes (HTML entities, patterns) [requires: 1]",
+      ),
     );
     console.log(
       chalk.gray(
-        "  Layer 3: Component best practices (React keys, accessibility)",
+        "  Layer 3: Component best practices (React keys, accessibility) [requires: 1,2]",
       ),
     );
-    console.log(chalk.gray("  Layer 4: Hydration & SSR protection"));
     console.log(
-      chalk.gray("  Layer 5: Next.js optimizations (App Router patterns)"),
+      chalk.gray("  Layer 4: Hydration & SSR protection [requires: 1,2,3]"),
     );
     console.log(
-      chalk.gray("  Layer 6: Quality & performance (error handling)"),
+      chalk.gray(
+        "  Layer 5: Next.js optimizations (App Router patterns) [requires: 1,2,3,4]",
+      ),
+    );
+    console.log(
+      chalk.gray(
+        "  Layer 6: Quality & performance (error handling) [requires: 1,2,3,4,5]",
+      ),
     );
     console.log();
 
