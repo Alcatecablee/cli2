@@ -488,32 +488,43 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     });
 
     let data;
+
+    // Create all necessary clones upfront before consuming any response
+    const responseClone = response.clone();
+    const responseTextClone = response.clone();
+
     try {
-      // Clone the response to avoid "body stream already read" errors
-      const responseClone = response.clone();
       try {
         data = await response.json();
       } catch (jsonError) {
-        // If the original response failed, try the clone
         console.warn(
-          "Failed to parse profile update response, trying clone:",
+          "Failed to parse JSON profile update response, trying clone:",
           jsonError,
         );
-        data = await responseClone.json();
-      }
-    } catch (jsonError) {
-      console.error("Failed to parse profile update response:", jsonError);
+        try {
+          data = await responseClone.json();
+        } catch (cloneJsonError) {
+          console.error(
+            "Failed to parse both original and cloned profile update response:",
+            cloneJsonError,
+          );
 
-      // Try to get response text for debugging
-      try {
-        const responseText = await response.text();
-        console.error("Profile update response text:", responseText);
-      } catch (textError) {
-        console.error(
-          "Could not read profile update response text:",
-          textError,
-        );
+          // Try to get response text for debugging
+          try {
+            const responseText = await responseTextClone.text();
+            console.error("Profile update response text:", responseText);
+          } catch (textError) {
+            console.error(
+              "Could not read profile update response text:",
+              textError,
+            );
+          }
+
+          throw new Error("Server returned invalid response");
+        }
       }
+    } catch (error) {
+      console.error("Failed to parse profile update response:", error);
 
       throw new Error("Server returned invalid response");
     }
