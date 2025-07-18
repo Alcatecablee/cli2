@@ -150,15 +150,6 @@ export async function POST(request: NextRequest) {
       "[SESSION CREATE] Session stored successfully:",
       dataStore.collaborationSessions.has(sessionId),
     );
-    const sessionError = null;
-
-    if (sessionError) {
-      console.error("Session creation error:", sessionError);
-      return NextResponse.json(
-        { error: "Failed to create session" },
-        { status: 500 },
-      );
-    }
 
     // Add creator as participant
     const userColor = generateUserColor(userId);
