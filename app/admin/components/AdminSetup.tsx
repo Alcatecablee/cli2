@@ -125,9 +125,12 @@ export default function AdminSetup() {
                 key={index}
                 className={`result-item ${result.success ? "success" : "error"}`}
               >
-                <div className="result-sql">
-                  <code>{result.sql}</code>
+                <div className="result-operation">
+                  <strong>{result.operation || result.sql}</strong>
                 </div>
+                {result.details && (
+                  <div className="result-details">{result.details}</div>
+                )}
                 {result.error && (
                   <div className="result-error">Error: {result.error}</div>
                 )}
