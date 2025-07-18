@@ -362,7 +362,7 @@ export default function Dashboard() {
         throw new Error("execCommand failed");
       }
     } catch (fallbackErr) {
-            console.error("All copy methods failed:", fallbackErr);
+      console.error("All copy methods failed:", fallbackErr);
       // Show user a manual copy option - optimized to prevent reflows
       requestAnimationFrame(() => {
         const modal = document.createElement("div");
@@ -413,15 +413,21 @@ export default function Dashboard() {
         ">Close</button>
       `;
 
-      modal.appendChild(content);
-      document.body.appendChild(modal);
+        modal.appendChild(content);
+        document.body.appendChild(modal);
 
-      // Auto-select the text in the textarea
-      const textarea = modal.querySelector("textarea") as HTMLTextAreaElement;
-      if (textarea) {
-        textarea.select();
-        textarea.focus();
-      }
+        // Auto-select the text in the textarea
+        const textarea = modal.querySelector("textarea") as HTMLTextAreaElement;
+        if (textarea) {
+          textarea.select();
+          textarea.focus();
+        }
+
+        // Fade in the modal
+        requestAnimationFrame(() => {
+          modal.style.opacity = "1";
+        });
+      });
     }
   };
 
