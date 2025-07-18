@@ -2027,7 +2027,6 @@ export default function Dashboard() {
                               name,
                               description: "",
                               files: [],
-                              created_at: new Date().toISOString(),
                             },
                           );
 
