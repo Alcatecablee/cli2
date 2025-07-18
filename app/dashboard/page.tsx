@@ -252,6 +252,8 @@ export default function Dashboard() {
       loading: false,
       error: null,
     },
+    collaborationSessions: [],
+    loadingSessions: false,
   });
 
   // Search & filter for analysis history
