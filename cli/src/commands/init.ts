@@ -140,7 +140,7 @@ export async function initCommand(options: InitOptions) {
         type: "input",
         name: "apiUrl",
         message: "NeuroLint API URL:",
-        default: "https://api.neurolint.dev",
+        default: "http://localhost:3000/api",
         validate: (input) => {
           try {
             new URL(input);
