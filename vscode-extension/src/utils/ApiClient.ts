@@ -55,12 +55,20 @@ export class ApiClient {
 
   public async analyzeCode(request: AnalysisRequest): Promise<AnalysisResult> {
     try {
-      const response = await this.client.post("/api/analyze", {
-        ...request,
+      // Transform request to match root project API structure
+      const response = await this.client.post("/analyze", {
+        code: request.code,
+        filename: request.filename || "untitled.tsx",
+        layers: Array.isArray(request.layers)
+          ? request.layers.length === 1
+            ? request.layers[0].toString()
+            : request.layers.join(",")
+          : "auto",
+        applyFixes: false,
         metadata: {
           ...request.metadata,
           source: "vscode-extension",
-          version: "1.0.2",
+          version: "1.0.6",
         },
       });
 
