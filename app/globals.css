@@ -71,7 +71,11 @@ body::before {
     radial-gradient(1px 1px at 45% 60%, rgba(255, 255, 255, 0.4), transparent),
     radial-gradient(1px 1px at 75% 35%, rgba(255, 255, 255, 0.5), transparent),
     radial-gradient(1px 1px at 25% 80%, rgba(255, 255, 255, 0.3), transparent),
-    radial-gradient(1px 1px at 85% 70%, rgba(255, 255, 255, 0.4), transparent);
+    radial-gradient(1px 1px at 85% 70%, rgba(255, 255, 255, 0.4), transparent),
+    radial-gradient(1px 1px at 55% 20%, rgba(255, 255, 255, 0.3), transparent),
+    radial-gradient(1px 1px at 90% 15%, rgba(255, 255, 255, 0.5), transparent),
+    radial-gradient(1px 1px at 10% 55%, rgba(255, 255, 255, 0.4), transparent),
+    radial-gradient(1px 1px at 30% 40%, rgba(255, 255, 255, 0.3), transparent);
   background-size: 100vw 100vh;
   animation: subtleSparkle 120s linear infinite;
 }
