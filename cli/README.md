@@ -11,7 +11,7 @@ NeuroLint Pro CLI is the command-line interface for the NeuroLint Pro premium co
 
 ```bash
 # Install globally
-npm install -g @neurolint/cli
+npm install -g @neurolint-pro/cli
 
 # Initialize in your project
 neurolint init
@@ -219,7 +219,7 @@ neurolint analyze src/ --include="**/*.svelte"
 │   Layer 2 (Patterns): 3 issues                 │
 │   Layer 3 (Components): 2 issues               │
 │   Layer 4 (Hydration): 1 issue                 │
-└─────────────────────────────────────────────────┘
+└───────────────��─────────────────────────────────┘
 ```
 
 ### JSON Format
