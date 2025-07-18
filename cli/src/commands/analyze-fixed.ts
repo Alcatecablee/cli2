@@ -79,7 +79,12 @@ export async function analyzeCommand(files: string[], options: AnalyzeOptions) {
           },
         );
 
-        const plan = userResponse.data.plan || "free";
+        // Handle different response structures from API
+        const plan =
+          userResponse.data.plan ||
+          userResponse.data.user?.plan ||
+          userResponse.data.apiKey?.plan ||
+          "free";
         if (plan === "free" && premiumLayers.length > 0) {
           spinner.fail("Premium features required");
           console.log(
@@ -279,7 +284,7 @@ export async function analyzeCommand(files: string[], options: AnalyzeOptions) {
           chalk.gray(`  ${layerName}: `) +
             (layerIssues.length > 0
               ? chalk.yellow(`${layerIssues.length} issues`)
-              : chalk.green("✓ passed")),
+              : chalk.green("��� passed")),
         );
 
         // Show first few issues for each layer
