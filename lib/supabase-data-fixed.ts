@@ -12,29 +12,6 @@ if (!supabaseUrl || !supabaseKey) {
 
 export const supabase = createClient(supabaseUrl, supabaseKey);
 
-// Helper function to get authenticated Supabase client
-function getAuthenticatedSupabase() {
-  // Get the current session from localStorage
-  if (typeof window !== "undefined") {
-    try {
-      const savedSession = localStorage.getItem("supabase_session");
-      if (savedSession) {
-        const sessionData = JSON.parse(savedSession);
-        if (sessionData?.access_token) {
-          // Set the session for this request
-          supabase.auth.setSession({
-            access_token: sessionData.access_token,
-            refresh_token: sessionData.refresh_token,
-          });
-        }
-      }
-    } catch (error) {
-      console.error("Error setting Supabase session:", error);
-    }
-  }
-  return supabase;
-}
-
 // Types for database objects
 export interface AnalysisHistory {
   id: string;
@@ -70,232 +47,31 @@ export interface UserSettings {
   updated_at?: string;
 }
 
-// Helper function to format error messages properly
-function formatError(error: any): string {
+// Helper function to safely format error messages
+function safeLogError(error: any, prefix: string): void {
   if (error instanceof Error) {
-    return `${error.name}: ${error.message}`;
+    console.error(prefix, error.message);
+  } else if (typeof error === "object" && error !== null) {
+    console.error(prefix, {
+      message: error.message || "Unknown error",
+      code: error.code || "",
+    });
+  } else {
+    console.error(prefix, String(error));
   }
-  if (typeof error === "object" && error !== null) {
-    return JSON.stringify(
-      {
-        message: error.message || "Unknown error",
-        details: error.details || "",
-        hint: error.hint || "",
-        code: error.code || "",
-      },
-      null,
-      2,
-    );
-  }
-  return String(error);
+}
+
+// Helper function to create authenticated Supabase client
+function createAuthenticatedClient() {
+  return supabase;
 }
 
 // Data service functions
 export const dataService = {
-  // Analysis History
-  async saveAnalysisHistory(
-    userId: string,
-    analysisData: Omit<
-      AnalysisHistory,
-      "id" | "user_id" | "created_at" | "updated_at"
-    >,
-  ): Promise<AnalysisHistory | null> {
-    try {
-      const client = getAuthenticatedSupabase();
-      const { data, error } = await client
-        .from("analysis_history")
-        .insert({
-          user_id: userId,
-          ...analysisData,
-        })
-        .select()
-        .single();
-
-      if (error) {
-        console.error("Error saving analysis history:", formatError(error));
-        return null;
-      }
-
-      return data;
-    } catch (error) {
-      console.error("Error in saveAnalysisHistory:", formatError(error));
-      return null;
-    }
-  },
-
-  async getAnalysisHistory(
-    userId: string,
-    limit = 50,
-  ): Promise<AnalysisHistory[]> {
-    try {
-      const client = getAuthenticatedSupabase();
-      const { data, error } = await client
-        .from("analysis_history")
-        .select("*")
-        .eq("user_id", userId)
-        .order("created_at", { ascending: false })
-        .limit(limit);
-
-      if (error) {
-        console.error("Error fetching analysis history:", formatError(error));
-        return [];
-      }
-
-      return data || [];
-    } catch (error) {
-      console.error("Error in getAnalysisHistory:", formatError(error));
-      return [];
-    }
-  },
-
-  async deleteAnalysisHistory(
-    userId: string,
-    historyId: string,
-  ): Promise<boolean> {
-    try {
-      const client = getAuthenticatedSupabase();
-      const { error } = await client
-        .from("analysis_history")
-        .delete()
-        .eq("id", historyId)
-        .eq("user_id", userId);
-
-      if (error) {
-        console.error("Error deleting analysis history:", formatError(error));
-        return false;
-      }
-
-      return true;
-    } catch (error) {
-      console.error("Error in deleteAnalysisHistory:", formatError(error));
-      return false;
-    }
-  },
-
-  async clearAnalysisHistory(userId: string): Promise<boolean> {
-    try {
-      const client = getAuthenticatedSupabase();
-      const { error } = await client
-        .from("analysis_history")
-        .delete()
-        .eq("user_id", userId);
-
-      if (error) {
-        console.error("Error clearing analysis history:", formatError(error));
-        return false;
-      }
-
-      return true;
-    } catch (error) {
-      console.error("Error in clearAnalysisHistory:", formatError(error));
-      return false;
-    }
-  },
-
-  // Projects
-  async saveProject(
-    userId: string,
-    projectData: Omit<Project, "id" | "user_id" | "created_at" | "updated_at">,
-  ): Promise<Project | null> {
-    try {
-      const client = getAuthenticatedSupabase();
-      const { data, error } = await client
-        .from("projects")
-        .insert({
-          user_id: userId,
-          ...projectData,
-        })
-        .select()
-        .single();
-
-      if (error) {
-        console.error("Error saving project:", formatError(error));
-        return null;
-      }
-
-      return data;
-    } catch (error) {
-      console.error("Error in saveProject:", formatError(error));
-      return null;
-    }
-  },
-
-  async getProjects(userId: string): Promise<Project[]> {
-    try {
-      const client = getAuthenticatedSupabase();
-      const { data, error } = await client
-        .from("projects")
-        .select("*")
-        .eq("user_id", userId)
-        .order("created_at", { ascending: false });
-
-      if (error) {
-        console.error("Error fetching projects:", formatError(error));
-        return [];
-      }
-
-      return data || [];
-    } catch (error) {
-      console.error("Error in getProjects:", formatError(error));
-      return [];
-    }
-  },
-
-  async updateProject(
-    userId: string,
-    projectId: string,
-    updates: Partial<Omit<Project, "id" | "user_id" | "created_at">>,
-  ): Promise<Project | null> {
-    try {
-      const client = getAuthenticatedSupabase();
-      const { data, error } = await client
-        .from("projects")
-        .update({
-          ...updates,
-          updated_at: new Date().toISOString(),
-        })
-        .eq("id", projectId)
-        .eq("user_id", userId)
-        .select()
-        .single();
-
-      if (error) {
-        console.error("Error updating project:", formatError(error));
-        return null;
-      }
-
-      return data;
-    } catch (error) {
-      console.error("Error in updateProject:", formatError(error));
-      return null;
-    }
-  },
-
-  async deleteProject(userId: string, projectId: string): Promise<boolean> {
-    try {
-      const client = getAuthenticatedSupabase();
-      const { error } = await client
-        .from("projects")
-        .delete()
-        .eq("id", projectId)
-        .eq("user_id", userId);
-
-      if (error) {
-        console.error("Error deleting project:", formatError(error));
-        return false;
-      }
-
-      return true;
-    } catch (error) {
-      console.error("Error in deleteProject:", formatError(error));
-      return false;
-    }
-  },
-
   // User Settings
   async getUserSettings(userId: string): Promise<UserSettings | null> {
     try {
-      const client = getAuthenticatedSupabase();
+      const client = createAuthenticatedClient();
       const { data, error } = await client
         .from("user_settings")
         .select("*")
@@ -314,13 +90,13 @@ export const dataService = {
             theme: "dark",
           };
         }
-        console.error("Error fetching user settings:", formatError(error));
+        safeLogError(error, "Error fetching user settings:");
         return null;
       }
 
       return data;
     } catch (error) {
-      console.error("Error in getUserSettings:", formatError(error));
+      safeLogError(error, "Error in getUserSettings:");
       return null;
     }
   },
@@ -333,7 +109,7 @@ export const dataService = {
     >,
   ): Promise<UserSettings | null> {
     try {
-      const client = getAuthenticatedSupabase();
+      const client = createAuthenticatedClient();
       const { data, error } = await client
         .from("user_settings")
         .upsert({
@@ -345,14 +121,215 @@ export const dataService = {
         .single();
 
       if (error) {
-        console.error("Error saving user settings:", formatError(error));
+        safeLogError(error, "Error saving user settings:");
         return null;
       }
 
       return data;
     } catch (error) {
-      console.error("Error in saveUserSettings:", formatError(error));
+      safeLogError(error, "Error in saveUserSettings:");
       return null;
+    }
+  },
+
+  // Analysis History
+  async saveAnalysisHistory(
+    userId: string,
+    analysisData: Omit<
+      AnalysisHistory,
+      "id" | "user_id" | "created_at" | "updated_at"
+    >,
+  ): Promise<AnalysisHistory | null> {
+    try {
+      const client = createAuthenticatedClient();
+
+      const { data, error } = await client
+        .from("analysis_history")
+        .insert({
+          user_id: userId,
+          ...analysisData,
+        })
+        .select()
+        .single();
+
+      if (error) {
+        safeLogError(error, "Error saving analysis history:");
+        return null;
+      }
+
+      return data;
+    } catch (error) {
+      safeLogError(error, "Error in saveAnalysisHistory:");
+      return null;
+    }
+  },
+
+  async getAnalysisHistory(
+    userId: string,
+    limit = 50,
+  ): Promise<AnalysisHistory[]> {
+    try {
+      const client = createAuthenticatedClient();
+      const { data, error } = await client
+        .from("analysis_history")
+        .select("*")
+        .eq("user_id", userId)
+        .order("created_at", { ascending: false })
+        .limit(limit);
+
+      if (error) {
+        safeLogError(error, "Error fetching analysis history:");
+        return [];
+      }
+
+      return data || [];
+    } catch (error) {
+      safeLogError(error, "Error in getAnalysisHistory:");
+      return [];
+    }
+  },
+
+  async deleteAnalysisHistory(
+    userId: string,
+    historyId: string,
+  ): Promise<boolean> {
+    try {
+      const client = createAuthenticatedClient();
+      const { error } = await client
+        .from("analysis_history")
+        .delete()
+        .eq("id", historyId)
+        .eq("user_id", userId);
+
+      if (error) {
+        safeLogError(error, "Error deleting analysis history:");
+        return false;
+      }
+
+      return true;
+    } catch (error) {
+      safeLogError(error, "Error in deleteAnalysisHistory:");
+      return false;
+    }
+  },
+
+  async clearAnalysisHistory(userId: string): Promise<boolean> {
+    try {
+      const client = createAuthenticatedClient();
+      const { error } = await client
+        .from("analysis_history")
+        .delete()
+        .eq("user_id", userId);
+
+      if (error) {
+        safeLogError(error, "Error clearing analysis history:");
+        return false;
+      }
+
+      return true;
+    } catch (error) {
+      safeLogError(error, "Error in clearAnalysisHistory:");
+      return false;
+    }
+  },
+
+  // Projects
+  async saveProject(
+    userId: string,
+    projectData: Omit<Project, "id" | "user_id" | "created_at" | "updated_at">,
+  ): Promise<Project | null> {
+    try {
+      const client = createAuthenticatedClient();
+      const { data, error } = await client
+        .from("projects")
+        .insert({
+          user_id: userId,
+          ...projectData,
+        })
+        .select()
+        .single();
+
+      if (error) {
+        safeLogError(error, "Error saving project:");
+        return null;
+      }
+
+      return data;
+    } catch (error) {
+      safeLogError(error, "Error in saveProject:");
+      return null;
+    }
+  },
+
+  async getProjects(userId: string): Promise<Project[]> {
+    try {
+      const client = createAuthenticatedClient();
+      const { data, error } = await client
+        .from("projects")
+        .select("*")
+        .eq("user_id", userId)
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        safeLogError(error, "Error fetching projects:");
+        return [];
+      }
+
+      return data || [];
+    } catch (error) {
+      safeLogError(error, "Error in getProjects:");
+      return [];
+    }
+  },
+
+  async updateProject(
+    userId: string,
+    projectId: string,
+    updates: Partial<Omit<Project, "id" | "user_id" | "created_at">>,
+  ): Promise<Project | null> {
+    try {
+      const client = createAuthenticatedClient();
+      const { data, error } = await client
+        .from("projects")
+        .update({
+          ...updates,
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", projectId)
+        .eq("user_id", userId)
+        .select()
+        .single();
+
+      if (error) {
+        safeLogError(error, "Error updating project:");
+        return null;
+      }
+
+      return data;
+    } catch (error) {
+      safeLogError(error, "Error in updateProject:");
+      return null;
+    }
+  },
+
+  async deleteProject(userId: string, projectId: string): Promise<boolean> {
+    try {
+      const client = createAuthenticatedClient();
+      const { error } = await client
+        .from("projects")
+        .delete()
+        .eq("id", projectId)
+        .eq("user_id", userId);
+
+      if (error) {
+        safeLogError(error, "Error deleting project:");
+        return false;
+      }
+
+      return true;
+    } catch (error) {
+      safeLogError(error, "Error in deleteProject:");
+      return false;
     }
   },
 
@@ -366,27 +343,34 @@ export const dataService = {
   ): Promise<void> {
     // Always save to localStorage for immediate access
     try {
-      const localHistory = JSON.parse(
-        localStorage.getItem("neurolint-history") || "[]",
-      );
-      const newItem = {
-        id: Date.now().toString(),
-        ...analysisData,
-        timestamp: analysisData.timestamp || new Date().toISOString(),
-      };
-      const updatedHistory = [newItem, ...localHistory].slice(0, 50);
-      localStorage.setItem("neurolint-history", JSON.stringify(updatedHistory));
+      if (typeof window !== "undefined") {
+        const localHistory = JSON.parse(
+          localStorage.getItem("neurolint-history") || "[]",
+        );
+        const newItem = {
+          id: Date.now().toString(),
+          ...analysisData,
+          timestamp: analysisData.timestamp || new Date().toISOString(),
+        };
+        const updatedHistory = [newItem, ...localHistory].slice(0, 50);
+        localStorage.setItem(
+          "neurolint-history",
+          JSON.stringify(updatedHistory),
+        );
+      }
     } catch (error) {
-      console.error("Error saving to localStorage:", formatError(error));
+      safeLogError(error, "Error saving to localStorage:");
     }
 
     // If user is authenticated, also save to Supabase
     if (userId) {
       try {
-        await this.saveAnalysisHistory(userId, analysisData);
+        const result = await this.saveAnalysisHistory(userId, analysisData);
+        if (result) {
+          console.log("Successfully saved analysis history to Supabase");
+        }
       } catch (error) {
-        console.error("Error saving to Supabase:", formatError(error));
-        // Continue execution - localStorage backup is available
+        safeLogError(error, "Error saving to Supabase:");
       }
     }
   },
@@ -399,31 +383,36 @@ export const dataService = {
         if (supabaseHistory.length > 0) {
           // Also update localStorage with Supabase data
           try {
-            localStorage.setItem(
-              "neurolint-history",
-              JSON.stringify(supabaseHistory),
-            );
+            if (typeof window !== "undefined") {
+              localStorage.setItem(
+                "neurolint-history",
+                JSON.stringify(supabaseHistory),
+              );
+            }
           } catch (error) {
-            console.error("Error updating localStorage:", formatError(error));
+            safeLogError(error, "Error updating localStorage:");
           }
           return supabaseHistory;
         }
       } catch (error) {
-        console.error(
+        safeLogError(
+          error,
           "Error fetching from Supabase, falling back to localStorage:",
-          formatError(error),
         );
       }
     }
 
     // Fallback to localStorage
     try {
-      const localHistory = JSON.parse(
-        localStorage.getItem("neurolint-history") || "[]",
-      );
-      return localHistory;
+      if (typeof window !== "undefined") {
+        const localHistory = JSON.parse(
+          localStorage.getItem("neurolint-history") || "[]",
+        );
+        return localHistory;
+      }
+      return [];
     } catch (error) {
-      console.error("Error reading from localStorage:", formatError(error));
+      safeLogError(error, "Error reading from localStorage:");
       return [];
     }
   },
