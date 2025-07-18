@@ -53,6 +53,25 @@ export default function AnalyticsOverview() {
         throw new Error("Not authenticated");
       }
 
+      // Debug: Check admin permissions first
+      const debugResponse = await fetch(`/api/admin/check-admin`, {
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (debugResponse.ok) {
+        const debugData = await debugResponse.json();
+        console.log("Admin check debug:", debugData);
+
+        if (!debugData.isAdmin) {
+          throw new Error(
+            `Access denied. Admin check: ${JSON.stringify(debugData.adminChecks)}`,
+          );
+        }
+      }
+
       const response = await fetch(
         `/api/admin/analytics-safe?period=${period}`,
         {
