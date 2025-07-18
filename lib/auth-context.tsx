@@ -290,9 +290,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       } catch (jsonError) {
         console.error("Failed to parse login response:", jsonError);
 
-        // Try to get response text for debugging
+        // Try to get response text for debugging using a fresh clone
         try {
-          const responseText = await response.text();
+          const responseCloneForText = response.clone();
+          const responseText = await responseCloneForText.text();
           console.error("Response text:", responseText);
         } catch (textError) {
           console.error("Could not read response text:", textError);
