@@ -40,7 +40,10 @@ interface Activity {
     | "session_left"
     | "document_edited"
     | "comment_added"
-    | "analysis_run";
+    | "analysis_run"
+    | "session_deleted"
+    | "member_invited"
+    | "member_joined";
   sessionId?: string;
   userId: string;
   userName: string;
