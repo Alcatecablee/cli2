@@ -98,7 +98,7 @@ export class ApiClient {
         baseURL: this.configManager.getApiUrl(),
         timeout: this.configManager.getTimeout(),
         headers: {
-          Authorization: `Bearer ${apiKey}`,
+          "X-API-Key": apiKey,
           "Content-Type": "application/json",
         },
       });
