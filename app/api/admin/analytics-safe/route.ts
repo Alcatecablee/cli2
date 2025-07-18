@@ -12,12 +12,22 @@ async function isAdmin(supabase: any, userId: string): Promise<boolean> {
       .eq("id", userId)
       .single();
 
-    return (
-      user?.email === "admin@neurolint.com" ||
-      user?.email === "info@neurolint.com" ||
-      user?.plan_type === "admin"
-    );
-  } catch {
+    if (!user) {
+      console.log("No user found in database for ID:", userId);
+      return false;
+    }
+
+    console.log("Admin check for user:", user);
+
+    const isAdminEmail = user.email === "admin@neurolint.com";
+    const isInfoEmail = user.email === "info@neurolint.com";
+    const hasAdminPlan = user.plan_type === "admin";
+
+    console.log("Admin checks:", { isAdminEmail, isInfoEmail, hasAdminPlan });
+
+    return isAdminEmail || isInfoEmail || hasAdminPlan;
+  } catch (error) {
+    console.error("Admin check error:", error);
     return false;
   }
 }
