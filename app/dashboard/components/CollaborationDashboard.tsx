@@ -87,6 +87,7 @@ export default function CollaborationDashboard({
   const [connectionStatus, setConnectionStatus] = useState<
     "connecting" | "connected" | "disconnected" | "error"
   >("disconnected");
+  const [isConnectionInitialized, setIsConnectionInitialized] = useState(false);
   const pollInterval = useRef<NodeJS.Timeout | null>(null);
   const activityPollInterval = useRef<NodeJS.Timeout | null>(null);
   const presencePollInterval = useRef<NodeJS.Timeout | null>(null);
