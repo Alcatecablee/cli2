@@ -214,6 +214,12 @@ export default function CollaborationDashboard({
       return;
     }
 
+    // Prevent duplicate connections
+    if (connectionStatus === "connecting" || connectionStatus === "connected") {
+      console.log("[RT] Connection already active, skipping");
+      return;
+    }
+
     // Since Next.js App Router doesn't support WebSocket upgrades natively,
     // we'll use HTTP polling for real-time updates
     console.log("[RT] Starting real-time polling for collaboration updates");
