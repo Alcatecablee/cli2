@@ -181,7 +181,7 @@
   object-fit: contain;
   transition: var(--transition-smooth);
   filter: brightness(1.1) contrast(1.1);
-  animation: logoSpin 4s linear infinite;
+  animation: logoSpin 20s linear infinite;
 }
 
 @keyframes logoSpin {
