@@ -237,8 +237,18 @@ export default function CollaborationDashboard({
 
         setTeamMembers(Array.from(allMembers.values()));
       } else {
-        console.error("Failed to load teams:", response.statusText);
-        // Fallback to mock data
+        console.error(
+          "Failed to load teams:",
+          response.status,
+          response.statusText,
+        );
+        // Show user-friendly error and fallback
+        if (response.status === 401) {
+          console.warn("Authentication required for team data");
+        } else if (response.status >= 500) {
+          console.error("Server error loading teams");
+        }
+        // Fallback to current user only
         setTeamMembers([
           {
             id: user.id,
