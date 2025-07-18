@@ -651,32 +651,7 @@
   flex-direction: column;
   overflow: hidden;
   position: relative;
-  background: rgba(0, 0, 0, 0.15);
-  backdrop-filter: blur(10px) saturate(1.2);
-  -webkit-backdrop-filter: blur(10px) saturate(1.2);
-}
-
-.dashboard-main::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.02) 0%,
-    transparent 30%,
-    transparent 70%,
-    rgba(0, 0, 0, 0.1) 100%
-  );
-  pointer-events: none;
-  z-index: 0;
-}
-
-.dashboard-main > * {
-  position: relative;
-  z-index: 1;
+  background: #000000;
 }
 
 /* Centered header with rounded corners */
