@@ -40,6 +40,13 @@ export async function analyzeCommand(files: string[], options: AnalyzeOptions) {
   const startTime = Date.now();
 
   try {
+    // Input validation
+    if (files.some((file) => !file || typeof file !== "string")) {
+      spinner.fail("Invalid file paths provided");
+      console.log(chalk.red("ERROR: All file paths must be valid strings"));
+      return;
+    }
+
     // Load and validate configuration
     const config = await loadConfig(options.config);
     const configValidation = await validateConfig(config);
