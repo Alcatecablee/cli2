@@ -1679,8 +1679,8 @@ export default function Dashboard() {
                     </p>
                   </div>
                   <div style={{ display: "flex", gap: "0.75rem" }}>
-                    <Link
-                      href="/collaborate"
+                    <button
+                      onClick={createCollaborationSession}
                       className="btn btn-primary"
                       style={{
                         padding: "0.75rem 1.5rem",
@@ -1688,15 +1688,10 @@ export default function Dashboard() {
                       }}
                     >
                       New Session
-                    </Link>
+                    </button>
                     <button
                       className="btn btn-secondary"
-                      onClick={() => {
-                        const sessionId = prompt("Enter session ID to join:");
-                        if (sessionId) {
-                          window.location.href = `/collaborate?session=${sessionId}`;
-                        }
-                      }}
+                      onClick={joinCollaborationSession}
                       style={{
                         padding: "0.75rem 1.5rem",
                         fontSize: "0.875rem",
