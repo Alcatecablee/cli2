@@ -61,10 +61,20 @@ export class NeuroLintProvider implements vscode.Disposable {
         }
       }
 
+      // Apply layer dependency management (from IMPLEMENTATION_PATTERNS.md)
+      const requestedLayers = this.configManager.getEnabledLayers();
+      const validatedLayers = this.validateAndCorrectLayers(requestedLayers);
+
+      if (validatedLayers.warnings.length > 0) {
+        this.outputChannel.appendLine(
+          `Layer dependencies auto-corrected: ${validatedLayers.warnings.join(", ")}`,
+        );
+      }
+
       const request: AnalysisRequest = {
         code: document.getText(),
         filename: document.fileName,
-        layers: this.configManager.getEnabledLayers(),
+        layers: validatedLayers.correctedLayers,
         metadata: {
           language: document.languageId,
           uri: document.uri.toString(),
