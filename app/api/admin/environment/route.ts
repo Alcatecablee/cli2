@@ -58,12 +58,53 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Invalid session" }, { status: 401 });
     }
 
-    // Check admin permissions
-    if (!(await isAdmin(supabase, user.id))) {
-      return NextResponse.json(
-        { error: "Admin access required" },
-        { status: 403 },
-      );
+    // Check admin permissions - with auto-grant for admin@neurolint.com
+    const hasAdminAccess = await isAdmin(supabase, user.id);
+
+    if (!hasAdminAccess) {
+      // Auto-grant admin access if user is admin@neurolint.com
+      if (user.email === "admin@neurolint.com") {
+        console.log("Auto-granting admin access to admin@neurolint.com");
+
+        try {
+          // Delete any existing record and create fresh one
+          await supabase.from("users").delete().eq("id", user.id);
+
+          const { error: insertError } = await supabase.from("users").insert({
+            id: user.id,
+            clerk_id: user.id,
+            email: user.email,
+            plan_type: "admin",
+            full_name: "Admin User",
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          });
+
+          if (insertError) {
+            console.error("Failed to auto-grant admin:", insertError);
+            return NextResponse.json(
+              {
+                error: "Failed to auto-grant admin access",
+                details: insertError.message,
+              },
+              { status: 500 },
+            );
+          }
+
+          console.log("Successfully auto-granted admin access");
+        } catch (autoGrantError) {
+          console.error("Auto-grant error:", autoGrantError);
+          return NextResponse.json(
+            { error: "Admin access required - auto-grant failed" },
+            { status: 403 },
+          );
+        }
+      } else {
+        return NextResponse.json(
+          { error: "Admin access required" },
+          { status: 403 },
+        );
+      }
     }
 
     // Return sanitized environment variables
