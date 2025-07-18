@@ -88,7 +88,18 @@ export default function WhatIsNeuroLintPage() {
 
           <div className="docs-problem-grid">
             <div className="docs-problem-card">
-              <div className="docs-problem-icon">🔧</div>
+              <div className="docs-problem-icon">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="24"
+                  height="24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
+                </svg>
+              </div>
               <h4>Configuration Modernization</h4>
               <p>
                 Updates outdated TypeScript configs, Next.js settings, and
@@ -101,7 +112,19 @@ export default function WhatIsNeuroLintPage() {
             </div>
 
             <div className="docs-problem-card">
-              <div className="docs-problem-icon">🧹</div>
+              <div className="docs-problem-icon">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="24"
+                  height="24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path d="M3 6h18l-2 13H5L3 6z" />
+                  <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                </svg>
+              </div>
               <h4>HTML Entity Corruption</h4>
               <p>
                 Fixes corrupted HTML entities that break string literals and JSX
@@ -114,7 +137,20 @@ export default function WhatIsNeuroLintPage() {
             </div>
 
             <div className="docs-problem-card">
-              <div className="docs-problem-icon">⚛️</div>
+              <div className="docs-problem-icon">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="24"
+                  height="24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                  <circle cx="12" cy="17" r="1" />
+                </svg>
+              </div>
               <h4>React Component Issues</h4>
               <p>
                 Adds missing key props, fixes button variants, and improves
@@ -127,7 +163,19 @@ export default function WhatIsNeuroLintPage() {
             </div>
 
             <div className="docs-problem-card">
-              <div className="docs-problem-icon">💧</div>
+              <div className="docs-problem-icon">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="24"
+                  height="24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path d="M12 2v6m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0z" />
+                  <path d="M12 8v4l3 3" />
+                </svg>
+              </div>
               <h4>Hydration Mismatches</h4>
               <p>
                 Prevents SSR errors by adding proper guards for client-only
@@ -142,7 +190,18 @@ export default function WhatIsNeuroLintPage() {
             </div>
 
             <div className="docs-problem-card">
-              <div className="docs-problem-icon">🚀</div>
+              <div className="docs-problem-icon">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="24"
+                  height="24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+                </svg>
+              </div>
               <h4>Next.js App Router</h4>
               <p>
                 Ensures compatibility with Next.js 13+ App Router patterns and
@@ -155,7 +214,18 @@ export default function WhatIsNeuroLintPage() {
             </div>
 
             <div className="docs-problem-card">
-              <div className="docs-problem-icon">🛡️</div>
+              <div className="docs-problem-icon">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="24"
+                  height="24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                </svg>
+              </div>
               <h4>Error Boundaries & Safety</h4>
               <p>
                 Adds error handling, accessibility attributes, and performance
@@ -171,7 +241,7 @@ export default function WhatIsNeuroLintPage() {
 
         {/* How It Works */}
         <div className="docs-section">
-          <h2 id="how-it-works">⚙️ How It Works: The 6-Layer System</h2>
+          <h2 id="how-it-works">How It Works: The 6-Layer System</h2>
           <p>
             NeuroLint Pro uses a{" "}
             <strong>sequential 6-layer transformation system</strong>. Each
@@ -183,7 +253,7 @@ export default function WhatIsNeuroLintPage() {
             <div className="docs-layer-item">
               <div className="docs-layer-number">1</div>
               <div className="docs-layer-content">
-                <h4>🔧 Configuration Fixes</h4>
+                <h4>Configuration Fixes</h4>
                 <p>Modernizes TypeScript, Next.js, and package.json settings</p>
               </div>
             </div>
@@ -192,7 +262,7 @@ export default function WhatIsNeuroLintPage() {
             <div className="docs-layer-item">
               <div className="docs-layer-number">2</div>
               <div className="docs-layer-content">
-                <h4>🧹 Pattern Fixes</h4>
+                <h4>Pattern Fixes</h4>
                 <p>Cleans up HTML entities, imports, and legacy patterns</p>
               </div>
             </div>
@@ -201,7 +271,7 @@ export default function WhatIsNeuroLintPage() {
             <div className="docs-layer-item">
               <div className="docs-layer-number">3</div>
               <div className="docs-layer-content">
-                <h4>⚛️ Component Fixes</h4>
+                <h4>Component Fixes</h4>
                 <p>Improves React components, keys, and accessibility</p>
               </div>
             </div>
@@ -210,7 +280,7 @@ export default function WhatIsNeuroLintPage() {
             <div className="docs-layer-item">
               <div className="docs-layer-number">4</div>
               <div className="docs-layer-content">
-                <h4>💧 Hydration Fixes</h4>
+                <h4>Hydration Fixes</h4>
                 <p>Prevents SSR issues and hydration mismatches</p>
               </div>
             </div>
@@ -219,7 +289,7 @@ export default function WhatIsNeuroLintPage() {
             <div className="docs-layer-item">
               <div className="docs-layer-number">5</div>
               <div className="docs-layer-content">
-                <h4>🚀 Next.js App Router</h4>
+                <h4>Next.js App Router</h4>
                 <p>Ensures App Router compatibility and proper directives</p>
               </div>
             </div>
@@ -228,7 +298,7 @@ export default function WhatIsNeuroLintPage() {
             <div className="docs-layer-item">
               <div className="docs-layer-number">6</div>
               <div className="docs-layer-content">
-                <h4>🛡️ Testing & Validation</h4>
+                <h4>Testing & Validation</h4>
                 <p>Adds error boundaries, testing, and quality improvements</p>
               </div>
             </div>
@@ -272,7 +342,19 @@ export default function WhatIsNeuroLintPage() {
             </div>
 
             <div className="docs-advantage-item">
-              <div className="docs-advantage-icon">🔍</div>
+              <div className="docs-advantage-icon">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="32"
+                  height="32"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <circle cx="11" cy="11" r="8" />
+                  <path d="m21 21-4.35-4.35" />
+                </svg>
+              </div>
               <h4>Transparent Logic</h4>
               <p>
                 You can understand exactly what each transformation does and
@@ -281,19 +363,53 @@ export default function WhatIsNeuroLintPage() {
             </div>
 
             <div className="docs-advantage-item">
-              <div className="docs-advantage-icon">⚡</div>
+              <div className="docs-advantage-icon">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="32"
+                  height="32"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+                </svg>
+              </div>
               <h4>Fast Execution</h4>
               <p>No model inference needed - transformations run instantly.</p>
             </div>
 
             <div className="docs-advantage-item">
-              <div className="docs-advantage-icon">🛡️</div>
+              <div className="docs-advantage-icon">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="32"
+                  height="32"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                </svg>
+              </div>
               <h4>Safety Guaranteed</h4>
               <p>Rules are tested and validated to never corrupt your code.</p>
             </div>
 
             <div className="docs-advantage-item">
-              <div className="docs-advantage-icon">🎛️</div>
+              <div className="docs-advantage-icon">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="32"
+                  height="32"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <circle cx="12" cy="12" r="3" />
+                  <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1 1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+                </svg>
+              </div>
               <h4>Full Control</h4>
               <p>
                 You can customize, disable, or extend any transformation rule.
@@ -301,7 +417,18 @@ export default function WhatIsNeuroLintPage() {
             </div>
 
             <div className="docs-advantage-item">
-              <div className="docs-advantage-icon">📊</div>
+              <div className="docs-advantage-icon">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="32"
+                  height="32"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                </svg>
+              </div>
               <h4>Reliable Metrics</h4>
               <p>Accurate reporting of what was changed and why.</p>
             </div>
@@ -310,7 +437,7 @@ export default function WhatIsNeuroLintPage() {
 
         {/* Safety First */}
         <div className="docs-section">
-          <h2 id="safety-first">🛡️ Safety-First Architecture</h2>
+          <h2 id="safety-first">Safety-First Architecture</h2>
           <p>
             Every transformation in NeuroLint Pro is designed with safety as the
             top priority:
@@ -318,19 +445,19 @@ export default function WhatIsNeuroLintPage() {
 
           <div className="docs-safety-features">
             <div className="docs-safety-item">
-              <h4>🔍 Dry-Run Mode</h4>
+              <h4>Dry-Run Mode</h4>
               <p>Preview all changes before applying them to your code.</p>
             </div>
 
             <div className="docs-safety-item">
-              <h4>✅ Incremental Validation</h4>
+              <h4>Incremental Validation</h4>
               <p>
                 Each layer validates its changes before proceeding to the next.
               </p>
             </div>
 
             <div className="docs-safety-item">
-              <h4>🔄 Automatic Rollback</h4>
+              <h4>Automatic Rollback</h4>
               <p>
                 If any transformation corrupts code, it's automatically
                 reverted.
@@ -338,7 +465,7 @@ export default function WhatIsNeuroLintPage() {
             </div>
 
             <div className="docs-safety-item">
-              <h4>📝 Complete Logging</h4>
+              <h4>Complete Logging</h4>
               <p>Detailed logs show exactly what was changed and why.</p>
             </div>
           </div>
@@ -346,7 +473,7 @@ export default function WhatIsNeuroLintPage() {
 
         {/* Next Steps */}
         <div className="docs-section">
-          <h2 id="next-steps">🚀 Ready to Get Started?</h2>
+          <h2 id="next-steps">Ready to Get Started?</h2>
           <p>
             Now that you understand what NeuroLint Pro is and how it works, here
             are the best next steps:
@@ -357,7 +484,18 @@ export default function WhatIsNeuroLintPage() {
               href="/docs/introduction/why-rule-based"
               className="docs-next-step-card"
             >
-              <div className="docs-next-step-icon">📐</div>
+              <div className="docs-next-step-icon">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="32"
+                  height="32"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+                </svg>
+              </div>
               <h4>Why Rule-Based (Not AI)?</h4>
               <p>
                 Deep dive into the advantages of deterministic transformations
@@ -368,7 +506,18 @@ export default function WhatIsNeuroLintPage() {
               href="/docs/getting-started/installation"
               className="docs-next-step-card primary"
             >
-              <div className="docs-next-step-icon">����️</div>
+              <div className="docs-next-step-icon">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="32"
+                  height="32"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
+                </svg>
+              </div>
               <h4>Installation & Setup</h4>
               <p>Get NeuroLint Pro running on your system in minutes</p>
             </Link>
@@ -377,7 +526,18 @@ export default function WhatIsNeuroLintPage() {
               href="/docs/getting-started/first-fix"
               className="docs-next-step-card"
             >
-              <div className="docs-next-step-icon">⚡</div>
+              <div className="docs-next-step-icon">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="32"
+                  height="32"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+                </svg>
+              </div>
               <h4>Your First Fix</h4>
               <p>Complete walkthrough from problem to solution</p>
             </Link>
@@ -614,8 +774,8 @@ export default function WhatIsNeuroLintPage() {
         }
 
         .docs-problem-icon {
-          font-size: 24px;
           margin-bottom: 12px;
+          color: #2196f3;
         }
 
         .docs-problem-card h4 {
@@ -701,8 +861,8 @@ export default function WhatIsNeuroLintPage() {
         }
 
         .docs-advantage-icon {
-          font-size: 32px;
           margin-bottom: 12px;
+          color: #2196f3;
         }
 
         .docs-advantage-item h4 {
@@ -775,8 +935,8 @@ export default function WhatIsNeuroLintPage() {
         }
 
         .docs-next-step-icon {
-          font-size: 32px;
           margin-bottom: 12px;
+          color: #2196f3;
         }
 
         .docs-next-step-card h4 {
