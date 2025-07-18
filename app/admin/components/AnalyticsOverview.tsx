@@ -37,6 +37,7 @@ interface AnalyticsState {
 }
 
 export default function AnalyticsOverview() {
+  const { session } = useAuth();
   const [state, setState] = useState<AnalyticsState>({
     data: null,
     loading: true,
