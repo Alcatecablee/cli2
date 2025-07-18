@@ -7,6 +7,13 @@
 
 NeuroLint CLI v1.0.4+ now includes integration with NeuroLint Pro for enhanced React/Next.js code analysis and automatic fixing capabilities. Works with both standalone analysis and NeuroLint Pro service.
 
+## What's New in v1.0.4
+
+- **NeuroLint Pro Integration**: Enhanced compatibility with NeuroLint Pro service
+- **Local Development Support**: Updated to work with local NeuroLint Pro instances
+- **Improved API Structure**: Better alignment with modern React/Next.js workflows
+- **Enhanced Authentication**: Streamlined API key authentication system
+
 ## Quick Start
 
 ```bash
@@ -209,7 +216,7 @@ neurolint analyze src/ --include="**/*.svelte"
 ```
 ┌─────────────────────────────────────────────────┐
 │                Analysis Results                 │
-├─────────────────────────────────────────────────┤
+├────────────────���────────────────────────────────┤
 │ Files analyzed: 42                              │
 │ Issues found: 8                                 │
 │ Layers used: [1, 2, 3, 4]                      │

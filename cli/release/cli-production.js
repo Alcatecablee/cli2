@@ -16,11 +16,11 @@ const login_1 = require("./commands/login");
 const program = new commander_1.Command();
 program
     .name("neurolint")
-    .description("NeuroLint Pro CLI - Premium React/Next.js code fixing and analysis")
-    .version("1.0.0");
+    .description("NeuroLint CLI - Advanced code analysis and transformation")
+    .version("1.0.4");
 // Welcome message
-console.log(chalk_1.default.white.bold("NeuroLint Pro CLI"));
-console.log(chalk_1.default.gray("Premium React/Next.js Code Fixing Service\n"));
+console.log(chalk_1.default.white.bold("NeuroLint CLI"));
+console.log(chalk_1.default.gray("Advanced code analysis and transformation\n"));
 // Initialize project command
 program
     .command("init")
@@ -83,7 +83,7 @@ program
     .alias("i")
     .description("Run NeuroLint in interactive mode")
     .action(async () => {
-    console.log(chalk_1.default.white("NeuroLint Pro Interactive Mode\n"));
+    console.log(chalk_1.default.white("NeuroLint Interactive Mode\n"));
     const answers = await inquirer_1.default.prompt([
         {
             type: "list",
@@ -123,7 +123,7 @@ program
     .command("help")
     .description("Show help and examples")
     .action(() => {
-    console.log(chalk_1.default.white.bold("\nNeuroLint Pro CLI Examples\n"));
+    console.log(chalk_1.default.white.bold("\nNeuroLint CLI Examples\n"));
     console.log(chalk_1.default.white("Getting Started:"));
     console.log(chalk_1.default.gray("  neurolint init                    # Initialize in your project"));
     console.log(chalk_1.default.gray("  neurolint login                   # Authenticate with API"));
