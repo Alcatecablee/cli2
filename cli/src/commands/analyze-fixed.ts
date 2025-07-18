@@ -266,6 +266,13 @@ export async function analyzeCommand(files: string[], options: AnalyzeOptions) {
         );
 
         const result = response.data;
+
+        // Basic validation following IMPLEMENTATION_PATTERNS.md
+        if (!result || typeof result !== "object") {
+          console.log(chalk.yellow(`Warning: Invalid response for ${file}`));
+          continue;
+        }
+
         allResults.push({ file, result });
 
         // Handle different response structures
