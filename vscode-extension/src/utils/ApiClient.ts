@@ -225,7 +225,7 @@ export class ApiClient {
       config.baseURL = this.configManager.getApiUrl();
       config.headers = config.headers || {};
       config.headers["Content-Type"] = "application/json";
-      config.headers["User-Agent"] = "NeuroLint-VSCode/1.0.3";
+      config.headers["User-Agent"] = "NeuroLint-VSCode/1.0.6";
 
       return config;
     });
