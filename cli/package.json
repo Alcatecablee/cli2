@@ -1,6 +1,6 @@
 {
   "name": "@neurolint/cli",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "NeuroLint Pro CLI - Advanced React/Next.js code fixing and analysis tool",
   "main": "release/cli-production.js",
   "bin": {
