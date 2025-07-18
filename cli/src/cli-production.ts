@@ -21,8 +21,8 @@ program
   .version("1.0.0");
 
 // Welcome message
-console.log(chalk.white.bold("NeuroLint Pro CLI"));
-console.log(chalk.gray("Premium React/Next.js Code Fixing Service\n"));
+console.log(chalk.white.bold("NeuroLint CLI"));
+console.log(chalk.gray("Advanced code analysis and transformation\n"));
 
 // Initialize project command
 program
