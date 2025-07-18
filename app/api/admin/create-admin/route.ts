@@ -66,6 +66,7 @@ export async function POST(request: NextRequest) {
         .upsert(
           {
             id: adminAuthUser.id,
+            clerk_id: adminAuthUser.id,
             email: adminEmail,
             plan_type: "admin",
           },
