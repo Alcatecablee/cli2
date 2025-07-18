@@ -17,7 +17,7 @@ export default function WhatIsNeuroLintPage() {
           </span>
         </div>
 
-        <h1 className="docs-page-title">🧠 What is NeuroLint Pro?</h1>
+        <h1 className="docs-page-title">What is NeuroLint Pro?</h1>
         <p className="docs-page-subtitle">
           Understanding the core concept and rule-based architecture that makes
           NeuroLint Pro unique
