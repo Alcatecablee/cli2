@@ -1093,7 +1093,13 @@ function getActivityText(activity: Activity): string {
     case "comment_added":
       return ` added a comment`;
     case "analysis_run":
-      return ` ran analysis on ${activity.details.layers.join(", ")} layers (${activity.details.issuesFound} issues found)`;
+      return ` ran analysis on ${activity.details.layers?.join(", ") || "unknown"} layers (${activity.details.issuesFound || 0} issues found)`;
+    case "session_deleted":
+      return ` deleted session "${activity.details.sessionName || "Unknown Session"}"`;
+    case "member_invited":
+      return ` invited ${activity.details.inviteeEmail || "someone"} to the team`;
+    case "member_joined":
+      return ` joined the team`;
     default:
       return " performed an action";
   }
