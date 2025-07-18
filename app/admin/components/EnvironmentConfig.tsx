@@ -165,8 +165,10 @@ export default function EnvironmentConfig() {
   };
 
   useEffect(() => {
-    fetchEnvironmentVariables();
-  }, []);
+    if (session?.access_token) {
+      fetchEnvironmentVariables();
+    }
+  }, [session?.access_token]);
 
   const handleVariableChange = (key: string, value: string) => {
     setState((prev) => ({
