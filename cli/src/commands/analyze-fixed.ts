@@ -37,6 +37,7 @@ interface AnalysisResult {
 
 export async function analyzeCommand(files: string[], options: AnalyzeOptions) {
   const spinner = ora("Initializing NeuroLint analysis...").start();
+  const startTime = Date.now();
 
   try {
     // Load and validate configuration
@@ -70,13 +71,10 @@ export async function analyzeCommand(files: string[], options: AnalyzeOptions) {
     const premiumLayers = layers.filter((layer) => layer >= 5);
     if (premiumLayers.length > 0) {
       try {
-        const userResponse = await axios.get(
-          `${config.api.url}/api/user/profile`,
-          {
-            headers: { Authorization: `Bearer ${config.apiKey}` },
-            timeout: 10000,
-          },
-        );
+        const userResponse = await axios.get(`${config.api.url}/auth/user`, {
+          headers: { "X-API-Key": config.apiKey },
+          timeout: 10000,
+        });
 
         const plan = userResponse.data.plan || "free";
         if (plan === "free" && premiumLayers.length > 0) {
@@ -149,7 +147,7 @@ export async function analyzeCommand(files: string[], options: AnalyzeOptions) {
 
     spinner.text = `Analyzing ${existingFiles.length} files with layers [${layers.join(", ")}]...`;
 
-        // Process files one by one since the API expects single files
+    // Process files one by one since the API expects single files
     const allResults: any[] = [];
     let totalIssues = 0;
 
@@ -170,8 +168,7 @@ export async function analyzeCommand(files: string[], options: AnalyzeOptions) {
           },
         };
 
-    try {
-              const response = await axios.post(
+        const response = await axios.post(
           `${config.api.url}/analyze`,
           analysisPayload,
           {
@@ -186,13 +183,37 @@ export async function analyzeCommand(files: string[], options: AnalyzeOptions) {
         const result = response.data;
         allResults.push({ file, result });
         totalIssues += result.analysis?.detectedIssues?.length || 0;
-
       } catch (fileError) {
         console.log(chalk.yellow(`Warning: Could not analyze ${file}`));
-        console.log(chalk.gray(`Error: ${fileError instanceof Error ? fileError.message : String(fileError)}`));
+        if (axios.isAxiosError(fileError)) {
+          if (fileError.response?.status === 401) {
+            console.log(
+              chalk.red(
+                "Authentication failed. Please run 'neurolint login' again.",
+              ),
+            );
+          } else if (fileError.response?.status === 403) {
+            console.log(
+              chalk.red("Access denied. Check your API permissions."),
+            );
+          } else {
+            console.log(
+              chalk.gray(
+                `API Error: ${fileError.response?.status} ${fileError.response?.statusText}`,
+              ),
+            );
+          }
+        } else {
+          console.log(
+            chalk.gray(
+              `Error: ${fileError instanceof Error ? fileError.message : String(fileError)}`,
+            ),
+          );
+        }
       }
     }
 
+    const processingTime = Date.now() - startTime;
     spinner.succeed(`Analysis completed for ${existingFiles.length} files`);
 
     // Aggregate results
@@ -202,132 +223,102 @@ export async function analyzeCommand(files: string[], options: AnalyzeOptions) {
       layersUsed: layers,
       results: allResults,
       performance: {
-        duration: Date.now() - startTime,
+        duration: processingTime,
         layerTimes: {},
       },
     };
 
-      // Display results
-      console.log();
-      console.log(chalk.white.bold("Analysis Results"));
-      console.log();
-      console.log(
-        chalk.white("Files analyzed: ") + chalk.cyan(result.filesAnalyzed),
-      );
-      console.log(
-        chalk.white("Issues found: ") +
-          (result.issuesFound > 0
-            ? chalk.yellow(result.issuesFound)
-            : chalk.green("0")),
-      );
-      console.log(
-        chalk.white("Layers used: ") +
-          chalk.gray(`[${result.layersUsed.join(", ")}]`),
-      );
-      console.log(
-        chalk.white("Duration: ") +
-          chalk.gray(`${result.performance.duration}ms`),
-      );
-      console.log();
+    // Display results
+    console.log();
+    console.log(chalk.white.bold("Analysis Results"));
+    console.log();
+    console.log(
+      chalk.white("Files analyzed: ") +
+        chalk.cyan(aggregatedResult.filesAnalyzed),
+    );
+    console.log(
+      chalk.white("Issues found: ") +
+        (aggregatedResult.issuesFound > 0
+          ? chalk.yellow(aggregatedResult.issuesFound)
+          : chalk.green("0")),
+    );
+    console.log(
+      chalk.white("Layers used: ") +
+        chalk.gray(`[${aggregatedResult.layersUsed.join(", ")}]`),
+    );
+    console.log(
+      chalk.white("Duration: ") +
+        chalk.gray(`${aggregatedResult.performance.duration}ms`),
+    );
+    console.log();
 
-      if (result.issuesFound > 0) {
-        // Group issues by layer
-        const issuesByLayer: Record<
-          number,
-          Array<(typeof result.issues)[0]>
-        > = {};
-        result.issues.forEach((issue) => {
-          if (!issuesByLayer[issue.layer]) {
-            issuesByLayer[issue.layer] = [];
-          }
-          issuesByLayer[issue.layer].push(issue);
-        });
+    if (aggregatedResult.issuesFound > 0) {
+      // Group issues by layer and file
+      const issuesByLayer: Record<number, any[]> = {};
 
-        console.log(chalk.white("Issues by Layer:"));
-        for (const layer of result.layersUsed) {
-          const layerIssues = issuesByLayer[layer] || [];
-          const layerName =
-            config.layers.config[layer]?.name || `Layer ${layer}`;
-          console.log(
-            chalk.gray(`  ${layerName}: `) +
-              (layerIssues.length > 0
-                ? chalk.yellow(`${layerIssues.length} issues`)
-                : chalk.green("✓ passed")),
-          );
-
-          // Show first few issues for each layer
-          if (
-            layerIssues.length > 0 &&
-            (options.output === "table" || !options.output)
-          ) {
-            layerIssues.slice(0, 3).forEach((issue) => {
-              const location = issue.line
-                ? `:${issue.line}${issue.column ? `:${issue.column}` : ""}`
-                : "";
-              console.log(
-                chalk.gray(`    ${issue.file}${location} - ${issue.message}`),
-              );
-            });
-            if (layerIssues.length > 3) {
-              console.log(
-                chalk.gray(`    ... and ${layerIssues.length - 3} more`),
-              );
+      allResults.forEach(({ file, result }) => {
+        if (result.analysis?.detectedIssues) {
+          result.analysis.detectedIssues.forEach((issue: any) => {
+            const layer = issue.layer || 1;
+            if (!issuesByLayer[layer]) {
+              issuesByLayer[layer] = [];
             }
+            issuesByLayer[layer].push({ ...issue, file });
+          });
+        }
+      });
+
+      console.log(chalk.white("Issues by Layer:"));
+      for (const layer of aggregatedResult.layersUsed) {
+        const layerIssues = issuesByLayer[layer] || [];
+        const layerName = config.layers.config[layer]?.name || `Layer ${layer}`;
+        console.log(
+          chalk.gray(`  ${layerName}: `) +
+            (layerIssues.length > 0
+              ? chalk.yellow(`${layerIssues.length} issues`)
+              : chalk.green("✓ passed")),
+        );
+
+        // Show first few issues for each layer
+        if (
+          layerIssues.length > 0 &&
+          (options.output === "table" || !options.output)
+        ) {
+          layerIssues.slice(0, 3).forEach((issue) => {
+            const location = issue.line
+              ? `:${issue.line}${issue.column ? `:${issue.column}` : ""}`
+              : "";
+            console.log(
+              chalk.gray(
+                `    ${issue.file}${location} - ${issue.message || issue.description || "Issue detected"}`,
+              ),
+            );
+          });
+          if (layerIssues.length > 3) {
+            console.log(
+              chalk.gray(`    ... and ${layerIssues.length - 3} more`),
+            );
           }
         }
-        console.log();
-
-        // Output formatted results if requested
-        if (options.output === "json") {
-          console.log(JSON.stringify(result, null, 2));
-        }
-
-        console.log(chalk.white("Next steps:"));
-        console.log(
-          chalk.gray("  • Run 'neurolint fix' to automatically fix issues"),
-        );
-        console.log(
-          chalk.gray(
-            "  • Run 'neurolint analyze --output=json' for detailed results",
-          ),
-        );
-      } else {
-        console.log(chalk.green("No issues found! Your code looks great."));
       }
-    } catch (error) {
-      spinner.fail("Analysis failed");
+      console.log();
 
-      if (axios.isAxiosError(error)) {
-        if (error.response?.status === 401) {
-          console.log(
-            chalk.red(
-              "Authentication failed. Please run 'neurolint login' again.",
-            ),
-          );
-        } else if (error.response?.status === 403) {
-          console.log(chalk.red("Access denied. Check your API permissions."));
-        } else if (error.code === "ECONNREFUSED") {
-          console.log(
-            chalk.red(`Cannot connect to NeuroLint API at ${config.api.url}`),
-          );
-          console.log(chalk.gray("Make sure the NeuroLint server is running."));
-        } else {
-          console.log(
-            chalk.red(
-              `API Error: ${error.response?.status} ${error.response?.statusText}`,
-            ),
-          );
-          if (error.response?.data?.message) {
-            console.log(chalk.gray(error.response.data.message));
-          }
-        }
-      } else {
-        console.log(
-          chalk.red(
-            `Error: ${error instanceof Error ? error.message : String(error)}`,
-          ),
-        );
+      // Output formatted results if requested
+      if (options.output === "json") {
+        console.log(JSON.stringify(aggregatedResult, null, 2));
       }
+
+      console.log(chalk.white("Next steps:"));
+      console.log(
+        chalk.gray("  • Run 'neurolint fix' to automatically fix issues"),
+      );
+      console.log(
+        chalk.gray(
+          "  • Run 'neurolint analyze --output=json' for detailed results",
+        ),
+      );
+    } else {
+      console.log(chalk.green("No issues found! Your code looks great."));
     }
   } catch (error) {
     spinner.fail("Analysis initialization failed");
