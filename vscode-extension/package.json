@@ -2,7 +2,7 @@
   "name": "neurolint-vscode",
   "displayName": "NeuroLint - Advanced Code Analysis",
   "description": "Advanced rule-based code analysis and transformation for TypeScript, React, and Next.js",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "publisher": "neurolint",
   "icon": "media/icon.png",
   "galleryBanner": {
