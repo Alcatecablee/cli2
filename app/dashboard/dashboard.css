@@ -583,33 +583,19 @@
   position: relative;
 }
 
-/* Centered header with rounded corners */
-.dashboard-header {
-  padding: 24px 32px;
-  display: flex;
-  justify-content: center;
+/* Clean dashboard title styling */
+.dashboard-title-container {
+  padding: 32px;
+  text-align: center;
 }
 
-.header-content {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 32px;
-  padding: 24px 48px;
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.1) 0%,
-    rgba(255, 255, 255, 0.05) 50%,
-    rgba(0, 0, 0, 0.9) 100%
-  );
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 16px;
-  backdrop-filter: blur(25px) saturate(1.2);
-  -webkit-backdrop-filter: blur(25px) saturate(1.2);
-  box-shadow:
-    0 12px 40px rgba(0, 0, 0, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.15);
-  width: fit-content;
+.dashboard-title-container h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+  font-family: var(--font-sans);
+  letter-spacing: -0.02em;
 }
 
 .header-title h1 {
