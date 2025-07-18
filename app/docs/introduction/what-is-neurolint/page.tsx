@@ -67,7 +67,7 @@ export default function WhatIsNeuroLintPage() {
               </ul>
             </div>
             <div className="docs-comparison-item success">
-              <h4>✅ NeuroLint Pro</h4>
+              <h4>NeuroLint Pro</h4>
               <ul>
                 <li>Automatically fixes problems</li>
                 <li>Handles complex transformations</li>
