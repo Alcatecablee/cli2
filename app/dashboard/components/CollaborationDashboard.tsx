@@ -313,7 +313,7 @@ export default function CollaborationDashboard({
 
       // Fall back to polling
       if (activeTab === "sessions") {
-        pollInterval.current = setInterval(onRefreshSessions, 30000);
+        pollInterval.current = setInterval(onRefreshSessions, 120000); // Poll every 2 minutes for less disruption
       }
     }
   }, [user?.id, activeTab]); // Simplified dependencies
