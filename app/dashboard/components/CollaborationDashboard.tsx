@@ -192,6 +192,21 @@ export default function CollaborationDashboard({
     };
   }, [activeTab, user.id, user.firstName, user.email, onUpdateSessions]);
 
+  // Cleanup all intervals on unmount
+  useEffect(() => {
+    return () => {
+      if (pollInterval.current) {
+        clearInterval(pollInterval.current);
+      }
+      if (activityPollInterval.current) {
+        clearInterval(activityPollInterval.current);
+      }
+      if (presencePollInterval.current) {
+        clearInterval(presencePollInterval.current);
+      }
+    };
+  }, []);
+
   // Load team members
   const loadTeamMembers = useCallback(async () => {
     setLoadingTeams(true);
