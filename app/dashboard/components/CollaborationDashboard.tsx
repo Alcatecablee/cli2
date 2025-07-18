@@ -77,6 +77,7 @@ export default function CollaborationDashboard({
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showInviteModal, setShowInviteModal] = useState(false);
   const pollInterval = useRef<NodeJS.Timeout | null>(null);
+  const activityPollInterval = useRef<NodeJS.Timeout | null>(null);
 
   // Real-time polling for live updates
   useEffect(() => {
