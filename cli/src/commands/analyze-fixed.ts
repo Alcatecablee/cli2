@@ -279,15 +279,20 @@ export async function analyzeCommand(files: string[], options: AnalyzeOptions) {
       const issuesByLayer: Record<number, any[]> = {};
 
       allResults.forEach(({ file, result }) => {
-        if (result.analysis?.detectedIssues) {
-          result.analysis.detectedIssues.forEach((issue: any) => {
-            const layer = issue.layer || 1;
-            if (!issuesByLayer[layer]) {
-              issuesByLayer[layer] = [];
-            }
-            issuesByLayer[layer].push({ ...issue, file });
-          });
-        }
+        // Handle different response structures
+        const detectedIssues =
+          result.analysis?.detectedIssues ||
+          result.detectedIssues ||
+          result.layers?.flatMap((l: any) => l.detectedIssues || []) ||
+          [];
+
+        detectedIssues.forEach((issue: any) => {
+          const layer = issue.layer || 1;
+          if (!issuesByLayer[layer]) {
+            issuesByLayer[layer] = [];
+          }
+          issuesByLayer[layer].push({ ...issue, file });
+        });
       });
 
       console.log(chalk.white("Issues by Layer:"));
