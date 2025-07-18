@@ -66,8 +66,16 @@ export default function AnalyticsOverview() {
         console.log("Admin check debug:", debugData);
 
         if (!debugData.isAdmin) {
+          const errorDetails = {
+            currentUser: debugData.user,
+            userRecord: debugData.userRecord,
+            usersTableExists: debugData.usersTableExists,
+            adminChecks: debugData.adminChecks,
+            dbUserError: debugData.dbUserError,
+          };
+          console.log("Full admin check details:", errorDetails);
           throw new Error(
-            `Access denied. Admin check: ${JSON.stringify(debugData.adminChecks)}`,
+            `Access denied. Current user: ${debugData.user?.email}. Admin checks: ${JSON.stringify(debugData.adminChecks)}. DB Error: ${debugData.dbUserError || "none"}`,
           );
         }
       }
