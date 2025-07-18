@@ -8,10 +8,16 @@ interface SetupState {
   error: string | null;
   success: boolean;
   results: Array<{
-    sql: string;
+    operation?: string;
+    sql?: string;
     success?: boolean;
     error?: string;
+    details?: string;
   }>;
+  instructions?: {
+    message: string;
+    tables: string[];
+  };
 }
 
 export default function AdminSetup() {
