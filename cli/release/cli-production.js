@@ -17,7 +17,7 @@ const program = new commander_1.Command();
 program
     .name("neurolint")
     .description("NeuroLint CLI - Advanced code analysis and transformation")
-    .version("1.0.5");
+    .version("1.0.6");
 // Welcome message
 console.log(chalk_1.default.white.bold("NeuroLint CLI"));
 console.log(chalk_1.default.gray("Advanced code analysis and transformation\n"));
