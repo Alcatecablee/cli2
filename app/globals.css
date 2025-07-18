@@ -597,6 +597,48 @@ body {
   }
 }
 
+/* Larger Modal Logo with Floating Bee Effect */
+.modal-logo-bee {
+  width: 64px;
+  height: 64px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  margin: 0 auto;
+}
+
+.modal-logo-bee:hover,
+.modal-logo-bee:focus {
+  background: rgba(33, 150, 243, 0.08);
+  border-color: rgba(33, 150, 243, 0.3);
+  outline: 2px solid rgba(33, 150, 243, 0.4);
+  outline-offset: 2px;
+  box-shadow: 0 0 16px rgba(33, 150, 243, 0.25);
+}
+
+.modal-logo-bee img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  transition: all 0.3s ease;
+  filter: brightness(1.1) contrast(1.1);
+  animation: beeFloat 6s ease-in-out infinite;
+}
+
+.modal-logo-bee:hover img {
+  transform: scale(1.1);
+  filter: brightness(1.2) contrast(1.2);
+}
+
 .onboarding-progress {
   margin-bottom: 2rem;
   text-align: center;
