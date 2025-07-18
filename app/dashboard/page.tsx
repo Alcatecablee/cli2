@@ -299,6 +299,10 @@ export default function Dashboard() {
     },
     collaborationSessions: [],
     loadingSessions: false,
+    collaborationTeams: [],
+    collaborationActivity: [],
+    loadingTeams: false,
+    loadingActivity: false,
   });
 
   // Search & filter for analysis history
