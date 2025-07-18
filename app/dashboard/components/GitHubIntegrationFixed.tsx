@@ -271,18 +271,30 @@ export default function GitHubIntegrationFixed() {
   const getPlanLimits = () => {
     const userPlan = user?.plan || "free";
     const limits = {
-      free: { repositories: "0", filesPerScan: "0", note: "Upgrade required" },
-      developer: { repositories: "5", filesPerScan: "50", note: "Per scan" },
-      professional: {
-        repositories: "25",
-        filesPerScan: "500",
-        note: "Per scan",
+      free: {
+        repositories: "Unlimited",
+        filesPerScan: "Unlimited",
+        note: "Free for everyone",
       },
-      team: { repositories: "100", filesPerScan: "2,000", note: "Per scan" },
+      developer: {
+        repositories: "Unlimited",
+        filesPerScan: "Unlimited",
+        note: "Free for everyone",
+      },
+      professional: {
+        repositories: "Unlimited",
+        filesPerScan: "Unlimited",
+        note: "Free for everyone",
+      },
+      team: {
+        repositories: "Unlimited",
+        filesPerScan: "Unlimited",
+        note: "Free for everyone",
+      },
       enterprise: {
         repositories: "Unlimited",
         filesPerScan: "Unlimited",
-        note: "No limits",
+        note: "Free for everyone",
       },
     };
     return limits[userPlan as keyof typeof limits] || limits.free;
