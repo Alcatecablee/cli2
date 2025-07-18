@@ -193,6 +193,22 @@ export default function ApiManagement() {
     return `${key.substring(0, 4)}...${key.substring(key.length - 4)}`;
   };
 
+  // Show loading if auth is still loading or if we're not admin
+  if (authLoading || !isAdmin) {
+    return (
+      <div className="admin-content">
+        <div className="loading-container">
+          <div className="loading-spinner" />
+          <p>
+            {authLoading
+              ? "Authenticating..."
+              : "Access denied. Admin privileges required."}
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   if (state.loading) {
     return (
       <div className="admin-content">
