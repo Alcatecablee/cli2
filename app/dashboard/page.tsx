@@ -252,6 +252,16 @@ export default function Dashboard() {
     },
   });
 
+  // Search & filter for analysis history
+  const [historySearch, setHistorySearch] = useState("");
+  const filteredHistory = React.useMemo(
+    () =>
+      dashboardState.analysisHistory.filter((item) =>
+        item.filename.toLowerCase().includes(historySearch.toLowerCase()),
+      ),
+    [dashboardState.analysisHistory, historySearch],
+  );
+
   // Robust copy function with fallbacks
   const copyToClipboard = async (text: string, type: string) => {
     try {
@@ -2127,8 +2137,24 @@ export default function Dashboard() {
           {/* Analysis History Tab */}
           {dashboardState.activeSection === "history" && (
             <div className="tab-content">
-              <div className="history-header">
-                <h3>Analysis History</h3>
+              <div className="history-header" style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                <h3 style={{ margin: 0 }}>Analysis History</h3>
+                <input
+                  type="text"
+                  className="history-search-input"
+                  placeholder="Search filename..."
+                  value={historySearch}
+                  onChange={(e) => setHistorySearch(e.target.value)}
+                  style={{
+                    background: "rgba(255, 255, 255, 0.05)",
+                    border: "1px solid rgba(255, 255, 255, 0.15)",
+                    borderRadius: "6px",
+                    padding: "6px 12px",
+                    color: "#ffffff",
+                    fontSize: "0.9rem",
+                    flex: "0 0 220px",
+                  }}
+                />
                 <button
                   className="btn btn-secondary"
                   onClick={async () => {
@@ -2166,7 +2192,7 @@ export default function Dashboard() {
                 </button>
               </div>
 
-              {dashboardState.analysisHistory.length === 0 ? (
+              {filteredHistory.length === 0 ? (
                 <div className="empty-state">
                   <p>
                     No analysis history yet. Your completed analyses will appear
@@ -2175,7 +2201,7 @@ export default function Dashboard() {
                 </div>
               ) : (
                 <div className="history-list">
-                  {dashboardState.analysisHistory.map((item) => (
+                  {filteredHistory.map((item) => (
                     <div key={item.id} className="history-item">
                       <div className="history-main">
                         <h4>{item.filename}</h4>

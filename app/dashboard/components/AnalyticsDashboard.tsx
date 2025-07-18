@@ -198,7 +198,20 @@ export default function AnalyticsDashboard({
 
       {filteredHistory.length === 0 ? (
         <div className="no-data">
-          <div className="no-data-icon">•</div>
+          <div className="no-data-icon">
+            <svg
+              viewBox="0 0 24 24"
+              width="48"
+              height="48"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <line x1="8" y1="8" x2="16" y2="16" />
+              <line x1="16" y1="8" x2="8" y2="16" />
+            </svg>
+          </div>
           <h4>No Analysis Data</h4>
           <p>Run some code analyses to see your analytics dashboard.</p>
         </div>
@@ -227,7 +240,20 @@ export default function AnalyticsDashboard({
             </div>
 
             <div className="metric-card">
-              <div className="metric-icon">🐛</div>
+              <div className="metric-icon">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="20"
+                  height="20"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <circle cx="12" cy="12" r="9" />
+                  <line x1="12" y1="8" x2="12" y2="12" />
+                  <circle cx="12" cy="16" r="1" />
+                </svg>
+              </div>
               <div className="metric-content">
                 <div className="metric-value">{analytics.totalIssuesFound}</div>
                 <div className="metric-label">Issues Found</div>
@@ -235,7 +261,18 @@ export default function AnalyticsDashboard({
             </div>
 
             <div className="metric-card">
-              <div className="metric-icon">•</div>
+              <div className="metric-icon">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="20"
+                  height="20"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              </div>
               <div className="metric-content">
                 <div className="metric-value">
                   {formatTime(analytics.timeSaved)}
@@ -245,7 +282,18 @@ export default function AnalyticsDashboard({
             </div>
 
             <div className="metric-card">
-              <div className="metric-icon">•</div>
+              <div className="metric-icon">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="20"
+                  height="20"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              </div>
               <div className="metric-content">
                 <div className="metric-value">{analytics.qualityScore}%</div>
                 <div className="metric-label">Avg Quality Score</div>
@@ -609,11 +657,7 @@ export default function AnalyticsDashboard({
 
         .issue-bar-fill {
           height: 100%;
-          background: linear-gradient(
-            90deg,
-            rgba(33, 150, 243, 0.6),
-            rgba(76, 175, 80, 0.6)
-          );
+          background: rgba(33, 150, 243, 0.6);
           transition: width 0.3s ease;
         }
 
@@ -661,7 +705,7 @@ export default function AnalyticsDashboard({
 
         .layer-bar-fill {
           height: 100%;
-          background: linear-gradient(90deg, #ff9800, #4caf50);
+          background: rgba(255, 152, 0, 0.8);
           transition: width 0.3s ease;
         }
 
