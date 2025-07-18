@@ -1257,6 +1257,22 @@ export default function CollaborationDashboard({
           }}
         />
       )}
+
+      {/* Conflict Resolution Modal */}
+      {showConflictModal && conflictData && (
+        <ConflictResolutionModal
+          conflictData={conflictData}
+          onResolve={(resolution) => {
+            console.log("Conflict resolved:", resolution);
+            setShowConflictModal(false);
+            setConflictData(null);
+          }}
+          onClose={() => {
+            setShowConflictModal(false);
+            setConflictData(null);
+          }}
+        />
+      )}
     </div>
   );
 }
