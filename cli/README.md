@@ -7,6 +7,14 @@
 
 NeuroLint CLI v1.0.4+ now includes integration with NeuroLint Pro for enhanced React/Next.js code analysis and automatic fixing capabilities. Works with both standalone analysis and NeuroLint Pro service.
 
+## What's New in v1.0.6
+
+- **Full Alignment**: Complete alignment with root project's 6-layer system
+- **Dependency Management**: Automatic layer dependency validation and correction
+- **Implementation Patterns**: Following exact patterns from IMPLEMENTATION_PATTERNS.md
+- **Enhanced Documentation**: All 6 layers properly documented with dependencies
+- **Transformation Validation**: Basic response validation for safety
+
 ## What's New in v1.0.5
 
 - **Fixed API Endpoints**: Corrected authentication endpoints to match server structure
