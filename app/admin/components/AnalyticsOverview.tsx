@@ -67,6 +67,16 @@ export default function AnalyticsOverview() {
 
       const result = await response.json();
 
+      // If this is a debug response, show debug info instead of analytics
+      if (result.debug) {
+        setState((prev) => ({
+          ...prev,
+          error: `Debug Info: ${JSON.stringify(result, null, 2)}`,
+          loading: false,
+        }));
+        return;
+      }
+
       setState((prev) => ({
         ...prev,
         data: result.analytics,
