@@ -184,9 +184,9 @@ export default function EnvironmentConfig() {
     setState((prev) => ({ ...prev, saving: true, error: null }));
 
     try {
-      const token =
-        localStorage.getItem("supabase.auth.token") ||
-        sessionStorage.getItem("supabase.auth.token");
+      if (!session?.access_token) {
+        throw new Error("Not authenticated");
+      }
 
       // Only send variables that have been changed and are not "[SET]" placeholders
       const updates = Object.entries(state.variables)
@@ -196,7 +196,7 @@ export default function EnvironmentConfig() {
       const response = await fetch("/api/admin/environment", {
         method: "PUT",
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${session.access_token}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ updates }),
