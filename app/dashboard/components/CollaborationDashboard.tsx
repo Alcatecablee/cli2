@@ -79,6 +79,8 @@ export default function CollaborationDashboard({
   >("all");
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showInviteModal, setShowInviteModal] = useState(false);
+  const [showConflictModal, setShowConflictModal] = useState(false);
+  const [conflictData, setConflictData] = useState<any>(null);
   const [onlineUsers, setOnlineUsers] = useState<
     Map<string, { userName: string; lastSeen: Date; status: string }>
   >(new Map());
