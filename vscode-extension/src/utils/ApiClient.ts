@@ -61,7 +61,7 @@ export class ApiClient {
         filename: request.filename || "untitled.tsx",
         layers: Array.isArray(request.layers)
           ? request.layers.length === 1
-            ? request.layers[0].toString()
+            ? request.layers[0]?.toString() || "1"
             : request.layers.join(",")
           : "auto",
         applyFixes: false,
