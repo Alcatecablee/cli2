@@ -15,9 +15,7 @@ const program = new Command();
 
 program
   .name("neurolint")
-  .description(
-    "NeuroLint Pro CLI - Premium React/Next.js code fixing and analysis",
-  )
+  .description("NeuroLint CLI - Advanced code analysis and transformation")
   .version("1.0.0");
 
 // Welcome message
