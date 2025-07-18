@@ -1144,12 +1144,6 @@ export default function Dashboard() {
                 height="32"
               />
             </a>
-            {!dashboardState.sidebarCollapsed && (
-              <div className="brand-text">
-                <span className="brand-name">NeuroLint</span>
-                <span className="brand-subtitle">Pro</span>
-              </div>
-            )}
           </div>
           <button
             className="sidebar-toggle"
