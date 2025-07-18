@@ -14,7 +14,6 @@ import AnalyticsDashboard from "./components/AnalyticsDashboard";
 import ApiKeysManager from "./components/ApiKeysManager";
 import SystemStatus from "./components/SystemStatus";
 import ErrorBoundary from "./components/ErrorBoundary";
-import CollaborationDashboard from "./components/CollaborationDashboard";
 
 // Import the same result interfaces from the demo
 interface DemoResult {
@@ -282,7 +281,7 @@ export default function Dashboard() {
     selectedLayers: [],
     applyFixes: false,
     sidebarCollapsed: false,
-    activeSection: "editor",
+    activeSection: "overview",
     analysisHistory: [],
     projects: [],
     settings: {
@@ -1092,6 +1091,18 @@ export default function Dashboard() {
 
   const sidebarItems = [
     {
+      id: "overview",
+      icon: (
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2">
+          <path d="M3 3h18v4H3z" />
+          <path d="M3 10h18v4H3z" />
+          <path d="M3 17h18v4H3z" />
+        </svg>
+      ),
+      label: "Overview",
+      description: "Summary & recent activity",
+    },
+    {
       id: "editor",
       icon: (
         <svg
@@ -1708,6 +1719,15 @@ export default function Dashboard() {
             <div className="tab-content">
               <ErrorBoundary>
                 <GitHubIntegrationFixed />
+              </ErrorBoundary>
+            </div>
+          )}
+
+          {/* Overview Tab */}
+          {dashboardState.activeSection === "overview" && (
+            <div className="tab-content">
+              <ErrorBoundary>
+                <Overview analysisHistory={dashboardState.analysisHistory} />
               </ErrorBoundary>
             </div>
           )}
