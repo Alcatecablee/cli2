@@ -255,7 +255,7 @@ export default function CollaborationDashboard({
                       error,
                     );
                   });
-              }, 8000);
+              }, 120000); // Poll every 2 minutes (120 seconds) for less disruption
             }
           } else {
             throw new Error(`Health check failed: ${res.status}`);
