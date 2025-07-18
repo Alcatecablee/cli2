@@ -715,20 +715,36 @@ export default function Dashboard() {
             }));
 
             // Load user settings from Supabase
-            const settings = await dataService.getUserSettings(user.id);
-            if (settings) {
-              setDashboardState((prev) => ({
-                ...prev,
-                settings: {
-                  defaultLayers: settings.default_layers || [],
-                  autoSave: settings.auto_save,
-                  notifications: settings.notifications,
-                  theme: settings.theme as "dark" | "light",
-                },
-              }));
+            try {
+              const settings = await dataService.getUserSettings(user.id);
+              if (settings) {
+                setDashboardState((prev) => ({
+                  ...prev,
+                  settings: {
+                    defaultLayers: settings.default_layers || [],
+                    autoSave: settings.auto_save,
+                    notifications: settings.notifications,
+                    theme: settings.theme as "dark" | "light",
+                  },
+                }));
+              }
+            } catch (settingsError) {
+              console.error(
+                "Error fetching user settings:",
+                settingsError instanceof Error
+                  ? settingsError.message
+                  : String(settingsError),
+              );
+              // Continue with default settings - this is not a critical error
             }
           } catch (error) {
-            console.error("Error loading Supabase data:", error);
+            const errorMessage =
+              error instanceof Error
+                ? error.message
+                : typeof error === "object" && error !== null
+                  ? JSON.stringify(error)
+                  : String(error);
+            console.error("Error loading Supabase data:", errorMessage);
             // Fall back to localStorage
             const savedProjects =
               typeof window !== "undefined"
