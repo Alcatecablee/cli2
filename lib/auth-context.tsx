@@ -344,9 +344,29 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       let data;
       try {
-        data = await response.json();
+        // Clone the response to avoid "body stream already read" errors
+        const responseClone = response.clone();
+        try {
+          data = await response.json();
+        } catch (jsonError) {
+          // If the original response failed, try the clone
+          console.warn(
+            "Failed to parse signup response, trying clone:",
+            jsonError,
+          );
+          data = await responseClone.json();
+        }
       } catch (jsonError) {
         console.error("Failed to parse signup response:", jsonError);
+
+        // Try to get response text for debugging
+        try {
+          const responseText = await response.text();
+          console.error("Signup response text:", responseText);
+        } catch (textError) {
+          console.error("Could not read signup response text:", textError);
+        }
+
         throw new Error("Server returned invalid response");
       }
 
