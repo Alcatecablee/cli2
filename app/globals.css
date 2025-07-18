@@ -184,7 +184,7 @@ body::after {
 /* NeuroLint Pro Onboarding Design System */
 .onboarding-section {
   min-height: 100vh;
-  background: #000000;
+  background: transparent;
   color: #ffffff;
   display: flex;
   align-items: center;
@@ -202,17 +202,17 @@ body::after {
 .onboarding-content {
   background: linear-gradient(
     135deg,
-    rgba(255, 255, 255, 0.1) 0%,
-    rgba(255, 255, 255, 0.05) 50%,
-    rgba(0, 0, 0, 0.9) 100%
+    rgba(255, 255, 255, 0.08) 0%,
+    rgba(255, 255, 255, 0.03) 50%,
+    rgba(0, 0, 0, 0.4) 100%
   );
   border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 16px;
   padding: 0;
   box-shadow:
-    0 8px 32px rgba(0, 0, 0, 0.3),
+    0 8px 32px rgba(0, 0, 0, 0.2),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(15px);
 }
 
 .onboarding-card {
