@@ -176,7 +176,7 @@ export async function analyzeCommand(files: string[], options: AnalyzeOptions) {
         analysisPayload,
         {
           headers: {
-            Authorization: `Bearer ${config.apiKey}`,
+            "X-API-Key": config.apiKey,
             "Content-Type": "application/json",
           },
           timeout: config.api.timeout,
