@@ -89,14 +89,25 @@
 }
 
 .header-actions .btn-primary {
-  background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(33, 150, 243, 0.2) 0%,
+    rgba(33, 150, 243, 0.15) 50%,
+    rgba(255, 255, 255, 0.1) 100%
+  );
+  border: 1px solid rgba(33, 150, 243, 0.4);
   color: #ffffff;
-  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+  font-weight: 500;
 }
 
 .header-actions .btn-primary:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(33, 150, 243, 0.3) 0%,
+    rgba(33, 150, 243, 0.22) 50%,
+    rgba(255, 255, 255, 0.12) 100%
+  );
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(33, 150, 243, 0.4);
 }
 
 .header-actions .btn-secondary {
