@@ -1412,7 +1412,9 @@
         <h1 class="typewriter" id="typewriter" aria-live="polite"></h1>
         <div class="hero-actions">
           <a href="#demo" class="btn" aria-label="Try live demo">Try Demo</a>
-          <a href="/app" class="btn" aria-label="Log in to dashboard">Log&nbsp;In</a>
+          <a href="/app" class="btn" aria-label="Log in to dashboard"
+            >Log&nbsp;In</a
+          >
         </div>
       </section>
 
@@ -2332,8 +2334,10 @@
                 console.log("  - Status Text:", response.statusText);
                 console.log("  - Headers:", [...response.headers.entries()]);
 
-                if (!response.ok) {
-                  const errorData = await response.json().catch(() => ({}));
+                                if (!response.ok) {
+                  // Clone response to avoid "body stream already read" error
+                  const responseClone = response.clone();
+                  const errorData = await responseClone.json().catch(() => ({}));
                   throw new Error(errorData.error || `HTTP ${response.status}`);
                 }
 
