@@ -108,25 +108,78 @@ async function getAuthSession() {
   }
 }
 
+// Helper function to validate user authentication for RLS
+async function validateUserAuth(userId: string): Promise<boolean> {
+  try {
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.getUser();
+
+    if (error || !user) {
+      console.error("User not authenticated:", formatError(error));
+      return false;
+    }
+
+    if (user.id !== userId) {
+      console.error(
+        `User ID mismatch: authenticated user ${user.id}, requested ${userId}`,
+      );
+      return false;
+    }
+
+    return true;
+  } catch (error) {
+    console.error("Error validating user auth:", formatError(error));
+    return false;
+  }
+}
+
 // Helper function to create authenticated Supabase client
 async function createAuthenticatedClient() {
-  const session = await getAuthSession();
-
-  if (!session?.access_token) {
-    console.warn("No valid session found - operations may fail due to RLS");
+  // Check if we're in browser environment
+  if (typeof window === "undefined") {
+    console.warn("Running in server environment - using service role client");
     return supabase;
   }
 
-  // Create a new client instance with the auth token
-  const client = createClient(supabaseUrl!, supabaseKey!, {
-    global: {
-      headers: {
-        Authorization: `Bearer ${session.access_token}`,
-      },
-    },
-  });
+  try {
+    // Get current session from Supabase auth
+    const {
+      data: { session },
+      error,
+    } = await supabase.auth.getSession();
 
-  return client;
+    if (error) {
+      console.error("Error getting session:", formatError(error));
+      return supabase;
+    }
+
+    if (!session) {
+      console.warn("No active session found - user may not be logged in");
+      return supabase;
+    }
+
+    // Verify the session is valid and user exists
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
+
+    if (userError || !user) {
+      console.error(
+        "Invalid session or user not found:",
+        formatError(userError),
+      );
+      return supabase;
+    }
+
+    console.log("Authenticated user found:", user.id);
+    return supabase;
+  } catch (error) {
+    console.error("Error in createAuthenticatedClient:", formatError(error));
+    return supabase;
+  }
 }
 
 // Data service functions
@@ -325,8 +378,16 @@ export const dataService = {
     projectData: Omit<Project, "id" | "user_id" | "created_at" | "updated_at">,
   ): Promise<Project | null> {
     try {
+      // Validate user authentication
+      const isAuthenticated = await validateUserAuth(userId);
+      if (!isAuthenticated) {
+        console.error("User authentication failed for saveProject");
+        return null;
+      }
+
       const client = await createAuthenticatedClient();
 
+      console.log("Attempting to save project for user:", userId);
       const { data, error } = await client
         .from("projects")
         .insert({
@@ -341,6 +402,7 @@ export const dataService = {
         return null;
       }
 
+      console.log("Project saved successfully:", data.id);
       return data;
     } catch (error) {
       console.error("Error in saveProject:", formatError(error));
