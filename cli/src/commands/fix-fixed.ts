@@ -79,7 +79,12 @@ export async function fixCommand(files: string[], options: FixOptions) {
           },
         );
 
-        const plan = userResponse.data.plan || "free";
+        // Handle different response structures from API
+        const plan =
+          userResponse.data.plan ||
+          userResponse.data.user?.plan ||
+          userResponse.data.apiKey?.plan ||
+          "free";
         if (plan === "free" && premiumLayers.length > 0) {
           spinner.fail("Premium features required");
           console.log(
