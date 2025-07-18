@@ -241,3 +241,109 @@ export async function GET(request: NextRequest) {
     );
   }
 }
+
+// Helper Functions for Collaborative Features
+
+async function checkForConflicts(
+  sessionId: string,
+  userId: string,
+  currentCode: string,
+  conflictResolution: string,
+): Promise<{ hasConflict: boolean; details?: any }> {
+  try {
+    // Get recent analyses to detect potential conflicts
+    const recentAnalyses = [];
+    if (dataStore.collaborationAnalysis) {
+      for (const [key, analysis] of dataStore.collaborationAnalysis.entries()) {
+        if (
+          key.startsWith(`${sessionId}_`) &&
+          analysis.triggered_by !== userId &&
+          new Date(analysis.created_at).getTime() > Date.now() - 60000
+        ) {
+          // Last minute
+          recentAnalyses.push(analysis);
+        }
+      }
+    }
+
+    // If no recent activity from others, no conflict
+    if (recentAnalyses.length === 0) {
+      return { hasConflict: false };
+    }
+
+    // Simple conflict detection based on code differences
+    const lastAnalysis = recentAnalyses[0];
+    const codeDifference = Math.abs(
+      currentCode.length - lastAnalysis.input_code.length,
+    );
+    const significantChange = codeDifference > 50; // Threshold for significant changes
+
+    if (significantChange && conflictResolution === "strict") {
+      return {
+        hasConflict: true,
+        details: {
+          lastModifiedBy: lastAnalysis.triggered_by_name,
+          lastModified: lastAnalysis.created_at,
+          codeDifference,
+          suggestedResolution: "merge",
+        },
+      };
+    }
+
+    return { hasConflict: false };
+  } catch (error) {
+    console.error("Error checking conflicts:", error);
+    return { hasConflict: false };
+  }
+}
+
+function getParticipantCount(sessionId: string): number {
+  let count = 0;
+  for (const [
+    key,
+    participant,
+  ] of dataStore.collaborationParticipants.entries()) {
+    if (key.startsWith(`${sessionId}_`) && participant.is_active) {
+      count++;
+    }
+  }
+  return count;
+}
+
+function mergeCodeChanges(
+  baseCode: string,
+  userChanges: string,
+  otherChanges: string[],
+  strategy: "merge" | "overwrite" | "manual",
+): { mergedCode: string; conflicts: any[] } {
+  // Simple merge strategy - in production, use more sophisticated diff/merge algorithm
+  switch (strategy) {
+    case "overwrite":
+      return { mergedCode: userChanges, conflicts: [] };
+
+    case "merge":
+      // Basic line-by-line merge
+      const baseLines = baseCode.split("\n");
+      const userLines = userChanges.split("\n");
+      const mergedLines = [...userLines]; // Start with user changes
+
+      // This is a simplified merge - production should use proper 3-way merge
+      return { mergedCode: mergedLines.join("\n"), conflicts: [] };
+
+    case "manual":
+      return {
+        mergedCode: baseCode,
+        conflicts: [
+          {
+            type: "manual_resolution_required",
+            baseCode,
+            userChanges,
+            otherChanges,
+          },
+        ],
+      };
+
+    default:
+      return { mergedCode: userChanges, conflicts: [] };
+  }
+}
