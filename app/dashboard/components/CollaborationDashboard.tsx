@@ -906,22 +906,28 @@ export default function CollaborationDashboard({
                   <p>Loading team members...</p>
                 </div>
               ) : (
-                teamMembers.map((member) => (
+                                teamMembers.map((member) => {
+                  const livePresence = onlineUsers.get(member.id);
+                  const actualStatus = livePresence?.status || member.status;
+                  const isOnline = livePresence && actualStatus === "online";
+
+                  return (
                   <div key={member.id} className="member-card">
                     <div className="member-avatar">
                       <div
                         className="avatar-circle"
                         style={{
-                          backgroundColor: getStatusColor(member.status),
+                          backgroundColor: getStatusColor(actualStatus),
                         }}
                       >
                         {member.name.charAt(0).toUpperCase()}
                       </div>
                       <div
-                        className="status-dot"
+                        className={`status-dot ${isOnline ? 'pulse' : ''}`}
                         style={{
-                          backgroundColor: getStatusColor(member.status),
+                          backgroundColor: getStatusColor(actualStatus),
                         }}
+                        title={isOnline ? 'Online now' : `Last seen ${formatTimeAgo(livePresence?.lastSeen || member.lastSeen)}`}
                       ></div>
                     </div>
                     <div className="member-info">
