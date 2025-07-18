@@ -53,45 +53,7 @@ export default function AnalyticsOverview() {
         throw new Error("Not authenticated");
       }
 
-      // Debug: Check admin permissions first
-      const debugResponse = await fetch(`/api/admin/check-admin`, {
-        headers: {
-          Authorization: `Bearer ${session.access_token}`,
-          "Content-Type": "application/json",
-        },
-      });
-
-      // Additional debug: Check what's in database
-      const dbDebugResponse = await fetch(`/api/admin/debug-admin-user`, {
-        headers: {
-          Authorization: `Bearer ${session.access_token}`,
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (dbDebugResponse.ok) {
-        const dbDebugData = await dbDebugResponse.json();
-        console.log("Database debug data:", dbDebugData);
-      }
-
-      if (debugResponse.ok) {
-        const debugData = await debugResponse.json();
-        console.log("Admin check debug:", debugData);
-
-        if (!debugData.isAdmin) {
-          const errorDetails = {
-            currentUser: debugData.user,
-            userRecord: debugData.userRecord,
-            usersTableExists: debugData.usersTableExists,
-            adminChecks: debugData.adminChecks,
-            dbUserError: debugData.dbUserError,
-          };
-          console.log("Full admin check details:", errorDetails);
-          throw new Error(
-            `Access denied. Current user: ${debugData.user?.email}. Admin checks: ${JSON.stringify(debugData.adminChecks)}. DB Error: ${debugData.dbUserError || "none"}`,
-          );
-        }
-      }
+      // Let the analytics API handle admin checks and auto-grant if needed
 
       const response = await fetch(
         `/api/admin/analytics-safe?period=${period}`,
