@@ -519,6 +519,10 @@ export default function CollaborationDashboard({
     filename: string;
     language: string;
     template?: string;
+    collaborative?: boolean;
+    realTimeUpdates?: boolean;
+    sessionLocking?: boolean;
+    conflictResolution?: "merge" | "overwrite" | "strict";
   }) => {
     try {
       const response = await fetch("/api/collaboration/sessions", {
