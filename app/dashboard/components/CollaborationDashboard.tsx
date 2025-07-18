@@ -110,46 +110,73 @@ export default function CollaborationDashboard({
   const loadTeamMembers = useCallback(async () => {
     setLoadingTeams(true);
     try {
-      // Mock team members for now - in production, fetch from API
-      await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate API call
-      const mockMembers: TeamMember[] = [
+      const response = await fetch("/api/collaboration/teams", {
+        headers: {
+          "x-user-id": user.id,
+          "x-user-name": user.firstName || user.email || "Anonymous",
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        // Extract all unique members from all teams
+        const allMembers = new Map<string, TeamMember>();
+
+        data.teams.forEach((team: any) => {
+          team.members.forEach((member: any) => {
+            if (!allMembers.has(member.user_id)) {
+              allMembers.set(member.user_id, {
+                id: member.user_id,
+                name: member.user_name || member.user_email || "Unknown",
+                email: member.user_email || "",
+                role: member.role,
+                status: member.status || "offline",
+                lastSeen: new Date(member.lastSeen || Date.now()),
+              });
+            }
+          });
+        });
+
+        // Add current user if not already included
+        if (!allMembers.has(user.id)) {
+          allMembers.set(user.id, {
+            id: user.id,
+            name: user.firstName || user.email || "You",
+            email: user.email || "",
+            role: "owner",
+            status: "online",
+            lastSeen: new Date(),
+          });
+        }
+
+        setTeamMembers(Array.from(allMembers.values()));
+      } else {
+        console.error("Failed to load teams:", response.statusText);
+        // Fallback to mock data
+        setTeamMembers([
+          {
+            id: user.id,
+            name: user.firstName || user.email || "You",
+            email: user.email || "",
+            role: "owner",
+            status: "online",
+            lastSeen: new Date(),
+          },
+        ]);
+      }
+    } catch (error) {
+      console.error("Failed to load team members:", error);
+      // Fallback to basic user data
+      setTeamMembers([
         {
           id: user.id,
           name: user.firstName || user.email || "You",
           email: user.email || "",
           role: "owner",
-          avatar: user.avatar,
           status: "online",
           lastSeen: new Date(),
         },
-        {
-          id: "member1",
-          name: "Sarah Chen",
-          email: "sarah.chen@example.com",
-          role: "admin",
-          status: "online",
-          lastSeen: new Date(Date.now() - 1000 * 60 * 5), // 5 minutes ago
-        },
-        {
-          id: "member2",
-          name: "Alex Rodriguez",
-          email: "alex.r@example.com",
-          role: "member",
-          status: "away",
-          lastSeen: new Date(Date.now() - 1000 * 60 * 30), // 30 minutes ago
-        },
-        {
-          id: "member3",
-          name: "Jordan Kim",
-          email: "jordan.kim@example.com",
-          role: "member",
-          status: "offline",
-          lastSeen: new Date(Date.now() - 1000 * 60 * 60 * 2), // 2 hours ago
-        },
-      ];
-      setTeamMembers(mockMembers);
-    } catch (error) {
-      console.error("Failed to load team members:", error);
+      ]);
     } finally {
       setLoadingTeams(false);
     }
