@@ -66,7 +66,7 @@ export async function GET(request: NextRequest) {
     const usersTableExists = tables && tables.length > 0;
 
     let userRecord = null;
-    let userError = null;
+    let dbUserError = null;
 
     if (usersTableExists) {
       const { data: userData, error: userErr } = await supabase
@@ -76,7 +76,7 @@ export async function GET(request: NextRequest) {
         .single();
 
       userRecord = userData;
-      userError = userErr?.message;
+      dbUserError = userErr?.message;
     }
 
     const isAdmin =
