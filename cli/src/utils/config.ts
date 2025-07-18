@@ -56,7 +56,7 @@ export async function loadConfig(
       verbose: false,
     },
     api: {
-      url: "http://localhost:3000/api",
+      url: process.env.NEUROLINT_API_URL || "http://localhost:3000/api",
       timeout: 60000,
     },
   };
