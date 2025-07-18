@@ -737,25 +737,27 @@ export default function CollaborationDashboard({
               </div>
             )}
           </div>
-          <div className="header-actions">
-            <button
-              className="btn btn-primary"
-              onClick={() => setShowCreateModal(true)}
-            >
-              <svg
-                viewBox="0 0 24 24"
-                width="16"
-                height="16"
-                fill="currentColor"
+                    {/* Only show header actions when sessions exist to avoid duplication with empty state */}
+          {sessions.length > 0 && (
+            <div className="header-actions">
+              <button
+                className="btn btn-primary"
+                onClick={() => setShowCreateModal(true)}
               >
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" />
-              </svg>
-              New Session
-            </button>
-            <button
-              className="btn btn-secondary"
-              onClick={() => setShowInviteModal(true)}
-            >
+                <svg
+                  viewBox="0 0 24 24"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                >
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" />
+                </svg>
+                New Session
+              </button>
+              <button
+                className="btn btn-secondary"
+                onClick={() => setShowInviteModal(true)}
+              >
               <svg
                 viewBox="0 0 24 24"
                 width="16"
