@@ -1,0 +1,940 @@
+"use client";
+
+import React, { useState } from "react";
+import Link from "next/link";
+
+interface DocSection {
+  id: string;
+  title: string;
+  description: string;
+  icon: string;
+  pages: DocPage[];
+  status?: "complete" | "beta" | "new";
+}
+
+interface DocPage {
+  slug: string;
+  title: string;
+  description: string;
+  estimatedReadTime: string;
+  difficulty?: "beginner" | "intermediate" | "advanced";
+}
+
+const docSections: DocSection[] = [
+  {
+    id: "introduction",
+    title: "🚀 Introduction",
+    description:
+      "Learn the fundamentals of NeuroLint Pro's rule-based transformation system",
+    icon: "🧠",
+    pages: [
+      {
+        slug: "what-is-neurolint",
+        title: "What is NeuroLint Pro?",
+        description: "Understand the core concept and rule-based architecture",
+        estimatedReadTime: "3 min",
+        difficulty: "beginner",
+      },
+      {
+        slug: "why-rule-based",
+        title: "Why Rule-Based (Not AI)?",
+        description:
+          "The advantages of deterministic transformations over machine learning",
+        estimatedReadTime: "4 min",
+        difficulty: "beginner",
+      },
+      {
+        slug: "supported-frameworks",
+        title: "Supported Languages & Frameworks",
+        description:
+          "React, Next.js, TypeScript compatibility and requirements",
+        estimatedReadTime: "2 min",
+        difficulty: "beginner",
+      },
+      {
+        slug: "vs-traditional-tools",
+        title: "NeuroLint vs Traditional Linters",
+        description:
+          "How NeuroLint Pro differs from ESLint, Prettier, and other tools",
+        estimatedReadTime: "5 min",
+        difficulty: "intermediate",
+      },
+    ],
+  },
+  {
+    id: "getting-started",
+    title: "⚡ Getting Started",
+    description: "Quick setup and your first successful transformation",
+    icon: "🛠️",
+    pages: [
+      {
+        slug: "installation",
+        title: "Installation & Requirements",
+        description: "System requirements and step-by-step installation guide",
+        estimatedReadTime: "3 min",
+        difficulty: "beginner",
+      },
+      {
+        slug: "first-fix",
+        title: "Running Your First Fix",
+        description:
+          "Complete walkthrough from problem detection to successful fix",
+        estimatedReadTime: "8 min",
+        difficulty: "beginner",
+      },
+      {
+        slug: "layer-overview",
+        title: "Quick Layer Overview (1–6)",
+        description: "Understanding what each layer does and when to use them",
+        estimatedReadTime: "6 min",
+        difficulty: "beginner",
+      },
+      {
+        slug: "safety-features",
+        title: "Safety Features Overview",
+        description: "Dry-run mode, backups, rollback, and validation systems",
+        estimatedReadTime: "4 min",
+        difficulty: "beginner",
+      },
+    ],
+  },
+  {
+    id: "usage-guide",
+    title: "📖 Usage Guide",
+    description: "Master the command-line interface and execution options",
+    icon: "⚙️",
+    pages: [
+      {
+        slug: "full-orchestration",
+        title: "Running Full Orchestration (fix-all)",
+        description: "Complete automated fixing with all layers",
+        estimatedReadTime: "5 min",
+        difficulty: "intermediate",
+      },
+      {
+        slug: "dry-runs-previews",
+        title: "Dry Runs and Previews (fix-dry-run)",
+        description: "Preview changes safely before applying them",
+        estimatedReadTime: "4 min",
+        difficulty: "beginner",
+      },
+      {
+        slug: "individual-layers",
+        title: "Running Individual Layers (1–6)",
+        description: "Targeted fixes for specific types of issues",
+        estimatedReadTime: "6 min",
+        difficulty: "intermediate",
+      },
+      {
+        slug: "skipping-layers",
+        title: "Skipping Layers (--skip-layers)",
+        description: "Custom layer combinations and exclusions",
+        estimatedReadTime: "3 min",
+        difficulty: "intermediate",
+      },
+      {
+        slug: "verbose-debugging",
+        title: "Verbose Output for Debugging",
+        description: "Understanding detailed logs and troubleshooting issues",
+        estimatedReadTime: "5 min",
+        difficulty: "advanced",
+      },
+    ],
+  },
+  {
+    id: "layer-reference",
+    title: "🔧 Layer Reference",
+    description: "Deep dive into each transformation layer",
+    icon: "📚",
+    status: "complete",
+    pages: [
+      {
+        slug: "layer-1-config",
+        title: "Layer 1: Configuration Fixes",
+        description: "TypeScript, Next.js, and package.json modernization",
+        estimatedReadTime: "8 min",
+        difficulty: "intermediate",
+      },
+      {
+        slug: "layer-2-patterns",
+        title: "Layer 2: Pattern Fixes",
+        description:
+          "HTML entities, import cleanup, and legacy pattern updates",
+        estimatedReadTime: "10 min",
+        difficulty: "intermediate",
+      },
+      {
+        slug: "layer-3-components",
+        title: "Layer 3: Component Fixes",
+        description:
+          "React components, missing keys, and accessibility improvements",
+        estimatedReadTime: "12 min",
+        difficulty: "intermediate",
+      },
+      {
+        slug: "layer-4-hydration",
+        title: "Layer 4: Hydration and SSR Fixes",
+        description:
+          "Server-side rendering safety and hydration mismatch prevention",
+        estimatedReadTime: "15 min",
+        difficulty: "advanced",
+      },
+      {
+        slug: "layer-5-nextjs",
+        title: "Layer 5: Next.js App Router Optimization",
+        description:
+          "App Router compatibility and 'use client' directive management",
+        estimatedReadTime: "10 min",
+        difficulty: "advanced",
+      },
+      {
+        slug: "layer-6-testing",
+        title: "Layer 6: Testing and Validation",
+        description:
+          "Error boundaries, accessibility, and quality improvements",
+        estimatedReadTime: "8 min",
+        difficulty: "advanced",
+      },
+      {
+        slug: "master-orchestration",
+        title: "Master Execution: How Orchestration Works",
+        description: "The complete execution pipeline and safety mechanisms",
+        estimatedReadTime: "20 min",
+        difficulty: "advanced",
+      },
+    ],
+  },
+  {
+    id: "architecture",
+    title: "🏗️ Architecture",
+    description: "Understanding the rule engine and transformation patterns",
+    icon: "⚡",
+    status: "beta",
+    pages: [
+      {
+        slug: "6-layer-engine",
+        title: "6-Layer Rule Engine",
+        description: "Sequential execution and dependency management system",
+        estimatedReadTime: "12 min",
+        difficulty: "advanced",
+      },
+      {
+        slug: "ast-vs-regex",
+        title: "AST vs Regex Transformations",
+        description: "When and how different parsing strategies are used",
+        estimatedReadTime: "15 min",
+        difficulty: "advanced",
+      },
+      {
+        slug: "safe-execution",
+        title: "Safe Layer Execution Pattern",
+        description: "Validation, rollback, and error recovery mechanisms",
+        estimatedReadTime: "18 min",
+        difficulty: "advanced",
+      },
+      {
+        slug: "rollback-recovery",
+        title: "Rollback & Recovery System",
+        description:
+          "How NeuroLint Pro prevents and recovers from transformation errors",
+        estimatedReadTime: "10 min",
+        difficulty: "advanced",
+      },
+      {
+        slug: "incremental-validation",
+        title: "Incremental Validation Explained",
+        description: "Step-by-step validation and corruption detection",
+        estimatedReadTime: "8 min",
+        difficulty: "advanced",
+      },
+      {
+        slug: "error-categories",
+        title: "Error Categories & Recovery Logic",
+        description: "How different types of errors are handled and resolved",
+        estimatedReadTime: "12 min",
+        difficulty: "advanced",
+      },
+    ],
+  },
+  {
+    id: "customization",
+    title: "🎨 Customization & Extending",
+    description: "Adapt NeuroLint Pro to your specific needs",
+    icon: "🔧",
+    status: "new",
+    pages: [
+      {
+        slug: "custom-patterns",
+        title: "Adding Custom Fix Patterns",
+        description: "Create your own transformation rules and patterns",
+        estimatedReadTime: "15 min",
+        difficulty: "advanced",
+      },
+      {
+        slug: "editing-layers",
+        title: "Editing Existing Layers",
+        description: "Modify built-in transformation logic safely",
+        estimatedReadTime: "12 min",
+        difficulty: "advanced",
+      },
+      {
+        slug: "disabling-fixes",
+        title: "Skipping or Disabling Fixes",
+        description: "Fine-grained control over which transformations run",
+        estimatedReadTime: "6 min",
+        difficulty: "intermediate",
+      },
+      {
+        slug: "custom-regex-example",
+        title: "Example: Custom Regex Transform",
+        description: "Step-by-step guide to creating a custom transformation",
+        estimatedReadTime: "20 min",
+        difficulty: "advanced",
+      },
+    ],
+  },
+  {
+    id: "troubleshooting",
+    title: "🔍 Troubleshooting",
+    description: "Solve common issues and debug transformation problems",
+    icon: "🛠️",
+    pages: [
+      {
+        slug: "common-errors",
+        title: "Common Errors and Fixes",
+        description: "Solutions to the most frequently encountered issues",
+        estimatedReadTime: "10 min",
+        difficulty: "intermediate",
+      },
+      {
+        slug: "recovery-tips",
+        title: "Recovery Tips",
+        description: "What to do when transformations fail or cause issues",
+        estimatedReadTime: "8 min",
+        difficulty: "intermediate",
+      },
+      {
+        slug: "dry-run-safety",
+        title: "Using Dry Run Mode for Safety",
+        description: "Master the art of safe transformation previewing",
+        estimatedReadTime: "5 min",
+        difficulty: "beginner",
+      },
+      {
+        slug: "understanding-logs",
+        title: "Understanding Logs & Debug Output",
+        description: "Interpret verbose output and diagnostic information",
+        estimatedReadTime: "12 min",
+        difficulty: "advanced",
+      },
+    ],
+  },
+  {
+    id: "reference",
+    title: "📋 Reference",
+    description: "Complete command reference and version information",
+    icon: "📖",
+    pages: [
+      {
+        slug: "faq",
+        title: "Frequently Asked Questions",
+        description: "Answers to the most common questions about NeuroLint Pro",
+        estimatedReadTime: "8 min",
+        difficulty: "beginner",
+      },
+      {
+        slug: "changelog",
+        title: "Changelog / Version History",
+        description: "Track new features, improvements, and breaking changes",
+        estimatedReadTime: "5 min",
+        difficulty: "beginner",
+      },
+    ],
+  },
+];
+
+export default function DocsPage() {
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const filteredSections = docSections
+    .map((section) => ({
+      ...section,
+      pages: section.pages.filter(
+        (page) =>
+          page.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          page.description.toLowerCase().includes(searchQuery.toLowerCase()),
+      ),
+    }))
+    .filter((section) => section.pages.length > 0);
+
+  const getDifficultyColor = (difficulty?: string) => {
+    switch (difficulty) {
+      case "beginner":
+        return "var(--status-active)";
+      case "intermediate":
+        return "var(--status-processing)";
+      case "advanced":
+        return "var(--status-error)";
+      default:
+        return "var(--status-info)";
+    }
+  };
+
+  const getStatusBadge = (status?: string) => {
+    switch (status) {
+      case "complete":
+        return { label: "✅ Complete", color: "var(--status-active)" };
+      case "beta":
+        return { label: "🚧 Beta", color: "var(--status-processing)" };
+      case "new":
+        return { label: "✨ New", color: "var(--status-info)" };
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <div className="docs-container">
+      {/* Hero Section */}
+      <div className="docs-hero">
+        <div className="docs-hero-content">
+          <div className="docs-logo">
+            <span className="docs-logo-icon">🧠</span>
+            <h1>NeuroLint Pro Documentation</h1>
+          </div>
+          <p className="docs-hero-description">
+            Master the rule-based transformation engine that safely fixes
+            React/Next.js code. From configuration modernization to SSR safety,
+            learn every layer of the 6-layer system.
+          </p>
+
+          <div className="docs-hero-stats">
+            <div className="docs-stat">
+              <span className="docs-stat-number">6</span>
+              <span className="docs-stat-label">Transformation Layers</span>
+            </div>
+            <div className="docs-stat">
+              <span className="docs-stat-number">100%</span>
+              <span className="docs-stat-label">Rule-Based</span>
+            </div>
+            <div className="docs-stat">
+              <span className="docs-stat-number">0</span>
+              <span className="docs-stat-label">Code Corruption</span>
+            </div>
+          </div>
+
+          {/* Quick Actions */}
+          <div className="docs-quick-actions">
+            <Link
+              href="/docs/getting-started/installation"
+              className="docs-cta-primary"
+            >
+              🚀 Get Started
+            </Link>
+            <Link
+              href="/docs/layer-reference/layer-1-config"
+              className="docs-cta-secondary"
+            >
+              📚 Layer Reference
+            </Link>
+            <Link
+              href="/docs/architecture/6-layer-engine"
+              className="docs-cta-secondary"
+            >
+              🏗️ Architecture
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      {/* Search */}
+      <div className="docs-search-section">
+        <div className="docs-search-container">
+          <div className="docs-search-input-wrapper">
+            <span className="docs-search-icon">🔍</span>
+            <input
+              type="text"
+              placeholder="Search documentation..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="docs-search-input"
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Documentation Sections */}
+      <div className="docs-content">
+        <div className="docs-grid">
+          {filteredSections.map((section) => (
+            <div key={section.id} className="docs-section-card">
+              <div className="docs-section-header">
+                <div className="docs-section-title-row">
+                  <h2 className="docs-section-title">{section.title}</h2>
+                  {getStatusBadge(section.status) && (
+                    <span
+                      className="docs-status-badge"
+                      style={{ color: getStatusBadge(section.status)!.color }}
+                    >
+                      {getStatusBadge(section.status)!.label}
+                    </span>
+                  )}
+                </div>
+                <p className="docs-section-description">
+                  {section.description}
+                </p>
+              </div>
+
+              <div className="docs-pages-list">
+                {section.pages.map((page) => (
+                  <Link
+                    key={page.slug}
+                    href={`/docs/${section.id}/${page.slug}`}
+                    className="docs-page-link"
+                  >
+                    <div className="docs-page-info">
+                      <h3 className="docs-page-title">{page.title}</h3>
+                      <p className="docs-page-description">
+                        {page.description}
+                      </p>
+                    </div>
+                    <div className="docs-page-meta">
+                      <span className="docs-read-time">
+                        ⏱️ {page.estimatedReadTime}
+                      </span>
+                      {page.difficulty && (
+                        <span
+                          className="docs-difficulty-badge"
+                          style={{ color: getDifficultyColor(page.difficulty) }}
+                        >
+                          {page.difficulty}
+                        </span>
+                      )}
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Footer */}
+      <div className="docs-footer">
+        <div className="docs-footer-content">
+          <div className="docs-footer-section">
+            <h4>🚀 Quick Links</h4>
+            <Link href="/docs/getting-started/installation">
+              Installation Guide
+            </Link>
+            <Link href="/docs/usage-guide/first-fix">Your First Fix</Link>
+            <Link href="/docs/troubleshooting/common-errors">
+              Common Errors
+            </Link>
+          </div>
+          <div className="docs-footer-section">
+            <h4>🔧 Advanced</h4>
+            <Link href="/docs/architecture/6-layer-engine">
+              Architecture Overview
+            </Link>
+            <Link href="/docs/customization/custom-patterns">
+              Custom Patterns
+            </Link>
+            <Link href="/docs/layer-reference/master-orchestration">
+              Master Orchestration
+            </Link>
+          </div>
+          <div className="docs-footer-section">
+            <h4>📖 Reference</h4>
+            <Link href="/docs/reference/faq">FAQ</Link>
+            <Link href="/docs/reference/changelog">Changelog</Link>
+            <Link href="/api-docs">API Documentation</Link>
+          </div>
+        </div>
+        <div className="docs-footer-bottom">
+          <p>© 2024 NeuroLint Pro. Built with precision, powered by rules.</p>
+        </div>
+      </div>
+
+      <style jsx>{`
+        .docs-container {
+          min-height: 100vh;
+          background: #000000;
+          color: white;
+          font-family: var(--font-sans, "Inter", sans-serif);
+        }
+
+        .docs-hero {
+          background: linear-gradient(
+            135deg,
+            rgba(33, 150, 243, 0.1) 0%,
+            rgba(0, 0, 0, 0.95) 100%
+          );
+          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+          padding: 60px 40px;
+          text-align: center;
+        }
+
+        .docs-hero-content {
+          max-width: 800px;
+          margin: 0 auto;
+        }
+
+        .docs-logo {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 16px;
+          margin-bottom: 24px;
+        }
+
+        .docs-logo-icon {
+          font-size: 48px;
+          filter: drop-shadow(0 0 20px rgba(33, 150, 243, 0.5));
+        }
+
+        .docs-logo h1 {
+          font-size: 48px;
+          font-weight: 700;
+          margin: 0;
+          background: linear-gradient(135deg, #ffffff 0%, #2196f3 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+        }
+
+        .docs-hero-description {
+          font-size: 20px;
+          line-height: 1.6;
+          margin-bottom: 40px;
+          color: rgba(255, 255, 255, 0.8);
+          max-width: 600px;
+          margin-left: auto;
+          margin-right: auto;
+        }
+
+        .docs-hero-stats {
+          display: flex;
+          justify-content: center;
+          gap: 40px;
+          margin-bottom: 40px;
+        }
+
+        .docs-stat {
+          text-align: center;
+        }
+
+        .docs-stat-number {
+          display: block;
+          font-size: 36px;
+          font-weight: 700;
+          color: var(--status-info);
+          margin-bottom: 4px;
+        }
+
+        .docs-stat-label {
+          font-size: 14px;
+          color: rgba(255, 255, 255, 0.6);
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+
+        .docs-quick-actions {
+          display: flex;
+          justify-content: center;
+          gap: 16px;
+          flex-wrap: wrap;
+        }
+
+        .docs-cta-primary,
+        .docs-cta-secondary {
+          padding: 12px 24px;
+          border-radius: 8px;
+          font-weight: 600;
+          text-decoration: none;
+          transition: all 0.2s ease;
+          display: inline-block;
+        }
+
+        .docs-cta-primary {
+          background: var(--status-info);
+          color: white;
+          box-shadow: 0 4px 16px rgba(33, 150, 243, 0.3);
+        }
+
+        .docs-cta-primary:hover {
+          background: #1976d2;
+          transform: translateY(-1px);
+          box-shadow: 0 6px 20px rgba(33, 150, 243, 0.4);
+        }
+
+        .docs-cta-secondary {
+          background: rgba(255, 255, 255, 0.05);
+          color: white;
+          border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .docs-cta-secondary:hover {
+          background: rgba(255, 255, 255, 0.1);
+          border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .docs-search-section {
+          padding: 40px;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .docs-search-container {
+          max-width: 600px;
+          margin: 0 auto;
+        }
+
+        .docs-search-input-wrapper {
+          position: relative;
+          display: flex;
+          align-items: center;
+        }
+
+        .docs-search-icon {
+          position: absolute;
+          left: 16px;
+          font-size: 18px;
+          color: rgba(255, 255, 255, 0.5);
+        }
+
+        .docs-search-input {
+          width: 100%;
+          padding: 16px 16px 16px 48px;
+          background: rgba(255, 255, 255, 0.05);
+          border: 1px solid rgba(255, 255, 255, 0.15);
+          border-radius: 12px;
+          color: white;
+          font-size: 16px;
+          outline: none;
+          transition: all 0.2s ease;
+        }
+
+        .docs-search-input:focus {
+          border-color: var(--status-info);
+          box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.2);
+          background: rgba(255, 255, 255, 0.08);
+        }
+
+        .docs-search-input::placeholder {
+          color: rgba(255, 255, 255, 0.5);
+        }
+
+        .docs-content {
+          padding: 60px 40px;
+        }
+
+        .docs-grid {
+          max-width: 1200px;
+          margin: 0 auto;
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+          gap: 32px;
+        }
+
+        .docs-section-card {
+          background: rgba(255, 255, 255, 0.05);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 16px;
+          padding: 32px;
+          transition: all 0.3s ease;
+        }
+
+        .docs-section-card:hover {
+          background: rgba(255, 255, 255, 0.08);
+          border-color: rgba(255, 255, 255, 0.2);
+          transform: translateY(-4px);
+          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .docs-section-header {
+          margin-bottom: 24px;
+        }
+
+        .docs-section-title-row {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-bottom: 8px;
+          flex-wrap: wrap;
+          gap: 8px;
+        }
+
+        .docs-section-title {
+          font-size: 24px;
+          font-weight: 700;
+          margin: 0;
+          color: white;
+        }
+
+        .docs-status-badge {
+          font-size: 12px;
+          font-weight: 600;
+          padding: 4px 8px;
+          border-radius: 6px;
+          background: rgba(0, 0, 0, 0.3);
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+
+        .docs-section-description {
+          color: rgba(255, 255, 255, 0.7);
+          line-height: 1.5;
+          margin: 0;
+        }
+
+        .docs-pages-list {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+        }
+
+        .docs-page-link {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+          padding: 16px;
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          border-radius: 8px;
+          text-decoration: none;
+          color: white;
+          transition: all 0.2s ease;
+          gap: 16px;
+        }
+
+        .docs-page-link:hover {
+          background: rgba(255, 255, 255, 0.06);
+          border-color: rgba(255, 255, 255, 0.15);
+          transform: translateX(4px);
+        }
+
+        .docs-page-info {
+          flex: 1;
+        }
+
+        .docs-page-title {
+          font-size: 16px;
+          font-weight: 600;
+          margin: 0 0 4px 0;
+          color: white;
+        }
+
+        .docs-page-description {
+          font-size: 14px;
+          color: rgba(255, 255, 255, 0.6);
+          margin: 0;
+          line-height: 1.4;
+        }
+
+        .docs-page-meta {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-end;
+          gap: 4px;
+          flex-shrink: 0;
+        }
+
+        .docs-read-time {
+          font-size: 12px;
+          color: rgba(255, 255, 255, 0.5);
+        }
+
+        .docs-difficulty-badge {
+          font-size: 11px;
+          font-weight: 600;
+          padding: 2px 6px;
+          border-radius: 4px;
+          background: rgba(0, 0, 0, 0.3);
+          text-transform: uppercase;
+          letter-spacing: 0.3px;
+        }
+
+        .docs-footer {
+          background: rgba(255, 255, 255, 0.02);
+          border-top: 1px solid rgba(255, 255, 255, 0.1);
+          padding: 60px 40px 40px;
+        }
+
+        .docs-footer-content {
+          max-width: 1200px;
+          margin: 0 auto;
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+          gap: 40px;
+          margin-bottom: 40px;
+        }
+
+        .docs-footer-section h4 {
+          font-size: 16px;
+          font-weight: 600;
+          margin: 0 0 16px 0;
+          color: white;
+        }
+
+        .docs-footer-section a {
+          display: block;
+          color: rgba(255, 255, 255, 0.6);
+          text-decoration: none;
+          margin-bottom: 8px;
+          transition: color 0.2s ease;
+        }
+
+        .docs-footer-section a:hover {
+          color: var(--status-info);
+        }
+
+        .docs-footer-bottom {
+          max-width: 1200px;
+          margin: 0 auto;
+          padding-top: 20px;
+          border-top: 1px solid rgba(255, 255, 255, 0.05);
+          text-align: center;
+          color: rgba(255, 255, 255, 0.4);
+        }
+
+        @media (max-width: 768px) {
+          .docs-hero {
+            padding: 40px 20px;
+          }
+
+          .docs-logo h1 {
+            font-size: 36px;
+          }
+
+          .docs-hero-stats {
+            gap: 20px;
+          }
+
+          .docs-content {
+            padding: 40px 20px;
+          }
+
+          .docs-grid {
+            grid-template-columns: 1fr;
+          }
+
+          .docs-footer {
+            padding: 40px 20px 20px;
+          }
+
+          .docs-page-link {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 8px;
+          }
+
+          .docs-page-meta {
+            align-items: flex-start;
+            flex-direction: row;
+            gap: 12px;
+          }
+        }
+      `}</style>
+    </div>
+  );
+}
