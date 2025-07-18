@@ -105,8 +105,8 @@ export default function AdminSetup() {
   return (
     <div className="admin-setup">
       <div className="setup-header">
-        <h2>Admin Database Setup</h2>
-        <p>Initialize the database schema required for the admin dashboard</p>
+        <h2>Admin System Check</h2>
+        <p>Verify your system configuration and admin dashboard setup</p>
       </div>
 
       {state.error && (
