@@ -208,7 +208,7 @@ export default function CollaborationDashboard({
   }, [activeTab, user.id, user.firstName, user.email, onUpdateSessions]);
 
   // Real-time connection management (HTTP polling - WebSocket not supported in Next.js App Router)
-  const connectWebSocket = useCallback(() => {
+  const connectRealTime = useCallback(() => {
     if (!user?.id || (activeTab !== "sessions" && activeTab !== "activity")) {
       return;
     }
