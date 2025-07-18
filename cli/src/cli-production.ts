@@ -95,7 +95,7 @@ program
   .alias("i")
   .description("Run NeuroLint in interactive mode")
   .action(async () => {
-    console.log(chalk.white("NeuroLint Pro Interactive Mode\n"));
+    console.log(chalk.white("NeuroLint Interactive Mode\n"));
 
     const answers = await inquirer.prompt([
       {
