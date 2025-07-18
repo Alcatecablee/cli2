@@ -1,0 +1,1378 @@
+"use client";
+
+import React from "react";
+import Link from "next/link";
+
+export default function SafetyFeaturesPage() {
+  return (
+    <div className="docs-page">
+      <div className="docs-page-header">
+        <div className="docs-breadcrumb">
+          <Link href="/docs">Docs</Link>
+          <span className="docs-breadcrumb-separator">→</span>
+          <Link href="/docs#getting-started">Getting Started</Link>
+          <span className="docs-breadcrumb-separator">→</span>
+          <span className="docs-breadcrumb-current">
+            Safety Features Overview
+          </span>
+        </div>
+
+        <h1 className="docs-page-title">Safety Features Overview</h1>
+        <p className="docs-page-subtitle">
+          Dry-run mode, backups, rollback, and validation systems that keep your
+          code safe
+        </p>
+
+        <div className="docs-page-meta">
+          <span className="docs-meta-item">4 min read</span>
+          <span className="docs-meta-item difficulty-beginner">Beginner</span>
+          <span className="docs-meta-item">Last updated: Dec 2024</span>
+        </div>
+      </div>
+
+      <div className="docs-page-content">
+        {/* Safety Promise */}
+        <div className="docs-highlight-box success">
+          <h3>Our Safety Promise</h3>
+          <p>
+            NeuroLint Pro is designed with a{" "}
+            <strong>safety-first philosophy</strong>. Every transformation goes
+            through multiple validation layers, and we provide comprehensive
+            rollback mechanisms. In thousands of production runs, we have
+            achieved <strong>zero code corruption incidents</strong>.
+          </p>
+        </div>
+
+        {/* Multi-Layer Safety System */}
+        <div className="docs-section">
+          <h2 id="safety-system">Multi-Layer Safety System</h2>
+          <p>
+            NeuroLint Pro employs multiple safety mechanisms working together to
+            ensure your code remains intact and functional throughout the
+            transformation process:
+          </p>
+
+          <div className="docs-safety-layers">
+            <div className="docs-safety-layer">
+              <div className="docs-safety-icon">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="32"
+                  height="32"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+              </div>
+              <div className="docs-safety-content">
+                <h4>1. Preview Mode (Dry Run)</h4>
+                <p>
+                  See exactly what changes will be made before applying them.
+                  Review every transformation and decide what to accept or
+                  reject.
+                </p>
+                <div className="docs-safety-command">
+                  <code>npm run fix-dry-run</code>
+                </div>
+              </div>
+            </div>
+
+            <div className="docs-safety-layer">
+              <div className="docs-safety-icon">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="32"
+                  height="32"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                  <polyline points="14 2 14 8 20 8" />
+                  <line x1="16" y1="13" x2="8" y2="13" />
+                  <line x1="16" y1="17" x2="8" y2="17" />
+                </svg>
+              </div>
+              <div className="docs-safety-content">
+                <h4>2. Automatic Backups</h4>
+                <p>
+                  Every file is automatically backed up before modification.
+                  Original files are preserved with timestamps for easy
+                  recovery.
+                </p>
+                <div className="docs-safety-note">
+                  Backups stored in <code>.neurolint-backups/</code>
+                </div>
+              </div>
+            </div>
+
+            <div className="docs-safety-layer">
+              <div className="docs-safety-icon">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="32"
+                  height="32"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+                  <polyline points="17 6 23 6 23 12" />
+                </svg>
+              </div>
+              <div className="docs-safety-content">
+                <h4>3. Incremental Validation</h4>
+                <p>
+                  Each transformation is validated immediately after
+                  application. Syntax errors, corrupted patterns, and logical
+                  issues are caught instantly.
+                </p>
+                <div className="docs-safety-note">
+                  Invalid changes are automatically reverted
+                </div>
+              </div>
+            </div>
+
+            <div className="docs-safety-layer">
+              <div className="docs-safety-icon">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="32"
+                  height="32"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+                  <path d="M3 3v5h5" />
+                </svg>
+              </div>
+              <div className="docs-safety-content">
+                <h4>4. Smart Rollback</h4>
+                <p>
+                  If any transformation causes issues, the entire operation can
+                  be rolled back to the exact previous state using backup files.
+                </p>
+                <div className="docs-safety-command">
+                  <code>npm run neurolint-rollback</code>
+                </div>
+              </div>
+            </div>
+
+            <div className="docs-safety-layer">
+              <div className="docs-safety-icon">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="32"
+                  height="32"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path d="M12 2v20m8-10H4" />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+              </div>
+              <div className="docs-safety-content">
+                <h4>5. Layer Isolation</h4>
+                <p>
+                  Each layer runs independently. If one layer fails, others
+                  continue to run, minimizing the impact of any issues.
+                </p>
+                <div className="docs-safety-note">
+                  Failed layers don't affect successful ones
+                </div>
+              </div>
+            </div>
+
+            <div className="docs-safety-layer">
+              <div className="docs-safety-icon">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="32"
+                  height="32"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                  <polyline points="14 2 14 8 20 8" />
+                  <line x1="16" y1="13" x2="8" y2="13" />
+                  <line x1="16" y1="17" x2="8" y2="17" />
+                  <polyline points="10 9 9 9 8 9" />
+                </svg>
+              </div>
+              <div className="docs-safety-content">
+                <h4>6. Comprehensive Logging</h4>
+                <p>
+                  Detailed logs track every change made, providing complete
+                  transparency and enabling precise troubleshooting.
+                </p>
+                <div className="docs-safety-command">
+                  <code>npm run fix-verbose</code>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Dry Run Mode */}
+        <div className="docs-section">
+          <h2 id="dry-run-mode">Dry Run Mode: Preview Before Changes</h2>
+          <p>
+            Dry run mode is your most important safety tool. It shows you
+            exactly what NeuroLint Pro will change without actually modifying
+            any files.
+          </p>
+
+          <div className="docs-dry-run-demo">
+            <div className="docs-demo-header">
+              <h4>Example Dry Run Output</h4>
+            </div>
+            <div className="docs-demo-content">
+              <pre>
+                <code>{`$ npm run fix-dry-run
+
+🔍 NeuroLint Pro - Dry Run Mode
+📁 Analyzing project...
+
+✅ Layer 1: Configuration Fixes
+   📄 tsconfig.json
+   - target: "es5" → "ES2020"
+   - Added: "downlevelIteration": true
+   
+   📄 next.config.js  
+   - Removed deprecated "appDir" option
+   - Added security headers
+
+🧹 Layer 2: Pattern Fixes
+   📄 components/Header.tsx
+   - Fixed HTML entities: &quot;Logo&quot; → "Logo"
+   - Removed unused import: React
+   
+   📄 pages/api/users.ts
+   - console.log → console.debug (3 instances)
+
+⚛️ Layer 3: Component Fixes  
+   📄 components/ProductList.tsx
+   - Added missing key props (5 items)
+   - Enhanced button accessibility
+
+💧 Layer 4: Hydration Fixes
+   📄 components/ThemeProvider.tsx
+   - Added SSR guards for localStorage
+   - Prevented hydration mismatch
+
+🚀 Layer 5: Next.js App Router
+   📄 app/layout.tsx
+   - Added "use client" directive
+   
+📊 Summary:
+   - Files analyzed: 47
+   - Files to be modified: 8  
+   - Total changes: 23
+   - Estimated time: 45 seconds
+
+🛡️ All changes validated - No issues detected
+💾 Backups will be created automatically
+
+Run without --dry-run to apply these changes.`}</code>
+              </pre>
+            </div>
+          </div>
+
+          <div className="docs-dry-run-benefits">
+            <h4>Dry Run Benefits:</h4>
+            <ul>
+              <li>
+                <strong>Complete Transparency:</strong> See every change before
+                it happens
+              </li>
+              <li>
+                <strong>Selective Application:</strong> Choose which changes to
+                apply
+              </li>
+              <li>
+                <strong>Impact Assessment:</strong> Understand the scope of
+                modifications
+              </li>
+              <li>
+                <strong>Risk-Free Exploration:</strong> Test different layer
+                combinations safely
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Validation System */}
+        <div className="docs-section">
+          <h2 id="validation-system">Advanced Validation System</h2>
+          <p>
+            NeuroLint Pro validates transformations at multiple levels to ensure
+            code integrity:
+          </p>
+
+          <div className="docs-validation-types">
+            <div className="docs-validation-card">
+              <div className="docs-validation-icon">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="24"
+                  height="24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <polyline points="9 11 12 14 22 4" />
+                  <path d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9c1.84 0 3.56.55 4.99 1.5" />
+                </svg>
+              </div>
+              <h4>Syntax Validation</h4>
+              <p>
+                Ensures all transformations produce valid JavaScript/TypeScript
+                syntax. Uses AST parsing to catch syntax errors immediately.
+              </p>
+              <div className="docs-validation-example">
+                <strong>Detects:</strong> Missing brackets, invalid imports,
+                broken JSX
+              </div>
+            </div>
+
+            <div className="docs-validation-card">
+              <div className="docs-validation-icon">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="24"
+                  height="24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                </svg>
+              </div>
+              <h4>Logical Integrity</h4>
+              <p>
+                Checks that transformations don't break component logic or
+                introduce runtime errors through pattern analysis.
+              </p>
+              <div className="docs-validation-example">
+                <strong>Detects:</strong> Broken component props, invalid hook
+                usage, circular dependencies
+              </div>
+            </div>
+
+            <div className="docs-validation-card">
+              <div className="docs-validation-icon">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="24"
+                  height="24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path d="M9 12l2 2 4-4" />
+                  <circle cx="12" cy="12" r="10" />
+                </svg>
+              </div>
+              <h4>Corruption Detection</h4>
+              <p>
+                Identifies patterns that indicate code corruption, such as
+                malformed strings, broken imports, or invalid character
+                sequences.
+              </p>
+              <div className="docs-validation-example">
+                <strong>Detects:</strong> Encoding issues, malformed HTML
+                entities, broken string literals
+              </div>
+            </div>
+
+            <div className="docs-validation-card">
+              <div className="docs-validation-icon">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="24"
+                  height="24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                </svg>
+              </div>
+              <h4>Performance Impact</h4>
+              <p>
+                Analyzes whether transformations could negatively impact
+                performance and suggests optimizations where appropriate.
+              </p>
+              <div className="docs-validation-example">
+                <strong>Monitors:</strong> Bundle size impact, render
+                performance, memory usage patterns
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Recovery Mechanisms */}
+        <div className="docs-section">
+          <h2 id="recovery-mechanisms">Recovery Mechanisms</h2>
+          <p>
+            Multiple recovery options ensure you can always return to a working
+            state:
+          </p>
+
+          <div className="docs-recovery-options">
+            <div className="docs-recovery-card immediate">
+              <div className="docs-recovery-header">
+                <h4>Immediate Recovery</h4>
+                <span className="docs-recovery-speed">Instant</span>
+              </div>
+              <p>
+                If a transformation fails validation, it's immediately reverted
+                automatically. No user intervention required.
+              </p>
+              <div className="docs-recovery-trigger">
+                <strong>Triggered by:</strong> Syntax errors, corruption
+                detection, logical breaks
+              </div>
+            </div>
+
+            <div className="docs-recovery-card manual">
+              <div className="docs-recovery-header">
+                <h4>Manual Rollback</h4>
+                <span className="docs-recovery-speed">1-2 minutes</span>
+              </div>
+              <p>
+                Restore all files to their exact previous state using the
+                automatic backup system. Preserves timestamps and file
+                permissions.
+              </p>
+              <div className="docs-recovery-command">
+                <code>npm run neurolint-rollback</code>
+              </div>
+            </div>
+
+            <div className="docs-recovery-card selective">
+              <div className="docs-recovery-header">
+                <h4>Selective Recovery</h4>
+                <span className="docs-recovery-speed">As needed</span>
+              </div>
+              <p>
+                Restore individual files or specific changes using backup files
+                and detailed logs. Perfect for surgical fixes.
+              </p>
+              <div className="docs-recovery-command">
+                <code>
+                  npm run neurolint-recover --file=src/components/Header.tsx
+                </code>
+              </div>
+            </div>
+
+            <div className="docs-recovery-card git">
+              <div className="docs-recovery-header">
+                <h4>Git Integration</h4>
+                <span className="docs-recovery-speed">Variable</span>
+              </div>
+              <p>
+                NeuroLint Pro works seamlessly with Git. You can always use
+                standard Git commands to revert changes or compare with previous
+                versions.
+              </p>
+              <div className="docs-recovery-command">
+                <code>git checkout .</code> or{" "}
+                <code>git reset --hard HEAD</code>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Best Practices */}
+        <div className="docs-section">
+          <h2 id="best-practices">Safety Best Practices</h2>
+          <p>
+            Follow these practices to maximize safety when using NeuroLint Pro:
+          </p>
+
+          <div className="docs-best-practices">
+            <div className="docs-practice-card essential">
+              <div className="docs-practice-icon">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="24"
+                  height="24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="M12 6v6l4 2" />
+                </svg>
+              </div>
+              <h4>Always Start with Dry Run</h4>
+              <p>
+                Never run transformations directly on important code. Always
+                preview changes first to understand the impact and scope.
+              </p>
+              <div className="docs-practice-tip">
+                <strong>Tip:</strong> Save dry run output to review later or
+                share with team members
+              </div>
+            </div>
+
+            <div className="docs-practice-card recommended">
+              <div className="docs-practice-icon">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="24"
+                  height="24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path d="M9 11H1l6-6 6 6" />
+                  <path d="M9 17l3-3 3 3" />
+                  <path d="M22 18.5V12l-3-3-3 3v6.5" />
+                </svg>
+              </div>
+              <h4>Commit Before Transforming</h4>
+              <p>
+                Create a Git commit before running NeuroLint Pro. This provides
+                an additional safety net beyond the automatic backups.
+              </p>
+              <div className="docs-practice-tip">
+                <strong>Tip:</strong> Use descriptive commit messages like
+                "Pre-NeuroLint checkpoint"
+              </div>
+            </div>
+
+            <div className="docs-practice-card recommended">
+              <div className="docs-practice-icon">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="24"
+                  height="24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+                  <rect x="8" y="2" width="8" height="4" rx="1" ry="1" />
+                </svg>
+              </div>
+              <h4>Test After Transformations</h4>
+              <p>
+                Run your test suite and build process after applying
+                transformations. This catches any issues that automated
+                validation might miss.
+              </p>
+              <div className="docs-practice-tip">
+                <strong>Tip:</strong> Set up a pre-commit hook to run tests
+                automatically
+              </div>
+            </div>
+
+            <div className="docs-practice-card optional">
+              <div className="docs-practice-icon">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="24"
+                  height="24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path d="M14 9V5a3 3 0 0 0-6 0v4" />
+                  <rect x="2" y="9" width="20" height="11" rx="2" ry="2" />
+                  <circle cx="12" cy="15" r="1" />
+                </svg>
+              </div>
+              <h4>Use Staging Environment</h4>
+              <p>
+                For critical production code, test transformations in a staging
+                environment first to ensure everything works correctly.
+              </p>
+              <div className="docs-practice-tip">
+                <strong>Tip:</strong> Run full integration tests in staging
+                before production deployment
+              </div>
+            </div>
+
+            <div className="docs-practice-card optional">
+              <div className="docs-practice-icon">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="24"
+                  height="24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" />
+                </svg>
+              </div>
+              <h4>Gradual Layer Application</h4>
+              <p>
+                For large codebases, apply layers incrementally rather than all
+                at once. This makes it easier to identify and fix any issues.
+              </p>
+              <div className="docs-practice-tip">
+                <strong>Tip:</strong> Start with Layers 1-2, test, then proceed
+                to higher layers
+              </div>
+            </div>
+
+            <div className="docs-practice-card essential">
+              <div className="docs-practice-icon">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="24"
+                  height="24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+              </div>
+              <h4>Review Verbose Logs</h4>
+              <p>
+                Use verbose mode to understand exactly what changes were made.
+                This helps you learn the tool and troubleshoot any issues.
+              </p>
+              <div className="docs-practice-tip">
+                <strong>Tip:</strong> Keep logs for important transformations as
+                documentation
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Emergency Procedures */}
+        <div className="docs-section">
+          <h2 id="emergency-procedures">Emergency Recovery Procedures</h2>
+          <p>
+            If something goes wrong, follow these step-by-step recovery
+            procedures:
+          </p>
+
+          <div className="docs-emergency-steps">
+            <div className="docs-emergency-scenario">
+              <h4>Scenario 1: Build Fails After Transformation</h4>
+              <ol>
+                <li>Don't panic - your original code is safely backed up</li>
+                <li>
+                  Run <code>npm run neurolint-rollback</code> to restore all
+                  files
+                </li>
+                <li>
+                  Verify your build works: <code>npm run build</code>
+                </li>
+                <li>
+                  Review the dry-run output to identify problematic changes
+                </li>
+                <li>Apply layers selectively to isolate the issue</li>
+              </ol>
+            </div>
+
+            <div className="docs-emergency-scenario">
+              <h4>Scenario 2: Runtime Errors After Changes</h4>
+              <ol>
+                <li>
+                  Check the detailed logs to identify which layer caused issues
+                </li>
+                <li>
+                  Use selective recovery to restore specific problematic files
+                </li>
+                <li>Test individual components that were modified</li>
+                <li>Report any validation failures that weren't caught</li>
+                <li>Re-run the specific layer with verbose logging</li>
+              </ol>
+            </div>
+
+            <div className="docs-emergency-scenario">
+              <h4>Scenario 3: Partial Corruption Detected</h4>
+              <ol>
+                <li>Stop any running NeuroLint processes immediately</li>
+                <li>
+                  Check the <code>.neurolint-backups/</code> directory for
+                  intact backups
+                </li>
+                <li>Restore the most recent clean backup</li>
+                <li>Review logs to understand what caused the corruption</li>
+                <li>Update NeuroLint Pro and retry with latest version</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+
+        {/* Next Steps */}
+        <div className="docs-section">
+          <h2 id="next-steps">Ready for Safe Transformations?</h2>
+          <p>
+            Now that you understand NeuroLint Pro's safety features, you're
+            ready to transform code with confidence:
+          </p>
+
+          <div className="docs-next-steps">
+            <Link
+              href="/docs/getting-started/first-fix"
+              className="docs-next-step-card primary"
+            >
+              <div className="docs-next-step-icon">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="32"
+                  height="32"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <polygon points="10 8 16 12 10 16 10 8" />
+                </svg>
+              </div>
+              <h4>Run Your First Safe Fix</h4>
+              <p>Step-by-step guide to your first transformation with safety</p>
+            </Link>
+
+            <Link
+              href="/docs/usage-guide/dry-runs-previews"
+              className="docs-next-step-card"
+            >
+              <div className="docs-next-step-icon">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="32"
+                  height="32"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+              </div>
+              <h4>Master Dry-Run Mode</h4>
+              <p>
+                Advanced techniques for safe preview and selective application
+              </p>
+            </Link>
+
+            <Link
+              href="/docs/troubleshooting/recovery-tips"
+              className="docs-next-step-card"
+            >
+              <div className="docs-next-step-icon">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="32"
+                  height="32"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+                  <path d="M3 3v5h5" />
+                </svg>
+              </div>
+              <h4>Recovery Best Practices</h4>
+              <p>Advanced recovery techniques and troubleshooting</p>
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      {/* Page Navigation */}
+      <div className="docs-page-nav">
+        <div className="docs-page-nav-item">
+          <Link
+            href="/docs/getting-started/layer-overview"
+            className="docs-nav-link prev"
+          >
+            ← Quick Layer Overview (1–6)
+          </Link>
+        </div>
+        <div className="docs-page-nav-item">
+          <Link
+            href="/docs/usage-guide/dry-runs-previews"
+            className="docs-nav-link next"
+          >
+            Dry Runs and Previews →
+          </Link>
+        </div>
+      </div>
+
+      <style jsx>{`
+        .docs-page {
+          min-height: 100vh;
+          background: #000000;
+          color: white;
+          font-family: var(--font-sans, "Inter", sans-serif);
+        }
+
+        .docs-page-header {
+          background: linear-gradient(
+            135deg,
+            rgba(33, 150, 243, 0.08) 0%,
+            rgba(0, 0, 0, 0.95) 100%
+          );
+          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+          padding: 40px;
+        }
+
+        .docs-breadcrumb {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 20px;
+          font-size: 14px;
+        }
+
+        .docs-breadcrumb a {
+          color: var(--status-info);
+          text-decoration: none;
+        }
+
+        .docs-breadcrumb a:hover {
+          text-decoration: underline;
+        }
+
+        .docs-breadcrumb-separator {
+          color: rgba(255, 255, 255, 0.4);
+        }
+
+        .docs-breadcrumb-current {
+          color: rgba(255, 255, 255, 0.8);
+        }
+
+        .docs-page-title {
+          font-size: 48px;
+          font-weight: 700;
+          margin: 0 0 16px 0;
+          background: linear-gradient(135deg, #ffffff 0%, #2196f3 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+        }
+
+        .docs-page-subtitle {
+          font-size: 20px;
+          color: rgba(255, 255, 255, 0.7);
+          margin: 0 0 24px 0;
+          line-height: 1.5;
+        }
+
+        .docs-page-meta {
+          display: flex;
+          gap: 16px;
+          flex-wrap: wrap;
+        }
+
+        .docs-meta-item {
+          padding: 6px 12px;
+          background: rgba(255, 255, 255, 0.05);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 6px;
+          font-size: 13px;
+          font-weight: 500;
+        }
+
+        .difficulty-beginner {
+          color: var(--status-active);
+          border-color: rgba(76, 175, 80, 0.3);
+          background: rgba(76, 175, 80, 0.1);
+        }
+
+        .docs-page-content {
+          max-width: 900px;
+          margin: 0 auto;
+          padding: 60px 40px;
+          line-height: 1.7;
+        }
+
+        .docs-section {
+          margin-bottom: 60px;
+        }
+
+        .docs-section h2 {
+          font-size: 32px;
+          font-weight: 700;
+          margin: 0 0 24px 0;
+          color: white;
+        }
+
+        .docs-section h4 {
+          font-size: 18px;
+          font-weight: 600;
+          margin: 24px 0 12px 0;
+          color: white;
+        }
+
+        .docs-section p {
+          margin-bottom: 16px;
+          color: rgba(255, 255, 255, 0.8);
+        }
+
+        .docs-section ul {
+          margin: 12px 0;
+          padding-left: 24px;
+        }
+
+        .docs-section ol {
+          margin: 12px 0;
+          padding-left: 24px;
+        }
+
+        .docs-section li {
+          margin-bottom: 8px;
+          color: rgba(255, 255, 255, 0.8);
+        }
+
+        .docs-highlight-box {
+          padding: 24px;
+          border-radius: 12px;
+          margin: 32px 0;
+          border: 1px solid;
+        }
+
+        .docs-highlight-box.success {
+          background: rgba(76, 175, 80, 0.1);
+          border-color: rgba(76, 175, 80, 0.3);
+        }
+
+        .docs-highlight-box h3 {
+          margin: 0 0 12px 0;
+          font-size: 18px;
+        }
+
+        .docs-highlight-box p {
+          margin: 0;
+        }
+
+        .docs-safety-layers {
+          display: flex;
+          flex-direction: column;
+          gap: 24px;
+          margin: 32px 0;
+        }
+
+        .docs-safety-layer {
+          display: flex;
+          align-items: flex-start;
+          gap: 20px;
+          padding: 24px;
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          border-radius: 12px;
+          transition: all 0.2s ease;
+        }
+
+        .docs-safety-layer:hover {
+          background: rgba(255, 255, 255, 0.05);
+          border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .docs-safety-icon {
+          color: #4caf50;
+          flex-shrink: 0;
+          margin-top: 4px;
+        }
+
+        .docs-safety-content h4 {
+          margin: 0 0 8px 0;
+          font-size: 18px;
+          color: white;
+        }
+
+        .docs-safety-content p {
+          margin: 0 0 12px 0;
+          color: rgba(255, 255, 255, 0.8);
+        }
+
+        .docs-safety-command,
+        .docs-safety-note {
+          font-family: "Monaco", "Menlo", monospace;
+          font-size: 13px;
+          background: rgba(0, 0, 0, 0.3);
+          padding: 8px 12px;
+          border-radius: 6px;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          color: rgba(255, 255, 255, 0.9);
+        }
+
+        .docs-dry-run-demo {
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 12px;
+          overflow: hidden;
+          margin: 32px 0;
+        }
+
+        .docs-demo-header {
+          background: rgba(255, 255, 255, 0.05);
+          padding: 16px 24px;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .docs-demo-header h4 {
+          margin: 0;
+          font-size: 16px;
+          color: white;
+        }
+
+        .docs-demo-content {
+          padding: 0;
+        }
+
+        .docs-demo-content pre {
+          margin: 0;
+          padding: 24px;
+          background: #000;
+          color: #00ff00;
+          font-family: "Monaco", "Menlo", monospace;
+          font-size: 12px;
+          line-height: 1.5;
+          overflow-x: auto;
+        }
+
+        .docs-dry-run-benefits {
+          margin: 24px 0;
+          padding: 20px;
+          background: rgba(33, 150, 243, 0.05);
+          border: 1px solid rgba(33, 150, 243, 0.2);
+          border-radius: 8px;
+        }
+
+        .docs-dry-run-benefits h4 {
+          margin: 0 0 12px 0;
+          font-size: 16px;
+          color: #2196f3;
+        }
+
+        .docs-dry-run-benefits ul {
+          margin: 0;
+          padding-left: 20px;
+        }
+
+        .docs-validation-types {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+          gap: 24px;
+          margin: 32px 0;
+        }
+
+        .docs-validation-card {
+          padding: 24px;
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          border-radius: 12px;
+        }
+
+        .docs-validation-icon {
+          color: #2196f3;
+          margin-bottom: 12px;
+        }
+
+        .docs-validation-card h4 {
+          margin: 0 0 12px 0;
+          font-size: 16px;
+        }
+
+        .docs-validation-card p {
+          margin: 0 0 12px 0;
+          font-size: 14px;
+          color: rgba(255, 255, 255, 0.7);
+        }
+
+        .docs-validation-example {
+          font-size: 12px;
+          color: rgba(255, 255, 255, 0.6);
+          background: rgba(0, 0, 0, 0.3);
+          padding: 8px;
+          border-radius: 4px;
+        }
+
+        .docs-recovery-options {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+          gap: 20px;
+          margin: 32px 0;
+        }
+
+        .docs-recovery-card {
+          padding: 20px;
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          border-radius: 12px;
+        }
+
+        .docs-recovery-card.immediate {
+          border-color: rgba(76, 175, 80, 0.3);
+          background: rgba(76, 175, 80, 0.05);
+        }
+
+        .docs-recovery-card.manual {
+          border-color: rgba(33, 150, 243, 0.3);
+          background: rgba(33, 150, 243, 0.05);
+        }
+
+        .docs-recovery-card.selective {
+          border-color: rgba(255, 152, 0, 0.3);
+          background: rgba(255, 152, 0, 0.05);
+        }
+
+        .docs-recovery-card.git {
+          border-color: rgba(156, 39, 176, 0.3);
+          background: rgba(156, 39, 176, 0.05);
+        }
+
+        .docs-recovery-header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-bottom: 12px;
+        }
+
+        .docs-recovery-header h4 {
+          margin: 0;
+          font-size: 16px;
+        }
+
+        .docs-recovery-speed {
+          font-size: 12px;
+          padding: 4px 8px;
+          background: rgba(0, 0, 0, 0.3);
+          border-radius: 4px;
+          color: rgba(255, 255, 255, 0.7);
+        }
+
+        .docs-recovery-card p {
+          margin: 0 0 12px 0;
+          font-size: 14px;
+          color: rgba(255, 255, 255, 0.7);
+        }
+
+        .docs-recovery-command,
+        .docs-recovery-trigger {
+          font-size: 12px;
+          background: rgba(0, 0, 0, 0.3);
+          padding: 8px;
+          border-radius: 4px;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .docs-recovery-command {
+          font-family: "Monaco", "Menlo", monospace;
+          color: rgba(255, 255, 255, 0.9);
+        }
+
+        .docs-recovery-trigger {
+          color: rgba(255, 255, 255, 0.6);
+        }
+
+        .docs-best-practices {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+          gap: 20px;
+          margin: 32px 0;
+        }
+
+        .docs-practice-card {
+          padding: 20px;
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          border-radius: 12px;
+        }
+
+        .docs-practice-card.essential {
+          border-color: rgba(244, 67, 54, 0.3);
+          background: rgba(244, 67, 54, 0.05);
+        }
+
+        .docs-practice-card.recommended {
+          border-color: rgba(255, 152, 0, 0.3);
+          background: rgba(255, 152, 0, 0.05);
+        }
+
+        .docs-practice-card.optional {
+          border-color: rgba(33, 150, 243, 0.3);
+          background: rgba(33, 150, 243, 0.05);
+        }
+
+        .docs-practice-icon {
+          color: #2196f3;
+          margin-bottom: 12px;
+        }
+
+        .docs-practice-card h4 {
+          margin: 0 0 12px 0;
+          font-size: 16px;
+        }
+
+        .docs-practice-card p {
+          margin: 0 0 12px 0;
+          font-size: 14px;
+          color: rgba(255, 255, 255, 0.7);
+        }
+
+        .docs-practice-tip {
+          font-size: 12px;
+          color: rgba(255, 255, 255, 0.6);
+          background: rgba(0, 0, 0, 0.3);
+          padding: 8px;
+          border-radius: 4px;
+        }
+
+        .docs-emergency-steps {
+          margin: 32px 0;
+        }
+
+        .docs-emergency-scenario {
+          margin-bottom: 32px;
+          padding: 24px;
+          background: rgba(244, 67, 54, 0.05);
+          border: 1px solid rgba(244, 67, 54, 0.2);
+          border-radius: 12px;
+        }
+
+        .docs-emergency-scenario h4 {
+          margin: 0 0 16px 0;
+          font-size: 18px;
+          color: #f44336;
+        }
+
+        .docs-emergency-scenario ol {
+          margin: 0;
+          padding-left: 20px;
+        }
+
+        .docs-emergency-scenario li {
+          margin-bottom: 8px;
+          color: rgba(255, 255, 255, 0.8);
+        }
+
+        .docs-next-steps {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+          gap: 20px;
+          margin: 32px 0;
+        }
+
+        .docs-next-step-card {
+          display: block;
+          padding: 24px;
+          background: rgba(255, 255, 255, 0.05);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 12px;
+          text-decoration: none;
+          color: white;
+          transition: all 0.2s ease;
+        }
+
+        .docs-next-step-card:hover {
+          background: rgba(255, 255, 255, 0.08);
+          border-color: rgba(255, 255, 255, 0.2);
+          transform: translateY(-2px);
+        }
+
+        .docs-next-step-card.primary {
+          border-color: var(--status-info);
+          background: rgba(33, 150, 243, 0.1);
+        }
+
+        .docs-next-step-card.primary:hover {
+          background: rgba(33, 150, 243, 0.15);
+        }
+
+        .docs-next-step-icon {
+          margin-bottom: 12px;
+          color: #2196f3;
+        }
+
+        .docs-next-step-card h4 {
+          margin: 0 0 8px 0;
+          font-size: 18px;
+        }
+
+        .docs-next-step-card p {
+          margin: 0;
+          font-size: 14px;
+          color: rgba(255, 255, 255, 0.7);
+        }
+
+        .docs-page-nav {
+          background: rgba(255, 255, 255, 0.02);
+          border-top: 1px solid rgba(255, 255, 255, 0.1);
+          padding: 40px;
+          display: flex;
+          justify-content: space-between;
+        }
+
+        .docs-nav-link {
+          padding: 12px 24px;
+          background: rgba(255, 255, 255, 0.05);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 8px;
+          text-decoration: none;
+          color: white;
+          font-weight: 500;
+          transition: all 0.2s ease;
+        }
+
+        .docs-nav-link:hover {
+          background: rgba(255, 255, 255, 0.1);
+          border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        code {
+          background: rgba(255, 255, 255, 0.1);
+          padding: 2px 6px;
+          border-radius: 4px;
+          font-family: "Monaco", "Menlo", monospace;
+          font-size: 0.9em;
+        }
+
+        strong {
+          color: white;
+          font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+          .docs-page-header {
+            padding: 20px;
+          }
+
+          .docs-page-title {
+            font-size: 36px;
+          }
+
+          .docs-page-content {
+            padding: 40px 20px;
+          }
+
+          .docs-safety-layer {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 12px;
+          }
+
+          .docs-demo-content pre {
+            font-size: 10px;
+            padding: 16px;
+          }
+
+          .docs-page-nav {
+            padding: 20px;
+            flex-direction: column;
+            gap: 12px;
+          }
+        }
+      `}</style>
+    </div>
+  );
+}
