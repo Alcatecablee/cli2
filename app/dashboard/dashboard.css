@@ -64,7 +64,16 @@
 .dashboard-container {
   display: flex;
   height: 100vh;
-  background: #000000;
+  background: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.95) 0%,
+    rgba(15, 15, 15, 0.9) 25%,
+    rgba(0, 0, 0, 0.98) 50%,
+    rgba(10, 10, 10, 0.92) 75%,
+    rgba(0, 0, 0, 0.96) 100%
+  );
+  backdrop-filter: blur(20px) saturate(1.8);
+  -webkit-backdrop-filter: blur(20px) saturate(1.8);
   font-family: var(--font-sans);
   overflow: hidden;
   position: relative;
