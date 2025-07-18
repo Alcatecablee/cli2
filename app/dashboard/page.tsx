@@ -944,6 +944,13 @@ export default function Dashboard() {
     loadSubscriptionData,
   ]);
 
+  // Load collaboration sessions when collaborate section is opened
+  useEffect(() => {
+    if (dashboardState.activeSection === "collaborate" && user?.id) {
+      loadCollaborationSessions();
+    }
+  }, [dashboardState.activeSection, user?.id, loadCollaborationSessions]);
+
   // Show loading screen while checking authentication (bypassed for dashboard)
   if (!isHydrated && !forceBypassLoading && false) {
     // Disabled loading condition
