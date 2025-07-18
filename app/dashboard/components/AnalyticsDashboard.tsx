@@ -207,7 +207,7 @@ export default function AnalyticsDashboard({
           {/* Key Metrics */}
           <div className="metrics-grid">
             <div className="metric-card">
-              <div className="metric-icon">����</div>
+              <div className="metric-icon">📊</div>
               <div className="metric-content">
                 <div className="metric-value">{analytics.totalAnalyses}</div>
                 <div className="metric-label">Total Analyses</div>
