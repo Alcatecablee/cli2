@@ -51,14 +51,33 @@ export interface UserSettings {
 function safeLogError(error: any, prefix: string): void {
   if (error instanceof Error) {
     console.error(prefix, error.message);
-  } else if (typeof error === "object" && error !== null) {
-    console.error(prefix, {
-      message: error.message || "Unknown error",
-      code: error.code || "",
-    });
-  } else {
-    console.error(prefix, String(error));
+    return;
   }
+
+  if (typeof error === "object" && error !== null) {
+    // Extract Supabase error details safely
+    const errorDetails: any = {};
+
+    // Common Supabase error properties
+    if (typeof error.message === "string") errorDetails.message = error.message;
+    if (typeof error.code === "string") errorDetails.code = error.code;
+    if (typeof error.details === "string") errorDetails.details = error.details;
+    if (typeof error.hint === "string") errorDetails.hint = error.hint;
+
+    // If no recognizable properties, try to get a string representation
+    if (Object.keys(errorDetails).length === 0) {
+      try {
+        errorDetails.raw = JSON.stringify(error);
+      } catch {
+        errorDetails.raw = "[Circular object]";
+      }
+    }
+
+    console.error(prefix, errorDetails);
+    return;
+  }
+
+  console.error(prefix, String(error));
 }
 
 // Helper function to create authenticated Supabase client
