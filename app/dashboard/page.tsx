@@ -106,6 +106,8 @@ interface DashboardState {
   progressStatus: string;
   uploadProgress: number;
   subscriptionData: SubscriptionData;
+  collaborationSessions: any[];
+  loadingSessions: boolean;
 }
 
 const sampleFiles = {
@@ -2137,7 +2139,10 @@ export default function Dashboard() {
           {/* Analysis History Tab */}
           {dashboardState.activeSection === "history" && (
             <div className="tab-content">
-              <div className="history-header" style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+              <div
+                className="history-header"
+                style={{ display: "flex", alignItems: "center", gap: "12px" }}
+              >
                 <h3 style={{ margin: 0 }}>Analysis History</h3>
                 <input
                   type="text"
