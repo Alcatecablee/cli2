@@ -239,7 +239,7 @@ export default function WhatIsNeuroLintPage() {
 
         {/* Rule-Based Approach */}
         <div className="docs-section">
-          <h2 id="rule-based-approach">📐 The Rule-Based Approach</h2>
+          <h2 id="rule-based-approach">The Rule-Based Approach</h2>
 
           <div className="docs-highlight-box info">
             <h3>🎯 Why Rules, Not AI?</h3>
