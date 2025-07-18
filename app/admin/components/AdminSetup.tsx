@@ -244,6 +244,18 @@ export default function AdminSetup() {
           border-left-color: #f44336;
         }
 
+        .result-operation {
+          font-size: 0.9rem;
+          color: rgba(255, 255, 255, 0.9);
+          margin-bottom: 4px;
+        }
+
+        .result-details {
+          font-size: 0.8rem;
+          color: rgba(255, 255, 255, 0.7);
+          margin-bottom: 4px;
+        }
+
         .result-sql {
           font-family: var(--font-mono);
           font-size: 0.85rem;
