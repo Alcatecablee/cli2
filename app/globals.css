@@ -538,6 +538,65 @@ body {
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
+/* Brand Logo with Floating Bee Effect */
+.brand-logo {
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+}
+
+.brand-logo:hover,
+.brand-logo:focus {
+  background: rgba(33, 150, 243, 0.08);
+  border-color: rgba(33, 150, 243, 0.3);
+  outline: 2px solid rgba(33, 150, 243, 0.4);
+  outline-offset: 2px;
+  box-shadow: 0 0 12px rgba(33, 150, 243, 0.2);
+}
+
+.brand-logo img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  transition: all 0.3s ease;
+  filter: brightness(1.1) contrast(1.1);
+  animation: beeFloat 6s ease-in-out infinite;
+}
+
+.brand-logo:hover img {
+  transform: scale(1.1);
+  filter: brightness(1.2) contrast(1.2);
+}
+
+@keyframes beeFloat {
+  0% {
+    transform: translateY(0px) translateX(0px) rotate(0deg) scale(1);
+  }
+  25% {
+    transform: translateY(-3px) translateX(2px) rotate(5deg) scale(1.05);
+  }
+  50% {
+    transform: translateY(0px) translateX(-1px) rotate(-3deg) scale(1);
+  }
+  75% {
+    transform: translateY(2px) translateX(1px) rotate(2deg) scale(0.95);
+  }
+  100% {
+    transform: translateY(0px) translateX(0px) rotate(0deg) scale(1);
+  }
+}
+
 .onboarding-progress {
   margin-bottom: 2rem;
   text-align: center;
