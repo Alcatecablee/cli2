@@ -88,7 +88,38 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Run analysis
+    // Check for session locking
+    if (
+      sessionLocking &&
+      session.is_locked &&
+      session.host_user_id !== userId
+    ) {
+      return NextResponse.json(
+        { error: "Session is locked by host" },
+        { status: 403 },
+      );
+    }
+
+    // Implement collaborative conflict resolution
+    const conflictCheck = await checkForConflicts(
+      sessionId,
+      userId,
+      code,
+      conflictResolution,
+    );
+
+    if (conflictCheck.hasConflict && conflictResolution === "strict") {
+      return NextResponse.json(
+        {
+          error: "Conflict detected",
+          conflictDetails: conflictCheck.details,
+          requiresResolution: true,
+        },
+        { status: 409 },
+      );
+    }
+
+    // Run analysis with enhanced collaborative options
     const result = await engine(
       code,
       session.document_filename,
@@ -98,10 +129,22 @@ export async function POST(request: NextRequest) {
         isApi: true,
         singleFile: true,
         verbose: false,
-        collaborative: true,
+        // Enhanced collaborative options
+        collaborative,
+        realTimeUpdates,
+        participantId: participantId || userId,
         sessionId,
         userId,
         userName,
+        sessionLocking,
+        conflictResolution,
+        // Additional collaborative metadata
+        sessionMetadata: {
+          isLocked: session.is_locked,
+          hostId: session.host_user_id,
+          participantCount: getParticipantCount(sessionId),
+          lastActivity: session.last_activity,
+        },
       },
     );
 
