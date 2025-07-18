@@ -186,49 +186,46 @@ export default function CollaborationDashboard({
   const loadActivity = useCallback(async () => {
     setLoadingActivity(true);
     try {
-      // Mock activities for now - in production, fetch from API
-      await new Promise((resolve) => setTimeout(resolve, 800)); // Simulate API call
-      const mockActivities: Activity[] = [
-        {
-          id: "act1",
-          type: "session_created",
-          sessionId: sessions[0]?.id,
-          userId: user.id,
-          userName: user.firstName || user.email || "You",
-          timestamp: new Date(Date.now() - 1000 * 60 * 10), // 10 minutes ago
-          details: { sessionName: "React Component Review" },
+      const response = await fetch("/api/collaboration/activity", {
+        headers: {
+          "x-user-id": user.id,
+          "x-user-name": user.firstName || user.email || "Anonymous",
         },
-        {
-          id: "act2",
-          type: "session_joined",
-          sessionId: sessions[0]?.id,
-          userId: "member1",
-          userName: "Sarah Chen",
-          timestamp: new Date(Date.now() - 1000 * 60 * 15), // 15 minutes ago
-          details: { sessionName: "React Component Review" },
-        },
-        {
-          id: "act3",
-          type: "document_edited",
-          sessionId: sessions[0]?.id,
-          userId: "member2",
-          userName: "Alex Rodriguez",
-          timestamp: new Date(Date.now() - 1000 * 60 * 25), // 25 minutes ago
-          details: { filename: "ProductCard.tsx", linesChanged: 23 },
-        },
-        {
-          id: "act4",
-          type: "analysis_run",
-          sessionId: sessions[0]?.id,
-          userId: user.id,
-          userName: user.firstName || user.email || "You",
-          timestamp: new Date(Date.now() - 1000 * 60 * 35), // 35 minutes ago
-          details: { layers: [1, 2, 3], issuesFound: 5 },
-        },
-      ];
-      setActivities(mockActivities);
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const formattedActivities: Activity[] = data.activities.map(
+          (activity: any) => ({
+            id: activity.id,
+            type: activity.type,
+            sessionId: activity.session_id,
+            userId: activity.user_id,
+            userName: activity.user_name,
+            timestamp: new Date(activity.timestamp),
+            details: activity.details,
+          }),
+        );
+        setActivities(formattedActivities);
+      } else {
+        console.error("Failed to load activity:", response.statusText);
+        // Fallback to sample activities for demo
+        const sampleActivities: Activity[] = [
+          {
+            id: "sample1",
+            type: "session_created",
+            sessionId: sessions[0]?.id,
+            userId: user.id,
+            userName: user.firstName || user.email || "You",
+            timestamp: new Date(Date.now() - 1000 * 60 * 10),
+            details: { sessionName: sessions[0]?.name || "Sample Session" },
+          },
+        ];
+        setActivities(sampleActivities);
+      }
     } catch (error) {
       console.error("Failed to load activity:", error);
+      setActivities([]);
     } finally {
       setLoadingActivity(false);
     }
