@@ -17,6 +17,13 @@ interface SetupState {
   instructions?: {
     message: string;
     tables: string[];
+    note?: string;
+  };
+  summary?: {
+    totalChecks: number;
+    passed: number;
+    failed: number;
+    recommendation: string;
   };
 }
 
