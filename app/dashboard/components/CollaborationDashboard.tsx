@@ -737,7 +737,7 @@ export default function CollaborationDashboard({
               </div>
             )}
           </div>
-                    {/* Only show header actions when sessions exist to avoid duplication with empty state */}
+          {/* Only show header actions when sessions exist to avoid duplication with empty state */}
           {sessions.length > 0 && (
             <div className="header-actions">
               <button
@@ -758,17 +758,18 @@ export default function CollaborationDashboard({
                 className="btn btn-secondary"
                 onClick={() => setShowInviteModal(true)}
               >
-              <svg
-                viewBox="0 0 24 24"
-                width="16"
-                height="16"
-                fill="currentColor"
-              >
-                <path d="M16 4c0-1.11.89-2 2-2s2 .89 2 2-.89 2-2 2-2-.89-2-2zm4 18v-6h2.5l-2.54-7.63A1.49 1.49 0 0 0 18.5 7.5h-3A1.49 1.49 0 0 0 14.04 8.37L11.5 16H14v6h6zM12.5 11.5c.83 0 1.5-.67 1.5-1.5s-.67-1.5-1.5-1.5S11 9.17 11 10s.67 1.5 1.5 1.5zm-2 1L8.96 15H10v5H4v-5h1.04L3.5 12.5C3.18 11.75 3.73 11 4.54 11h3.92c.81 0 1.36.75 1.04 1.5z" />
-              </svg>
-              Invite Members
-            </button>
-          </div>
+                <svg
+                  viewBox="0 0 24 24"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                >
+                  <path d="M16 4c0-1.11.89-2 2-2s2 .89 2 2-.89 2-2 2-2-.89-2-2zm4 18v-6h2.5l-2.54-7.63A1.49 1.49 0 0 0 18.5 7.5h-3A1.49 1.49 0 0 0 14.04 8.37L11.5 16H14v6h6zM12.5 11.5c.83 0 1.5-.67 1.5-1.5s-.67-1.5-1.5-1.5S11 9.17 11 10s.67 1.5 1.5 1.5zm-2 1L8.96 15H10v5H4v-5h1.04L3.5 12.5C3.18 11.75 3.73 11 4.54 11h3.92c.81 0 1.36.75 1.04 1.5z" />
+                </svg>
+                Invite Members
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Navigation Tabs */}
