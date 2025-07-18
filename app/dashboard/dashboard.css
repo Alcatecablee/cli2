@@ -410,7 +410,7 @@
 
 .nav-item:hover {
   background: rgba(33, 150, 243, 0.08);
-  color: rgb(255, 255, 255);
+  color: #ffffff;
   border-left: 3px solid rgba(33, 150, 243, 0.4);
 }
 
