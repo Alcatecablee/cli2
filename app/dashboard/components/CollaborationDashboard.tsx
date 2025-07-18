@@ -241,6 +241,7 @@ export default function CollaborationDashboard({
 
       wsConnection.current.onclose = () => {
         console.log("[WS] WebSocket connection closed");
+        setConnectionStatus("disconnected");
 
         // Attempt reconnection with exponential backoff
         if (wsReconnectAttempts.current < wsMaxReconnectAttempts) {
