@@ -32,7 +32,7 @@ export default function AdminSetup() {
     }));
 
     try {
-      const response = await adminFetch("/api/admin/setup", {
+      const response = await adminFetch("/api/admin/setup-simple", {
         method: "POST",
       });
 
