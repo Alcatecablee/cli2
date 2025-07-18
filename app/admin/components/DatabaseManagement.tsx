@@ -160,8 +160,10 @@ export default function DatabaseManagement() {
   };
 
   useEffect(() => {
-    fetchDatabaseData();
-  }, []);
+    if (session?.access_token) {
+      fetchDatabaseData();
+    }
+  }, [session?.access_token]);
 
   const predefinedQueries = [
     {
