@@ -26,7 +26,16 @@ const getNeuroLintEngine = async () => {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { sessionId, layers, dryRun } = body;
+    const {
+      sessionId,
+      layers,
+      dryRun,
+      collaborative = true,
+      realTimeUpdates = true,
+      participantId,
+      sessionLocking = false,
+      conflictResolution = "merge",
+    } = body;
     const userId = request.headers.get("x-user-id");
     const userName = request.headers.get("x-user-name") || "Anonymous";
 
@@ -79,7 +88,38 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Run analysis
+    // Check for session locking
+    if (
+      sessionLocking &&
+      session.is_locked &&
+      session.host_user_id !== userId
+    ) {
+      return NextResponse.json(
+        { error: "Session is locked by host" },
+        { status: 403 },
+      );
+    }
+
+    // Implement collaborative conflict resolution
+    const conflictCheck = await checkForConflicts(
+      sessionId,
+      userId,
+      code,
+      conflictResolution,
+    );
+
+    if (conflictCheck.hasConflict && conflictResolution === "strict") {
+      return NextResponse.json(
+        {
+          error: "Conflict detected",
+          conflictDetails: conflictCheck.details,
+          requiresResolution: true,
+        },
+        { status: 409 },
+      );
+    }
+
+    // Run analysis with enhanced collaborative options
     const result = await engine(
       code,
       session.document_filename,
@@ -89,10 +129,22 @@ export async function POST(request: NextRequest) {
         isApi: true,
         singleFile: true,
         verbose: false,
-        collaborative: true,
+        // Enhanced collaborative options
+        collaborative,
+        realTimeUpdates,
+        participantId: participantId || userId,
         sessionId,
         userId,
         userName,
+        sessionLocking,
+        conflictResolution,
+        // Additional collaborative metadata
+        sessionMetadata: {
+          isLocked: session.is_locked,
+          hostId: session.host_user_id,
+          participantCount: getParticipantCount(sessionId),
+          lastActivity: session.last_activity,
+        },
       },
     );
 
@@ -187,5 +239,111 @@ export async function GET(request: NextRequest) {
       { error: "Internal server error" },
       { status: 500 },
     );
+  }
+}
+
+// Helper Functions for Collaborative Features
+
+async function checkForConflicts(
+  sessionId: string,
+  userId: string,
+  currentCode: string,
+  conflictResolution: string,
+): Promise<{ hasConflict: boolean; details?: any }> {
+  try {
+    // Get recent analyses to detect potential conflicts
+    const recentAnalyses = [];
+    if (dataStore.collaborationAnalysis) {
+      for (const [key, analysis] of dataStore.collaborationAnalysis.entries()) {
+        if (
+          key.startsWith(`${sessionId}_`) &&
+          analysis.triggered_by !== userId &&
+          new Date(analysis.created_at).getTime() > Date.now() - 60000
+        ) {
+          // Last minute
+          recentAnalyses.push(analysis);
+        }
+      }
+    }
+
+    // If no recent activity from others, no conflict
+    if (recentAnalyses.length === 0) {
+      return { hasConflict: false };
+    }
+
+    // Simple conflict detection based on code differences
+    const lastAnalysis = recentAnalyses[0];
+    const codeDifference = Math.abs(
+      currentCode.length - lastAnalysis.input_code.length,
+    );
+    const significantChange = codeDifference > 50; // Threshold for significant changes
+
+    if (significantChange && conflictResolution === "strict") {
+      return {
+        hasConflict: true,
+        details: {
+          lastModifiedBy: lastAnalysis.triggered_by_name,
+          lastModified: lastAnalysis.created_at,
+          codeDifference,
+          suggestedResolution: "merge",
+        },
+      };
+    }
+
+    return { hasConflict: false };
+  } catch (error) {
+    console.error("Error checking conflicts:", error);
+    return { hasConflict: false };
+  }
+}
+
+function getParticipantCount(sessionId: string): number {
+  let count = 0;
+  for (const [
+    key,
+    participant,
+  ] of dataStore.collaborationParticipants.entries()) {
+    if (key.startsWith(`${sessionId}_`) && participant.is_active) {
+      count++;
+    }
+  }
+  return count;
+}
+
+function mergeCodeChanges(
+  baseCode: string,
+  userChanges: string,
+  otherChanges: string[],
+  strategy: "merge" | "overwrite" | "manual",
+): { mergedCode: string; conflicts: any[] } {
+  // Simple merge strategy - in production, use more sophisticated diff/merge algorithm
+  switch (strategy) {
+    case "overwrite":
+      return { mergedCode: userChanges, conflicts: [] };
+
+    case "merge":
+      // Basic line-by-line merge
+      const baseLines = baseCode.split("\n");
+      const userLines = userChanges.split("\n");
+      const mergedLines = [...userLines]; // Start with user changes
+
+      // This is a simplified merge - production should use proper 3-way merge
+      return { mergedCode: mergedLines.join("\n"), conflicts: [] };
+
+    case "manual":
+      return {
+        mergedCode: baseCode,
+        conflicts: [
+          {
+            type: "manual_resolution_required",
+            baseCode,
+            userChanges,
+            otherChanges,
+          },
+        ],
+      };
+
+    default:
+      return { mergedCode: userChanges, conflicts: [] };
   }
 }

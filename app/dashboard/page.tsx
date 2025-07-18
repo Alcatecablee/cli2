@@ -8,13 +8,12 @@ import dataService from "../../lib/supabase-data-unified";
 import "./dashboard.css";
 import "./integrations.css";
 import "./collaboration-styles.css";
+import "./collaboration-enhanced.css";
 import GitHubIntegrationFixed from "./components/GitHubIntegrationFixed";
 import AnalyticsDashboard from "./components/AnalyticsDashboard";
 import ApiKeysManager from "./components/ApiKeysManager";
 import SystemStatus from "./components/SystemStatus";
 import ErrorBoundary from "./components/ErrorBoundary";
-import dynamic from "next/dynamic";
-const Overview = dynamic(() => import("./components/Overview"), { ssr: false });
 
 // Import the same result interfaces from the demo
 interface DemoResult {
@@ -93,6 +92,47 @@ interface SubscriptionData {
   error: string | null;
 }
 
+interface CollaborationTeam {
+  id: string;
+  name: string;
+  description: string;
+  members: Array<{
+    id: string;
+    name: string;
+    email: string;
+    role: "owner" | "admin" | "member";
+    avatar?: string;
+    status: "online" | "offline" | "away";
+    lastSeen: Date;
+  }>;
+  settings: {
+    defaultPermissions: "read" | "write" | "admin";
+    allowInvites: boolean;
+    requireApproval: boolean;
+  };
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+interface CollaborationActivity {
+  id: string;
+  type:
+    | "session_created"
+    | "session_joined"
+    | "session_left"
+    | "document_edited"
+    | "comment_added"
+    | "analysis_run"
+    | "member_invited"
+    | "member_joined";
+  sessionId?: string;
+  userId: string;
+  userName: string;
+  userAvatar?: string;
+  timestamp: Date;
+  details: any;
+}
+
 interface DashboardState {
   isLoading: boolean;
   currentFile: string | null;
@@ -108,6 +148,12 @@ interface DashboardState {
   progressStatus: string;
   uploadProgress: number;
   subscriptionData: SubscriptionData;
+  collaborationSessions: any[];
+  loadingSessions: boolean;
+  collaborationTeams: CollaborationTeam[];
+  collaborationActivity: CollaborationActivity[];
+  loadingTeams: boolean;
+  loadingActivity: boolean;
 }
 
 const sampleFiles = {
@@ -252,6 +298,12 @@ export default function Dashboard() {
       loading: false,
       error: null,
     },
+    collaborationSessions: [],
+    loadingSessions: false,
+    collaborationTeams: [],
+    collaborationActivity: [],
+    loadingTeams: false,
+    loadingActivity: false,
   });
 
   // Search & filter for analysis history
@@ -277,19 +329,31 @@ export default function Dashboard() {
       console.warn("Clipboard API failed, trying fallback:", err);
     }
 
-    // Fallback method using textarea
+    // Optimized fallback method using textarea
     try {
       const textArea = document.createElement("textarea");
       textArea.value = text;
-      textArea.style.position = "fixed";
-      textArea.style.left = "-999999px";
-      textArea.style.top = "-999999px";
-      document.body.appendChild(textArea);
-      textArea.focus();
-      textArea.select();
+      // Use efficient CSS to avoid layout calculations
+      textArea.style.cssText =
+        "position:absolute;left:-9999px;top:-9999px;opacity:0;pointer-events:none;";
 
-      const successful = document.execCommand("copy");
-      document.body.removeChild(textArea);
+      // Use requestAnimationFrame to avoid forced reflow
+      let successful = false;
+      await new Promise<void>((resolve) => {
+        requestAnimationFrame(() => {
+          document.body.appendChild(textArea);
+          textArea.select();
+          successful = document.execCommand("copy");
+
+          // Cleanup in next frame
+          requestAnimationFrame(() => {
+            if (textArea.parentNode) {
+              document.body.removeChild(textArea);
+            }
+            resolve();
+          });
+        });
+      });
 
       if (successful) {
         console.log(`${type} code copied to clipboard (fallback)`);
@@ -298,27 +362,30 @@ export default function Dashboard() {
       }
     } catch (fallbackErr) {
       console.error("All copy methods failed:", fallbackErr);
-      // Show user a manual copy option
-      const modal = document.createElement("div");
-      modal.style.cssText = `
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background: rgba(0, 0, 0, 0.9);
-        color: white;
-        padding: 20px;
-        border-radius: 8px;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        z-index: 10000;
-        max-width: 90vw;
-        max-height: 80vh;
-        overflow: auto;
-        backdrop-filter: blur(10px);
-      `;
+      // Show user a manual copy option - optimized to prevent reflows
+      requestAnimationFrame(() => {
+        const modal = document.createElement("div");
+        modal.style.cssText = `
+          position: fixed;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          background: rgba(0, 0, 0, 0.9);
+          color: white;
+          padding: 20px;
+          border-radius: 8px;
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          z-index: 10000;
+          max-width: 90vw;
+          max-height: 80vh;
+          overflow: auto;
+          backdrop-filter: blur(10px);
+          opacity: 0;
+          transition: opacity 0.2s ease;
+        `;
 
-      const content = document.createElement("div");
-      content.innerHTML = `
+        const content = document.createElement("div");
+        content.innerHTML = `
                 <h3 style="margin-top: 0; color: rgba(33, 150, 243, 0.9);">Copy Code Manually</h3>
         <p style="color: rgba(255, 255, 255, 0.8);">Please copy the code below manually:</p>
         <textarea readonly style="
@@ -345,15 +412,21 @@ export default function Dashboard() {
         ">Close</button>
       `;
 
-      modal.appendChild(content);
-      document.body.appendChild(modal);
+        modal.appendChild(content);
+        document.body.appendChild(modal);
 
-      // Auto-select the text in the textarea
-      const textarea = modal.querySelector("textarea") as HTMLTextAreaElement;
-      if (textarea) {
-        textarea.select();
-        textarea.focus();
-      }
+        // Auto-select the text in the textarea
+        const textarea = modal.querySelector("textarea") as HTMLTextAreaElement;
+        if (textarea) {
+          textarea.select();
+          textarea.focus();
+        }
+
+        // Fade in the modal
+        requestAnimationFrame(() => {
+          modal.style.opacity = "1";
+        });
+      });
     }
   };
 
@@ -520,7 +593,9 @@ export default function Dashboard() {
         if (!response.ok) {
           let errorMessage = "Analysis failed";
           try {
-            const errorResult = await response.json();
+            // Clone response to avoid "body stream already read" error
+            const responseClone = response.clone();
+            const errorResult = await responseClone.json();
             errorMessage = errorResult.error || errorMessage;
           } catch (jsonError) {
             // If response isn't JSON, use status text or default message
@@ -741,21 +816,63 @@ export default function Dashboard() {
                 }));
               }
             } catch (settingsError) {
-              console.error(
-                "Error fetching user settings:",
-                settingsError instanceof Error
-                  ? settingsError.message
-                  : String(settingsError),
-              );
+              // Enhanced error handling to prevent uncaught exceptions
+              const errorMessage = (() => {
+                if (settingsError instanceof Error) {
+                  return settingsError.message;
+                }
+                if (
+                  typeof settingsError === "object" &&
+                  settingsError !== null
+                ) {
+                  try {
+                    // Safely extract error information without consuming response bodies
+                    const errorObj = {};
+                    if (settingsError.message)
+                      errorObj.message = settingsError.message;
+                    if (settingsError.code) errorObj.code = settingsError.code;
+                    if (settingsError.status)
+                      errorObj.status = settingsError.status;
+                    return Object.keys(errorObj).length > 0
+                      ? Object.entries(errorObj)
+                          .map(([k, v]) => `${k}: ${v}`)
+                          .join(", ")
+                      : "Unknown object error";
+                  } catch {
+                    return "Error object processing failed";
+                  }
+                }
+                return String(settingsError);
+              })();
+
+              console.error("Error fetching user settings:", errorMessage);
               // Continue with default settings - this is not a critical error
             }
           } catch (error) {
-            const errorMessage =
-              error instanceof Error
-                ? error.message
-                : typeof error === "object" && error !== null
-                  ? JSON.stringify(error)
-                  : String(error);
+            // Enhanced error handling to prevent response body consumption issues
+            const errorMessage = (() => {
+              if (error instanceof Error) {
+                return error.message;
+              }
+              if (typeof error === "object" && error !== null) {
+                try {
+                  // Safely extract error information without consuming response bodies
+                  const errorObj = {};
+                  if (error.message) errorObj.message = error.message;
+                  if (error.code) errorObj.code = error.code;
+                  if (error.status) errorObj.status = error.status;
+                  if (error.details) errorObj.details = error.details;
+                  return Object.keys(errorObj).length > 0
+                    ? Object.entries(errorObj)
+                        .map(([k, v]) => `${k}: ${v}`)
+                        .join(", ")
+                    : "Unknown object error";
+                } catch {
+                  return "Error object processing failed";
+                }
+              }
+              return String(error);
+            })();
             console.error("Error loading Supabase data:", errorMessage);
             // Fall back to localStorage
             const savedProjects =
@@ -838,7 +955,30 @@ export default function Dashboard() {
             .catch((e) => console.error("Failed to load session info:", e));
         }
       } catch (error) {
-        console.error("Error loading dashboard data:", error);
+        // Enhanced top-level error handling
+        const errorMessage = (() => {
+          if (error instanceof Error) {
+            return error.message;
+          }
+          if (typeof error === "object" && error !== null) {
+            try {
+              // Safely extract error information
+              const errorObj = {};
+              if (error.message) errorObj.message = error.message;
+              if (error.name) errorObj.name = error.name;
+              if (error.code) errorObj.code = error.code;
+              return Object.keys(errorObj).length > 0
+                ? Object.entries(errorObj)
+                    .map(([k, v]) => `${k}: ${v}`)
+                    .join(", ")
+                : "Unknown error object";
+            } catch {
+              return "Error processing failed";
+            }
+          }
+          return String(error);
+        })();
+        console.error("Error loading dashboard data:", errorMessage);
       }
     };
 
@@ -862,6 +1002,37 @@ export default function Dashboard() {
     session?.access_token,
     loadSubscriptionData,
   ]);
+
+  // Load collaboration sessions when collaborate section is opened
+  useEffect(() => {
+    if (dashboardState.activeSection === "collaborate" && user?.id) {
+      const loadSessions = async () => {
+        setDashboardState((prev) => ({ ...prev, loadingSessions: true }));
+        try {
+          const response = await fetch("/api/collaboration/sessions", {
+            headers: {
+              "x-user-id": user.id,
+              "x-user-name": user.firstName || user.email || "Anonymous",
+            },
+          });
+          if (response.ok) {
+            const data = await response.json();
+            setDashboardState((prev) => ({
+              ...prev,
+              collaborationSessions: data.sessions || [],
+              loadingSessions: false,
+            }));
+          } else {
+            setDashboardState((prev) => ({ ...prev, loadingSessions: false }));
+          }
+        } catch (error) {
+          console.error("Failed to load collaboration sessions:", error);
+          setDashboardState((prev) => ({ ...prev, loadingSessions: false }));
+        }
+      };
+      loadSessions();
+    }
+  }, [dashboardState.activeSection, user]);
 
   // Show loading screen while checking authentication (bypassed for dashboard)
   if (!isHydrated && !forceBypassLoading && false) {
@@ -1584,133 +1755,58 @@ export default function Dashboard() {
           {/* Collaborate Tab */}
           {dashboardState.activeSection === "collaborate" && (
             <div className="tab-content">
-              <div className="collaborate-overview">
-                <h3>Real-time Collaboration</h3>
-                <p className="tab-description">
-                  Code together with your team using NeuroLint Pro's real-time
-                  collaborative editor.
-                </p>
-
-                <div className="collaborate-features">
-                  <div className="feature-grid">
-                    <div className="feature-card">
-                      <div className="feature-icon">
-                        <svg
-                          viewBox="0 0 24 24"
-                          width="24"
-                          height="24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                        >
-                          <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
-                          <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
-                        </svg>
-                      </div>
-                      <h4>Live Code Editing</h4>
-                      <p>
-                        Edit code together with real-time cursors and
-                        synchronized changes.
-                      </p>
-                    </div>
-
-                    <div className="feature-card">
-                      <div className="feature-icon">
-                        <svg
-                          viewBox="0 0 24 24"
-                          width="24"
-                          height="24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                        >
-                          <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
-                        </svg>
-                      </div>
-                      <h4>Team Chat</h4>
-                      <p>
-                        Built-in chat and commenting system for seamless
-                        communication.
-                      </p>
-                    </div>
-
-                    <div className="feature-card">
-                      <div className="feature-icon">
-                        <svg
-                          viewBox="0 0 24 24"
-                          width="24"
-                          height="24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                        >
-                          <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
-                          <polyline points="14,2 14,8 20,8" />
-                          <line x1="16" y1="13" x2="8" y2="13" />
-                          <line x1="16" y1="17" x2="8" y2="17" />
-                        </svg>
-                      </div>
-                      <h4>Shared NeuroLint Analysis</h4>
-                      <p>
-                        Run collaborative code analysis with results visible to
-                        all team members.
-                      </p>
-                    </div>
-
-                    <div className="feature-card">
-                      <div className="feature-icon">
-                        <svg
-                          viewBox="0 0 24 24"
-                          width="24"
-                          height="24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                        >
-                          <circle cx="12" cy="12" r="3" />
-                          <path d="M12 1v6m0 6v6m11-7h-6m-6 0H1" />
-                        </svg>
-                      </div>
-                      <h4>Session Management</h4>
-                      <p>
-                        Create and join coding sessions with invite links and
-                        host controls.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="collaborate-actions">
-                  <Link href="/collaborate" className="btn btn-primary">
-                    Start Collaboration Session
-                  </Link>
-                  <button
-                    className="btn btn-secondary"
-                    onClick={() => {
-                      const sessionId = prompt("Enter session ID to join:");
-                      if (sessionId) {
-                        window.location.href = `/collaborate?session=${sessionId}`;
-                      }
-                    }}
-                  >
-                    Join Session by ID
-                  </button>
-                </div>
-
-                <div className="collaborate-info">
-                  <h4>Getting Started</h4>
-                  <ol className="getting-started-steps">
-                    <li>
-                      Click "Start Collaboration Session" to create a new
-                      session
-                    </li>
-                    <li>Share the session link with your team members</li>
-                    <li>Code together with live cursors and real-time sync</li>
-                    <li>Use built-in chat and comments for communication</li>
-                    <li>Run NeuroLint Pro analysis collaboratively</li>
-                  </ol>
-                </div>
-              </div>
+              <CollaborationDashboard
+                user={user}
+                sessions={dashboardState.collaborationSessions}
+                loadingSessions={dashboardState.loadingSessions}
+                onRefreshSessions={async () => {
+                  if (!user?.id) return;
+                  setDashboardState((prev) => ({
+                    ...prev,
+                    loadingSessions: true,
+                  }));
+                  try {
+                    const response = await fetch(
+                      "/api/collaboration/sessions",
+                      {
+                        headers: {
+                          "x-user-id": user.id,
+                          "x-user-name":
+                            user.firstName || user.email || "Anonymous",
+                        },
+                      },
+                    );
+                    if (response.ok) {
+                      const data = await response.json();
+                      setDashboardState((prev) => ({
+                        ...prev,
+                        collaborationSessions: data.sessions || [],
+                        loadingSessions: false,
+                      }));
+                    } else {
+                      setDashboardState((prev) => ({
+                        ...prev,
+                        loadingSessions: false,
+                      }));
+                    }
+                  } catch (error) {
+                    console.error(
+                      "Failed to load collaboration sessions:",
+                      error,
+                    );
+                    setDashboardState((prev) => ({
+                      ...prev,
+                      loadingSessions: false,
+                    }));
+                  }
+                }}
+                onUpdateSessions={(sessions) => {
+                  setDashboardState((prev) => ({
+                    ...prev,
+                    collaborationSessions: sessions,
+                  }));
+                }}
+              />
             </div>
           )}
 
@@ -2160,7 +2256,10 @@ export default function Dashboard() {
           {/* Analysis History Tab */}
           {dashboardState.activeSection === "history" && (
             <div className="tab-content">
-              <div className="history-header" style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+              <div
+                className="history-header"
+                style={{ display: "flex", alignItems: "center", gap: "12px" }}
+              >
                 <h3 style={{ margin: 0 }}>Analysis History</h3>
                 <input
                   type="text"
@@ -2541,7 +2640,9 @@ export default function Dashboard() {
                           if (!response.ok) {
                             let errorMessage = "Export failed";
                             try {
-                              const errorResult = await response.json();
+                              // Clone response to avoid "body stream already read" error
+                              const responseClone = response.clone();
+                              const errorResult = await responseClone.json();
                               errorMessage = errorResult.error || errorMessage;
                             } catch (jsonError) {
                               errorMessage =

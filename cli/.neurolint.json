@@ -1,0 +1,25 @@
+{
+  "version": "1.0.0",
+  "layers": {
+    "enabled": [1, 2, 3, 4],
+    "config": {
+      "1": { "name": "Configuration Validation", "timeout": 30000 },
+      "2": { "name": "Pattern & Entity Fixes", "timeout": 45000 },
+      "3": { "name": "Component Best Practices", "timeout": 60000 },
+      "4": { "name": "Hydration & SSR Guard", "timeout": 45000 }
+    }
+  },
+  "files": {
+    "include": ["**/*.{ts,tsx,js,jsx}"],
+    "exclude": ["node_modules/**", "dist/**", "build/**"]
+  },
+  "output": {
+    "format": "table",
+    "verbose": false
+  },
+  "api": {
+    "url": "http://localhost:5000",
+    "timeout": 60000
+  },
+  "apiKey": "test_api_key_for_cli"
+}

@@ -1,6 +1,8 @@
 import React from "react";
 import type { Metadata } from "next";
 import Script from "next/script";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { AuthProvider } from "../lib/auth-context";
 import ScrollToTop from "../src/components/ScrollToTop";
 import "./globals.css";
@@ -41,6 +43,8 @@ export default function RootLayout({
         <div className="shooting-star"></div>
         <div className="shooting-star"></div>
         <AuthProvider>{children}</AuthProvider>
+        <Analytics />
+        <SpeedInsights />
         <Script
           src="https://www.paypal.com/sdk/js?client-id=AaZabZwUPYitlE5MOXwohkXxtMzI7GaSArFxw7JYMIDfZE_PHvsMzY1WEsZk_QwTdek4SEpjj_DC5ys7&currency=USD&intent=capture&enable-funding=venmo,card"
           strategy="lazyOnload"

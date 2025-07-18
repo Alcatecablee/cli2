@@ -195,7 +195,9 @@ export default function CollaboratePage() {
       });
 
       if (!response.ok) {
-        const errorData = await response
+        // Clone response to avoid "body stream already read" error
+        const responseClone = response.clone();
+        const errorData = await responseClone
           .json()
           .catch(() => ({ error: "Network error" }));
         throw new Error(errorData.error || `HTTP ${response.status}`);

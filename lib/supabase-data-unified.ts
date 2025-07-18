@@ -4,6 +4,47 @@ import {
   setSupabaseSession,
 } from "./supabase-client";
 
+// Utility to safely handle responses that might be read multiple times
+function createSafeResponse(response: any): any {
+  if (!response || typeof response !== "object") {
+    return response;
+  }
+
+  // If it's already a cloned or safe response, return as-is
+  if (response._isSafeResponse) {
+    return response;
+  }
+
+  // Create a safe wrapper that prevents multiple consumption
+  const safeResponse = {
+    ...response,
+    _isSafeResponse: true,
+    _consumed: false,
+
+    async text() {
+      if (this._consumed) {
+        throw new Error(
+          "Response body already consumed - safe response cannot be read multiple times",
+        );
+      }
+      this._consumed = true;
+      return response.text ? await response.text() : String(response);
+    },
+
+    async json() {
+      if (this._consumed) {
+        throw new Error(
+          "Response body already consumed - safe response cannot be read multiple times",
+        );
+      }
+      this._consumed = true;
+      return response.json ? await response.json() : response;
+    },
+  };
+
+  return safeResponse;
+}
+
 // Types for database objects
 export interface AnalysisHistory {
   id: string;
@@ -39,6 +80,57 @@ export interface UserSettings {
   updated_at?: string;
 }
 
+// Ultra-safe Supabase error handler that completely avoids response body access
+function safeSupabaseErrorHandler(error: any): {
+  formattedError: string;
+  isRetryable: boolean;
+} {
+  // Only access the most basic properties to prevent any response body consumption
+  let formattedError = "Unknown error";
+  let isRetryable = false;
+
+  try {
+    // Extract safe properties without deep object traversal
+    if (error && typeof error === "object") {
+      // Only access known safe properties
+      const safeMessage = error.message;
+      const safeCode = error.code;
+      const safeStatus = error.status;
+
+      if (safeMessage) {
+        formattedError = `Error: ${safeMessage}`;
+      } else if (safeCode) {
+        formattedError = `Error code: ${safeCode}`;
+      } else if (safeStatus) {
+        formattedError = `Status: ${safeStatus}`;
+      }
+
+      // Determine retry-ability from basic properties only
+      if (safeCode && typeof safeCode === "string") {
+        isRetryable = [
+          "ECONNRESET",
+          "ENOTFOUND",
+          "ETIMEDOUT",
+          "ECONNREFUSED",
+        ].includes(safeCode);
+      } else if (safeStatus && typeof safeStatus === "number") {
+        isRetryable = [408, 429, 500, 502, 503, 504].includes(safeStatus);
+      }
+    } else if (error instanceof Error) {
+      formattedError = `${error.name}: ${error.message}`;
+    } else {
+      formattedError = String(error);
+    }
+  } catch (e) {
+    // If even basic property access fails, use minimal fallback
+    formattedError =
+      "Error processing failed - potential response body consumption issue";
+    isRetryable = false;
+  }
+
+  return { formattedError, isRetryable };
+}
+
 // Enhanced error formatting function
 function formatError(error: any): string {
   if (error instanceof Error) {
@@ -46,16 +138,23 @@ function formatError(error: any): string {
   }
 
   if (typeof error === "object" && error !== null) {
-    // Try to extract meaningful error information
+    // Try to extract meaningful error information without consuming response bodies
     const errorObj: any = {};
 
-    // Extract common Supabase error properties
+    // Extract common Supabase/PostgREST error properties safely
     if (error.message) errorObj.message = error.message;
     if (error.details) errorObj.details = error.details;
     if (error.hint) errorObj.hint = error.hint;
     if (error.code) errorObj.code = error.code;
     if (error.status) errorObj.status = error.status;
     if (error.statusText) errorObj.statusText = error.statusText;
+
+    // Handle PostgREST specific error structure
+    if (error.error && typeof error.error === "object") {
+      if (error.error.message) errorObj.message = error.error.message;
+      if (error.error.details) errorObj.details = error.error.details;
+      if (error.error.code) errorObj.code = error.error.code;
+    }
 
     // If we have meaningful properties, format them nicely
     if (Object.keys(errorObj).length > 0) {
@@ -64,12 +163,35 @@ function formatError(error: any): string {
         .join(", ");
     }
 
-    // Fallback to JSON stringify with error handling
-    try {
-      return JSON.stringify(error, null, 2);
-    } catch {
-      return "[Complex object - unable to stringify]";
+    // Avoid trying to stringify objects that might contain response bodies
+    // or other non-serializable properties
+    if (error.constructor && error.constructor.name !== "Object") {
+      return `[${error.constructor.name}]: ${error.toString ? error.toString() : "Unknown error"}`;
     }
+
+    // Safe fallback for plain objects
+    try {
+      // Only stringify if it's a simple object without potential response bodies
+      const safeKeys = Object.keys(error).filter(
+        (key) =>
+          typeof error[key] !== "function" &&
+          !key.includes("body") &&
+          !key.includes("stream") &&
+          !key.includes("response"),
+      );
+
+      if (safeKeys.length > 0) {
+        const safeError = {};
+        safeKeys.forEach((key) => {
+          safeError[key] = error[key];
+        });
+        return JSON.stringify(safeError, null, 2);
+      }
+    } catch {
+      // If JSON.stringify fails, return a safe fallback
+    }
+
+    return "[Complex object - unable to safely stringify]";
   }
 
   return String(error);
@@ -120,7 +242,12 @@ export const dataService = {
         .single();
 
       if (error) {
-        if (error.code === "PGRST116") {
+        // Extract only safe properties immediately to avoid any response body access
+        const errorCode = error.code;
+        const errorStatus = error.status;
+        const errorMessage = error.message;
+
+        if (errorCode === "PGRST116") {
           // No settings found, return default settings without logging error
           console.log(
             `No user settings found for user ${userId}, using defaults`,
@@ -135,8 +262,25 @@ export const dataService = {
           };
         }
 
-        // Log other errors but don't throw
-        console.error("Error fetching user settings:", formatError(error));
+        // Handle 406 errors specifically (Not Acceptable - usually RLS or auth issues)
+        if (errorStatus === 406 || errorCode === "406") {
+          console.warn(
+            `Supabase 406 error for user_settings: This might be due to RLS policies or missing table. Using defaults for user ${userId}`,
+          );
+          return {
+            id: "",
+            user_id: userId,
+            default_layers: [],
+            auto_save: true,
+            notifications: true,
+            theme: "dark",
+          };
+        }
+
+        // Log error without accessing potentially consumed response bodies
+        console.error(
+          `Error fetching user settings: ${errorMessage || errorCode || "Unknown error"}`,
+        );
 
         // Return default settings as fallback
         return {
@@ -151,7 +295,10 @@ export const dataService = {
 
       return data;
     } catch (error) {
-      console.error("Error in getUserSettings:", formatError(error));
+      // Extract only safe properties to avoid response body consumption
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
+      console.error("Error in getUserSettings:", errorMessage);
 
       // Return default settings as ultimate fallback
       return {

@@ -32,6 +32,7 @@ npm run fix-layer-4  # Hydration fixes
 ## 🔧 System Architecture
 
 ### Layer 1: Configuration Fixes
+
 **File:** `fix-layer-1-config.js`
 
 - **TypeScript Configuration**: Updates `tsconfig.json` with modern settings
@@ -45,6 +46,7 @@ npm run fix-layer-4  # Hydration fixes
 - **Package.json**: Optimizes scripts and dependencies
 
 ### Layer 2: Bulk Pattern Fixes
+
 **File:** `fix-layer-2-patterns.js`
 
 - **HTML Entity Corruption**: Fixes `&quot;`, `&#x27;`, `&amp;`
@@ -54,6 +56,7 @@ npm run fix-layer-4  # Hydration fixes
 - **Console Statements**: Converts `console.log` to `console.debug`
 
 ### Layer 3: Component-Specific Fixes
+
 **File:** `fix-layer-3-components.js`
 
 - **Button Components**: Ensures proper variant props
@@ -64,6 +67,7 @@ npm run fix-layer-4  # Hydration fixes
 - **Missing Imports**: Auto-adds missing component imports
 
 ### Layer 4: Hydration and SSR Fixes
+
 **File:** `fix-layer-4-hydration.js`
 
 - **SSR Guards**: Adds `typeof window !== "undefined"` guards for client-only APIs
@@ -72,6 +76,24 @@ npm run fix-layer-4  # Hydration fixes
 - **Document/Window Access**: Protects DOM API calls from SSR errors
 - **Missing Files**: Creates web manifest, robots.txt, and NoSSR component
 - **Client-Only Components**: Wraps components that require client-side rendering
+
+### Layer 5: Next.js App Router Optimization
+
+**File:** `fix-layer-5-nextjs.js`
+
+- **'use client' Directives**: Fixes misplaced client component directives
+- **Import Corruption**: Cleans up corrupted import statements
+- **App Router Patterns**: Ensures proper Next.js 13+ structure
+- **Client Component Structure**: Validates client-side component setup
+
+### Layer 6: Testing and Validation
+
+**File:** `fix-layer-6-testing.js`
+
+- **Error Boundaries**: Adds error handling for critical components
+- **TypeScript Interfaces**: Enhances prop type definitions
+- **Accessibility**: Adds missing ARIA attributes
+- **Performance**: Optimizes component structure
 
 ## 🔍 Problem Detection
 
@@ -85,12 +107,14 @@ The system includes intelligent problem detection that categorizes issues by sev
 ## 📊 Usage Examples
 
 ### Basic Usage
+
 ```bash
 # Run complete automated fixing
 npm run fix-all
 ```
 
 ### Advanced Usage
+
 ```bash
 # Preview changes without applying them
 npm run fix-dry-run
@@ -103,6 +127,7 @@ npm run fix-verbose
 ```
 
 ### Individual Layer Execution
+
 ```bash
 # Fix only configuration issues
 npm run fix-layer-1
@@ -112,6 +137,15 @@ npm run fix-layer-2
 
 # Fix only component issues
 npm run fix-layer-3
+
+# Fix only hydration issues
+npm run fix-layer-4
+
+# Fix only Next.js App Router issues
+npm run fix-layer-5
+
+# Fix only testing and validation
+npm run fix-layer-6
 ```
 
 ## 🛡️ Safety Features
@@ -125,6 +159,7 @@ npm run fix-layer-3
 ## 🎯 Common Fix Patterns
 
 ### HTML Entity Corruption
+
 ```javascript
 // Before
 const message = &quot;Hello World&quot;;
@@ -134,15 +169,21 @@ const message = "Hello World";
 ```
 
 ### Missing Key Props
+
 ```jsx
 // Before
-{items.map(item => <div>{item.name}</div>)}
+{
+  items.map((item) => <div>{item.name}</div>);
+}
 
 // After
-{items.map(item => <div key={item.id}>{item.name}</div>)}
+{
+  items.map((item) => <div key={item.id}>{item.name}</div>);
+}
 ```
 
 ### Button Variants
+
 ```jsx
 // Before
 <Button>Click me</Button>
@@ -152,6 +193,7 @@ const message = "Hello World";
 ```
 
 ### TypeScript Configuration
+
 ```json
 // Before
 {
@@ -170,34 +212,51 @@ const message = "Hello World";
 ```
 
 ### SSR Guards for Client APIs
+
 ```javascript
 // Before
-const savedTheme = localStorage.getItem('theme');
+const savedTheme = localStorage.getItem("theme");
 
 // After
-const savedTheme = typeof window !== 'undefined' && localStorage.getItem('theme');
+const savedTheme =
+  typeof window !== "undefined" && localStorage.getItem("theme");
 ```
 
 ### Theme Provider Hydration
+
 ```jsx
 // Before
 export function ThemeProvider({ children }) {
-  const [theme, setTheme] = useState('light');
-  return <ThemeContext.Provider value={{ theme, setTheme }}>{children}</ThemeContext.Provider>;
+  const [theme, setTheme] = useState("light");
+  return (
+    <ThemeContext.Provider value={{ theme, setTheme }}>
+      {children}
+    </ThemeContext.Provider>
+  );
 }
 
 // After
 export function ThemeProvider({ children }) {
-  const [theme, setTheme] = useState('light');
+  const [theme, setTheme] = useState("light");
   const [mounted, setMounted] = useState(false);
-  
-  useEffect(() => { setMounted(true); }, []);
-  
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   if (!mounted) {
-    return <ThemeContext.Provider value={{ theme: 'light', setTheme: () => {} }}>{children}</ThemeContext.Provider>;
+    return (
+      <ThemeContext.Provider value={{ theme: "light", setTheme: () => {} }}>
+        {children}
+      </ThemeContext.Provider>
+    );
   }
-  
-  return <ThemeContext.Provider value={{ theme, setTheme }}>{children}</ThemeContext.Provider>;
+
+  return (
+    <ThemeContext.Provider value={{ theme, setTheme }}>
+      {children}
+    </ThemeContext.Provider>
+  );
 }
 ```
 
@@ -207,26 +266,30 @@ export function ThemeProvider({ children }) {
 - **Layer 2**: ~10-30 seconds (depends on codebase size)
 - **Layer 3**: ~5-15 seconds (component files only)
 - **Layer 4**: ~5-15 seconds (hydration files only)
-- **Total**: Usually completes in under 1 minute
+- **Layer 5**: ~3-10 seconds (Next.js App Router fixes)
+- **Layer 6**: ~5-20 seconds (testing and validation)
+- **Total**: Usually completes in under 2 minutes
 
 ## 🔧 Customization
 
 ### Adding Custom Patterns
+
 Edit the pattern arrays in each layer script:
 
 ```javascript
 // In fix-layer-2-patterns.js
 const patterns = [
   {
-    name: 'Custom Fix',
+    name: "Custom Fix",
     pattern: /your-pattern/g,
-    replacement: 'your-replacement',
-    fileTypes: ['ts', 'tsx']
-  }
+    replacement: "your-replacement",
+    fileTypes: ["ts", "tsx"],
+  },
 ];
 ```
 
 ### Skipping Specific Fixes
+
 Use the `--skip-layers` option:
 
 ```bash
@@ -244,6 +307,7 @@ node scripts/fix-master.js --skip-layers 2,3
 ### Recovery
 
 If fixes cause issues:
+
 1. Use git to revert changes: `git checkout .`
 2. Run individual layers to isolate the problem
 3. Use `--dry-run` to preview changes first
@@ -269,6 +333,6 @@ To add new fix patterns:
 
 ## 📄 License
 
-This automated fixing system is part of the Taxfy project and follows the same license terms. 
+This automated fixing system is part of the Taxfy project and follows the same license terms.
 
-Built with ❤️ on top of your battle-tested IMPLEMENTATION_PATTERNS.md framework._
+Built with ❤️ on top of your battle-tested IMPLEMENTATION*PATTERNS.md framework.*

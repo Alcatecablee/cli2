@@ -174,27 +174,18 @@ export default function GitHubIntegrationFixed() {
   };
 
   const analyzeRepository = async (repo: GitHubRepository) => {
-    // Check user plan limits
+    // GitHub repository scanning is now free for everyone
     const planLimits = {
-      free: { repositories: 0, filesPerScan: 0 },
-      developer: { repositories: 5, filesPerScan: 50 },
-      professional: { repositories: 25, filesPerScan: 500 },
-      team: { repositories: 100, filesPerScan: 2000 },
-      enterprise: { repositories: -1, filesPerScan: -1 }, // unlimited
+      free: { repositories: -1, filesPerScan: -1 }, // unlimited for free users
+      developer: { repositories: -1, filesPerScan: -1 },
+      professional: { repositories: -1, filesPerScan: -1 },
+      team: { repositories: -1, filesPerScan: -1 },
+      enterprise: { repositories: -1, filesPerScan: -1 },
     };
 
     const userPlan = user?.plan || "free";
     const limits =
       planLimits[userPlan as keyof typeof planLimits] || planLimits.free;
-
-    if (limits.repositories === 0) {
-      setState((prev) => ({
-        ...prev,
-        error:
-          "GitHub repository scanning requires a paid plan. Please upgrade to Developer or higher.",
-      }));
-      return;
-    }
 
     if (!state.accessToken) {
       setState((prev) => ({
@@ -280,18 +271,30 @@ export default function GitHubIntegrationFixed() {
   const getPlanLimits = () => {
     const userPlan = user?.plan || "free";
     const limits = {
-      free: { repositories: "0", filesPerScan: "0", note: "Upgrade required" },
-      developer: { repositories: "5", filesPerScan: "50", note: "Per scan" },
-      professional: {
-        repositories: "25",
-        filesPerScan: "500",
-        note: "Per scan",
+      free: {
+        repositories: "Unlimited",
+        filesPerScan: "Unlimited",
+        note: "Free for everyone",
       },
-      team: { repositories: "100", filesPerScan: "2,000", note: "Per scan" },
+      developer: {
+        repositories: "Unlimited",
+        filesPerScan: "Unlimited",
+        note: "Free for everyone",
+      },
+      professional: {
+        repositories: "Unlimited",
+        filesPerScan: "Unlimited",
+        note: "Free for everyone",
+      },
+      team: {
+        repositories: "Unlimited",
+        filesPerScan: "Unlimited",
+        note: "Free for everyone",
+      },
       enterprise: {
         repositories: "Unlimited",
         filesPerScan: "Unlimited",
-        note: "No limits",
+        note: "Free for everyone",
       },
     };
     return limits[userPlan as keyof typeof limits] || limits.free;
@@ -324,14 +327,6 @@ export default function GitHubIntegrationFixed() {
             <span className="limit-value">{getPlanLimits().filesPerScan}</span>
           </div>
         </div>
-        {(user?.plan === "free" || !user?.plan) && (
-          <div className="upgrade-prompt">
-            <p>GitHub integration requires a paid plan</p>
-            <a href="/pricing" className="upgrade-link">
-              View Plans
-            </a>
-          </div>
-        )}
       </div>
 
       {!state.isConnected ? (
@@ -355,9 +350,7 @@ export default function GitHubIntegrationFixed() {
             <button
               className="connect-btn"
               onClick={handleConnectGitHub}
-              disabled={
-                state.isConnecting || user?.plan === "free" || !user?.plan
-              }
+              disabled={state.isConnecting}
             >
               {state.isConnecting ? "Connecting..." : "Connect GitHub"}
             </button>
