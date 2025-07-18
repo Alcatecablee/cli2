@@ -26,7 +26,16 @@ const getNeuroLintEngine = async () => {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { sessionId, layers, dryRun } = body;
+    const {
+      sessionId,
+      layers,
+      dryRun,
+      collaborative = true,
+      realTimeUpdates = true,
+      participantId,
+      sessionLocking = false,
+      conflictResolution = "merge",
+    } = body;
     const userId = request.headers.get("x-user-id");
     const userName = request.headers.get("x-user-name") || "Anonymous";
 
