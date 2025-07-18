@@ -583,19 +583,18 @@
   position: relative;
 }
 
-/* Clean dashboard title styling */
+/* Minimal dashboard title styling */
 .dashboard-title-container {
-  padding: 32px;
+  padding: 8px 16px;
   text-align: center;
 }
 
 .dashboard-title-container h1 {
-  font-size: 2.5rem;
-  font-weight: 700;
+  font-size: 1.5rem;
+  font-weight: 600;
   color: #ffffff;
   margin: 0;
   font-family: var(--font-sans);
-  letter-spacing: -0.02em;
 }
 
 .header-title h1 {
