@@ -38,7 +38,7 @@ export default function AdminSetup() {
     }));
 
     try {
-      const response = await adminFetch("/api/admin/setup-simple", {
+      const response = await adminFetch("/api/admin/setup-ultra-safe", {
         method: "POST",
       });
 
