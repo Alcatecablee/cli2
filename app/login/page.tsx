@@ -161,18 +161,6 @@ export default function LoginPage() {
               )}
 
               <div style={{ marginBottom: "1.5rem" }}>
-                <label
-                  htmlFor="email"
-                  style={{
-                    display: "block",
-                    fontSize: "0.875rem",
-                    fontWeight: "500",
-                    color: "#ffffff",
-                    marginBottom: "0.5rem",
-                  }}
-                >
-                  Email address
-                </label>
                 <input
                   id="email"
                   name="email"
