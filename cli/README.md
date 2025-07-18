@@ -1,6 +1,6 @@
-# NeuroLint Pro CLI
+# NeuroLint CLI
 
-[![npm version](https://badge.fury.io/js/%40neurolint-pro%2Fcli.svg)](https://badge.fury.io/js/%40neurolint-pro%2Fcli)
+[![npm version](https://badge.fury.io/js/%40neurolint%2Fcli.svg)](https://badge.fury.io/js/%40neurolint%2Fcli)
 [![Repository](https://img.shields.io/badge/Repository-Private-red.svg)](https://github.com/neurolint-pro/neurolint-pro)
 
 > **Premium React/Next.js Code Fixing Service - Command Line Interface**
