@@ -37,6 +37,8 @@ const initDataStore = () => ({
   collaborationParticipants: new Map(),
   collaborationComments: new Map(),
   collaborationAnalysis: new Map(),
+  collaborationPresence: new Map(),
+  collaborationActivity: new Map(),
 
   // Demo rate limiting
   requestCounts: new Map(),
