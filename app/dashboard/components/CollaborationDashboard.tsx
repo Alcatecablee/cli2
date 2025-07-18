@@ -76,6 +76,9 @@ export default function CollaborationDashboard({
   >("all");
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showInviteModal, setShowInviteModal] = useState(false);
+  const [onlineUsers, setOnlineUsers] = useState<
+    Map<string, { userName: string; lastSeen: Date; status: string }>
+  >(new Map());
   const pollInterval = useRef<NodeJS.Timeout | null>(null);
   const activityPollInterval = useRef<NodeJS.Timeout | null>(null);
 
