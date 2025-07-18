@@ -114,8 +114,12 @@ export class ApiClient {
 
       const response = await tempClient.get("/auth/api-keys");
 
-      // Map plan to features
-      const plan = response.data.plan || "free";
+      // Handle different response structures from API
+      const plan =
+        response.data.plan ||
+        response.data.user?.plan ||
+        response.data.apiKey?.plan ||
+        "free";
       const features = this.mapPlanToFeatures(plan);
 
       return {
