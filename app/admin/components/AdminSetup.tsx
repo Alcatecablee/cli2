@@ -62,6 +62,7 @@ export default function AdminSetup() {
         success: data.success,
         results: data.results || [],
         instructions: data.instructions,
+        summary: data.summary,
       }));
 
       // Log successful setup
