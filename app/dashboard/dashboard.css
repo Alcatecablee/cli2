@@ -376,7 +376,6 @@
   border: none;
   color: rgb(102, 102, 102);
   cursor: pointer;
-  transition: var(--transition-smooth);
   text-align: left;
   border-radius: 8px;
   position: relative;
