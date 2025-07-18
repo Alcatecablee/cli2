@@ -205,7 +205,147 @@ export default function CollaborationDashboard({
     };
   }, [activeTab, user.id, user.firstName, user.email, onUpdateSessions]);
 
-  // Cleanup all intervals on unmount
+  // WebSocket connection management
+  const connectWebSocket = useCallback(() => {
+    if (!user?.id || (activeTab !== "sessions" && activeTab !== "activity")) {
+      return;
+    }
+
+    try {
+      const wsUrl = `ws://localhost:3000/api/collaboration/ws?userId=${user.id}&userName=${encodeURIComponent(user.firstName || user.email || "Anonymous")}`;
+      wsConnection.current = new WebSocket(wsUrl);
+
+      wsConnection.current.onopen = () => {
+        console.log("[WS] Connected to collaboration WebSocket");
+        wsReconnectAttempts.current = 0;
+
+        // Send initial ping
+        wsConnection.current?.send(JSON.stringify({ type: "ping" }));
+      };
+
+      wsConnection.current.onmessage = (event) => {
+        try {
+          const message = JSON.parse(event.data);
+          handleWebSocketMessage(message);
+        } catch (error) {
+          console.error("[WS] Failed to parse message:", error);
+        }
+      };
+
+      wsConnection.current.onclose = () => {
+        console.log("[WS] WebSocket connection closed");
+
+        // Attempt reconnection with exponential backoff
+        if (wsReconnectAttempts.current < wsMaxReconnectAttempts) {
+          const delay = Math.pow(2, wsReconnectAttempts.current) * 1000;
+          wsReconnectAttempts.current++;
+
+          setTimeout(() => {
+            console.log(
+              `[WS] Attempting reconnection (${wsReconnectAttempts.current}/${wsMaxReconnectAttempts})`,
+            );
+            connectWebSocket();
+          }, delay);
+        } else {
+          console.warn(
+            "[WS] Max reconnection attempts reached, falling back to polling",
+          );
+          // Fall back to HTTP polling if WebSocket fails
+          if (activeTab === "sessions") {
+            pollInterval.current = setInterval(onRefreshSessions, 10000);
+          }
+        }
+      };
+
+      wsConnection.current.onerror = (error) => {
+        console.error("[WS] WebSocket error:", error);
+      };
+    } catch (error) {
+      console.error("[WS] Failed to connect:", error);
+      // Fall back to polling
+      if (activeTab === "sessions") {
+        pollInterval.current = setInterval(onRefreshSessions, 10000);
+      }
+    }
+  }, [user, activeTab, onRefreshSessions]);
+
+  const handleWebSocketMessage = useCallback(
+    (message: any) => {
+      const { type, data } = message;
+
+      switch (type) {
+        case "sessions_updated":
+          onUpdateSessions(data.sessions || []);
+          break;
+
+        case "activity_update":
+          if (data.activity) {
+            setActivities((prev) => [data.activity, ...prev.slice(0, 49)]); // Keep last 50
+          }
+          break;
+
+        case "presence_update":
+          if (data.presence) {
+            setOnlineUsers((prev) => {
+              const newMap = new Map(prev);
+              data.presence.forEach((p: any) => {
+                newMap.set(p.userId, {
+                  userName: p.userName,
+                  lastSeen: new Date(p.lastSeen),
+                  status: p.status,
+                });
+              });
+              return newMap;
+            });
+          }
+          break;
+
+        case "session_created":
+          onRefreshSessions(); // Refresh to get new session
+          if (data.activity) {
+            setActivities((prev) => [data.activity, ...prev.slice(0, 49)]);
+          }
+          break;
+
+        case "user_joined":
+        case "user_left":
+          // Update presence and activity
+          onRefreshSessions();
+          if (data.activity) {
+            setActivities((prev) => [data.activity, ...prev.slice(0, 49)]);
+          }
+          break;
+
+        case "pong":
+          // Keep-alive response
+          break;
+
+        case "error":
+          console.error("[WS] Server error:", data.message);
+          break;
+
+        default:
+          console.warn("[WS] Unknown message type:", type);
+      }
+    },
+    [onUpdateSessions],
+  );
+
+  // WebSocket connection effect
+  useEffect(() => {
+    if (activeTab === "sessions" || activeTab === "activity") {
+      connectWebSocket();
+    }
+
+    return () => {
+      if (wsConnection.current) {
+        wsConnection.current.close();
+        wsConnection.current = null;
+      }
+    };
+  }, [activeTab, connectWebSocket]);
+
+  // Cleanup all intervals and connections on unmount
   useEffect(() => {
     return () => {
       if (pollInterval.current) {
@@ -216,6 +356,9 @@ export default function CollaborationDashboard({
       }
       if (presencePollInterval.current) {
         clearInterval(presencePollInterval.current);
+      }
+      if (wsConnection.current) {
+        wsConnection.current.close();
       }
     };
   }, []);
