@@ -524,8 +524,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
       }
     } catch (error) {
-      console.error("Failed to parse profile update response:", error);
-
       throw new Error("Server returned invalid response");
     }
 
