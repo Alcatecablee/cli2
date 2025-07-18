@@ -161,15 +161,14 @@ export default function SignupPage() {
         <div className="onboarding-content">
           <div className="onboarding-card">
             <div className="onboarding-logo">
-              <Link href="/">
+              <Link
+                href="/"
+                className="brand-logo"
+                style={{ marginBottom: "1.5rem" }}
+              >
                 <img
-                  src="https://cdn.builder.io/api/v1/image/assets%2Fbcdfdb608d38407b88c1584fe3705961%2F1b38a4a385ed4a0bb404148fae0ce80e?format=webp&width=800"
+                  src="https://cdn.builder.io/api/v1/image/assets%2F4b35a64a4a2c446c91402681adcf734e%2F485afb87468542eeba91d45b141bab95?format=webp&width=800"
                   alt="NeuroLint Pro"
-                  style={{
-                    height: "48px",
-                    width: "48px",
-                    marginBottom: "1.5rem",
-                  }}
                 />
               </Link>
             </div>
