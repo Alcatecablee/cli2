@@ -425,12 +425,6 @@
   stroke-width: 2;
   stroke-linecap: round;
   stroke-linejoin: round;
-  transition: var(--transition-smooth);
-}
-
-.nav-item:hover .nav-icon svg {
-  transform: scale(1.1);
-  stroke-width: 2.5;
 }
 
 .nav-item.active .nav-icon svg {
