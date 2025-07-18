@@ -1277,6 +1277,135 @@ export default function CollaborationDashboard({
   );
 }
 
+function ConflictResolutionModal({
+  conflictData,
+  onResolve,
+  onClose,
+}: {
+  conflictData: any;
+  onResolve: (resolution: { strategy: string; resolvedCode: string }) => void;
+  onClose: () => void;
+}) {
+  const [selectedStrategy, setSelectedStrategy] = useState<
+    "merge" | "overwrite" | "manual"
+  >("merge");
+  const [resolvedCode, setResolvedCode] = useState(
+    conflictData.userChanges || "",
+  );
+
+  const handleResolve = () => {
+    onResolve({
+      strategy: selectedStrategy,
+      resolvedCode:
+        selectedStrategy === "manual" ? resolvedCode : conflictData.userChanges,
+    });
+  };
+
+  return (
+    <div className="modal-overlay">
+      <div
+        className="modal-content"
+        style={{ maxWidth: "800px", width: "90vw" }}
+      >
+        <div className="modal-header">
+          <h3>Merge Conflict Detected</h3>
+          <button className="modal-close" onClick={onClose}>
+            ×
+          </button>
+        </div>
+        <div className="modal-form">
+          <div className="conflict-info">
+            <p>
+              A conflict has been detected with recent changes. Please choose a
+              resolution strategy:
+            </p>
+            <div className="conflict-details">
+              <strong>Conflict ID:</strong> {conflictData.conflictId}
+              <br />
+              <strong>Last modified by:</strong> Another user
+              <br />
+              <strong>Conflict ranges:</strong>{" "}
+              {conflictData.conflictRanges?.length || 0} areas
+            </div>
+          </div>
+
+          <div className="form-group">
+            <label>Resolution Strategy:</label>
+            <div className="resolution-options">
+              <label className="radio-option">
+                <input
+                  type="radio"
+                  value="merge"
+                  checked={selectedStrategy === "merge"}
+                  onChange={(e) =>
+                    setSelectedStrategy(e.target.value as "merge")
+                  }
+                />
+                <span>Auto-merge (recommended)</span>
+                <small>Automatically merge non-conflicting changes</small>
+              </label>
+              <label className="radio-option">
+                <input
+                  type="radio"
+                  value="overwrite"
+                  checked={selectedStrategy === "overwrite"}
+                  onChange={(e) =>
+                    setSelectedStrategy(e.target.value as "overwrite")
+                  }
+                />
+                <span>Use my changes</span>
+                <small>Overwrite with your version</small>
+              </label>
+              <label className="radio-option">
+                <input
+                  type="radio"
+                  value="manual"
+                  checked={selectedStrategy === "manual"}
+                  onChange={(e) =>
+                    setSelectedStrategy(e.target.value as "manual")
+                  }
+                />
+                <span>Manual resolution</span>
+                <small>Edit the code manually to resolve conflicts</small>
+              </label>
+            </div>
+          </div>
+
+          {selectedStrategy === "manual" && (
+            <div className="form-group">
+              <label>Resolved Code:</label>
+              <textarea
+                value={resolvedCode}
+                onChange={(e) => setResolvedCode(e.target.value)}
+                rows={15}
+                className="conflict-editor"
+                placeholder="Edit the code to resolve conflicts..."
+              />
+            </div>
+          )}
+
+          <div className="modal-actions">
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={onClose}
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={handleResolve}
+            >
+              Resolve Conflict
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function getActivityText(activity: Activity): string {
   switch (activity.type) {
     case "session_created":
