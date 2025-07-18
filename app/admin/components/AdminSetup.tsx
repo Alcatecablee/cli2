@@ -140,6 +140,26 @@ export default function AdminSetup() {
         </div>
       )}
 
+      {state.instructions && (
+        <div className="setup-instructions">
+          <h3>Setup Instructions</h3>
+          <p>{state.instructions.message}</p>
+          {state.instructions.tables &&
+            state.instructions.tables.length > 0 && (
+              <div className="manual-tables">
+                <h4>Tables to create manually:</h4>
+                <ul>
+                  {state.instructions.tables.map((table, index) => (
+                    <li key={index}>
+                      <code>{table}</code>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+        </div>
+      )}
+
       <div className="setup-info">
         <h3>What this setup includes:</h3>
         <ul>
