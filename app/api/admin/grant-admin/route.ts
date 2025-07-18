@@ -54,63 +54,38 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Use service role to update profile
+    // Use service role to update user in existing users table
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    // First check if profiles table exists, if not create it
+    // Check if users table exists (it should based on the schema)
     const { data: tables } = await supabase
       .from("information_schema.tables")
       .select("table_name")
-      .eq("table_name", "profiles");
+      .eq("table_name", "users");
 
-    const profilesTableExists = tables && tables.length > 0;
+    const usersTableExists = tables && tables.length > 0;
 
-    if (!profilesTableExists) {
-      // Create profiles table
-      const createTableSQL = `
-        CREATE TABLE IF NOT EXISTS profiles (
-          id UUID REFERENCES auth.users ON DELETE CASCADE,
-          email TEXT,
-          role TEXT DEFAULT 'user',
-          first_name TEXT,
-          last_name TEXT,
-          plan TEXT DEFAULT 'free',
-          created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
-          updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
-          PRIMARY KEY (id)
-        );
-
-        -- Enable RLS
-        ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
-
-        -- Create policies
-        CREATE POLICY "Users can view own profile" ON profiles FOR SELECT USING (auth.uid() = id);
-        CREATE POLICY "Users can update own profile" ON profiles FOR UPDATE USING (auth.uid() = id);
-        CREATE POLICY "Enable insert for authenticated users only" ON profiles FOR INSERT WITH CHECK (auth.uid() = id);
-      `;
-
-      try {
-        await supabase.rpc("exec_sql", { sql_query: createTableSQL });
-      } catch (rpcError) {
-        // If RPC doesn't work, we'll continue and try direct operations
-        console.log("RPC failed, will try direct operations");
-      }
+    if (!usersTableExists) {
+      return NextResponse.json(
+        { error: "Users table not found. Please run database setup first." },
+        { status: 500 },
+      );
     }
 
-    // Try to find existing profile
-    const { data: existingProfile, error: profileError } = await supabase
-      .from("profiles")
-      .select("id, email, role")
+    // Try to find existing user
+    const { data: existingUser, error: userFindError } = await supabase
+      .from("users")
+      .select("id, email, plan_type")
       .eq("id", user.id)
       .single();
 
     let result;
-    if (existingProfile) {
-      // Update existing profile to admin
+    if (existingUser) {
+      // Update existing user to admin plan
       const { data, error } = await supabase
-        .from("profiles")
+        .from("users")
         .update({
-          role: "admin",
+          plan_type: "admin",
           email: user.email,
           updated_at: new Date().toISOString(),
         })
@@ -119,16 +94,19 @@ export async function POST(request: NextRequest) {
 
       result = { data, error, operation: "update" };
     } else {
-      // Insert new profile with admin role
+      // Insert new user with admin plan
       const { data, error } = await supabase
-        .from("profiles")
+        .from("users")
         .insert({
           id: user.id,
           email: user.email,
-          role: "admin",
-          first_name: user.user_metadata?.first_name || "",
-          last_name: user.user_metadata?.last_name || "",
-          plan: "admin",
+          plan_type: "admin",
+          full_name:
+            user.user_metadata?.full_name ||
+            `${user.user_metadata?.first_name || ""} ${user.user_metadata?.last_name || ""}`.trim() ||
+            user.email,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
         })
         .select();
 
