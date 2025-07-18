@@ -338,9 +338,7 @@ export default function GitHubIntegrationFixed() {
             <button
               className="connect-btn"
               onClick={handleConnectGitHub}
-              disabled={
-                state.isConnecting || user?.plan === "free" || !user?.plan
-              }
+              disabled={state.isConnecting}
             >
               {state.isConnecting ? "Connecting..." : "Connect GitHub"}
             </button>
