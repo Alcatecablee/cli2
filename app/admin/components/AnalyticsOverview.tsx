@@ -52,7 +52,7 @@ export default function AnalyticsOverview() {
         sessionStorage.getItem("supabase.auth.token");
 
       const response = await fetch(
-        `/api/admin/analytics-safe?period=${period}`,
+        `/api/admin/analytics-debug?period=${period}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
