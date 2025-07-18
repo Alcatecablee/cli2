@@ -85,6 +85,7 @@ export default function CollaborationDashboard({
   const pollInterval = useRef<NodeJS.Timeout | null>(null);
   const activityPollInterval = useRef<NodeJS.Timeout | null>(null);
   const presencePollInterval = useRef<NodeJS.Timeout | null>(null);
+  const lastPollTime = useRef<{ [key: string]: number }>({});
 
   // Real-time polling for live updates
   useEffect(() => {
