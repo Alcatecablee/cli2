@@ -38,13 +38,13 @@ npm install -g @neurolint/cli
 
 ```bash
 # npm
-npm install --save-dev @neurolint-pro/cli
+npm install --save-dev @neurolint/cli
 
 # yarn
-yarn add --dev @neurolint-pro/cli
+yarn add --dev @neurolint/cli
 
 # pnpm
-pnpm add -D @neurolint-pro/cli
+pnpm add -D @neurolint/cli
 ```
 
 ### Requirements
