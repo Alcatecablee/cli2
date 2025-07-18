@@ -1,0 +1,1580 @@
+"use client";
+
+import React, { useState } from "react";
+import Link from "next/link";
+
+export default function Layer5NextjsPage() {
+  const [activeTab, setActiveTab] = useState<
+    "overview" | "examples" | "performance" | "cli"
+  >("overview");
+
+  return (
+    <div className="docs-page">
+      <div className="docs-page-header">
+        <div className="docs-breadcrumb">
+          <Link href="/docs">📚 Docs</Link>
+          <span className="docs-breadcrumb-separator">→</span>
+          <Link href="/docs#layer-reference">🔧 Layer Reference</Link>
+          <span className="docs-breadcrumb-separator">→</span>
+          <span className="docs-breadcrumb-current">
+            Layer 5: Next.js App Router
+          </span>
+        </div>
+
+        <h1 className="docs-page-title">🚀 Layer 5: Next.js App Router</h1>
+        <p className="docs-page-subtitle">
+          Next.js 13+ App Router compatibility, 'use client' directive
+          management, and import optimization
+        </p>
+
+        <div className="docs-page-meta">
+          <span className="docs-meta-item">⏱️ 10 min read</span>
+          <span className="docs-meta-item difficulty-advanced">
+            🔴 Advanced
+          </span>
+          <span className="docs-meta-item layer-badge">🚀 Next.js Layer</span>
+          <span className="docs-meta-item">📝 Last updated: Dec 2024</span>
+        </div>
+      </div>
+
+      {/* Tab Navigation */}
+      <div className="docs-tab-nav">
+        <button
+          className={`docs-tab ${activeTab === "overview" ? "active" : ""}`}
+          onClick={() => setActiveTab("overview")}
+        >
+          📋 Overview
+        </button>
+        <button
+          className={`docs-tab ${activeTab === "examples" ? "active" : ""}`}
+          onClick={() => setActiveTab("examples")}
+        >
+          📝 Examples
+        </button>
+        <button
+          className={`docs-tab ${activeTab === "performance" ? "active" : ""}`}
+          onClick={() => setActiveTab("performance")}
+        >
+          ⚡ Performance
+        </button>
+        <button
+          className={`docs-tab ${activeTab === "cli" ? "active" : ""}`}
+          onClick={() => setActiveTab("cli")}
+        >
+          💻 CLI Usage
+        </button>
+      </div>
+
+      <div className="docs-page-content">
+        {/* Overview Tab */}
+        {activeTab === "overview" && (
+          <>
+            {/* Quick Summary */}
+            <div className="docs-highlight-box info">
+              <h3>🎯 Layer 5 Purpose</h3>
+              <p>
+                Layer 5 ensures{" "}
+                <strong>Next.js 13+ App Router compatibility</strong> by
+                managing 'use client' directives, fixing corrupted imports,
+                optimizing client-server boundaries, and ensuring proper
+                component structure for the modern Next.js architecture.
+              </p>
+            </div>
+
+            {/* What It Fixes */}
+            <div className="docs-section">
+              <h2 id="what-it-fixes">🚀 What Layer 5 Fixes</h2>
+
+              <div className="docs-fix-categories">
+                <div className="docs-fix-category">
+                  <div className="docs-fix-icon">📋</div>
+                  <h3>'use client' Directive Management</h3>
+                  <ul>
+                    <li>
+                      <strong>Missing directives:</strong> Adds 'use client' to
+                      components using hooks
+                    </li>
+                    <li>
+                      <strong>Misplaced directives:</strong> Moves 'use client'
+                      to the top of files
+                    </li>
+                    <li>
+                      <strong>Unnecessary directives:</strong> Removes 'use
+                      client' from server components
+                    </li>
+                    <li>
+                      <strong>Import conflicts:</strong> Resolves directive
+                      placement with import statements
+                    </li>
+                    <li>
+                      <strong>Component boundary optimization:</strong>{" "}
+                      Optimizes client-server split
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="docs-fix-category">
+                  <div className="docs-fix-icon">🔧</div>
+                  <h3>Import Statement Corruption</h3>
+                  <ul>
+                    <li>
+                      <strong>Corrupted imports:</strong> Fixes malformed import
+                      statements
+                    </li>
+                    <li>
+                      <strong>Duplicate imports:</strong> Consolidates multiple
+                      imports from same module
+                    </li>
+                    <li>
+                      <strong>Empty imports:</strong> Removes broken import
+                      statements
+                    </li>
+                    <li>
+                      <strong>Import ordering:</strong> Organizes imports for
+                      better readability
+                    </li>
+                    <li>
+                      <strong>Module resolution:</strong> Fixes incorrect import
+                      paths
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="docs-fix-category">
+                  <div className="docs-fix-icon">🏗️</div>
+                  <h3>App Router Structure</h3>
+                  <ul>
+                    <li>
+                      <strong>File organization:</strong> Ensures proper app/
+                      directory structure
+                    </li>
+                    <li>
+                      <strong>Layout components:</strong> Validates layout.tsx
+                      patterns
+                    </li>
+                    <li>
+                      <strong>Page components:</strong> Ensures proper page.tsx
+                      structure
+                    </li>
+                    <li>
+                      <strong>Route handlers:</strong> Validates API route
+                      patterns
+                    </li>
+                    <li>
+                      <strong>Loading states:</strong> Adds proper loading.tsx
+                      components
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="docs-fix-category">
+                  <div className="docs-fix-icon">⚡</div>
+                  <h3>Performance Optimization</h3>
+                  <ul>
+                    <li>
+                      <strong>Bundle splitting:</strong> Optimizes client-server
+                      code separation
+                    </li>
+                    <li>
+                      <strong>Server components:</strong> Maximizes server-side
+                      rendering
+                    </li>
+                    <li>
+                      <strong>Dynamic imports:</strong> Adds code splitting
+                      where beneficial
+                    </li>
+                    <li>
+                      <strong>Metadata optimization:</strong> Ensures proper SEO
+                      metadata
+                    </li>
+                    <li>
+                      <strong>Streaming patterns:</strong> Implements proper
+                      Suspense boundaries
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            {/* App Router Concepts */}
+            <div className="docs-section">
+              <h2 id="app-router-concepts">🏗️ App Router Key Concepts</h2>
+
+              <div className="docs-concepts-grid">
+                <div className="docs-concept-item">
+                  <h4>🖥️ Server Components (Default)</h4>
+                  <p>
+                    Components render on the server by default. No JavaScript
+                    sent to client.
+                  </p>
+                  <div className="docs-concept-example">
+                    <strong>Use for:</strong> Static content, data fetching,
+                    SEO-critical content
+                  </div>
+                </div>
+
+                <div className="docs-concept-item">
+                  <h4>🌐 Client Components ('use client')</h4>
+                  <p>
+                    Components that need browser APIs, event handlers, or React
+                    hooks.
+                  </p>
+                  <div className="docs-concept-example">
+                    <strong>Use for:</strong> Interactive elements, state
+                    management, browser APIs
+                  </div>
+                </div>
+
+                <div className="docs-concept-item">
+                  <h4>🔄 Client-Server Boundary</h4>
+                  <p>
+                    The line between server and client components affects bundle
+                    size and performance.
+                  </p>
+                  <div className="docs-concept-example">
+                    <strong>Optimize:</strong> Minimize client components,
+                    maximize server rendering
+                  </div>
+                </div>
+
+                <div className="docs-concept-item">
+                  <h4>📁 File-based Routing</h4>
+                  <p>
+                    Folders and special files (page.tsx, layout.tsx) define
+                    routes automatically.
+                  </p>
+                  <div className="docs-concept-example">
+                    <strong>Structure:</strong> app/blog/[slug]/page.tsx →
+                    /blog/[slug]
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Detection Strategy */}
+            <div className="docs-section">
+              <h2 id="detection-strategy">🔍 How Layer 5 Detects Issues</h2>
+
+              <div className="docs-detection-flow">
+                <div className="docs-detection-step">
+                  <div className="docs-step-number">1</div>
+                  <div className="docs-step-content">
+                    <h4>🌳 AST Analysis</h4>
+                    <p>
+                      Parses components to understand hook usage and client-side
+                      requirements
+                    </p>
+                  </div>
+                </div>
+
+                <div className="docs-detection-step">
+                  <div className="docs-step-number">2</div>
+                  <div className="docs-step-content">
+                    <h4>📋 Directive Validation</h4>
+                    <p>
+                      Checks for missing, misplaced, or unnecessary 'use client'
+                      directives
+                    </p>
+                  </div>
+                </div>
+
+                <div className="docs-detection-step">
+                  <div className="docs-step-number">3</div>
+                  <div className="docs-step-content">
+                    <h4>🔧 Import Analysis</h4>
+                    <p>
+                      Identifies corrupted import statements and ordering issues
+                    </p>
+                  </div>
+                </div>
+
+                <div className="docs-detection-step">
+                  <div className="docs-step-number">4</div>
+                  <div className="docs-step-content">
+                    <h4>🚀 Optimization</h4>
+                    <p>
+                      Applies fixes while optimizing for App Router performance
+                      patterns
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Why It's Important */}
+            <div className="docs-section">
+              <h2 id="why-important">⚡ Why Layer 5 is Critical</h2>
+
+              <div className="docs-importance-grid">
+                <div className="docs-importance-item">
+                  <h4>🚀 Next.js 13+ Compatibility</h4>
+                  <p>
+                    Ensures your application works correctly with the latest
+                    Next.js App Router features.
+                  </p>
+                </div>
+
+                <div className="docs-importance-item">
+                  <h4>⚡ Performance Optimization</h4>
+                  <p>
+                    Proper client-server boundaries reduce bundle size and
+                    improve loading speed.
+                  </p>
+                </div>
+
+                <div className="docs-importance-item">
+                  <h4>🛡️ Runtime Stability</h4>
+                  <p>
+                    Prevents errors from incorrect component boundaries and
+                    import issues.
+                  </p>
+                </div>
+
+                <div className="docs-importance-item">
+                  <h4>🔮 Future-Proofing</h4>
+                  <p>
+                    Prepares your codebase for future Next.js updates and React
+                    features.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Safety Features */}
+            <div className="docs-section">
+              <h2 id="safety-features">🛡️ Safety Features</h2>
+
+              <div className="docs-safety-grid">
+                <div className="docs-safety-feature">
+                  <h4>🎯 Smart Detection</h4>
+                  <p>
+                    Only adds 'use client' when components actually need
+                    client-side features.
+                  </p>
+                </div>
+
+                <div className="docs-safety-feature">
+                  <h4>📊 Component Analysis</h4>
+                  <p>
+                    Analyzes entire component tree to optimize client-server
+                    boundaries.
+                  </p>
+                </div>
+
+                <div className="docs-safety-feature">
+                  <h4>🔧 Import Preservation</h4>
+                  <p>
+                    Maintains import functionality while fixing corruption and
+                    organization.
+                  </p>
+                </div>
+
+                <div className="docs-safety-feature">
+                  <h4>⚡ Performance Focus</h4>
+                  <p>
+                    Optimizes for minimal client bundle size while maintaining
+                    functionality.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Known Limitations */}
+            <div className="docs-section">
+              <h2 id="limitations">⚠️ Known Limitations</h2>
+
+              <div className="docs-highlight-box warning">
+                <h3>🔍 Current Limitations</h3>
+                <ul>
+                  <li>
+                    <strong>Complex component trees:</strong> Very complex
+                    nested component structures may need manual review
+                  </li>
+                  <li>
+                    <strong>Dynamic imports:</strong> Complex dynamic import
+                    patterns may not be fully optimized
+                  </li>
+                  <li>
+                    <strong>Third-party components:</strong> External
+                    components' client requirements may not be detected
+                  </li>
+                  <li>
+                    <strong>Server actions:</strong> Server actions and other
+                    advanced App Router features need manual implementation
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </>
+        )}
+
+        {/* Examples Tab */}
+        {activeTab === "examples" && (
+          <>
+            <div className="docs-section">
+              <h2>📝 Before & After Examples</h2>
+
+              <div className="docs-example-group">
+                <h3>📋 'use client' Directive Fixes</h3>
+
+                <div className="docs-code-comparison">
+                  <div className="docs-code-before">
+                    <h4>❌ Before (Missing Directives)</h4>
+                    <pre>
+                      <code>{`// Component using hooks without 'use client'
+import React, { useState, useEffect } from 'react';
+import { Button } from '@/components/ui/button';
+
+export default function InteractiveComponent() {
+  const [count, setCount] = useState(0);
+  
+  useEffect(() => {
+    document.title = \`Count: \${count}\`;
+  }, [count]);
+  
+  return (
+    <div>
+      <p>Count: {count}</p>
+      <Button onClick={() => setCount(count + 1)}>
+        Increment
+      </Button>
+    </div>
+  );
+}
+
+// Component with misplaced directive
+import React from 'react';
+import { useRouter } from 'next/navigation';
+
+'use client'; // Should be at the top
+
+export default function NavigationComponent() {
+  const router = useRouter();
+  
+  return (
+    <button onClick={() => router.push('/home')}>
+      Go Home
+    </button>
+  );
+}`}</code>
+                    </pre>
+                  </div>
+
+                  <div className="docs-code-after">
+                    <h4>✅ After (Proper Directives)</h4>
+                    <pre>
+                      <code>{`// Component with proper 'use client' directive
+'use client';
+
+import React, { useState, useEffect } from 'react';
+import { Button } from '@/components/ui/button';
+
+export default function InteractiveComponent() {
+  const [count, setCount] = useState(0);
+  
+  useEffect(() => {
+    document.title = \`Count: \${count}\`;
+  }, [count]);
+  
+  return (
+    <div>
+      <p>Count: {count}</p>
+      <Button onClick={() => setCount(count + 1)}>
+        Increment
+      </Button>
+    </div>
+  );
+}
+
+// Component with correctly placed directive
+'use client';
+
+import React from 'react';
+import { useRouter } from 'next/navigation';
+
+export default function NavigationComponent() {
+  const router = useRouter();
+  
+  return (
+    <button onClick={() => router.push('/home')}>
+      Go Home
+    </button>
+  );
+}`}</code>
+                    </pre>
+                  </div>
+                </div>
+
+                <div className="docs-changes-summary">
+                  <h4>📊 Changes Made:</h4>
+                  <ul>
+                    <li>
+                      ✅ Added 'use client' directive to components using hooks
+                    </li>
+                    <li>✅ Moved misplaced directives to the top of files</li>
+                    <li>✅ Ensured proper placement before all imports</li>
+                    <li>✅ Maintained existing component functionality</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div className="docs-example-group">
+                <h3>🔧 Import Corruption Fixes</h3>
+
+                <div className="docs-code-comparison">
+                  <div className="docs-code-before">
+                    <h4>❌ Before (Corrupted Imports)</h4>
+                    <pre>
+                      <code>{`// Corrupted import statements
+import {
+import { useState, useEffect } from 'react';
+import Button, { Input } from '@/components/ui';
+import 
+  Modal,
+  Dialog
+} from '@/components/modal';
+
+// Duplicate and malformed imports
+import React from 'react';
+import { React } from 'react';
+import { } from '@/utils/helpers';
+
+export default function MyComponent() {
+  return <div>Content</div>;
+}`}</code>
+                    </pre>
+                  </div>
+
+                  <div className="docs-code-after">
+                    <h4>✅ After (Clean Imports)</h4>
+                    <pre>
+                      <code>{`'use client';
+
+import React, { useState, useEffect } from 'react';
+import { Button, Input } from '@/components/ui';
+import { Modal, Dialog } from '@/components/modal';
+
+export default function MyComponent() {
+  return <div>Content</div>;
+}`}</code>
+                    </pre>
+                  </div>
+                </div>
+
+                <div className="docs-changes-summary">
+                  <h4>📊 Changes Made:</h4>
+                  <ul>
+                    <li>✅ Fixed corrupted import statement structure</li>
+                    <li>✅ Consolidated duplicate imports from same modules</li>
+                    <li>✅ Removed empty import statements</li>
+                    <li>✅ Organized imports in logical order</li>
+                    <li>✅ Added 'use client' directive at the top</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div className="docs-example-group">
+                <h3>🏗️ Client-Server Boundary Optimization</h3>
+
+                <div className="docs-code-comparison">
+                  <div className="docs-code-before">
+                    <h4>❌ Before (Unnecessary Client Components)</h4>
+                    <pre>
+                      <code>{`// Entire component marked as client unnecessarily
+'use client';
+
+import React from 'react';
+
+function ServerContent() {
+  return (
+    <div>
+      <h1>Static Content</h1>
+      <p>This content doesn't need client-side rendering</p>
+    </div>
+  );
+}
+
+function InteractiveButton() {
+  const [clicked, setClicked] = React.useState(false);
+  
+  return (
+    <button onClick={() => setClicked(!clicked)}>
+      {clicked ? 'Clicked!' : 'Click me'}
+    </button>
+  );
+}
+
+export default function MyPage() {
+  return (
+    <div>
+      <ServerContent />
+      <InteractiveButton />
+    </div>
+  );
+}`}</code>
+                    </pre>
+                  </div>
+
+                  <div className="docs-code-after">
+                    <h4>✅ After (Optimized Boundaries)</h4>
+                    <pre>
+                      <code>{`// Server component (no directive needed)
+import React from 'react';
+import InteractiveButton from './InteractiveButton';
+
+function ServerContent() {
+  return (
+    <div>
+      <h1>Static Content</h1>
+      <p>This content doesn't need client-side rendering</p>
+    </div>
+  );
+}
+
+export default function MyPage() {
+  return (
+    <div>
+      <ServerContent />
+      <InteractiveButton />
+    </div>
+  );
+}
+
+// Separate client component file: InteractiveButton.tsx
+'use client';
+
+import React from 'react';
+
+export default function InteractiveButton() {
+  const [clicked, setClicked] = React.useState(false);
+  
+  return (
+    <button onClick={() => setClicked(!clicked)}>
+      {clicked ? 'Clicked!' : 'Click me'}
+    </button>
+  );
+}`}</code>
+                    </pre>
+                  </div>
+                </div>
+
+                <div className="docs-changes-summary">
+                  <h4>📊 Changes Made:</h4>
+                  <ul>
+                    <li>
+                      ✅ Removed unnecessary 'use client' from server components
+                    </li>
+                    <li>
+                      ✅ Extracted interactive components to separate client
+                      components
+                    </li>
+                    <li>
+                      ✅ Optimized client-server boundary for better performance
+                    </li>
+                    <li>
+                      ✅ Reduced client bundle size by maximizing server
+                      rendering
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </>
+        )}
+
+        {/* Performance Tab */}
+        {activeTab === "performance" && (
+          <>
+            <div className="docs-section">
+              <h2>⚡ Performance Impact</h2>
+
+              <div className="docs-performance-stats">
+                <div className="docs-performance-metric">
+                  <div className="docs-metric-value">3-10s</div>
+                  <div className="docs-metric-label">Execution Time</div>
+                  <div className="docs-metric-description">
+                    Next.js App Router fixes
+                  </div>
+                </div>
+
+                <div className="docs-performance-metric">
+                  <div className="docs-metric-value">~20-40%</div>
+                  <div className="docs-metric-label">Bundle Size Reduction</div>
+                  <div className="docs-metric-description">
+                    Optimized client boundaries
+                  </div>
+                </div>
+
+                <div className="docs-performance-metric">
+                  <div className="docs-metric-value">Significant</div>
+                  <div className="docs-metric-label">SEO Improvement</div>
+                  <div className="docs-metric-description">
+                    More server rendering
+                  </div>
+                </div>
+              </div>
+
+              <div className="docs-performance-details">
+                <h3>📊 Detailed Performance Analysis</h3>
+
+                <div className="docs-performance-section">
+                  <h4>🚀 Bundle Size Optimization</h4>
+                  <ul>
+                    <li>
+                      <strong>Client component minimization:</strong> Reduces
+                      JavaScript sent to browser
+                    </li>
+                    <li>
+                      <strong>Server rendering maximization:</strong> More
+                      content rendered on server
+                    </li>
+                    <li>
+                      <strong>Code splitting optimization:</strong> Better
+                      separation between client and server code
+                    </li>
+                    <li>
+                      <strong>Import tree shaking:</strong> Improved dead code
+                      elimination
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="docs-performance-section">
+                  <h4>⚡ Runtime Performance</h4>
+                  <ul>
+                    <li>
+                      <strong>Faster initial load:</strong> Less JavaScript to
+                      download and parse
+                    </li>
+                    <li>
+                      <strong>Better Core Web Vitals:</strong> Improved LCP,
+                      FID, and CLS scores
+                    </li>
+                    <li>
+                      <strong>Enhanced caching:</strong> Server components can
+                      be cached more aggressively
+                    </li>
+                    <li>
+                      <strong>Streaming benefits:</strong> Progressive page
+                      loading with Suspense
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="docs-performance-section">
+                  <h4>🔍 SEO Benefits</h4>
+                  <ul>
+                    <li>
+                      <strong>More server rendering:</strong> Better content
+                      availability for crawlers
+                    </li>
+                    <li>
+                      <strong>Faster page loads:</strong> Improved search engine
+                      ranking factors
+                    </li>
+                    <li>
+                      <strong>Better structured data:</strong> Server components
+                      enhance SEO metadata
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="docs-performance-section">
+                  <h4>🛠️ Development Experience</h4>
+                  <ul>
+                    <li>
+                      <strong>Cleaner code organization:</strong> Clear
+                      separation of concerns
+                    </li>
+                    <li>
+                      <strong>Better error handling:</strong> Proper component
+                      boundaries reduce errors
+                    </li>
+                    <li>
+                      <strong>Improved debugging:</strong> Clearer distinction
+                      between client and server code
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </>
+        )}
+
+        {/* CLI Usage Tab */}
+        {activeTab === "cli" && (
+          <>
+            <div className="docs-section">
+              <h2>💻 Command Line Usage</h2>
+
+              <div className="docs-cli-section">
+                <h3>🎯 Run Layer 5 Only</h3>
+                <div className="docs-cli-command">
+                  <pre>
+                    <code>npm run fix-layer-5</code>
+                  </pre>
+                  <p>Executes only the Next.js App Router optimization layer</p>
+                </div>
+              </div>
+
+              <div className="docs-cli-section">
+                <h3>🔍 Preview Layer 5 Changes</h3>
+                <div className="docs-cli-command">
+                  <pre>
+                    <code>node fix-layer-5-nextjs.js --dry-run</code>
+                  </pre>
+                  <p>Shows what App Router optimizations would be made</p>
+                </div>
+              </div>
+
+              <div className="docs-cli-section">
+                <h3>📝 Verbose Output</h3>
+                <div className="docs-cli-command">
+                  <pre>
+                    <code>node fix-layer-5-nextjs.js --verbose</code>
+                  </pre>
+                  <p>
+                    Provides detailed information about each Next.js
+                    optimization
+                  </p>
+                </div>
+              </div>
+
+              <div className="docs-cli-section">
+                <h3>🎛️ Advanced Options</h3>
+                <div className="docs-cli-options">
+                  <div className="docs-cli-option">
+                    <code>--skip-directives</code>
+                    <p>Skip 'use client' directive management</p>
+                  </div>
+                  <div className="docs-cli-option">
+                    <code>--skip-imports</code>
+                    <p>Skip import corruption fixes</p>
+                  </div>
+                  <div className="docs-cli-option">
+                    <code>--skip-optimization</code>
+                    <p>Skip client-server boundary optimization</p>
+                  </div>
+                  <div className="docs-cli-option">
+                    <code>--force-client</code>
+                    <p>Mark all interactive components as client components</p>
+                  </div>
+                  <div className="docs-cli-option">
+                    <code>--app-dir-only</code>
+                    <p>Only process files in the app/ directory</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="docs-cli-section">
+                <h3>📊 Example Output</h3>
+                <div className="docs-cli-output">
+                  <pre>
+                    <code>{`🚀 NeuroLint Pro - Layer 5: Next.js App Router Optimization
+
+📁 Scanning for Next.js App Router files...
+✅ Found 22 components in app/ directory
+✅ Found 8 components using React hooks
+
+🔍 Analyzing App Router patterns...
+⚠️  5 components missing 'use client' directives
+⚠️  3 components with misplaced directives
+⚠️  7 corrupted import statements detected
+⚠️  4 components with suboptimal client-server boundaries
+
+🛠️  Applying Next.js optimizations...
+✅ Added 'use client' to 5 interactive components
+✅ Fixed placement of 3 misplaced directives
+✅ Repaired 7 corrupted import statements
+✅ Optimized 4 client-server boundaries
+✅ Consolidated 12 duplicate imports
+
+📊 Summary:
+   • 5 'use client' directives added
+   • 3 directive placements fixed
+   • 7 import corruptions repaired
+   • 4 client-server boundaries optimized
+   • 12 imports consolidated
+   • 0 errors encountered
+   
+✨ Layer 5 completed successfully!
+   Bundle size reduction: ~25% (client components optimized)
+   App Router compatibility: 100%
+   Import health: All imports clean and organized`}</code>
+                  </pre>
+                </div>
+              </div>
+            </div>
+          </>
+        )}
+      </div>
+
+      {/* Page Navigation */}
+      <div className="docs-page-nav">
+        <div className="docs-page-nav-item">
+          <Link
+            href="/docs/layer-reference/layer-4-hydration"
+            className="docs-nav-link prev"
+          >
+            ← Layer 4: Hydration & SSR Fixes
+          </Link>
+        </div>
+        <div className="docs-page-nav-item">
+          <Link
+            href="/docs/layer-reference/layer-6-testing"
+            className="docs-nav-link next"
+          >
+            Layer 6: Testing & Validation →
+          </Link>
+        </div>
+      </div>
+
+      <style jsx>{`
+        .docs-page {
+          min-height: 100vh;
+          background: #000000;
+          color: white;
+          font-family: var(--font-sans, "Inter", sans-serif);
+        }
+
+        .docs-page-header {
+          background: linear-gradient(
+            135deg,
+            rgba(33, 150, 243, 0.08) 0%,
+            rgba(0, 0, 0, 0.95) 100%
+          );
+          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+          padding: 40px;
+        }
+
+        .docs-breadcrumb {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 20px;
+          font-size: 14px;
+        }
+
+        .docs-breadcrumb a {
+          color: var(--status-info);
+          text-decoration: none;
+        }
+
+        .docs-breadcrumb a:hover {
+          text-decoration: underline;
+        }
+
+        .docs-breadcrumb-separator {
+          color: rgba(255, 255, 255, 0.4);
+        }
+
+        .docs-breadcrumb-current {
+          color: rgba(255, 255, 255, 0.8);
+        }
+
+        .docs-page-title {
+          font-size: 48px;
+          font-weight: 700;
+          margin: 0 0 16px 0;
+          background: linear-gradient(135deg, #ffffff 0%, #2196f3 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+        }
+
+        .docs-page-subtitle {
+          font-size: 20px;
+          color: rgba(255, 255, 255, 0.7);
+          margin: 0 0 24px 0;
+          line-height: 1.5;
+        }
+
+        .docs-page-meta {
+          display: flex;
+          gap: 16px;
+          flex-wrap: wrap;
+        }
+
+        .docs-meta-item {
+          padding: 6px 12px;
+          background: rgba(255, 255, 255, 0.05);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 6px;
+          font-size: 13px;
+          font-weight: 500;
+        }
+
+        .difficulty-advanced {
+          color: var(--status-error);
+          border-color: rgba(229, 62, 62, 0.3);
+          background: rgba(229, 62, 62, 0.1);
+        }
+
+        .layer-badge {
+          color: #000;
+          background: linear-gradient(45deg, #fff, #000);
+          border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .docs-tab-nav {
+          background: rgba(255, 255, 255, 0.02);
+          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+          padding: 0 40px;
+          display: flex;
+          gap: 8px;
+        }
+
+        .docs-tab {
+          padding: 16px 24px;
+          background: none;
+          border: none;
+          color: rgba(255, 255, 255, 0.6);
+          cursor: pointer;
+          font-size: 14px;
+          font-weight: 500;
+          border-bottom: 2px solid transparent;
+          transition: all 0.2s ease;
+        }
+
+        .docs-tab:hover {
+          color: rgba(255, 255, 255, 0.8);
+          background: rgba(255, 255, 255, 0.05);
+        }
+
+        .docs-tab.active {
+          color: var(--status-info);
+          border-bottom-color: var(--status-info);
+          background: rgba(33, 150, 243, 0.1);
+        }
+
+        .docs-page-content {
+          max-width: 1000px;
+          margin: 0 auto;
+          padding: 60px 40px;
+          line-height: 1.7;
+        }
+
+        .docs-section {
+          margin-bottom: 60px;
+        }
+
+        .docs-section h2 {
+          font-size: 32px;
+          font-weight: 700;
+          margin: 0 0 24px 0;
+          color: white;
+        }
+
+        .docs-section h3 {
+          font-size: 24px;
+          font-weight: 600;
+          margin: 32px 0 16px 0;
+          color: white;
+        }
+
+        .docs-section h4 {
+          font-size: 18px;
+          font-weight: 600;
+          margin: 24px 0 12px 0;
+          color: white;
+        }
+
+        .docs-section p {
+          margin-bottom: 16px;
+          color: rgba(255, 255, 255, 0.8);
+        }
+
+        .docs-highlight-box {
+          padding: 24px;
+          border-radius: 12px;
+          margin: 32px 0;
+          border: 1px solid;
+        }
+
+        .docs-highlight-box.info {
+          background: rgba(33, 150, 243, 0.1);
+          border-color: rgba(33, 150, 243, 0.3);
+        }
+
+        .docs-highlight-box.warning {
+          background: rgba(255, 152, 0, 0.1);
+          border-color: rgba(255, 152, 0, 0.3);
+        }
+
+        .docs-highlight-box h3 {
+          margin: 0 0 12px 0;
+          font-size: 18px;
+        }
+
+        .docs-highlight-box p {
+          margin: 0;
+        }
+
+        .docs-highlight-box ul {
+          margin: 12px 0 0 0;
+          padding-left: 20px;
+        }
+
+        .docs-highlight-box li {
+          margin-bottom: 8px;
+        }
+
+        .docs-fix-categories {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+          gap: 24px;
+          margin: 32px 0;
+        }
+
+        .docs-fix-category {
+          padding: 24px;
+          background: rgba(255, 255, 255, 0.05);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 12px;
+        }
+
+        .docs-fix-icon {
+          font-size: 32px;
+          margin-bottom: 16px;
+        }
+
+        .docs-fix-category h3 {
+          margin: 0 0 16px 0;
+          font-size: 20px;
+        }
+
+        .docs-fix-category ul {
+          margin: 0;
+          padding-left: 20px;
+        }
+
+        .docs-fix-category li {
+          margin-bottom: 8px;
+          color: rgba(255, 255, 255, 0.8);
+        }
+
+        .docs-concepts-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+          gap: 20px;
+          margin: 32px 0;
+        }
+
+        .docs-concept-item {
+          padding: 20px;
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          border-radius: 12px;
+        }
+
+        .docs-concept-item h4 {
+          margin: 0 0 8px 0;
+          font-size: 16px;
+        }
+
+        .docs-concept-item p {
+          margin: 0 0 12px 0;
+          font-size: 14px;
+          color: rgba(255, 255, 255, 0.7);
+        }
+
+        .docs-concept-example {
+          font-size: 12px;
+          color: rgba(255, 255, 255, 0.6);
+          background: rgba(0, 0, 0, 0.3);
+          padding: 8px;
+          border-radius: 4px;
+          font-family: "Monaco", "Menlo", monospace;
+        }
+
+        .docs-concept-example strong {
+          color: var(--status-info);
+        }
+
+        .docs-detection-flow {
+          margin: 32px 0;
+        }
+
+        .docs-detection-step {
+          display: flex;
+          align-items: flex-start;
+          gap: 20px;
+          padding: 20px;
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          border-radius: 12px;
+          margin-bottom: 16px;
+        }
+
+        .docs-step-number {
+          width: 32px;
+          height: 32px;
+          background: linear-gradient(45deg, #000, #fff);
+          color: #000;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: 700;
+          flex-shrink: 0;
+        }
+
+        .docs-step-content h4 {
+          margin: 0 0 4px 0;
+          font-size: 16px;
+        }
+
+        .docs-step-content p {
+          margin: 0;
+          font-size: 14px;
+          color: rgba(255, 255, 255, 0.7);
+        }
+
+        .docs-importance-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+          gap: 20px;
+          margin: 32px 0;
+        }
+
+        .docs-importance-item {
+          padding: 20px;
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          border-radius: 12px;
+        }
+
+        .docs-importance-item h4 {
+          margin: 0 0 8px 0;
+          font-size: 16px;
+        }
+
+        .docs-importance-item p {
+          margin: 0;
+          font-size: 14px;
+          color: rgba(255, 255, 255, 0.7);
+        }
+
+        .docs-safety-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+          gap: 20px;
+          margin: 32px 0;
+        }
+
+        .docs-safety-feature {
+          padding: 20px;
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          border-radius: 12px;
+        }
+
+        .docs-safety-feature h4 {
+          margin: 0 0 8px 0;
+          font-size: 16px;
+        }
+
+        .docs-safety-feature p {
+          margin: 0;
+          font-size: 14px;
+          color: rgba(255, 255, 255, 0.7);
+        }
+
+        .docs-example-group {
+          margin: 40px 0;
+          padding: 32px;
+          background: rgba(255, 255, 255, 0.02);
+          border: 1px solid rgba(255, 255, 255, 0.05);
+          border-radius: 16px;
+        }
+
+        .docs-example-group h3 {
+          margin: 0 0 24px 0;
+          font-size: 22px;
+        }
+
+        .docs-code-comparison {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 24px;
+          margin: 24px 0;
+        }
+
+        .docs-code-before,
+        .docs-code-after {
+          background: rgba(0, 0, 0, 0.4);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 12px;
+          overflow: hidden;
+        }
+
+        .docs-code-before h4 {
+          background: rgba(229, 62, 62, 0.2);
+          color: #ff6b6b;
+          margin: 0;
+          padding: 12px 16px;
+          font-size: 14px;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .docs-code-after h4 {
+          background: rgba(76, 175, 80, 0.2);
+          color: #4caf50;
+          margin: 0;
+          padding: 12px 16px;
+          font-size: 14px;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .docs-code-before pre,
+        .docs-code-after pre {
+          margin: 0;
+          padding: 16px;
+          overflow-x: auto;
+        }
+
+        .docs-code-before code,
+        .docs-code-after code {
+          font-family: "Monaco", "Menlo", monospace;
+          font-size: 13px;
+          line-height: 1.5;
+          color: rgba(255, 255, 255, 0.9);
+        }
+
+        .docs-changes-summary {
+          background: rgba(33, 150, 243, 0.1);
+          border: 1px solid rgba(33, 150, 243, 0.3);
+          border-radius: 12px;
+          padding: 20px;
+          margin-top: 20px;
+        }
+
+        .docs-changes-summary h4 {
+          margin: 0 0 12px 0;
+          color: var(--status-info);
+        }
+
+        .docs-changes-summary ul {
+          margin: 0;
+          padding-left: 20px;
+        }
+
+        .docs-changes-summary li {
+          margin-bottom: 6px;
+          font-size: 14px;
+        }
+
+        .docs-performance-stats {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+          gap: 24px;
+          margin: 32px 0;
+        }
+
+        .docs-performance-metric {
+          text-align: center;
+          padding: 24px;
+          background: rgba(255, 255, 255, 0.05);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 12px;
+        }
+
+        .docs-metric-value {
+          font-size: 36px;
+          font-weight: 700;
+          color: #000;
+          background: linear-gradient(45deg, #fff, #000);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          margin-bottom: 8px;
+        }
+
+        .docs-metric-label {
+          font-size: 16px;
+          font-weight: 600;
+          margin-bottom: 4px;
+        }
+
+        .docs-metric-description {
+          font-size: 12px;
+          color: rgba(255, 255, 255, 0.6);
+        }
+
+        .docs-performance-details {
+          margin: 40px 0;
+        }
+
+        .docs-performance-section {
+          margin: 24px 0;
+          padding: 20px;
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          border-radius: 12px;
+        }
+
+        .docs-performance-section h4 {
+          margin: 0 0 12px 0;
+        }
+
+        .docs-performance-section ul {
+          margin: 0;
+          padding-left: 20px;
+        }
+
+        .docs-performance-section li {
+          margin-bottom: 8px;
+          font-size: 14px;
+        }
+
+        .docs-cli-section {
+          margin: 32px 0;
+        }
+
+        .docs-cli-section h3 {
+          margin: 0 0 16px 0;
+          font-size: 20px;
+        }
+
+        .docs-cli-command {
+          background: rgba(0, 0, 0, 0.4);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 8px;
+          padding: 16px;
+          margin-bottom: 12px;
+        }
+
+        .docs-cli-command pre {
+          margin: 0 0 8px 0;
+        }
+
+        .docs-cli-command code {
+          font-family: "Monaco", "Menlo", monospace;
+          font-size: 14px;
+          color: #000;
+          background: linear-gradient(45deg, #fff, #000);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+        }
+
+        .docs-cli-command p {
+          margin: 0;
+          font-size: 14px;
+          color: rgba(255, 255, 255, 0.7);
+        }
+
+        .docs-cli-options {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+          gap: 16px;
+          margin: 20px 0;
+        }
+
+        .docs-cli-option {
+          padding: 16px;
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          border-radius: 8px;
+        }
+
+        .docs-cli-option code {
+          color: var(--status-info);
+          font-weight: 600;
+          font-size: 14px;
+        }
+
+        .docs-cli-option p {
+          margin: 8px 0 0 0;
+          font-size: 13px;
+          color: rgba(255, 255, 255, 0.7);
+        }
+
+        .docs-cli-output {
+          background: rgba(0, 0, 0, 0.6);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 12px;
+          padding: 20px;
+          margin: 20px 0;
+        }
+
+        .docs-cli-output pre {
+          margin: 0;
+          overflow-x: auto;
+        }
+
+        .docs-cli-output code {
+          font-family: "Monaco", "Menlo", monospace;
+          font-size: 13px;
+          line-height: 1.6;
+          color: rgba(255, 255, 255, 0.9);
+        }
+
+        .docs-page-nav {
+          background: rgba(255, 255, 255, 0.02);
+          border-top: 1px solid rgba(255, 255, 255, 0.1);
+          padding: 40px;
+          display: flex;
+          justify-content: space-between;
+        }
+
+        .docs-nav-link {
+          padding: 12px 24px;
+          background: rgba(255, 255, 255, 0.05);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 8px;
+          text-decoration: none;
+          color: white;
+          font-weight: 500;
+          transition: all 0.2s ease;
+        }
+
+        .docs-nav-link:hover {
+          background: rgba(255, 255, 255, 0.1);
+          border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        code {
+          background: rgba(255, 255, 255, 0.1);
+          padding: 2px 6px;
+          border-radius: 4px;
+          font-family: "Monaco", "Menlo", monospace;
+          font-size: 0.9em;
+        }
+
+        strong {
+          color: white;
+          font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+          .docs-page-header,
+          .docs-page-content,
+          .docs-page-nav {
+            padding-left: 20px;
+            padding-right: 20px;
+          }
+
+          .docs-tab-nav {
+            padding-left: 20px;
+            padding-right: 20px;
+            overflow-x: auto;
+          }
+
+          .docs-page-title {
+            font-size: 36px;
+          }
+
+          .docs-code-comparison {
+            grid-template-columns: 1fr;
+          }
+
+          .docs-page-nav {
+            flex-direction: column;
+            gap: 12px;
+          }
+        }
+      `}</style>
+    </div>
+  );
+}
