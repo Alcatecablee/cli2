@@ -274,6 +274,9 @@ export default function CollaborationDashboard({
     }
   }, [user, activeTab, onRefreshSessions]);
 
+  // Alias for backward compatibility
+  const connectWebSocket = connectRealTime;
+
   const handleWebSocketMessage = useCallback(
     (message: any) => {
       const { type, data } = message;
