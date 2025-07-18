@@ -217,11 +217,13 @@ export default function CollaborationDashboard({
     }
 
     try {
+      setConnectionStatus("connecting");
       const wsUrl = `ws://localhost:3000/api/collaboration/ws?userId=${user.id}&userName=${encodeURIComponent(user.firstName || user.email || "Anonymous")}`;
       wsConnection.current = new WebSocket(wsUrl);
 
       wsConnection.current.onopen = () => {
         console.log("[WS] Connected to collaboration WebSocket");
+        setConnectionStatus("connected");
         wsReconnectAttempts.current = 0;
 
         // Send initial ping
