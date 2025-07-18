@@ -257,7 +257,9 @@ export function ThemeProvider({ children }) {
 - **Layer 2**: ~10-30 seconds (depends on codebase size)
 - **Layer 3**: ~5-15 seconds (component files only)
 - **Layer 4**: ~5-15 seconds (hydration files only)
-- **Total**: Usually completes in under 1 minute
+- **Layer 5**: ~3-10 seconds (Next.js App Router fixes)
+- **Layer 6**: ~5-20 seconds (testing and validation)
+- **Total**: Usually completes in under 2 minutes
 
 ## 🔧 Customization
 
