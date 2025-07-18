@@ -170,7 +170,7 @@ export default function AnalyticsOverview() {
     if (!session?.access_token) return;
 
     try {
-      const response = await fetch("/api/admin/fix-admin-user", {
+      const response = await fetch("/api/admin/force-admin", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${session.access_token}`,
@@ -179,14 +179,14 @@ export default function AnalyticsOverview() {
       });
 
       const result = await response.json();
-      console.log("Fix admin user result:", result);
+      console.log("Force admin result:", result);
 
       if (response.ok) {
         alert(
-          `Admin access fixed for ${result.currentAuthUser.email}! Please retry loading analytics.`,
+          `Admin access force-granted to ${result.currentAuthUser.email}! Admin checks: ${JSON.stringify(result.adminChecks)}. Please retry loading analytics.`,
         );
       } else {
-        alert(`Failed to fix admin access: ${result.error}`);
+        alert(`Failed to force admin access: ${result.error}`);
       }
     } catch (error) {
       console.error("Error granting admin access:", error);
