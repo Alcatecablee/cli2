@@ -57,46 +57,46 @@ export async function GET(request: NextRequest) {
     // Use service role to check profile
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    // Check if profiles table exists
+    // Check if users table exists
     const { data: tables, error: tablesError } = await supabase
       .from("information_schema.tables")
       .select("table_name")
-      .eq("table_name", "profiles");
+      .eq("table_name", "users");
 
-    const profilesTableExists = tables && tables.length > 0;
+    const usersTableExists = tables && tables.length > 0;
 
-    let profile = null;
-    let profileError = null;
+    let userRecord = null;
+    let userError = null;
 
-    if (profilesTableExists) {
-      const { data: profileData, error: profileErr } = await supabase
-        .from("profiles")
-        .select("email, role, id")
+    if (usersTableExists) {
+      const { data: userData, error: userErr } = await supabase
+        .from("users")
+        .select("email, plan_type, id")
         .eq("id", user.id)
         .single();
 
-      profile = profileData;
-      profileError = profileErr?.message;
+      userRecord = userData;
+      userError = userErr?.message;
     }
 
     const isAdmin =
-      profile?.email === "admin@neurolint.com" ||
-      profile?.email === "info@neurolint.com" ||
-      profile?.role === "admin";
+      userRecord?.email === "admin@neurolint.com" ||
+      userRecord?.email === "info@neurolint.com" ||
+      userRecord?.plan_type === "admin";
 
     return NextResponse.json({
       user: {
         id: user.id,
         email: user.email,
       },
-      profile,
-      profileError,
-      profilesTableExists,
+      userRecord,
+      userError,
+      usersTableExists,
       isAdmin,
       adminChecks: {
-        isAdminEmail: profile?.email === "admin@neurolint.com",
-        isInfoEmail: profile?.email === "info@neurolint.com",
-        hasAdminRole: profile?.role === "admin",
+        isAdminEmail: userRecord?.email === "admin@neurolint.com",
+        isInfoEmail: userRecord?.email === "info@neurolint.com",
+        hasAdminRole: userRecord?.plan_type === "admin",
       },
     });
   } catch (error) {
