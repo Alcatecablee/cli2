@@ -141,9 +141,6 @@ export default function LoginPage() {
               </Link>
             </div>
             <h1 className="onboarding-title">Welcome back</h1>
-            <p className="onboarding-subtitle">
-              Sign in to your NeuroLint Pro account
-            </p>
 
             <form onSubmit={handleSubmit}>
               {error && (
