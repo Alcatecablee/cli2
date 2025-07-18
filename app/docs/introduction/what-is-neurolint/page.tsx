@@ -46,7 +46,7 @@ export default function WhatIsNeuroLintPage() {
 
         {/* Core Concept */}
         <div className="docs-section">
-          <h2 id="core-concept">🎯 The Core Concept</h2>
+          <h2 id="core-concept">The Core Concept</h2>
           <p>
             NeuroLint Pro is fundamentally different from traditional linters
             like ESLint or formatters like Prettier. Instead of just{" "}
