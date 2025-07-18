@@ -165,7 +165,7 @@ NeuroLint uses `.neurolint.json` for project configuration:
 ```bash
 # API Configuration
 export NEUROLINT_API_KEY=your_api_key_here
-export NEUROLINT_API_URL=https://api.neurolint.dev
+export NEUROLINT_API_URL=http://localhost:3000/api
 
 
 ```
