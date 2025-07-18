@@ -865,6 +865,37 @@ export default function Dashboard() {
     loadSubscriptionData,
   ]);
 
+  // Load collaboration sessions when collaborate section is opened
+  useEffect(() => {
+    if (dashboardState.activeSection === "collaborate" && user?.id) {
+      const loadSessions = async () => {
+        setDashboardState((prev) => ({ ...prev, loadingSessions: true }));
+        try {
+          const response = await fetch("/api/collaboration/sessions", {
+            headers: {
+              "x-user-id": user.id,
+              "x-user-name": user.firstName || user.email || "Anonymous",
+            },
+          });
+          if (response.ok) {
+            const data = await response.json();
+            setDashboardState((prev) => ({
+              ...prev,
+              collaborationSessions: data.sessions || [],
+              loadingSessions: false,
+            }));
+          } else {
+            setDashboardState((prev) => ({ ...prev, loadingSessions: false }));
+          }
+        } catch (error) {
+          console.error("Failed to load collaboration sessions:", error);
+          setDashboardState((prev) => ({ ...prev, loadingSessions: false }));
+        }
+      };
+      loadSessions();
+    }
+  }, [dashboardState.activeSection, user]);
+
   // Show loading screen while checking authentication (bypassed for dashboard)
   if (!isHydrated && !forceBypassLoading && false) {
     // Disabled loading condition
