@@ -6,16 +6,16 @@ export const dynamic = "force-dynamic";
 // Helper function to check admin permissions
 async function isAdmin(supabase: any, userId: string): Promise<boolean> {
   try {
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("email, role")
+    const { data: userRecord } = await supabase
+      .from("users")
+      .select("email, plan_type")
       .eq("id", userId)
       .single();
 
     return (
-      profile?.email === "admin@neurolint.com" ||
-      profile?.email === "info@neurolint.com" ||
-      profile?.role === "admin"
+      userRecord?.email === "admin@neurolint.com" ||
+      userRecord?.email === "info@neurolint.com" ||
+      userRecord?.plan_type === "admin"
     );
   } catch {
     return false;
@@ -122,17 +122,7 @@ export async function GET(request: NextRequest) {
     let query = supabase
       .from("profiles")
       .select(
-        `
-        id,
-        email,
-        full_name,
-        plan,
-        role,
-        created_at,
-        last_sign_in_at,
-        email_confirmed_at,
-        (SELECT COUNT(*) FROM analysis_history WHERE user_id = profiles.id) as analysis_count
-      `,
+        "id, email, full_name, plan, created_at, last_sign_in_at, email_confirmed_at",
       )
       .order("created_at", { ascending: false });
 
