@@ -173,9 +173,23 @@ export default function UserManagement() {
       closeEditModal();
     } catch (error) {
       console.error("Error updating user:", error);
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
+
+      // Report error to admin system
+      await reportError(
+        error instanceof Error ? error : new Error(errorMessage),
+        "error",
+        {
+          action: "update_user",
+          userId: state.selectedUser.id,
+          updates,
+        },
+      );
+
       setState((prev) => ({
         ...prev,
-        error: error instanceof Error ? error.message : String(error),
+        error: errorMessage,
       }));
     }
   };
