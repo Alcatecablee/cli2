@@ -204,7 +204,7 @@ program
     console.log();
 
     console.log(
-      chalk.cyan("For more information, visit: https://neurolint.dev/docs"),
+      chalk.cyan("For more information, visit: http://localhost:3000/api-docs"),
     );
   });
 
