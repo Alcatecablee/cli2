@@ -80,7 +80,7 @@ export default function WhatIsNeuroLintPage() {
 
         {/* What Problems It Solves */}
         <div className="docs-section">
-          <h2 id="problems-solved">🔧 What Problems Does It Solve?</h2>
+          <h2 id="problems-solved">What Problems Does It Solve?</h2>
           <p>
             NeuroLint Pro tackles the most time-consuming and error-prone issues
             in React/Next.js development:
