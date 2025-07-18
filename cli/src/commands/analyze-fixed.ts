@@ -67,12 +67,20 @@ export async function analyzeCommand(files: string[], options: AnalyzeOptions) {
     }
 
     // Parse layers
-    const layers = options.layers
+    const requestedLayers = options.layers
       ? options.layers
           .split(",")
           .map((l) => parseInt(l.trim()))
           .filter((l) => l >= 1 && l <= 6)
       : config.layers.enabled;
+
+    // Apply Layer Dependency Management (from IMPLEMENTATION_PATTERNS.md)
+    const layers = validateAndCorrectLayers(requestedLayers);
+    if (layers.warnings.length > 0) {
+      layers.warnings.forEach((warning) =>
+        console.log(chalk.yellow(`DEPENDENCY: ${warning}`)),
+      );
+    }
 
     // Check premium features for layers 5 and 6
     const premiumLayers = layers.filter((layer) => layer >= 5);
