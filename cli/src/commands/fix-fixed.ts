@@ -195,7 +195,7 @@ export async function fixCommand(files: string[], options: FixOptions) {
         const fixPayload = {
           code,
           filename: file,
-          layers: layers.join(","),
+          layers: layers.length === 1 ? layers[0].toString() : layers.join(","),
           applyFixes: !options.dryRun, // Apply fixes unless it's a dry run
           metadata: {
             recursive: options.recursive,
