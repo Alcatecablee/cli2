@@ -116,24 +116,42 @@ function safeLogError(error: any, prefix: string): void {
   console.error(prefix, String(error));
 }
 
+// Helper function to get auth token from localStorage
+function getAuthToken(): string | null {
+  if (typeof window === "undefined") return null;
+
+  try {
+    const sessionData = localStorage.getItem("supabase_session");
+    if (sessionData) {
+      const session = JSON.parse(sessionData);
+      return session.access_token;
+    }
+  } catch (error) {
+    console.warn("Failed to get auth token from localStorage:", error);
+  }
+
+  return null;
+}
+
 // Helper function to create authenticated Supabase client
-async function createAuthenticatedClient() {
-  // Get the current session from Supabase
-  const {
-    data: { session },
-    error,
-  } = await supabase.auth.getSession();
+function createAuthenticatedClient() {
+  const token = getAuthToken();
 
-  if (error) {
-    console.warn("Error getting Supabase session:", error);
+  if (!token) {
+    console.warn("No auth token found - operations may fail due to RLS");
+    return supabase;
   }
 
-  if (!session) {
-    console.warn("No active Supabase session found");
-  }
+  // Set the auth header for this request
+  const client = createClient(supabaseUrl, supabaseKey, {
+    global: {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  });
 
-  // Return the client - it should automatically use the session
-  return supabase;
+  return client;
 }
 
 // Data service functions
@@ -141,7 +159,7 @@ export const dataService = {
   // User Settings
   async getUserSettings(userId: string): Promise<UserSettings | null> {
     try {
-      const client = await createAuthenticatedClient();
+      const client = createAuthenticatedClient();
       const { data, error } = await client
         .from("user_settings")
         .select("*")
@@ -179,7 +197,7 @@ export const dataService = {
     >,
   ): Promise<UserSettings | null> {
     try {
-      const client = await createAuthenticatedClient();
+      const client = createAuthenticatedClient();
       const { data, error } = await client
         .from("user_settings")
         .upsert({
@@ -211,7 +229,7 @@ export const dataService = {
     >,
   ): Promise<AnalysisHistory | null> {
     try {
-      const client = await createAuthenticatedClient();
+      const client = createAuthenticatedClient();
 
       const { data, error } = await client
         .from("analysis_history")
@@ -239,7 +257,7 @@ export const dataService = {
     limit = 50,
   ): Promise<AnalysisHistory[]> {
     try {
-      const client = await createAuthenticatedClient();
+      const client = createAuthenticatedClient();
       const { data, error } = await client
         .from("analysis_history")
         .select("*")
@@ -264,7 +282,7 @@ export const dataService = {
     historyId: string,
   ): Promise<boolean> {
     try {
-      const client = await createAuthenticatedClient();
+      const client = createAuthenticatedClient();
       const { error } = await client
         .from("analysis_history")
         .delete()
@@ -285,7 +303,7 @@ export const dataService = {
 
   async clearAnalysisHistory(userId: string): Promise<boolean> {
     try {
-      const client = await createAuthenticatedClient();
+      const client = createAuthenticatedClient();
       const { error } = await client
         .from("analysis_history")
         .delete()
@@ -309,18 +327,19 @@ export const dataService = {
     projectData: Omit<Project, "id" | "user_id" | "created_at" | "updated_at">,
   ): Promise<Project | null> {
     try {
-      const client = await createAuthenticatedClient();
+      const token = getAuthToken();
 
-      // Ensure we have a valid session before proceeding
-      const {
-        data: { session },
-      } = await client.auth.getSession();
-      if (!session) {
-        console.error("No authenticated session found for project creation");
+      if (!token) {
+        console.error("No authentication token found for project creation");
         return null;
       }
 
-      console.log("Creating project with authenticated user:", session.user.id);
+      console.log(
+        "Creating project with authenticated user - token exists:",
+        !!token,
+      );
+
+      const client = createAuthenticatedClient();
 
       const { data, error } = await client
         .from("projects")
@@ -345,7 +364,7 @@ export const dataService = {
 
   async getProjects(userId: string): Promise<Project[]> {
     try {
-      const client = await createAuthenticatedClient();
+      const client = createAuthenticatedClient();
       const { data, error } = await client
         .from("projects")
         .select("*")
@@ -370,7 +389,7 @@ export const dataService = {
     updates: Partial<Omit<Project, "id" | "user_id" | "created_at">>,
   ): Promise<Project | null> {
     try {
-      const client = await createAuthenticatedClient();
+      const client = createAuthenticatedClient();
       const { data, error } = await client
         .from("projects")
         .update({
@@ -396,7 +415,7 @@ export const dataService = {
 
   async deleteProject(userId: string, projectId: string): Promise<boolean> {
     try {
-      const client = await createAuthenticatedClient();
+      const client = createAuthenticatedClient();
       const { error } = await client
         .from("projects")
         .delete()
