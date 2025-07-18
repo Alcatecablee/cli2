@@ -4,7 +4,7 @@ import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useAuth } from "../../lib/auth-context";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import dataService from "../../lib/supabase-data";
+import dataService from "../../lib/supabase-data-unified";
 import "./dashboard.css";
 import "./integrations.css";
 import "./collaboration-styles.css";
