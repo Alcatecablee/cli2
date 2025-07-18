@@ -33,7 +33,7 @@ export default function WhatIsNeuroLintPage() {
       <div className="docs-page-content">
         {/* Quick Answer */}
         <div className="docs-highlight-box success">
-          <h3>💡 Quick Answer</h3>
+          <h3>Quick Answer</h3>
           <p>
             NeuroLint Pro is a{" "}
             <strong>rule-based code transformation engine</strong> that
