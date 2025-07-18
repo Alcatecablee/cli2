@@ -388,10 +388,14 @@ export default function CollaborationDashboard({
     [onUpdateSessions],
   );
 
-  // WebSocket connection effect
+  // Real-time connection effect
   useEffect(() => {
-    if (activeTab === "sessions" || activeTab === "activity") {
+    if (
+      (activeTab === "sessions" || activeTab === "activity") &&
+      !isConnectionInitialized
+    ) {
       connectWebSocket();
+      setIsConnectionInitialized(true);
     }
 
     return () => {
@@ -405,7 +409,7 @@ export default function CollaborationDashboard({
         activityPollInterval.current = null;
       }
     };
-  }, [activeTab, connectWebSocket]);
+  }, [activeTab]); // Removed connectWebSocket from dependencies to prevent infinite loop
 
   // Cleanup all intervals on unmount
   useEffect(() => {
