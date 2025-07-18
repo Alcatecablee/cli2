@@ -260,7 +260,39 @@ export default function CollaborationDashboard({
       };
 
       wsConnection.current.onerror = (error) => {
-        console.error("[WS] WebSocket error:", error);
+        // Enhanced WebSocket error handling with meaningful information
+        const errorInfo = (() => {
+          if (error instanceof Event) {
+            // Check WebSocket readyState for more context
+            const ws = wsConnection.current;
+            if (ws) {
+              const stateMap = {
+                0: "CONNECTING",
+                1: "OPEN",
+                2: "CLOSING",
+                3: "CLOSED",
+              };
+              return `WebSocket connection failed (state: ${stateMap[ws.readyState] || "UNKNOWN"})`;
+            }
+            return "WebSocket connection error occurred";
+          }
+          if (error instanceof Error) {
+            return `WebSocket error: ${error.message}`;
+          }
+          if (typeof error === "object" && error !== null) {
+            try {
+              return `WebSocket error: ${JSON.stringify(error)}`;
+            } catch {
+              return "WebSocket error: Unable to serialize error object";
+            }
+          }
+          return `WebSocket error: ${String(error)}`;
+        })();
+
+        console.error("[WS]", errorInfo);
+
+        // Set connection status to help with UI state
+        setConnectionStatus("disconnected");
       };
     } catch (error) {
       console.error("[WS] Failed to connect:", error);
