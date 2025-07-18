@@ -1,0 +1,259 @@
+import * as vscode from "vscode";
+import { ApiClient, AnalysisRequest, AnalysisResult } from "../utils/ApiClient";
+import { ConfigurationManager } from "../utils/ConfigurationManager";
+
+export class NeuroLintProvider implements vscode.Disposable {
+  private disposables: vscode.Disposable[] = [];
+
+  constructor(
+    private apiClient: ApiClient,
+    private configManager: ConfigurationManager,
+    private outputChannel: vscode.OutputChannel,
+  ) {}
+
+  public async analyzeDocument(
+    document: vscode.TextDocument,
+  ): Promise<AnalysisResult | null> {
+    try {
+      if (!this.apiClient.isAuthenticated()) {
+        this.outputChannel.appendLine("No API key configured");
+        return null;
+      }
+
+      // Check usage limits
+      const usageCheck = await this.apiClient.checkUsageLimit();
+      if (!usageCheck.canUse) {
+        const message = `Usage limit reached (${usageCheck.usage.current}/${usageCheck.usage.limit}). Upgrade your plan to continue.`;
+        this.outputChannel.appendLine(message);
+        vscode.window
+          .showWarningMessage(message, "Upgrade Plan")
+          .then((selection) => {
+            if (selection === "Upgrade Plan") {
+              vscode.env.openExternal(
+                vscode.Uri.parse("https://neurolint.dev/pricing"),
+              );
+            }
+          });
+        return null;
+      }
+
+      // Check premium feature access for layers 5 and 6
+      const enabledLayers = this.configManager.getEnabledLayers();
+      const premiumLayers = enabledLayers.filter((layer) => layer >= 5);
+
+      if (premiumLayers.length > 0) {
+        const userInfo = await this.apiClient.getUserInfo();
+        if (userInfo && userInfo.plan === "free") {
+          const message = `Layers ${premiumLayers.join(", ")} require Pro plan ($24.99/month). Upgrade to access Next.js and advanced features.`;
+          this.outputChannel.appendLine(message);
+          vscode.window
+            .showWarningMessage(message, "Upgrade to Pro")
+            .then((selection) => {
+              if (selection === "Upgrade to Pro") {
+                vscode.env.openExternal(
+                  vscode.Uri.parse("https://neurolint.dev/pricing"),
+                );
+              }
+            });
+          // Continue with only free layers (1-4)
+          const freeLayers = enabledLayers.filter((layer) => layer <= 4);
+          if (freeLayers.length === 0) return null;
+        }
+      }
+
+      const request: AnalysisRequest = {
+        code: document.getText(),
+        filename: document.fileName,
+        layers: this.configManager.getEnabledLayers(),
+        metadata: {
+          language: document.languageId,
+          uri: document.uri.toString(),
+          version: document.version,
+        },
+      };
+
+      this.outputChannel.appendLine(`Analyzing document: ${document.fileName}`);
+
+      const result = await this.apiClient.analyzeCode(request);
+
+      this.outputChannel.appendLine(
+        `Analysis completed with ${result.changes?.length || 0} suggestions`,
+      );
+
+      return result;
+    } catch (error) {
+      this.outputChannel.appendLine(
+        `Analysis failed: ${error instanceof Error ? error.message : "Unknown error"}`,
+      );
+      throw error;
+    }
+  }
+
+  public async analyzeWorkspace(): Promise<AnalysisResult | null> {
+    try {
+      if (!vscode.workspace.workspaceFolders) {
+        this.outputChannel.appendLine("No workspace folder available");
+        return null;
+      }
+
+      if (!this.apiClient.isAuthenticated()) {
+        this.outputChannel.appendLine("No API key configured");
+        return null;
+      }
+
+      // Check if user has bulk processing feature
+      const canUseBulkProcessing =
+        await this.apiClient.canUseFeature("bulkProcessing");
+      if (!canUseBulkProcessing) {
+        const message = "Workspace analysis requires a Pro plan or higher.";
+        this.outputChannel.appendLine(message);
+        vscode.window
+          .showWarningMessage(message, "Upgrade to Pro")
+          .then((selection) => {
+            if (selection === "Upgrade to Pro") {
+              vscode.env.openExternal(
+                vscode.Uri.parse("https://neurolint.dev/pricing"),
+              );
+            }
+          });
+        return null;
+      }
+
+      const files = await this.collectWorkspaceFiles();
+
+      if (files.length === 0) {
+        this.outputChannel.appendLine("No files found to analyze");
+        return null;
+      }
+
+      this.outputChannel.appendLine(
+        `Analyzing ${files.length} files in workspace`,
+      );
+
+      const result = await this.apiClient.analyzeWorkspace(files);
+
+      this.outputChannel.appendLine(`Workspace analysis completed`);
+
+      return result;
+    } catch (error) {
+      this.outputChannel.appendLine(
+        `Workspace analysis failed: ${error instanceof Error ? error.message : "Unknown error"}`,
+      );
+      throw error;
+    }
+  }
+
+  private async collectWorkspaceFiles(): Promise<
+    Array<{
+      filename: string;
+      code: string;
+    }>
+  > {
+    const files: Array<{ filename: string; code: string }> = [];
+    const workspaceSettings = this.configManager.getWorkspaceSettings();
+
+    if (!vscode.workspace.workspaceFolders) {
+      return files;
+    }
+
+    for (const includePattern of workspaceSettings.includePatterns) {
+      const fileUris = await vscode.workspace.findFiles(
+        includePattern,
+        `{${workspaceSettings.excludePatterns.join(",")}}`,
+        workspaceSettings.maxFiles,
+      );
+
+      for (const uri of fileUris) {
+        try {
+          const document = await vscode.workspace.openTextDocument(uri);
+
+          // Check file size limit
+          if (document.getText().length <= workspaceSettings.maxFileSize) {
+            files.push({
+              filename: uri.fsPath,
+              code: document.getText(),
+            });
+          } else {
+            this.outputChannel.appendLine(
+              `Skipping ${uri.fsPath}: file too large`,
+            );
+          }
+        } catch (error) {
+          this.outputChannel.appendLine(
+            `Error reading ${uri.fsPath}: ${error instanceof Error ? error.message : "Unknown error"}`,
+          );
+        }
+
+        // Respect file count limit
+        if (files.length >= workspaceSettings.maxFiles) {
+          break;
+        }
+      }
+
+      if (files.length >= workspaceSettings.maxFiles) {
+        break;
+      }
+    }
+
+    return files;
+  }
+
+  private async validateWorkspace(): Promise<void> {
+    try {
+      this.outputChannel.appendLine("Validating workspace configuration...");
+
+      // Check workspace folders
+      if (!vscode.workspace.workspaceFolders) {
+        this.outputChannel.appendLine("No workspace folders available");
+        return;
+      }
+
+      // Validate configuration
+      const configValidation = this.configManager.validateConfiguration();
+      if (!configValidation.valid) {
+        this.outputChannel.appendLine(
+          `Configuration errors: ${configValidation.errors.join(", ")}`,
+        );
+        vscode.window.showErrorMessage(
+          `NeuroLint configuration errors: ${configValidation.errors.join(", ")}`,
+        );
+        return;
+      }
+
+      if (configValidation.warnings.length > 0) {
+        this.outputChannel.appendLine(
+          `Configuration warnings: ${configValidation.warnings.join(", ")}`,
+        );
+        vscode.window.showWarningMessage(
+          `NeuroLint warnings: ${configValidation.warnings.join(", ")}`,
+        );
+      }
+
+      // Check API connection
+      if (this.apiClient.isAuthenticated()) {
+        const isValid = await this.apiClient.validateApiKey();
+        if (!isValid) {
+          vscode.window.showErrorMessage(
+            "NeuroLint: Invalid API key. Please check your configuration.",
+          );
+          return;
+        }
+      }
+
+      this.outputChannel.appendLine(
+        "Workspace validation completed successfully",
+      );
+    } catch (error) {
+      this.outputChannel.appendLine(
+        `Workspace validation failed: ${error instanceof Error ? error.message : "Unknown error"}`,
+      );
+      vscode.window.showErrorMessage(
+        `NeuroLint workspace validation failed: ${error instanceof Error ? error.message : "Unknown error"}`,
+      );
+    }
+  }
+
+  public dispose(): void {
+    this.disposables.forEach((d) => d.dispose());
+  }
+}

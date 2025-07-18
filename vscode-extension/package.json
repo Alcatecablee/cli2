@@ -1,0 +1,319 @@
+{
+  "name": "neurolint-vscode",
+  "displayName": "NeuroLint - Advanced Code Analysis",
+  "description": "Advanced rule-based code analysis and transformation for TypeScript, React, and Next.js",
+  "version": "1.0.6",
+  "publisher": "neurolint",
+  "icon": "media/icon.png",
+  "galleryBanner": {
+    "color": "#1a1a1a",
+    "theme": "dark"
+  },
+  "preview": false,
+  "pricing": "Free",
+  "engines": {
+    "vscode": "^1.101.0"
+  },
+  "categories": [
+    "Linters",
+    "Formatters",
+    "Programming Languages"
+  ],
+  "keywords": [
+    "typescript",
+    "javascript",
+    "react",
+    "nextjs",
+    "linting",
+    "rule-based",
+    "code analysis",
+    "transformation",
+    "productivity",
+    "code quality",
+    "performance",
+    "security"
+  ],
+  "badges": [
+    {
+      "url": "https://img.shields.io/badge/Rule--Based-blue",
+      "href": "https://neurolint.dev/features",
+      "description": "Advanced rule-based analysis"
+    }
+  ],
+  "qna": "marketplace",
+  "activationEvents": [
+    "onLanguage:typescript",
+    "onLanguage:javascript",
+    "onLanguage:typescriptreact",
+    "onLanguage:javascriptreact"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "languages": [
+      {
+        "id": "typescript",
+        "extensions": [
+          ".ts",
+          ".tsx"
+        ]
+      },
+      {
+        "id": "javascript",
+        "extensions": [
+          ".js",
+          ".jsx"
+        ]
+      }
+    ],
+    "commands": [
+      {
+        "command": "neurolint.analyzeFile",
+        "title": "Analyze Current File",
+        "category": "NeuroLint",
+        "icon": "$(search)"
+      },
+      {
+        "command": "neurolint.analyzeWorkspace",
+        "title": "Analyze Entire Workspace",
+        "category": "NeuroLint",
+        "icon": "$(folder)"
+      },
+      {
+        "command": "neurolint.fixFile",
+        "title": "Fix Current File",
+        "category": "NeuroLint",
+        "icon": "$(tools)"
+      },
+      {
+        "command": "neurolint.fixWorkspace",
+        "title": "Fix Entire Workspace",
+        "category": "NeuroLint",
+        "icon": "$(wrench)"
+      },
+      {
+        "command": "neurolint.showOutput",
+        "title": "Show Output Panel",
+        "category": "NeuroLint"
+      },
+      {
+        "command": "neurolint.configure",
+        "title": "Configure NeuroLint",
+        "category": "NeuroLint",
+        "icon": "$(gear)"
+      },
+      {
+        "command": "neurolint.login",
+        "title": "Login to NeuroLint",
+        "category": "NeuroLint"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "when": "editorLangId =~ /^(typescript|javascript|typescriptreact|javascriptreact)$/",
+          "command": "neurolint.analyzeFile",
+          "group": "1_modification@1"
+        },
+        {
+          "when": "editorLangId =~ /^(typescript|javascript|typescriptreact|javascriptreact)$/",
+          "command": "neurolint.fixFile",
+          "group": "1_modification@2"
+        }
+      ],
+      "explorer/context": [
+        {
+          "when": "resourceExtname =~ /^\\.(ts|tsx|js|jsx)$/",
+          "command": "neurolint.analyzeFile",
+          "group": "7_modification@1"
+        },
+        {
+          "when": "resourceExtname =~ /^\\.(ts|tsx|js|jsx)$/",
+          "command": "neurolint.fixFile",
+          "group": "7_modification@2"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "neurolint.analyzeFile",
+          "when": "editorLangId =~ /^(typescript|javascript|typescriptreact|javascriptreact)$/"
+        },
+        {
+          "command": "neurolint.fixFile",
+          "when": "editorLangId =~ /^(typescript|javascript|typescriptreact|javascriptreact)$/"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "NeuroLint",
+      "properties": {
+        "neurolint.apiUrl": {
+          "type": "string",
+          "default": "https://api.neurolint.dev",
+          "description": "NeuroLint API server URL"
+        },
+        "neurolint.apiKey": {
+          "type": "string",
+          "default": "",
+          "description": "NeuroLint API key for authentication"
+        },
+        "neurolint.enabledLayers": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 6
+          },
+          "default": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "description": "Which NeuroLint layers to enable (1-6)"
+        },
+        "neurolint.autoFix": {
+          "type": "boolean",
+          "default": false,
+          "description": "Automatically fix issues on save"
+        },
+        "neurolint.showInlineHints": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show inline code hints and suggestions"
+        },
+        "neurolint.diagnosticsLevel": {
+          "type": "string",
+          "enum": [
+            "error",
+            "warning",
+            "info"
+          ],
+          "default": "warning",
+          "description": "Diagnostic severity level"
+        },
+        "neurolint.timeout": {
+          "type": "number",
+          "default": 30000,
+          "description": "Request timeout in milliseconds"
+        },
+        "neurolint.workspace.excludePatterns": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "**/node_modules/**",
+            "**/dist/**",
+            "**/build/**",
+            "**/.next/**",
+            "**/coverage/**"
+          ],
+          "description": "File patterns to exclude from analysis"
+        },
+        "neurolint.workspace.includePatterns": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "**/*.ts",
+            "**/*.tsx",
+            "**/*.js",
+            "**/*.jsx"
+          ],
+          "description": "File patterns to include in analysis"
+        },
+        "neurolint.workspace.maxFileSize": {
+          "type": "number",
+          "default": 10485760,
+          "description": "Maximum file size to analyze (in bytes)"
+        },
+        "neurolint.workspace.maxFiles": {
+          "type": "number",
+          "default": 1000,
+          "description": "Maximum number of files to analyze in workspace"
+        }
+      }
+    },
+    "views": {
+      "explorer": [
+        {
+          "id": "neurolintExplorer",
+          "name": "NeuroLint",
+          "when": "neurolint.enabled"
+        }
+      ]
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "neurolint",
+          "title": "NeuroLint",
+          "icon": "$(search)"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "command": "neurolint.analyzeFile",
+        "key": "ctrl+shift+l",
+        "mac": "cmd+shift+l",
+        "when": "editorTextFocus && editorLangId =~ /^(typescript|javascript|typescriptreact|javascriptreact)$/"
+      },
+      {
+        "command": "neurolint.fixFile",
+        "key": "ctrl+shift+f",
+        "mac": "cmd+shift+f",
+        "when": "editorTextFocus && editorLangId =~ /^(typescript|javascript|typescriptreact|javascriptreact)$/"
+      },
+      {
+        "command": "neurolint.analyzeWorkspace",
+        "key": "ctrl+shift+w",
+        "mac": "cmd+shift+w"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run build",
+    "build": "npm run compile && npm run webpack",
+    "compile": "tsc -p ./",
+    "webpack": "webpack --mode production",
+    "webpack:dev": "webpack --mode development --watch",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts --fix",
+    "test": "node ./dist/test/runTest.js",
+    "clean": "rimraf dist",
+    "package": "npm run clean && npm run build && vsce package --out ./releases/",
+    "publish": "npm run package && vsce publish",
+    "publish:marketplace": "bash scripts/publish-to-marketplace.sh",
+    "test:package": "vsce package --out ./test/ && code --install-extension ./test/*.vsix",
+    "dev": "npm run compile && npm run webpack:dev"
+  },
+  "devDependencies": {
+    "@types/node": "^18.0.0",
+    "@types/vscode": "^1.101.0",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
+    "@vscode/test-electron": "^2.3.0",
+    "@vscode/vsce": "^2.32.0",
+    "eslint": "^8.50.0",
+    "rimraf": "^5.0.10",
+    "ts-loader": "^9.4.0",
+    "typescript": "^5.2.0",
+    "webpack": "^5.88.0",
+    "webpack-cli": "^5.1.0"
+  },
+  "dependencies": {
+    "axios": "^1.6.0",
+    "ws": "^8.14.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Alcatecablee/nurolint.git"
+  },
+  "bugs": {
+    "url": "https://neurolint.dev/support"
+  },
+  "homepage": "https://neurolint.dev"
+}
