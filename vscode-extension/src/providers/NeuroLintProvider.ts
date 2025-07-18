@@ -11,6 +11,67 @@ export class NeuroLintProvider implements vscode.Disposable {
     private outputChannel: vscode.OutputChannel,
   ) {}
 
+  /**
+   * Layer Dependency Management (from IMPLEMENTATION_PATTERNS.md)
+   * Validates and corrects layer selection based on dependencies
+   */
+  private validateAndCorrectLayers(requestedLayers: number[]) {
+    const DEPENDENCIES = {
+      1: [], // Configuration has no dependencies
+      2: [1], // Entity cleanup depends on config foundation
+      3: [1, 2], // Components depend on config + cleanup
+      4: [1, 2, 3], // Hydration depends on all previous layers
+      5: [1, 2, 3, 4], // Next.js depends on all core layers
+      6: [1, 2, 3, 4, 5], // Testing depends on all previous layers
+    };
+
+    const LAYER_INFO = {
+      1: { name: "Configuration", critical: true },
+      2: { name: "Entity Cleanup", critical: false },
+      3: { name: "Components", critical: false },
+      4: { name: "Hydration", critical: false },
+      5: { name: "Next.js App Router", critical: false },
+      6: { name: "Testing & Validation", critical: false },
+    };
+
+    const warnings: string[] = [];
+    const autoAdded: number[] = [];
+    let correctedLayers = [...requestedLayers];
+
+    // Sort layers in execution order
+    correctedLayers.sort((a, b) => a - b);
+
+    // Check dependencies for each requested layer
+    for (const layerId of requestedLayers) {
+      const dependencies =
+        DEPENDENCIES[layerId as keyof typeof DEPENDENCIES] || [];
+      const missingDeps = dependencies.filter(
+        (dep) => !correctedLayers.includes(dep),
+      );
+
+      if (missingDeps.length > 0) {
+        // Auto-add missing dependencies
+        correctedLayers.push(...missingDeps);
+        autoAdded.push(...missingDeps);
+
+        warnings.push(
+          `Layer ${layerId} (${LAYER_INFO[layerId as keyof typeof LAYER_INFO]?.name}) requires ` +
+            `${missingDeps.map((dep) => `${dep} (${LAYER_INFO[dep as keyof typeof LAYER_INFO]?.name})`).join(", ")}. ` +
+            `Auto-added missing dependencies.`,
+        );
+      }
+    }
+
+    // Remove duplicates and sort
+    correctedLayers = [...new Set(correctedLayers)].sort((a, b) => a - b);
+
+    return {
+      correctedLayers,
+      warnings,
+      autoAdded,
+    };
+  }
+
   public async analyzeDocument(
     document: vscode.TextDocument,
   ): Promise<AnalysisResult | null> {
