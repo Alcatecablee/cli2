@@ -24,11 +24,9 @@ export default function WhatIsNeuroLintPage() {
         </p>
 
         <div className="docs-page-meta">
-          <span className="docs-meta-item">⏱️ 3 min read</span>
-          <span className="docs-meta-item difficulty-beginner">
-            🟢 Beginner
-          </span>
-          <span className="docs-meta-item">📝 Last updated: Dec 2024</span>
+          <span className="docs-meta-item">3 min read</span>
+          <span className="docs-meta-item difficulty-beginner">Beginner</span>
+          <span className="docs-meta-item">Last updated: Dec 2024</span>
         </div>
       </div>
 
