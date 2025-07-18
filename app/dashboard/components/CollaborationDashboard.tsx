@@ -657,52 +657,184 @@ export default function CollaborationDashboard({
                           )
                         }
                       >
+                        <svg
+                          viewBox="0 0 24 24"
+                          width="14"
+                          height="14"
+                          fill="currentColor"
+                        >
+                          <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+                        </svg>
                         Join Session
                       </button>
                       <button
                         className="btn btn-secondary btn-sm"
-                        onClick={() => {
-                          navigator.clipboard.writeText(
-                            `${window.location.origin}/collaborate?session=${session.id}`,
-                          );
-                          // Could show a toast notification here
+                        onClick={async () => {
+                          try {
+                            await navigator.clipboard.writeText(
+                              `${window.location.origin}/collaborate?session=${session.id}`,
+                            );
+                            // Show temporary success feedback
+                            const button = event?.target as HTMLButtonElement;
+                            if (button) {
+                              const originalText = button.textContent;
+                              button.textContent = "Copied!";
+                              button.style.background = "#4caf50";
+                              setTimeout(() => {
+                                button.textContent = originalText;
+                                button.style.background = "";
+                              }, 2000);
+                            }
+                          } catch (error) {
+                            alert("Failed to copy link");
+                          }
                         }}
                       >
+                        <svg
+                          viewBox="0 0 24 24"
+                          width="14"
+                          height="14"
+                          fill="currentColor"
+                        >
+                          <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z" />
+                        </svg>
                         Copy Link
                       </button>
                       {session.host_user_id === user.id && (
-                        <button
-                          className="btn btn-danger btn-sm"
-                          onClick={async () => {
-                            if (
-                              confirm(
-                                "Are you sure you want to delete this session?",
-                              )
-                            ) {
+                        <>
+                          <button
+                            className="btn btn-secondary btn-sm"
+                            onClick={async () => {
                               try {
                                 const response = await fetch(
-                                  `/api/collaboration/sessions?sessionId=${session.id}`,
+                                  "/api/collaboration/sessions",
                                   {
-                                    method: "DELETE",
+                                    method: "PUT",
                                     headers: {
+                                      "Content-Type": "application/json",
                                       "x-user-id": user.id,
                                     },
+                                    body: JSON.stringify({
+                                      sessionId: session.id,
+                                      action: "lock_session",
+                                      data: { locked: !session.is_locked },
+                                    }),
                                   },
                                 );
                                 if (response.ok) {
                                   await onRefreshSessions();
                                 }
                               } catch (error) {
-                                console.error(
-                                  "Failed to delete session:",
-                                  error,
-                                );
+                                console.error("Failed to toggle lock:", error);
                               }
+                            }}
+                            title={
+                              session.is_locked
+                                ? "Unlock session"
+                                : "Lock session"
                             }
-                          }}
-                        >
-                          Delete
-                        </button>
+                          >
+                            <svg
+                              viewBox="0 0 24 24"
+                              width="14"
+                              height="14"
+                              fill="currentColor"
+                            >
+                              {session.is_locked ? (
+                                <path d="M12,17A2,2 0 0,0 14,15C14,13.89 13.1,13 12,13A2,2 0 0,0 10,15A2,2 0 0,0 12,17M18,8A2,2 0 0,1 20,10V20A2,2 0 0,1 18,22H6A2,2 0 0,1 4,20V10C4,8.89 4.9,8 6,8H7V6A5,5 0 0,1 12,1A5,5 0 0,1 17,6V8H18M12,3A3,3 0 0,0 9,6V8H15V6A3,3 0 0,0 12,3Z" />
+                              ) : (
+                                <path d="M12,17A2,2 0 0,0 14,15C14,13.89 13.1,13 12,13A2,2 0 0,0 10,15A2,2 0 0,0 12,17M18,8A2,2 0 0,1 20,10V20A2,2 0 0,1 18,22H6A2,2 0 0,1 4,20V10C4,8.89 4.9,8 6,8H15V6A3,3 0 0,0 12,3A3,3 0 0,0 9,6H7A5,5 0 0,1 12,1A5,5 0 0,1 17,6V8H18Z" />
+                              )}
+                            </svg>
+                            {session.is_locked ? "Unlock" : "Lock"}
+                          </button>
+                          <button
+                            className="btn btn-secondary btn-sm"
+                            onClick={() => {
+                              const sessionUrl = `${window.location.origin}/collaborate?session=${session.id}`;
+                              const subject = encodeURIComponent(
+                                `Join my NeuroLint collaboration session: ${session.name}`,
+                              );
+                              const body = encodeURIComponent(
+                                `Hi!\n\nI'd like to invite you to collaborate on "${session.name}".\n\nClick this link to join: ${sessionUrl}\n\nWe'll be working on: ${session.document_filename}\n\nBest regards`,
+                              );
+                              window.open(
+                                `mailto:?subject=${subject}&body=${body}`,
+                              );
+                            }}
+                            title="Send invitation via email"
+                          >
+                            <svg
+                              viewBox="0 0 24 24"
+                              width="14"
+                              height="14"
+                              fill="currentColor"
+                            >
+                              <path d="M20,8L12,13L4,8V6L12,11L20,6M20,4H4C2.89,4 2,4.89 2,6V18A2,2 0 0,0 4,20H20A2,2 0 0,0 22,18V6C22,4.89 21.1,4 20,4Z" />
+                            </svg>
+                            Invite
+                          </button>
+                          <button
+                            className="btn btn-danger btn-sm"
+                            onClick={async () => {
+                              if (
+                                confirm(
+                                  `Are you sure you want to delete "${session.name}"? This action cannot be undone.`,
+                                )
+                              ) {
+                                try {
+                                  const response = await fetch(
+                                    `/api/collaboration/sessions?sessionId=${session.id}`,
+                                    {
+                                      method: "DELETE",
+                                      headers: {
+                                        "x-user-id": user.id,
+                                      },
+                                    },
+                                  );
+                                  if (response.ok) {
+                                    // Track activity
+                                    await fetch("/api/collaboration/activity", {
+                                      method: "POST",
+                                      headers: {
+                                        "Content-Type": "application/json",
+                                        "x-user-id": user.id,
+                                        "x-user-name":
+                                          user.firstName ||
+                                          user.email ||
+                                          "Anonymous",
+                                      },
+                                      body: JSON.stringify({
+                                        type: "session_deleted",
+                                        sessionId: session.id,
+                                        details: { sessionName: session.name },
+                                      }),
+                                    }).catch(console.error);
+
+                                    await onRefreshSessions();
+                                  }
+                                } catch (error) {
+                                  console.error(
+                                    "Failed to delete session:",
+                                    error,
+                                  );
+                                  alert("Failed to delete session");
+                                }
+                              }
+                            }}
+                            title="Delete session"
+                          >
+                            <svg
+                              viewBox="0 0 24 24"
+                              width="14"
+                              height="14"
+                              fill="currentColor"
+                            >
+                              <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" />
+                            </svg>
+                            Delete
+                          </button>
+                        </>
                       )}
                     </div>
                   </div>
