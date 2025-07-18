@@ -14,6 +14,7 @@ import SystemMonitoring from "./components/SystemMonitoring";
 import AnalyticsOverview from "./components/AnalyticsOverview";
 import ApiManagement from "./components/ApiManagement";
 import DatabaseManagement from "./components/DatabaseManagement";
+import AdminSetup from "./components/AdminSetup";
 
 interface AdminDashboardState {
   activeSection: string;
