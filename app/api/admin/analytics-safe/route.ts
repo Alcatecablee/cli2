@@ -89,13 +89,18 @@ export async function GET(request: NextRequest) {
     }
 
     const token = authHeader.substring(7);
-    const anonClient = createClient(
-      supabaseUrl,
-      process.env.SUPABASE_ANON_KEY!,
-      {
-        global: { headers: { Authorization: `Bearer ${token}` } },
-      },
-    );
+    const anonKey = process.env.SUPABASE_ANON_KEY;
+
+    if (!anonKey) {
+      return NextResponse.json(
+        { error: "Supabase anonymous key not configured" },
+        { status: 500 },
+      );
+    }
+
+    const anonClient = createClient(supabaseUrl, anonKey, {
+      global: { headers: { Authorization: `Bearer ${token}` } },
+    });
 
     const {
       data: { user },
