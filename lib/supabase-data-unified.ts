@@ -255,7 +255,9 @@ export const dataService = {
 
       return data;
     } catch (error) {
-      console.error("Error in getUserSettings:", formatError(error));
+      // Use safe error handling to prevent response consumption issues
+      const { formattedError } = safeSupabaseErrorHandler(error);
+      console.error("Error in getUserSettings:", formattedError);
 
       // Return default settings as ultimate fallback
       return {
