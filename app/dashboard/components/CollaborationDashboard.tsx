@@ -255,13 +255,50 @@ export default function CollaborationDashboard({
           }
         })
         .catch((error) => {
-          console.error("[RT] Connection failed, using offline mode:", error);
+          console.error(
+            "[RT] Connection failed, implementing fallback strategy:",
+            error,
+          );
           setConnectionStatus("error");
 
-          // Fall back to less frequent polling
-          if (activeTab === "sessions") {
-            pollInterval.current = setInterval(onRefreshSessions, 30000);
-          }
+          // Implement progressive fallback strategy
+          const retryWithBackoff = (retryCount = 0) => {
+            if (retryCount < 3) {
+              const delay = Math.pow(2, retryCount) * 2000; // 2s, 4s, 8s
+              setTimeout(() => {
+                console.log(
+                  `[RT] Retrying connection (attempt ${retryCount + 1}/3)`,
+                );
+                fetch("/api/collaboration/health")
+                  .then((res) => {
+                    if (res.ok) {
+                      setConnectionStatus("connected");
+                      console.log("[RT] Reconnected successfully");
+                      if (activeTab === "sessions") {
+                        pollInterval.current = setInterval(
+                          onRefreshSessions,
+                          5000,
+                        );
+                      }
+                    } else {
+                      retryWithBackoff(retryCount + 1);
+                    }
+                  })
+                  .catch(() => retryWithBackoff(retryCount + 1));
+              }, delay);
+            } else {
+              // Final fallback to less frequent polling
+              console.log(
+                "[RT] All reconnection attempts failed, using degraded mode",
+              );
+              setConnectionStatus("disconnected");
+              if (activeTab === "sessions") {
+                pollInterval.current = setInterval(onRefreshSessions, 30000);
+              }
+            }
+          };
+
+          retryWithBackoff();
         });
     } catch (error) {
       console.error("[RT] Failed to initialize connection:", error);
