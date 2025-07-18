@@ -330,19 +330,31 @@ export default function Dashboard() {
       console.warn("Clipboard API failed, trying fallback:", err);
     }
 
-    // Fallback method using textarea
+    // Optimized fallback method using textarea
     try {
       const textArea = document.createElement("textarea");
       textArea.value = text;
-      textArea.style.position = "fixed";
-      textArea.style.left = "-999999px";
-      textArea.style.top = "-999999px";
-      document.body.appendChild(textArea);
-      textArea.focus();
-      textArea.select();
+      // Use efficient CSS to avoid layout calculations
+      textArea.style.cssText =
+        "position:absolute;left:-9999px;top:-9999px;opacity:0;pointer-events:none;";
 
-      const successful = document.execCommand("copy");
-      document.body.removeChild(textArea);
+      // Use requestAnimationFrame to avoid forced reflow
+      let successful = false;
+      await new Promise<void>((resolve) => {
+        requestAnimationFrame(() => {
+          document.body.appendChild(textArea);
+          textArea.select();
+          successful = document.execCommand("copy");
+
+          // Cleanup in next frame
+          requestAnimationFrame(() => {
+            if (textArea.parentNode) {
+              document.body.removeChild(textArea);
+            }
+            resolve();
+          });
+        });
+      });
 
       if (successful) {
         console.log(`${type} code copied to clipboard (fallback)`);
