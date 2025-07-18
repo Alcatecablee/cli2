@@ -167,7 +167,7 @@ export async function analyzeCommand(files: string[], options: AnalyzeOptions) {
         const analysisPayload = {
           code,
           filename: file,
-          layers: layers.join(","),
+          layers: layers.length === 1 ? layers[0].toString() : layers.join(","),
           applyFixes: false,
           metadata: {
             recursive: options.recursive,
