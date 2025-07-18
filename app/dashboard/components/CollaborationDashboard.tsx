@@ -165,7 +165,7 @@ export default function CollaborationDashboard({
       const now = Date.now();
       if (
         lastPollTime.current.presence &&
-        now - lastPollTime.current.presence < 10000
+        now - lastPollTime.current.presence < 120000
       ) {
         return; // Rate limit: don't poll more than once per 10 seconds
       }
