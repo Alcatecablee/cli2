@@ -218,18 +218,6 @@ export default function SignupPage() {
                 }}
               >
                 <div>
-                  <label
-                    htmlFor="firstName"
-                    style={{
-                      display: "block",
-                      fontSize: "0.875rem",
-                      fontWeight: "500",
-                      color: "#ffffff",
-                      marginBottom: "0.5rem",
-                    }}
-                  >
-                    First name
-                  </label>
                   <input
                     id="firstName"
                     name="firstName"
@@ -263,18 +251,6 @@ export default function SignupPage() {
                 </div>
 
                 <div>
-                  <label
-                    htmlFor="lastName"
-                    style={{
-                      display: "block",
-                      fontSize: "0.875rem",
-                      fontWeight: "500",
-                      color: "#ffffff",
-                      marginBottom: "0.5rem",
-                    }}
-                  >
-                    Last name
-                  </label>
                   <input
                     id="lastName"
                     name="lastName"
@@ -309,18 +285,6 @@ export default function SignupPage() {
               </div>
 
               <div style={{ marginBottom: "1.5rem" }}>
-                <label
-                  htmlFor="email"
-                  style={{
-                    display: "block",
-                    fontSize: "0.875rem",
-                    fontWeight: "500",
-                    color: "#ffffff",
-                    marginBottom: "0.5rem",
-                  }}
-                >
-                  Email address
-                </label>
                 <input
                   id="email"
                   name="email"
@@ -355,18 +319,6 @@ export default function SignupPage() {
               </div>
 
               <div style={{ marginBottom: "1.5rem" }}>
-                <label
-                  htmlFor="password"
-                  style={{
-                    display: "block",
-                    fontSize: "0.875rem",
-                    fontWeight: "500",
-                    color: "#ffffff",
-                    marginBottom: "0.5rem",
-                  }}
-                >
-                  Password
-                </label>
                 <input
                   id="password"
                   name="password"
@@ -401,18 +353,6 @@ export default function SignupPage() {
               </div>
 
               <div style={{ marginBottom: "2rem" }}>
-                <label
-                  htmlFor="confirmPassword"
-                  style={{
-                    display: "block",
-                    fontSize: "0.875rem",
-                    fontWeight: "500",
-                    color: "#ffffff",
-                    marginBottom: "0.5rem",
-                  }}
-                >
-                  Confirm password
-                </label>
                 <input
                   id="confirmPassword"
                   name="confirmPassword"
