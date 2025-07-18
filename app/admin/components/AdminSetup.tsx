@@ -45,7 +45,7 @@ export default function AdminSetup() {
     }));
 
     try {
-      const response = await adminFetch("/api/admin/setup-ultra-safe", {
+      const response = await adminFetch("/api/admin/setup-debug", {
         method: "POST",
       });
 
