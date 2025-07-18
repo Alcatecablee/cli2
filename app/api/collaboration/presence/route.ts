@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
     if (!userId) {
       return NextResponse.json(
         { error: "Authentication required" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -65,10 +65,120 @@ export async function GET(request: NextRequest) {
     console.error("Presence API error:", error);
     return NextResponse.json(
       { error: "Internal server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
 
 export async function POST(request: NextRequest) {
-  try {\n    const body = await request.json();\n    const { sessionId, status, cursor, selection } = body;\n    const userId = request.headers.get(\"x-user-id\");\n    const userName = request.headers.get(\"x-user-name\") || \"Anonymous\";\n\n    if (!userId) {\n      return NextResponse.json(\n        { error: \"Authentication required\" },\n        { status: 401 }\n      );\n    }\n\n    // Generate consistent color for user\n    const userColor = generateUserColor(userId);\n\n    const presenceKey = sessionId ? `${sessionId}_${userId}` : userId;\n    const presence: PresenceInfo = {\n      userId,\n      userName,\n      userColor,\n      sessionId,\n      status: status || \"online\",\n      lastSeen: new Date().toISOString(),\n      cursor,\n      selection,\n    };\n\n    presenceStore.set(presenceKey, presence);\n\n    // Broadcast presence update to other participants\n    const otherParticipants: PresenceInfo[] = [];\n    if (sessionId) {\n      for (const [key, p] of presenceStore.entries()) {\n        if (key.startsWith(`${sessionId}_`) && p.userId !== userId && p.status !== \"offline\") {\n          otherParticipants.push(p);\n        }\n      }\n    }\n\n    return NextResponse.json({ \n      presence,\n      otherParticipants \n    });\n  } catch (error) {\n    console.error(\"Presence update error:\", error);\n    return NextResponse.json(\n      { error: \"Internal server error\" },\n      { status: 500 }\n    );\n  }\n}\n\nexport async function DELETE(request: NextRequest) {\n  try {\n    const { searchParams } = new URL(request.url);\n    const sessionId = searchParams.get(\"sessionId\");\n    const userId = request.headers.get(\"x-user-id\");\n\n    if (!userId) {\n      return NextResponse.json(\n        { error: \"Authentication required\" },\n        { status: 401 }\n      );\n    }\n\n    const presenceKey = sessionId ? `${sessionId}_${userId}` : userId;\n    \n    // Mark as offline instead of deleting\n    const presence = presenceStore.get(presenceKey);\n    if (presence) {\n      presence.status = \"offline\";\n      presence.lastSeen = new Date().toISOString();\n      presenceStore.set(presenceKey, presence);\n    }\n\n    return NextResponse.json({ success: true });\n  } catch (error) {\n    console.error(\"Presence deletion error:\", error);\n    return NextResponse.json(\n      { error: \"Internal server error\" },\n      { status: 500 }\n    );\n  }\n}\n\nfunction generateUserColor(userId: string): string {\n  const colors = [\n    \"#2196f3\",\n    \"#4caf50\",\n    \"#ff9800\",\n    \"#e91e63\",\n    \"#9c27b0\",\n    \"#00bcd4\",\n    \"#ff5722\",\n    \"#795548\",\n    \"#607d8b\",\n    \"#f44336\",\n    \"#cddc39\",\n    \"#ffc107\",\n  ];\n\n  const hash = userId\n    .split(\"\")\n    .reduce((acc, char) => acc + char.charCodeAt(0), 0);\n  return colors[hash % colors.length];\n}
+  try {
+    const body = await request.json();
+    const { sessionId, status, cursor, selection } = body;
+    const userId = request.headers.get("x-user-id");
+    const userName = request.headers.get("x-user-name") || "Anonymous";
+
+    if (!userId) {
+      return NextResponse.json(
+        { error: "Authentication required" },
+        { status: 401 },
+      );
+    }
+
+    // Generate consistent color for user
+    const userColor = generateUserColor(userId);
+
+    const presenceKey = sessionId ? `${sessionId}_${userId}` : userId;
+    const presence: PresenceInfo = {
+      userId,
+      userName,
+      userColor,
+      sessionId,
+      status: status || "online",
+      lastSeen: new Date().toISOString(),
+      cursor,
+      selection,
+    };
+
+    presenceStore.set(presenceKey, presence);
+
+    // Broadcast presence update to other participants
+    const otherParticipants: PresenceInfo[] = [];
+    if (sessionId) {
+      for (const [key, p] of presenceStore.entries()) {
+        if (
+          key.startsWith(`${sessionId}_`) &&
+          p.userId !== userId &&
+          p.status !== "offline"
+        ) {
+          otherParticipants.push(p);
+        }
+      }
+    }
+
+    return NextResponse.json({
+      presence,
+      otherParticipants,
+    });
+  } catch (error) {
+    console.error("Presence update error:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 },
+    );
+  }
+}
+
+export async function DELETE(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const sessionId = searchParams.get("sessionId");
+    const userId = request.headers.get("x-user-id");
+
+    if (!userId) {
+      return NextResponse.json(
+        { error: "Authentication required" },
+        { status: 401 },
+      );
+    }
+
+    const presenceKey = sessionId ? `${sessionId}_${userId}` : userId;
+
+    // Mark as offline instead of deleting
+    const presence = presenceStore.get(presenceKey);
+    if (presence) {
+      presence.status = "offline";
+      presence.lastSeen = new Date().toISOString();
+      presenceStore.set(presenceKey, presence);
+    }
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error("Presence deletion error:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 },
+    );
+  }
+}
+
+function generateUserColor(userId: string): string {
+  const colors = [
+    "#2196f3",
+    "#4caf50",
+    "#ff9800",
+    "#e91e63",
+    "#9c27b0",
+    "#00bcd4",
+    "#ff5722",
+    "#795548",
+    "#607d8b",
+    "#f44336",
+    "#cddc39",
+    "#ffc107",
+  ];
+
+  const hash = userId
+    .split("")
+    .reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  return colors[hash % colors.length];
+}
