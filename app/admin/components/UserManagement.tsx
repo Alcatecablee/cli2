@@ -45,29 +45,19 @@ export default function UserManagement() {
     setState((prev) => ({ ...prev, loading: true, error: null }));
 
     try {
-      const token =
-        localStorage.getItem("supabase.auth.token") ||
-        sessionStorage.getItem("supabase.auth.token");
-
-      if (!token) {
-        throw new Error("No auth token found");
-      }
-
       const params = new URLSearchParams({
         page: page.toString(),
         limit: "20",
         ...(search && { search }),
       });
 
-      const response = await fetch(`/api/admin/users?${params}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await adminFetch(`/api/admin/users?${params}`);
 
       if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(
+          errorData.error || `HTTP ${response.status}: ${response.statusText}`,
+        );
       }
 
       const data = await response.json();
