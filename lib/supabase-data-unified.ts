@@ -118,7 +118,7 @@ async function createAuthenticatedClient() {
   }
 
   // Create a new client instance with the auth token
-  const client = createClient(supabaseUrl, supabaseKey, {
+  const client = createClient(supabaseUrl!, supabaseKey!, {
     global: {
       headers: {
         Authorization: `Bearer ${session.access_token}`,
