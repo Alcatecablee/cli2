@@ -322,6 +322,11 @@ export default function CollaborationDashboard({
           // Keep-alive response
           break;
 
+        case "conflict_detected":
+          setConflictData(data);
+          setShowConflictModal(true);
+          break;
+
         case "error":
           console.error("[WS] Server error:", data.message);
           break;
