@@ -363,7 +363,7 @@ export default function CollaborationDashboard({
     };
   }, [activeTab, connectWebSocket]);
 
-  // Cleanup all intervals and connections on unmount
+  // Cleanup all intervals on unmount
   useEffect(() => {
     return () => {
       if (pollInterval.current) {
@@ -374,9 +374,6 @@ export default function CollaborationDashboard({
       }
       if (presencePollInterval.current) {
         clearInterval(presencePollInterval.current);
-      }
-      if (wsConnection.current) {
-        wsConnection.current.close();
       }
     };
   }, []);
