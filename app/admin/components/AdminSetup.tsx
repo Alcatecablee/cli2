@@ -297,6 +297,57 @@ export default function AdminSetup() {
           color: #f44336;
         }
 
+        .setup-summary {
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 12px;
+          padding: 24px;
+          margin-bottom: 32px;
+        }
+
+        .setup-summary h3 {
+          color: #ffffff;
+          margin: 0 0 16px 0;
+        }
+
+        .summary-stats {
+          display: flex;
+          gap: 24px;
+          margin-bottom: 16px;
+        }
+
+        .stat-item {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 4px;
+        }
+
+        .stat-value {
+          font-size: 1.5rem;
+          font-weight: bold;
+          color: #ffffff;
+        }
+
+        .stat-value.success {
+          color: #4caf50;
+        }
+
+        .stat-value.error {
+          color: #f44336;
+        }
+
+        .stat-label {
+          font-size: 0.85rem;
+          color: rgba(255, 255, 255, 0.7);
+        }
+
+        .recommendation {
+          color: rgba(255, 255, 255, 0.9);
+          margin: 0;
+          font-style: italic;
+        }
+
         .setup-instructions {
           background: rgba(33, 150, 243, 0.1);
           border: 1px solid rgba(33, 150, 243, 0.3);
