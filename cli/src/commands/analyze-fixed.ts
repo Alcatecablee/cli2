@@ -136,9 +136,10 @@ export async function analyzeCommand(files: string[], options: AnalyzeOptions) {
       : config.layers.enabled;
 
     // Apply Layer Dependency Management (from IMPLEMENTATION_PATTERNS.md)
-    const layers = validateAndCorrectLayers(requestedLayers);
-    if (layers.warnings.length > 0) {
-      layers.warnings.forEach((warning) =>
+    const layerValidation = validateAndCorrectLayers(requestedLayers);
+    const layers = layerValidation.correctedLayers;
+    if (layerValidation.warnings.length > 0) {
+      layerValidation.warnings.forEach((warning) =>
         console.log(chalk.yellow(`DEPENDENCY: ${warning}`)),
       );
     }
