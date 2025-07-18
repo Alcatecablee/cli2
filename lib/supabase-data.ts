@@ -117,7 +117,22 @@ function safeLogError(error: any, prefix: string): void {
 }
 
 // Helper function to create authenticated Supabase client
-function createAuthenticatedClient() {
+async function createAuthenticatedClient() {
+  // Get the current session from Supabase
+  const {
+    data: { session },
+    error,
+  } = await supabase.auth.getSession();
+
+  if (error) {
+    console.warn("Error getting Supabase session:", error);
+  }
+
+  if (!session) {
+    console.warn("No active Supabase session found");
+  }
+
+  // Return the client - it should automatically use the session
   return supabase;
 }
 
@@ -126,7 +141,7 @@ export const dataService = {
   // User Settings
   async getUserSettings(userId: string): Promise<UserSettings | null> {
     try {
-      const client = createAuthenticatedClient();
+      const client = await createAuthenticatedClient();
       const { data, error } = await client
         .from("user_settings")
         .select("*")
@@ -164,7 +179,7 @@ export const dataService = {
     >,
   ): Promise<UserSettings | null> {
     try {
-      const client = createAuthenticatedClient();
+      const client = await createAuthenticatedClient();
       const { data, error } = await client
         .from("user_settings")
         .upsert({
@@ -196,7 +211,7 @@ export const dataService = {
     >,
   ): Promise<AnalysisHistory | null> {
     try {
-      const client = createAuthenticatedClient();
+      const client = await createAuthenticatedClient();
 
       const { data, error } = await client
         .from("analysis_history")
@@ -224,7 +239,7 @@ export const dataService = {
     limit = 50,
   ): Promise<AnalysisHistory[]> {
     try {
-      const client = createAuthenticatedClient();
+      const client = await createAuthenticatedClient();
       const { data, error } = await client
         .from("analysis_history")
         .select("*")
@@ -249,7 +264,7 @@ export const dataService = {
     historyId: string,
   ): Promise<boolean> {
     try {
-      const client = createAuthenticatedClient();
+      const client = await createAuthenticatedClient();
       const { error } = await client
         .from("analysis_history")
         .delete()
@@ -270,7 +285,7 @@ export const dataService = {
 
   async clearAnalysisHistory(userId: string): Promise<boolean> {
     try {
-      const client = createAuthenticatedClient();
+      const client = await createAuthenticatedClient();
       const { error } = await client
         .from("analysis_history")
         .delete()
@@ -294,7 +309,19 @@ export const dataService = {
     projectData: Omit<Project, "id" | "user_id" | "created_at" | "updated_at">,
   ): Promise<Project | null> {
     try {
-      const client = createAuthenticatedClient();
+      const client = await createAuthenticatedClient();
+
+      // Ensure we have a valid session before proceeding
+      const {
+        data: { session },
+      } = await client.auth.getSession();
+      if (!session) {
+        console.error("No authenticated session found for project creation");
+        return null;
+      }
+
+      console.log("Creating project with authenticated user:", session.user.id);
+
       const { data, error } = await client
         .from("projects")
         .insert({
@@ -318,7 +345,7 @@ export const dataService = {
 
   async getProjects(userId: string): Promise<Project[]> {
     try {
-      const client = createAuthenticatedClient();
+      const client = await createAuthenticatedClient();
       const { data, error } = await client
         .from("projects")
         .select("*")
@@ -343,7 +370,7 @@ export const dataService = {
     updates: Partial<Omit<Project, "id" | "user_id" | "created_at">>,
   ): Promise<Project | null> {
     try {
-      const client = createAuthenticatedClient();
+      const client = await createAuthenticatedClient();
       const { data, error } = await client
         .from("projects")
         .update({
@@ -369,7 +396,7 @@ export const dataService = {
 
   async deleteProject(userId: string, projectId: string): Promise<boolean> {
     try {
-      const client = createAuthenticatedClient();
+      const client = await createAuthenticatedClient();
       const { error } = await client
         .from("projects")
         .delete()
