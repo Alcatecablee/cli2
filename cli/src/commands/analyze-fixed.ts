@@ -149,42 +149,63 @@ export async function analyzeCommand(files: string[], options: AnalyzeOptions) {
 
     spinner.text = `Analyzing ${existingFiles.length} files with layers [${layers.join(", ")}]...`;
 
-    // Read file contents
-    const fileContents: Record<string, string> = {};
+        // Process files one by one since the API expects single files
+    const allResults: any[] = [];
+    let totalIssues = 0;
+
     for (const file of existingFiles) {
       try {
-        fileContents[file] = await fs.readFile(file, "utf-8");
-      } catch (error) {
-        console.log(chalk.yellow(`Warning: Could not read ${file}`));
+        const code = await fs.readFile(file, "utf-8");
+
+        // Send analysis request for single file
+        const analysisPayload = {
+          code,
+          filename: file,
+          layers: layers.join(","),
+          applyFixes: false,
+          metadata: {
+            recursive: options.recursive,
+            outputFormat: options.output || config.output.format,
+            verbose: config.output.verbose,
+          },
+        };
+
+    try {
+              const response = await axios.post(
+          `${config.api.url}/analyze`,
+          analysisPayload,
+          {
+            headers: {
+              "X-API-Key": config.apiKey,
+              "Content-Type": "application/json",
+            },
+            timeout: config.api.timeout,
+          },
+        );
+
+        const result = response.data;
+        allResults.push({ file, result });
+        totalIssues += result.analysis?.detectedIssues?.length || 0;
+
+      } catch (fileError) {
+        console.log(chalk.yellow(`Warning: Could not analyze ${file}`));
+        console.log(chalk.gray(`Error: ${fileError instanceof Error ? fileError.message : String(fileError)}`));
       }
     }
 
-    // Send analysis request to your API
-    const analysisPayload = {
-      files: fileContents,
-      layers: layers,
-      options: {
-        recursive: options.recursive,
-        outputFormat: options.output || config.output.format,
-        verbose: config.output.verbose,
+    spinner.succeed(`Analysis completed for ${existingFiles.length} files`);
+
+    // Aggregate results
+    const aggregatedResult = {
+      filesAnalyzed: existingFiles.length,
+      issuesFound: totalIssues,
+      layersUsed: layers,
+      results: allResults,
+      performance: {
+        duration: Date.now() - startTime,
+        layerTimes: {},
       },
     };
-
-    try {
-      const response = await axios.post(
-        `${config.api.url}/api/analyze`,
-        analysisPayload,
-        {
-          headers: {
-            "X-API-Key": config.apiKey,
-            "Content-Type": "application/json",
-          },
-          timeout: config.api.timeout,
-        },
-      );
-
-      const result: AnalysisResult = response.data;
-      spinner.succeed("Analysis completed");
 
       // Display results
       console.log();
