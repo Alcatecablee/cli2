@@ -1,6 +1,6 @@
 {
   "name": "@neurolint/cli",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "NeuroLint CLI - Advanced rule-based code analysis and transformation tool with NeuroLint Pro integration",
   "main": "release/cli-production.js",
   "bin": {

@@ -40,11 +40,15 @@ async function fixCommand(files, options) {
         const premiumLayers = layers.filter((layer) => layer >= 5);
         if (premiumLayers.length > 0) {
             try {
-                const userResponse = await axios_1.default.get(`${config.api.url}/auth/user`, {
+                const userResponse = await axios_1.default.get(`${config.api.url}/auth/api-keys`, {
                     headers: { "X-API-Key": config.apiKey },
                     timeout: 10000,
                 });
-                const plan = userResponse.data.plan || "free";
+                // Handle different response structures from API
+                const plan = userResponse.data.plan ||
+                    userResponse.data.user?.plan ||
+                    userResponse.data.apiKey?.plan ||
+                    "free";
                 if (plan === "free" && premiumLayers.length > 0) {
                     spinner.fail("Premium features required");
                     console.log(chalk_1.default.yellow(`Layers ${premiumLayers.join(", ")} require Pro plan ($24.99/month)`));
@@ -128,7 +132,7 @@ async function fixCommand(files, options) {
                 const fixPayload = {
                     code,
                     filename: file,
-                    layers: layers.join(","),
+                    layers: layers.length === 1 ? layers[0].toString() : layers.join(","),
                     applyFixes: !options.dryRun, // Apply fixes unless it's a dry run
                     metadata: {
                         recursive: options.recursive,

@@ -14,6 +14,12 @@ async function analyzeCommand(files, options) {
     const spinner = (0, ora_1.default)("Initializing NeuroLint analysis...").start();
     const startTime = Date.now();
     try {
+        // Input validation
+        if (files.some((file) => !file || typeof file !== "string")) {
+            spinner.fail("Invalid file paths provided");
+            console.log(chalk_1.default.red("ERROR: All file paths must be valid strings"));
+            return;
+        }
         // Load and validate configuration
         const config = await (0, config_1.loadConfig)(options.config);
         const configValidation = await (0, config_1.validateConfig)(config);
@@ -39,11 +45,15 @@ async function analyzeCommand(files, options) {
         const premiumLayers = layers.filter((layer) => layer >= 5);
         if (premiumLayers.length > 0) {
             try {
-                const userResponse = await axios_1.default.get(`${config.api.url}/auth/user`, {
+                const userResponse = await axios_1.default.get(`${config.api.url}/auth/api-keys`, {
                     headers: { "X-API-Key": config.apiKey },
                     timeout: 10000,
                 });
-                const plan = userResponse.data.plan || "free";
+                // Handle different response structures from API
+                const plan = userResponse.data.plan ||
+                    userResponse.data.user?.plan ||
+                    userResponse.data.apiKey?.plan ||
+                    "free";
                 if (plan === "free" && premiumLayers.length > 0) {
                     spinner.fail("Premium features required");
                     console.log(chalk_1.default.yellow(`Layers ${premiumLayers.join(", ")} require Pro plan ($24.99/month)`));
@@ -106,7 +116,7 @@ async function analyzeCommand(files, options) {
                 const analysisPayload = {
                     code,
                     filename: file,
-                    layers: layers.join(","),
+                    layers: layers.length === 1 ? layers[0].toString() : layers.join(","),
                     applyFixes: false,
                     metadata: {
                         recursive: options.recursive,
@@ -123,7 +133,12 @@ async function analyzeCommand(files, options) {
                 });
                 const result = response.data;
                 allResults.push({ file, result });
-                totalIssues += result.analysis?.detectedIssues?.length || 0;
+                // Handle different response structures
+                const detectedIssues = result.analysis?.detectedIssues ||
+                    result.detectedIssues ||
+                    result.layers?.flatMap((l) => l.detectedIssues) ||
+                    [];
+                totalIssues += detectedIssues.length;
             }
             catch (fileError) {
                 console.log(chalk_1.default.yellow(`Warning: Could not analyze ${file}`));
@@ -175,15 +190,18 @@ async function analyzeCommand(files, options) {
             // Group issues by layer and file
             const issuesByLayer = {};
             allResults.forEach(({ file, result }) => {
-                if (result.analysis?.detectedIssues) {
-                    result.analysis.detectedIssues.forEach((issue) => {
-                        const layer = issue.layer || 1;
-                        if (!issuesByLayer[layer]) {
-                            issuesByLayer[layer] = [];
-                        }
-                        issuesByLayer[layer].push({ ...issue, file });
-                    });
-                }
+                // Handle different response structures
+                const detectedIssues = result.analysis?.detectedIssues ||
+                    result.detectedIssues ||
+                    result.layers?.flatMap((l) => l.detectedIssues || []) ||
+                    [];
+                detectedIssues.forEach((issue) => {
+                    const layer = issue.layer || 1;
+                    if (!issuesByLayer[layer]) {
+                        issuesByLayer[layer] = [];
+                    }
+                    issuesByLayer[layer].push({ ...issue, file });
+                });
             });
             console.log(chalk_1.default.white("Issues by Layer:"));
             for (const layer of aggregatedResult.layersUsed) {
@@ -192,7 +210,7 @@ async function analyzeCommand(files, options) {
                 console.log(chalk_1.default.gray(`  ${layerName}: `) +
                     (layerIssues.length > 0
                         ? chalk_1.default.yellow(`${layerIssues.length} issues`)
-                        : chalk_1.default.green("✓ passed")));
+                        : chalk_1.default.green("��� passed")));
                 // Show first few issues for each layer
                 if (layerIssues.length > 0 &&
                     (options.output === "table" || !options.output)) {
