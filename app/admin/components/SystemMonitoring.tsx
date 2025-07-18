@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useAdminAuth } from "../utils/auth";
+import { useAuth } from "../../../lib/auth-context";
 
 interface SystemData {
   system: {
@@ -69,7 +69,7 @@ interface SystemMonitoringState {
 }
 
 export default function SystemMonitoring() {
-  const { adminFetch, loading: authLoading, isAdmin } = useAdminAuth();
+  const { session } = useAuth();
   const [state, setState] = useState<SystemMonitoringState>({
     data: null,
     loading: true,
@@ -79,15 +79,19 @@ export default function SystemMonitoring() {
   });
 
   const fetchSystemData = async () => {
-    // Don't make API calls if auth is still loading
-    if (authLoading || !isAdmin) {
-      return;
-    }
-
     setState((prev) => ({ ...prev, loading: true, error: null }));
 
     try {
-      const response = await adminFetch("/api/admin/system");
+      if (!session?.access_token) {
+        throw new Error("Not authenticated");
+      }
+
+      const response = await fetch("/api/admin/system", {
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+          "Content-Type": "application/json",
+        },
+      });
 
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -112,8 +116,16 @@ export default function SystemMonitoring() {
 
   const performSystemAction = async (action: string) => {
     try {
-      const response = await adminFetch("/api/admin/system", {
+      if (!session?.access_token) {
+        throw new Error("Not authenticated");
+      }
+
+      const response = await fetch("/api/admin/system", {
         method: "POST",
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({ action }),
       });
 
@@ -140,11 +152,10 @@ export default function SystemMonitoring() {
   };
 
   useEffect(() => {
-    // Only fetch data when auth is ready and user is admin
-    if (!authLoading && isAdmin) {
+    if (session?.access_token) {
       fetchSystemData();
     }
-  }, [authLoading, isAdmin]);
+  }, [session?.access_token]);
 
   useEffect(() => {
     let intervalId: NodeJS.Timeout;
@@ -198,22 +209,6 @@ export default function SystemMonitoring() {
     if (percentage > 75) return "memory-warning";
     return "memory-normal";
   };
-
-  // Show loading if auth is still loading or if we're not admin
-  if (authLoading || !isAdmin) {
-    return (
-      <div className="admin-content">
-        <div className="loading-container">
-          <div className="loading-spinner" />
-          <p>
-            {authLoading
-              ? "Authenticating..."
-              : "Access denied. Admin privileges required."}
-          </p>
-        </div>
-      </div>
-    );
-  }
 
   if (state.loading && !state.data) {
     return (
