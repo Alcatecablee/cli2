@@ -933,7 +933,30 @@ export default function Dashboard() {
             .catch((e) => console.error("Failed to load session info:", e));
         }
       } catch (error) {
-        console.error("Error loading dashboard data:", error);
+        // Enhanced top-level error handling
+        const errorMessage = (() => {
+          if (error instanceof Error) {
+            return error.message;
+          }
+          if (typeof error === "object" && error !== null) {
+            try {
+              // Safely extract error information
+              const errorObj = {};
+              if (error.message) errorObj.message = error.message;
+              if (error.name) errorObj.name = error.name;
+              if (error.code) errorObj.code = error.code;
+              return Object.keys(errorObj).length > 0
+                ? Object.entries(errorObj)
+                    .map(([k, v]) => `${k}: ${v}`)
+                    .join(", ")
+                : "Unknown error object";
+            } catch {
+              return "Error processing failed";
+            }
+          }
+          return String(error);
+        })();
+        console.error("Error loading dashboard data:", errorMessage);
       }
     };
 
