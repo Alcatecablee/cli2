@@ -1,16 +1,8 @@
-import { createClient } from "@supabase/supabase-js";
-
-// Create Supabase client
-const supabaseUrl =
-  process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
-const supabaseKey =
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY;
-
-if (!supabaseUrl || !supabaseKey) {
-  throw new Error("Missing Supabase environment variables");
-}
-
-export const supabase = createClient(supabaseUrl, supabaseKey);
+import {
+  supabase,
+  ensureAuthenticated,
+  setSupabaseSession,
+} from "./supabase-client";
 
 // Types for database objects
 export interface AnalysisHistory {
@@ -108,113 +100,11 @@ async function getAuthSession() {
   }
 }
 
-// Helper function to validate user authentication for RLS
-async function validateUserAuth(userId: string): Promise<boolean> {
-  try {
-    const {
-      data: { user },
-      error,
-    } = await supabase.auth.getUser();
-
-    if (error || !user) {
-      console.error("User not authenticated:", formatError(error));
-      return false;
-    }
-
-    if (user.id !== userId) {
-      console.error(
-        `User ID mismatch: authenticated user ${user.id}, requested ${userId}`,
-      );
-      return false;
-    }
-
-    return true;
-  } catch (error) {
-    console.error("Error validating user auth:", formatError(error));
-    return false;
-  }
-}
-
 // Helper function to create authenticated Supabase client
 async function createAuthenticatedClient() {
-  // Check if we're in browser environment
-  if (typeof window === "undefined") {
-    console.warn("Running in server environment - using service role client");
-    return supabase;
-  }
-
-  try {
-    // First, try to get session from localStorage (where our auth system stores it)
-    const storedSessionStr = localStorage.getItem("supabase_session");
-    if (storedSessionStr) {
-      try {
-        const storedSession = JSON.parse(storedSessionStr);
-
-        // Check if session is not expired
-        if (
-          storedSession.expires_at &&
-          storedSession.expires_at * 1000 > Date.now()
-        ) {
-          console.log("Setting session from localStorage for user auth");
-
-          // Set the session on the Supabase client
-          const { error } = await supabase.auth.setSession({
-            access_token: storedSession.access_token,
-            refresh_token: storedSession.refresh_token,
-          });
-
-          if (error) {
-            console.error(
-              "Error setting session from localStorage:",
-              formatError(error),
-            );
-          } else {
-            console.log("Successfully set session from localStorage");
-          }
-        } else {
-          console.warn("Stored session has expired");
-        }
-      } catch (parseError) {
-        console.error("Error parsing stored session:", parseError);
-      }
-    }
-
-    // Now get current session from Supabase auth
-    const {
-      data: { session },
-      error,
-    } = await supabase.auth.getSession();
-
-    if (error) {
-      console.error("Error getting session:", formatError(error));
-      return supabase;
-    }
-
-    if (!session) {
-      console.warn("No active session found - user may not be logged in");
-      return supabase;
-    }
-
-    // Verify the session is valid and user exists
-    const {
-      data: { user },
-      error: userError,
-    } = await supabase.auth.getUser();
-
-    if (userError || !user) {
-      console.error(
-        "Invalid session or user not found:",
-        formatError(userError),
-      );
-      return supabase;
-    }
-
-    console.log("Authenticated user found:", user.id);
-    return supabase;
-  } catch (error) {
-    console.error("Error in createAuthenticatedClient:", formatError(error));
-    return supabase;
-  }
+  // Ensure we have a valid session set
+  await setSupabaseSession();
+  return supabase;
 }
 
 // Data service functions
@@ -413,8 +303,8 @@ export const dataService = {
     projectData: Omit<Project, "id" | "user_id" | "created_at" | "updated_at">,
   ): Promise<Project | null> {
     try {
-      // Validate user authentication
-      const isAuthenticated = await validateUserAuth(userId);
+      // Ensure user is authenticated
+      const isAuthenticated = await ensureAuthenticated(userId);
       if (!isAuthenticated) {
         console.error("User authentication failed for saveProject");
         return null;
