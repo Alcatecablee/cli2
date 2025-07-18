@@ -58,7 +58,7 @@ export default function WhatIsNeuroLintPage() {
 
           <div className="docs-comparison-grid">
             <div className="docs-comparison-item">
-              <h4>❌ Traditional Linters</h4>
+              <h4>Traditional Linters</h4>
               <ul>
                 <li>Point out problems</li>
                 <li>Require manual fixes</li>
