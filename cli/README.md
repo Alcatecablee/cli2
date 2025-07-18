@@ -111,7 +111,7 @@ neurolint login
 neurolint login --api-key YOUR_API_KEY
 
 # Custom server
-neurolint login --url https://api.neurolint.dev
+neurolint login --url http://localhost:3000/api
 ```
 
 ### Advanced Options
@@ -219,7 +219,7 @@ neurolint analyze src/ --include="**/*.svelte"
 │   Layer 2 (Patterns): 3 issues                 │
 │   Layer 3 (Components): 2 issues               │
 │   Layer 4 (Hydration): 1 issue                 │
-└─────────────────────────────────────────────────┘
+└──────────────────���──────────────────────────────┘
 ```
 
 ### JSON Format
