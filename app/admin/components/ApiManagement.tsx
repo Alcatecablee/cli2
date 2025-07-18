@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { useAdminAuth } from "../utils/auth";
 
 interface ApiKey {
   id: string;
@@ -40,6 +41,7 @@ interface ApiManagementState {
 }
 
 export default function ApiManagement() {
+  const { adminFetch, loading: authLoading, isAdmin } = useAdminAuth();
   const [state, setState] = useState<ApiManagementState>({
     apiKeys: [],
     rateLimits: [],
@@ -60,16 +62,7 @@ export default function ApiManagement() {
     setState((prev) => ({ ...prev, loading: true, error: null }));
 
     try {
-      const token =
-        localStorage.getItem("supabase.auth.token") ||
-        sessionStorage.getItem("supabase.auth.token");
-
-      const response = await fetch("/api/admin/api-management", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await adminFetch("/api/admin/api-management");
 
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -105,16 +98,8 @@ export default function ApiManagement() {
     expiresAt?: string;
   }) => {
     try {
-      const token =
-        localStorage.getItem("supabase.auth.token") ||
-        sessionStorage.getItem("supabase.auth.token");
-
-      const response = await fetch("/api/admin/api-management", {
+      const response = await adminFetch("/api/admin/api-management", {
         method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
         body: JSON.stringify({ action: "create_key", ...keyData }),
       });
 
@@ -138,16 +123,8 @@ export default function ApiManagement() {
     updates: Partial<ApiKey>,
   ) => {
     try {
-      const token =
-        localStorage.getItem("supabase.auth.token") ||
-        sessionStorage.getItem("supabase.auth.token");
-
-      const response = await fetch("/api/admin/api-management", {
+      const response = await adminFetch("/api/admin/api-management", {
         method: "PUT",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
         body: JSON.stringify({ action: "update_key", keyId, updates }),
       });
 
@@ -180,16 +157,8 @@ export default function ApiManagement() {
     }
 
     try {
-      const token =
-        localStorage.getItem("supabase.auth.token") ||
-        sessionStorage.getItem("supabase.auth.token");
-
-      const response = await fetch("/api/admin/api-management", {
+      const response = await adminFetch("/api/admin/api-management", {
         method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
         body: JSON.stringify({ action: "delete_key", keyId }),
       });
 
