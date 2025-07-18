@@ -19,14 +19,13 @@ export default function InstallationPage() {
 
         <h1 className="docs-page-title">Installation & Requirements</h1>
         <p className="docs-page-subtitle">
-          System requirements and step-by-step installation guide for NeuroLint Pro
+          System requirements and step-by-step installation guide for NeuroLint
+          Pro
         </p>
 
         <div className="docs-page-meta">
           <span className="docs-meta-item">3 min read</span>
-          <span className="docs-meta-item difficulty-beginner">
-            Beginner
-          </span>
+          <span className="docs-meta-item difficulty-beginner">Beginner</span>
           <span className="docs-meta-item">Last updated: Dec 2024</span>
         </div>
       </div>
@@ -35,13 +34,14 @@ export default function InstallationPage() {
         <div className="docs-highlight-box info">
           <h3>Quick Start</h3>
           <p>
-            Get NeuroLint Pro running in under 2 minutes with our CLI tool, web dashboard, or VSCode extension.
+            Get NeuroLint Pro running in under 2 minutes with our CLI tool, web
+            dashboard, or VSCode extension.
           </p>
         </div>
 
         <div className="docs-section">
           <h2>System Requirements</h2>
-          
+
           <div className="docs-requirements-grid">
             <div className="docs-requirement-item">
               <h4>Operating System</h4>
@@ -84,56 +84,71 @@ export default function InstallationPage() {
 
         <div className="docs-section">
           <h2>Installation Options</h2>
-          
+
           <div className="docs-install-options">
             <div className="docs-install-option primary">
               <h3>Option 1: CLI Tool (Recommended)</h3>
-              <p>Install the command-line interface for maximum control and automation capabilities.</p>
-              
+              <p>
+                Install the command-line interface for maximum control and
+                automation capabilities.
+              </p>
+
               <div className="docs-code-block">
-                <pre><code># Install globally via npm
+                <pre>
+                  <code>{`# Install globally via npm
 npm install -g @neurolint/cli
 
 # Or install via yarn
 yarn global add @neurolint/cli
 
 # Verify installation
-neurolint --version</code></pre>
+neurolint --version`}</code>
+                </pre>
               </div>
-              
+
               <div className="docs-install-benefits">
-                <strong>Benefits:</strong> Full feature access, CI/CD integration, batch processing
+                <strong>Benefits:</strong> Full feature access, CI/CD
+                integration, batch processing
               </div>
             </div>
 
             <div className="docs-install-option">
               <h3>Option 2: Web Dashboard</h3>
-              <p>Use our online dashboard for quick analysis and smaller projects.</p>
-              
+              <p>
+                Use our online dashboard for quick analysis and smaller
+                projects.
+              </p>
+
               <div className="docs-code-block">
-                <pre><code># No installation required
+                <pre>
+                  <code>{`# No installation required
 # Visit: https://neurolint.app/dashboard
-# Sign up and start analyzing immediately</code></pre>
+# Sign up and start analyzing immediately`}</code>
+                </pre>
               </div>
-              
+
               <div className="docs-install-benefits">
-                <strong>Benefits:</strong> No setup, browser-based, real-time collaboration
+                <strong>Benefits:</strong> No setup, browser-based, real-time
+                collaboration
               </div>
             </div>
 
             <div className="docs-install-option">
               <h3>Option 3: VSCode Extension</h3>
               <p>Integrate directly into your development environment.</p>
-              
+
               <div className="docs-code-block">
-                <pre><code># Install from VSCode Marketplace
+                <pre>
+                  <code>{`# Install from VSCode Marketplace
 # Search for "NeuroLint Pro" in Extensions
 # Or install via command palette:
-ext install neurolint.neurolint-pro</code></pre>
+ext install neurolint.neurolint-pro`}</code>
+                </pre>
               </div>
-              
+
               <div className="docs-install-benefits">
-                <strong>Benefits:</strong> IDE integration, real-time feedback, inline suggestions
+                <strong>Benefits:</strong> IDE integration, real-time feedback,
+                inline suggestions
               </div>
             </div>
           </div>
@@ -141,15 +156,17 @@ ext install neurolint.neurolint-pro</code></pre>
 
         <div className="docs-section">
           <h2>Verification & First Run</h2>
-          
+
           <div className="docs-verification-steps">
             <div className="docs-step">
               <div className="docs-step-number">1</div>
               <div className="docs-step-content">
                 <h4>Verify Installation</h4>
                 <div className="docs-code-block">
-                  <pre><code>neurolint --version
-# Should output: @neurolint/cli v1.x.x</code></pre>
+                  <pre>
+                    <code>{`neurolint --version
+# Should output: @neurolint/cli v1.x.x`}</code>
+                  </pre>
                 </div>
               </div>
             </div>
@@ -159,8 +176,10 @@ ext install neurolint.neurolint-pro</code></pre>
               <div className="docs-step-content">
                 <h4>Check Available Commands</h4>
                 <div className="docs-code-block">
-                  <pre><code>neurolint --help
-# Shows all available commands and options</code></pre>
+                  <pre>
+                    <code>{`neurolint --help
+# Shows all available commands and options`}</code>
+                  </pre>
                 </div>
               </div>
             </div>
@@ -170,8 +189,10 @@ ext install neurolint.neurolint-pro</code></pre>
               <div className="docs-step-content">
                 <h4>Run Health Check</h4>
                 <div className="docs-code-block">
-                  <pre><code>neurolint health
-# Verifies system compatibility and requirements</code></pre>
+                  <pre>
+                    <code>{`neurolint health
+# Verifies system compatibility and requirements`}</code>
+                  </pre>
                 </div>
               </div>
             </div>
@@ -180,12 +201,16 @@ ext install neurolint.neurolint-pro</code></pre>
 
         <div className="docs-section">
           <h2>Configuration</h2>
-          
-          <p>Create a configuration file in your project root for customized behavior:</p>
-          
+
+          <p>
+            Create a configuration file in your project root for customized
+            behavior:
+          </p>
+
           <div className="docs-code-block">
             <h4>neurolint.config.js</h4>
-            <pre><code>module.exports = {
+            <pre>
+              <code>{`module.exports = {
   // Target files and directories
   include: ["src/**/*.{js,jsx,ts,tsx}"],
   exclude: ["node_modules/**", "dist/**"],
@@ -208,46 +233,53 @@ ext install neurolint.neurolint-pro</code></pre>
     verbose: false,
     logLevel: "info"
   }
-};</code></pre>
+};`}</code>
+            </pre>
           </div>
         </div>
 
         <div className="docs-section">
           <h2>Troubleshooting Installation</h2>
-          
+
           <div className="docs-troubleshooting">
             <div className="docs-trouble-item">
               <h4>Permission Errors (macOS/Linux)</h4>
               <div className="docs-code-block">
-                <pre><code># Use sudo for global installation
+                <pre>
+                  <code>{`# Use sudo for global installation
 sudo npm install -g @neurolint/cli
 
 # Or use npx to run without installing
-npx @neurolint/cli analyze ./src</code></pre>
+npx @neurolint/cli analyze ./src`}</code>
+                </pre>
               </div>
             </div>
 
             <div className="docs-trouble-item">
               <h4>Node.js Version Issues</h4>
               <div className="docs-code-block">
-                <pre><code># Check your Node.js version
+                <pre>
+                  <code>{`# Check your Node.js version
 node --version
 
 # Update Node.js via nvm (recommended)
 nvm install 18
-nvm use 18</code></pre>
+nvm use 18`}</code>
+                </pre>
               </div>
             </div>
 
             <div className="docs-trouble-item">
               <h4>Network/Proxy Issues</h4>
               <div className="docs-code-block">
-                <pre><code># Configure npm proxy if needed
+                <pre>
+                  <code>{`# Configure npm proxy if needed
 npm config set proxy http://proxy.company.com:8080
 npm config set https-proxy http://proxy.company.com:8080
 
 # Or install offline package
-npm install ./neurolint-cli-1.0.0.tgz</code></pre>
+npm install ./neurolint-cli-1.0.0.tgz`}</code>
+                </pre>
               </div>
             </div>
           </div>
@@ -256,12 +288,18 @@ npm install ./neurolint-cli-1.0.0.tgz</code></pre>
 
       <div className="docs-page-nav">
         <div className="docs-page-nav-item">
-          <Link href="/docs/introduction/vs-traditional-tools" className="docs-nav-link prev">
+          <Link
+            href="/docs/introduction/vs-traditional-tools"
+            className="docs-nav-link prev"
+          >
             ← NeuroLint vs Traditional Tools
           </Link>
         </div>
         <div className="docs-page-nav-item">
-          <Link href="/docs/getting-started/first-fix" className="docs-nav-link next">
+          <Link
+            href="/docs/getting-started/first-fix"
+            className="docs-nav-link next"
+          >
             Running Your First Fix →
           </Link>
         </div>
