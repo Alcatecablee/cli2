@@ -162,7 +162,7 @@ export default function UserManagement() {
         throw new Error(errorData.error || `HTTP ${response.status}`);
       }
 
-      // Log successful user update
+            // Log successful user update
       await logAdminAction("update_user", "user", state.selectedUser.id, {
         updates,
         userEmail: state.selectedUser.email,
@@ -171,43 +171,32 @@ export default function UserManagement() {
       // Refresh users list
       fetchUsers(state.currentPage, state.searchTerm);
       closeEditModal();
-    } catch (error) {
+        } catch (error) {
       console.error("Error updating user:", error);
-      const errorMessage =
-        error instanceof Error ? error.message : String(error);
+      const errorMessage = error instanceof Error ? error.message : String(error);
 
       // Report error to admin system
-      await reportError(
-        error instanceof Error ? error : new Error(errorMessage),
-        "error",
-        {
-          action: "update_user",
-          userId: state.selectedUser.id,
-          updates,
-        },
-      );
+      await reportError(error instanceof Error ? error : new Error(errorMessage), "error", {
+        action: "update_user",
+        userId: state.selectedUser.id,
+        updates,
+      });
 
-      setState((prev) => ({
+      setState(prev => ({
         ...prev,
         error: errorMessage,
       }));
     }
   };
 
-  const handleDeleteUser = async () => {
+    const handleDeleteUser = async () => {
     if (!state.selectedUser) return;
 
     try {
-      const token =
-        localStorage.getItem("supabase.auth.token") ||
-        sessionStorage.getItem("supabase.auth.token");
-
-      const response = await fetch(
+      const response = await adminFetch(
         `/api/admin/users?userId=${state.selectedUser.id}`,
         {
           method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}`,
           },
         },
       );
