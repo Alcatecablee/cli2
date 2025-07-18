@@ -91,6 +91,47 @@ interface SubscriptionData {
   error: string | null;
 }
 
+interface CollaborationTeam {
+  id: string;
+  name: string;
+  description: string;
+  members: Array<{
+    id: string;
+    name: string;
+    email: string;
+    role: "owner" | "admin" | "member";
+    avatar?: string;
+    status: "online" | "offline" | "away";
+    lastSeen: Date;
+  }>;
+  settings: {
+    defaultPermissions: "read" | "write" | "admin";
+    allowInvites: boolean;
+    requireApproval: boolean;
+  };
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+interface CollaborationActivity {
+  id: string;
+  type:
+    | "session_created"
+    | "session_joined"
+    | "session_left"
+    | "document_edited"
+    | "comment_added"
+    | "analysis_run"
+    | "member_invited"
+    | "member_joined";
+  sessionId?: string;
+  userId: string;
+  userName: string;
+  userAvatar?: string;
+  timestamp: Date;
+  details: any;
+}
+
 interface DashboardState {
   isLoading: boolean;
   currentFile: string | null;
@@ -108,6 +149,10 @@ interface DashboardState {
   subscriptionData: SubscriptionData;
   collaborationSessions: any[];
   loadingSessions: boolean;
+  collaborationTeams: CollaborationTeam[];
+  collaborationActivity: CollaborationActivity[];
+  loadingTeams: boolean;
+  loadingActivity: boolean;
 }
 
 const sampleFiles = {
