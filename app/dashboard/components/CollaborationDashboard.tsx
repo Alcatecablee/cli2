@@ -306,6 +306,7 @@ export default function CollaborationDashboard({
         },
       ]);
     } finally {
+      clearTimeout(timeoutId);
       setLoadingTeams(false);
     }
   }, [user]);
