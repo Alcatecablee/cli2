@@ -827,12 +827,30 @@ export default function Dashboard() {
               // Continue with default settings - this is not a critical error
             }
           } catch (error) {
-            const errorMessage =
-              error instanceof Error
-                ? error.message
-                : typeof error === "object" && error !== null
-                  ? JSON.stringify(error)
-                  : String(error);
+            // Enhanced error handling to prevent response body consumption issues
+            const errorMessage = (() => {
+              if (error instanceof Error) {
+                return error.message;
+              }
+              if (typeof error === "object" && error !== null) {
+                try {
+                  // Safely extract error information without consuming response bodies
+                  const errorObj = {};
+                  if (error.message) errorObj.message = error.message;
+                  if (error.code) errorObj.code = error.code;
+                  if (error.status) errorObj.status = error.status;
+                  if (error.details) errorObj.details = error.details;
+                  return Object.keys(errorObj).length > 0
+                    ? Object.entries(errorObj)
+                        .map(([k, v]) => `${k}: ${v}`)
+                        .join(", ")
+                    : "Unknown object error";
+                } catch {
+                  return "Error object processing failed";
+                }
+              }
+              return String(error);
+            })();
             console.error("Error loading Supabase data:", errorMessage);
             // Fall back to localStorage
             const savedProjects =
