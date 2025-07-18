@@ -1564,111 +1564,91 @@ export default function Dashboard() {
           {dashboardState.activeSection === "collaborate" && (
             <div className="tab-content">
               <div className="collaborate-overview">
-                <h3>Real-time Collaboration</h3>
+                <h3>Team Collaboration</h3>
                 <p className="tab-description">
-                  Code together with your team using NeuroLint Pro's real-time
-                  collaborative editor.
+                  Manage collaboration sessions and work together in real-time
                 </p>
 
-                <div className="collaborate-features">
-                  <div className="feature-grid">
-                    <div className="feature-card">
-                      <div className="feature-icon">
-                        <svg
-                          viewBox="0 0 24 24"
-                          width="24"
-                          height="24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                        >
-                          <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
-                          <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
-                        </svg>
-                      </div>
-                      <h4>Live Code Editing</h4>
-                      <p>
-                        Edit code together with real-time cursors and
-                        synchronized changes.
-                      </p>
-                    </div>
-
-                    <div className="feature-card">
-                      <div className="feature-icon">
-                        <svg
-                          viewBox="0 0 24 24"
-                          width="24"
-                          height="24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                        >
-                          <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
-                        </svg>
-                      </div>
-                      <h4>Team Chat</h4>
-                      <p>
-                        Built-in chat and commenting system for seamless
-                        communication.
-                      </p>
-                    </div>
-
-                    <div className="feature-card">
-                      <div className="feature-icon">
-                        <svg
-                          viewBox="0 0 24 24"
-                          width="24"
-                          height="24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                        >
-                          <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
-                          <polyline points="14,2 14,8 20,8" />
-                          <line x1="16" y1="13" x2="8" y2="13" />
-                          <line x1="16" y1="17" x2="8" y2="17" />
-                        </svg>
-                      </div>
-                      <h4>Shared NeuroLint Analysis</h4>
-                      <p>
-                        Run collaborative code analysis with results visible to
-                        all team members.
-                      </p>
-                    </div>
-
-                    <div className="feature-card">
-                      <div className="feature-icon">
-                        <svg
-                          viewBox="0 0 24 24"
-                          width="24"
-                          height="24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                        >
-                          <circle cx="12" cy="12" r="3" />
-                          <path d="M12 1v6m0 6v6m11-7h-6m-6 0H1" />
-                        </svg>
-                      </div>
-                      <h4>Session Management</h4>
-                      <p>
-                        Create and join coding sessions with invite links and
-                        host controls.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
                 <div className="collaborate-actions">
-                  <Link href="/collaborate" className="btn btn-primary">
+                  <button
+                    onClick={async () => {
+                      if (!user?.id) return;
+                      const sessionName = prompt("Enter session name:");
+                      if (!sessionName) return;
+                      const filename = prompt(
+                        "Enter filename (e.g., component.tsx):",
+                        "component.tsx",
+                      );
+                      if (!filename) return;
+                      try {
+                        const response = await fetch(
+                          "/api/collaboration/sessions",
+                          {
+                            method: "POST",
+                            headers: {
+                              "Content-Type": "application/json",
+                              "x-user-id": user.id,
+                              "x-user-name":
+                                user.firstName || user.email || "Anonymous",
+                            },
+                            body: JSON.stringify({
+                              name: sessionName,
+                              filename,
+                              language: "typescript",
+                              initialCode: "// Start coding here...\n",
+                            }),
+                          },
+                        );
+                        if (response.ok) {
+                          const data = await response.json();
+                          window.open(
+                            `/collaborate?session=${data.session.id}`,
+                            "_blank",
+                          );
+                          // Refresh sessions list
+                          if (dashboardState.activeSection === "collaborate") {
+                            const sessionsResponse = await fetch(
+                              "/api/collaboration/sessions",
+                              {
+                                headers: {
+                                  "x-user-id": user.id,
+                                  "x-user-name":
+                                    user.firstName || user.email || "Anonymous",
+                                },
+                              },
+                            );
+                            if (sessionsResponse.ok) {
+                              const sessionsData =
+                                await sessionsResponse.json();
+                              setDashboardState((prev) => ({
+                                ...prev,
+                                collaborationSessions:
+                                  sessionsData.sessions || [],
+                              }));
+                            }
+                          }
+                        } else {
+                          const error = await response.json();
+                          alert(`Failed to create session: ${error.error}`);
+                        }
+                      } catch (error) {
+                        console.error("Failed to create session:", error);
+                        alert("Failed to create session");
+                      }
+                    }}
+                    className="btn btn-primary"
+                  >
                     Start Collaboration Session
-                  </Link>
+                  </button>
                   <button
                     className="btn btn-secondary"
                     onClick={() => {
                       const sessionId = prompt("Enter session ID to join:");
                       if (sessionId) {
-                        window.location.href = `/collaborate?session=${sessionId}`;
+                        window.open(
+                          `/collaborate?session=${sessionId}`,
+                          "_blank",
+                        );
                       }
                     }}
                   >
