@@ -181,15 +181,24 @@
   object-fit: contain;
   transition: var(--transition-smooth);
   filter: brightness(1.1) contrast(1.1);
-  animation: logoSpin 20s linear infinite;
+  animation: beeFloat 6s ease-in-out infinite;
 }
 
-@keyframes logoSpin {
+@keyframes beeFloat {
   0% {
-    transform: rotate(0deg);
+    transform: translateY(0px) translateX(0px) rotate(0deg) scale(1);
+  }
+  25% {
+    transform: translateY(-3px) translateX(2px) rotate(5deg) scale(1.05);
+  }
+  50% {
+    transform: translateY(0px) translateX(-1px) rotate(-3deg) scale(1);
+  }
+  75% {
+    transform: translateY(2px) translateX(1px) rotate(2deg) scale(0.95);
   }
   100% {
-    transform: rotate(360deg);
+    transform: translateY(0px) translateX(0px) rotate(0deg) scale(1);
   }
 }
 
