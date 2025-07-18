@@ -8,9 +8,9 @@ export default function WhatIsNeuroLintPage() {
     <div className="docs-page">
       <div className="docs-page-header">
         <div className="docs-breadcrumb">
-          <Link href="/docs">📚 Docs</Link>
+          <Link href="/docs">Docs</Link>
           <span className="docs-breadcrumb-separator">→</span>
-          <Link href="/docs#introduction">🚀 Introduction</Link>
+          <Link href="/docs#introduction">Introduction</Link>
           <span className="docs-breadcrumb-separator">→</span>
           <span className="docs-breadcrumb-current">
             What is NeuroLint Pro?
