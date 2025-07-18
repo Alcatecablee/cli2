@@ -137,6 +137,15 @@ npm run fix-layer-2
 
 # Fix only component issues
 npm run fix-layer-3
+
+# Fix only hydration issues
+npm run fix-layer-4
+
+# Fix only Next.js App Router issues
+npm run fix-layer-5
+
+# Fix only testing and validation
+npm run fix-layer-6
 ```
 
 ## 🛡️ Safety Features
