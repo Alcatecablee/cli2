@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useAdminAuth } from "../utils/auth";
+import { useAuth } from "../../../lib/auth-context";
 
 interface ApiKey {
   id: string;
@@ -41,7 +41,7 @@ interface ApiManagementState {
 }
 
 export default function ApiManagement() {
-  const { adminFetch, loading: authLoading, isAdmin } = useAdminAuth();
+  const { session } = useAuth();
   const [state, setState] = useState<ApiManagementState>({
     apiKeys: [],
     rateLimits: [],
@@ -62,7 +62,16 @@ export default function ApiManagement() {
     setState((prev) => ({ ...prev, loading: true, error: null }));
 
     try {
-      const response = await adminFetch("/api/admin/api-management");
+      if (!session?.access_token) {
+        throw new Error("Not authenticated");
+      }
+
+      const response = await fetch("/api/admin/api-management", {
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+          "Content-Type": "application/json",
+        },
+      });
 
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -88,8 +97,10 @@ export default function ApiManagement() {
   };
 
   useEffect(() => {
-    fetchApiData();
-  }, []);
+    if (session?.access_token) {
+      fetchApiData();
+    }
+  }, [session?.access_token]);
 
   const handleCreateApiKey = async (keyData: {
     name: string;
@@ -98,8 +109,16 @@ export default function ApiManagement() {
     expiresAt?: string;
   }) => {
     try {
-      const response = await adminFetch("/api/admin/api-management", {
+      if (!session?.access_token) {
+        throw new Error("Not authenticated");
+      }
+
+      const response = await fetch("/api/admin/api-management", {
         method: "POST",
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({ action: "create_key", ...keyData }),
       });
 
@@ -123,8 +142,16 @@ export default function ApiManagement() {
     updates: Partial<ApiKey>,
   ) => {
     try {
-      const response = await adminFetch("/api/admin/api-management", {
+      if (!session?.access_token) {
+        throw new Error("Not authenticated");
+      }
+
+      const response = await fetch("/api/admin/api-management", {
         method: "PUT",
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({ action: "update_key", keyId, updates }),
       });
 
@@ -157,8 +184,16 @@ export default function ApiManagement() {
     }
 
     try {
-      const response = await adminFetch("/api/admin/api-management", {
+      if (!session?.access_token) {
+        throw new Error("Not authenticated");
+      }
+
+      const response = await fetch("/api/admin/api-management", {
         method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({ action: "delete_key", keyId }),
       });
 
@@ -192,22 +227,6 @@ export default function ApiManagement() {
     if (key.length <= 8) return key;
     return `${key.substring(0, 4)}...${key.substring(key.length - 4)}`;
   };
-
-  // Show loading if auth is still loading or if we're not admin
-  if (authLoading || !isAdmin) {
-    return (
-      <div className="admin-content">
-        <div className="loading-container">
-          <div className="loading-spinner" />
-          <p>
-            {authLoading
-              ? "Authenticating..."
-              : "Access denied. Admin privileges required."}
-          </p>
-        </div>
-      </div>
-    );
-  }
 
   if (state.loading) {
     return (
