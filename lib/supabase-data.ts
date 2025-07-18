@@ -47,255 +47,27 @@ export interface UserSettings {
   updated_at?: string;
 }
 
-// Helper function to format error messages properly
-function formatError(error: any): string {
+// Helper function to safely format error messages
+function safeLogError(error: any, prefix: string): void {
   if (error instanceof Error) {
-    return `${error.name}: ${error.message}`;
+    console.error(prefix, error.message);
+  } else if (typeof error === "object" && error !== null) {
+    console.error(prefix, {
+      message: error.message || "Unknown error",
+      code: error.code || "",
+    });
+  } else {
+    console.error(prefix, String(error));
   }
-  if (typeof error === "object" && error !== null) {
-    return JSON.stringify(
-      {
-        message: error.message || "Unknown error",
-        details: error.details || "",
-        hint: error.hint || "",
-        code: error.code || "",
-      },
-      null,
-      2,
-    );
-  }
-  return String(error);
 }
 
 // Helper function to create authenticated Supabase client
 function createAuthenticatedClient() {
-  // Return the supabase client without trying to manually set session
-  // The client will use the session from the auth context automatically
   return supabase;
 }
 
 // Data service functions
 export const dataService = {
-  // Analysis History
-  async saveAnalysisHistory(
-    userId: string,
-    analysisData: Omit<
-      AnalysisHistory,
-      "id" | "user_id" | "created_at" | "updated_at"
-    >,
-  ): Promise<AnalysisHistory | null> {
-    try {
-      const client = createAuthenticatedClient();
-
-      // Double-check authentication
-      const {
-        data: { user },
-      } = await client.auth.getUser();
-      if (!user) {
-        console.error("No authenticated user found for Supabase operation");
-        return null;
-      }
-
-      if (user.id !== userId) {
-        console.error(
-          "User ID mismatch - authenticated user:",
-          user.id,
-          "vs requested:",
-          userId,
-        );
-        return null;
-      }
-
-      const { data, error } = await client
-        .from("analysis_history")
-        .insert({
-          user_id: userId,
-          ...analysisData,
-        })
-        .select()
-        .single();
-
-      if (error) {
-        console.error("Error saving analysis history:", formatError(error));
-        return null;
-      }
-
-      return data;
-    } catch (error) {
-      console.error("Error in saveAnalysisHistory:", formatError(error));
-      return null;
-    }
-  },
-
-  async getAnalysisHistory(
-    userId: string,
-    limit = 50,
-  ): Promise<AnalysisHistory[]> {
-    try {
-      const client = createAuthenticatedClient();
-      const { data, error } = await client
-        .from("analysis_history")
-        .select("*")
-        .eq("user_id", userId)
-        .order("created_at", { ascending: false })
-        .limit(limit);
-
-      if (error) {
-        console.error("Error fetching analysis history:", formatError(error));
-        return [];
-      }
-
-      return data || [];
-    } catch (error) {
-      console.error("Error in getAnalysisHistory:", formatError(error));
-      return [];
-    }
-  },
-
-  async deleteAnalysisHistory(
-    userId: string,
-    historyId: string,
-  ): Promise<boolean> {
-    try {
-      const client = createAuthenticatedClient();
-      const { error } = await client
-        .from("analysis_history")
-        .delete()
-        .eq("id", historyId)
-        .eq("user_id", userId);
-
-      if (error) {
-        console.error("Error deleting analysis history:", formatError(error));
-        return false;
-      }
-
-      return true;
-    } catch (error) {
-      console.error("Error in deleteAnalysisHistory:", formatError(error));
-      return false;
-    }
-  },
-
-  async clearAnalysisHistory(userId: string): Promise<boolean> {
-    try {
-      const client = createAuthenticatedClient();
-      const { error } = await client
-        .from("analysis_history")
-        .delete()
-        .eq("user_id", userId);
-
-      if (error) {
-        console.error("Error clearing analysis history:", formatError(error));
-        return false;
-      }
-
-      return true;
-    } catch (error) {
-      console.error("Error in clearAnalysisHistory:", formatError(error));
-      return false;
-    }
-  },
-
-  // Projects
-  async saveProject(
-    userId: string,
-    projectData: Omit<Project, "id" | "user_id" | "created_at" | "updated_at">,
-  ): Promise<Project | null> {
-    try {
-      const client = createAuthenticatedClient();
-      const { data, error } = await client
-        .from("projects")
-        .insert({
-          user_id: userId,
-          ...projectData,
-        })
-        .select()
-        .single();
-
-      if (error) {
-        console.error("Error saving project:", formatError(error));
-        return null;
-      }
-
-      return data;
-    } catch (error) {
-      console.error("Error in saveProject:", formatError(error));
-      return null;
-    }
-  },
-
-  async getProjects(userId: string): Promise<Project[]> {
-    try {
-      const client = createAuthenticatedClient();
-      const { data, error } = await client
-        .from("projects")
-        .select("*")
-        .eq("user_id", userId)
-        .order("created_at", { ascending: false });
-
-      if (error) {
-        console.error("Error fetching projects:", formatError(error));
-        return [];
-      }
-
-      return data || [];
-    } catch (error) {
-      console.error("Error in getProjects:", formatError(error));
-      return [];
-    }
-  },
-
-  async updateProject(
-    userId: string,
-    projectId: string,
-    updates: Partial<Omit<Project, "id" | "user_id" | "created_at">>,
-  ): Promise<Project | null> {
-    try {
-      const client = createAuthenticatedClient();
-      const { data, error } = await client
-        .from("projects")
-        .update({
-          ...updates,
-          updated_at: new Date().toISOString(),
-        })
-        .eq("id", projectId)
-        .eq("user_id", userId)
-        .select()
-        .single();
-
-      if (error) {
-        console.error("Error updating project:", formatError(error));
-        return null;
-      }
-
-      return data;
-    } catch (error) {
-      console.error("Error in updateProject:", formatError(error));
-      return null;
-    }
-  },
-
-  async deleteProject(userId: string, projectId: string): Promise<boolean> {
-    try {
-      const client = createAuthenticatedClient();
-      const { error } = await client
-        .from("projects")
-        .delete()
-        .eq("id", projectId)
-        .eq("user_id", userId);
-
-      if (error) {
-        console.error("Error deleting project:", formatError(error));
-        return false;
-      }
-
-      return true;
-    } catch (error) {
-      console.error("Error in deleteProject:", formatError(error));
-      return false;
-    }
-  },
-
   // User Settings
   async getUserSettings(userId: string): Promise<UserSettings | null> {
     try {
@@ -318,13 +90,13 @@ export const dataService = {
             theme: "dark",
           };
         }
-        console.error("Error fetching user settings:", formatError(error));
+        safeLogError(error, "Error fetching user settings:");
         return null;
       }
 
       return data;
     } catch (error) {
-      console.error("Error in getUserSettings:", formatError(error));
+      safeLogError(error, "Error in getUserSettings:");
       return null;
     }
   },
@@ -349,14 +121,215 @@ export const dataService = {
         .single();
 
       if (error) {
-        console.error("Error saving user settings:", formatError(error));
+        safeLogError(error, "Error saving user settings:");
         return null;
       }
 
       return data;
     } catch (error) {
-      console.error("Error in saveUserSettings:", formatError(error));
+      safeLogError(error, "Error in saveUserSettings:");
       return null;
+    }
+  },
+
+  // Analysis History
+  async saveAnalysisHistory(
+    userId: string,
+    analysisData: Omit<
+      AnalysisHistory,
+      "id" | "user_id" | "created_at" | "updated_at"
+    >,
+  ): Promise<AnalysisHistory | null> {
+    try {
+      const client = createAuthenticatedClient();
+
+      const { data, error } = await client
+        .from("analysis_history")
+        .insert({
+          user_id: userId,
+          ...analysisData,
+        })
+        .select()
+        .single();
+
+      if (error) {
+        safeLogError(error, "Error saving analysis history:");
+        return null;
+      }
+
+      return data;
+    } catch (error) {
+      safeLogError(error, "Error in saveAnalysisHistory:");
+      return null;
+    }
+  },
+
+  async getAnalysisHistory(
+    userId: string,
+    limit = 50,
+  ): Promise<AnalysisHistory[]> {
+    try {
+      const client = createAuthenticatedClient();
+      const { data, error } = await client
+        .from("analysis_history")
+        .select("*")
+        .eq("user_id", userId)
+        .order("created_at", { ascending: false })
+        .limit(limit);
+
+      if (error) {
+        safeLogError(error, "Error fetching analysis history:");
+        return [];
+      }
+
+      return data || [];
+    } catch (error) {
+      safeLogError(error, "Error in getAnalysisHistory:");
+      return [];
+    }
+  },
+
+  async deleteAnalysisHistory(
+    userId: string,
+    historyId: string,
+  ): Promise<boolean> {
+    try {
+      const client = createAuthenticatedClient();
+      const { error } = await client
+        .from("analysis_history")
+        .delete()
+        .eq("id", historyId)
+        .eq("user_id", userId);
+
+      if (error) {
+        safeLogError(error, "Error deleting analysis history:");
+        return false;
+      }
+
+      return true;
+    } catch (error) {
+      safeLogError(error, "Error in deleteAnalysisHistory:");
+      return false;
+    }
+  },
+
+  async clearAnalysisHistory(userId: string): Promise<boolean> {
+    try {
+      const client = createAuthenticatedClient();
+      const { error } = await client
+        .from("analysis_history")
+        .delete()
+        .eq("user_id", userId);
+
+      if (error) {
+        safeLogError(error, "Error clearing analysis history:");
+        return false;
+      }
+
+      return true;
+    } catch (error) {
+      safeLogError(error, "Error in clearAnalysisHistory:");
+      return false;
+    }
+  },
+
+  // Projects
+  async saveProject(
+    userId: string,
+    projectData: Omit<Project, "id" | "user_id" | "created_at" | "updated_at">,
+  ): Promise<Project | null> {
+    try {
+      const client = createAuthenticatedClient();
+      const { data, error } = await client
+        .from("projects")
+        .insert({
+          user_id: userId,
+          ...projectData,
+        })
+        .select()
+        .single();
+
+      if (error) {
+        safeLogError(error, "Error saving project:");
+        return null;
+      }
+
+      return data;
+    } catch (error) {
+      safeLogError(error, "Error in saveProject:");
+      return null;
+    }
+  },
+
+  async getProjects(userId: string): Promise<Project[]> {
+    try {
+      const client = createAuthenticatedClient();
+      const { data, error } = await client
+        .from("projects")
+        .select("*")
+        .eq("user_id", userId)
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        safeLogError(error, "Error fetching projects:");
+        return [];
+      }
+
+      return data || [];
+    } catch (error) {
+      safeLogError(error, "Error in getProjects:");
+      return [];
+    }
+  },
+
+  async updateProject(
+    userId: string,
+    projectId: string,
+    updates: Partial<Omit<Project, "id" | "user_id" | "created_at">>,
+  ): Promise<Project | null> {
+    try {
+      const client = createAuthenticatedClient();
+      const { data, error } = await client
+        .from("projects")
+        .update({
+          ...updates,
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", projectId)
+        .eq("user_id", userId)
+        .select()
+        .single();
+
+      if (error) {
+        safeLogError(error, "Error updating project:");
+        return null;
+      }
+
+      return data;
+    } catch (error) {
+      safeLogError(error, "Error in updateProject:");
+      return null;
+    }
+  },
+
+  async deleteProject(userId: string, projectId: string): Promise<boolean> {
+    try {
+      const client = createAuthenticatedClient();
+      const { error } = await client
+        .from("projects")
+        .delete()
+        .eq("id", projectId)
+        .eq("user_id", userId);
+
+      if (error) {
+        safeLogError(error, "Error deleting project:");
+        return false;
+      }
+
+      return true;
+    } catch (error) {
+      safeLogError(error, "Error in deleteProject:");
+      return false;
     }
   },
 
@@ -386,7 +359,7 @@ export const dataService = {
         );
       }
     } catch (error) {
-      console.error("Error saving to localStorage:", formatError(error));
+      safeLogError(error, "Error saving to localStorage:");
     }
 
     // If user is authenticated, also save to Supabase
@@ -397,8 +370,7 @@ export const dataService = {
           console.log("Successfully saved analysis history to Supabase");
         }
       } catch (error) {
-        console.error("Error saving to Supabase:", formatError(error));
-        // Continue execution - localStorage backup is available
+        safeLogError(error, "Error saving to Supabase:");
       }
     }
   },
@@ -418,14 +390,14 @@ export const dataService = {
               );
             }
           } catch (error) {
-            console.error("Error updating localStorage:", formatError(error));
+            safeLogError(error, "Error updating localStorage:");
           }
           return supabaseHistory;
         }
       } catch (error) {
-        console.error(
+        safeLogError(
+          error,
           "Error fetching from Supabase, falling back to localStorage:",
-          formatError(error),
         );
       }
     }
@@ -440,7 +412,7 @@ export const dataService = {
       }
       return [];
     } catch (error) {
-      console.error("Error reading from localStorage:", formatError(error));
+      safeLogError(error, "Error reading from localStorage:");
       return [];
     }
   },
