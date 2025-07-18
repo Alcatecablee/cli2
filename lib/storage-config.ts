@@ -4,8 +4,11 @@
  */
 
 export const storageConfig = {
-  // Database connection
-  database: process.env.STORAGE_URL_DATABASE || process.env.DATABASE_URL,
+  // Database connection (Supabase URL)
+  database:
+    process.env.STORAGE_URL_DATABASE ||
+    process.env.SUPABASE_URL ||
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
 
   // Redis connection
   redis: process.env.STORAGE_URL_REDIS,
