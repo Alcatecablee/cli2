@@ -774,7 +774,8 @@ export default function CollaborationDashboard({
                             if (button) {
                               const originalText = button.textContent;
                               button.textContent = "Copied!";
-                              button.style.background = "#4caf50";
+                              button.style.background =
+                                "linear-gradient(135deg, rgba(76, 175, 80, 0.3) 0%, rgba(76, 175, 80, 0.2) 100%)";
                               setTimeout(() => {
                                 button.textContent = originalText;
                                 button.style.background = "";
