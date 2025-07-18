@@ -163,7 +163,7 @@ export default function SignupPage() {
             <div className="onboarding-logo">
               <Link
                 href="/"
-                className="brand-logo"
+                className="modal-logo-bee"
                 style={{ marginBottom: "1.5rem" }}
               >
                 <img
