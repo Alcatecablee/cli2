@@ -196,6 +196,73 @@ body::after {
   }
 }
 
+/* Shooting Stars */
+.shooting-star {
+  position: fixed;
+  width: 2px;
+  height: 2px;
+  background: #fff;
+  border-radius: 50%;
+  z-index: -1;
+  opacity: 0;
+}
+
+.shooting-star::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 40px;
+  height: 1px;
+  background: linear-gradient(to right, rgba(255, 255, 255, 0.8), transparent);
+  transform: translateX(2px);
+}
+
+.shooting-star:nth-child(1) {
+  top: 15%;
+  left: -40px;
+  animation: shootingStar 4s linear infinite;
+  animation-delay: 2s;
+}
+
+.shooting-star:nth-child(2) {
+  top: 35%;
+  left: -40px;
+  animation: shootingStar 3.5s linear infinite;
+  animation-delay: 8s;
+}
+
+.shooting-star:nth-child(3) {
+  top: 60%;
+  left: -40px;
+  animation: shootingStar 4.2s linear infinite;
+  animation-delay: 15s;
+}
+
+.shooting-star:nth-child(4) {
+  top: 80%;
+  left: -40px;
+  animation: shootingStar 3.8s linear infinite;
+  animation-delay: 25s;
+}
+
+@keyframes shootingStar {
+  0% {
+    opacity: 0;
+    transform: translateX(0) translateY(0);
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(100vw) translateY(100px);
+  }
+}
+
 /* Skip to content accessibility link */
 .skip-to-content {
   position: absolute;
