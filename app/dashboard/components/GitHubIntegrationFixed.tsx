@@ -174,27 +174,18 @@ export default function GitHubIntegrationFixed() {
   };
 
   const analyzeRepository = async (repo: GitHubRepository) => {
-    // Check user plan limits
+    // GitHub repository scanning is now free for everyone
     const planLimits = {
-      free: { repositories: 0, filesPerScan: 0 },
-      developer: { repositories: 5, filesPerScan: 50 },
-      professional: { repositories: 25, filesPerScan: 500 },
-      team: { repositories: 100, filesPerScan: 2000 },
-      enterprise: { repositories: -1, filesPerScan: -1 }, // unlimited
+      free: { repositories: -1, filesPerScan: -1 }, // unlimited for free users
+      developer: { repositories: -1, filesPerScan: -1 },
+      professional: { repositories: -1, filesPerScan: -1 },
+      team: { repositories: -1, filesPerScan: -1 },
+      enterprise: { repositories: -1, filesPerScan: -1 },
     };
 
     const userPlan = user?.plan || "free";
     const limits =
       planLimits[userPlan as keyof typeof planLimits] || planLimits.free;
-
-    if (limits.repositories === 0) {
-      setState((prev) => ({
-        ...prev,
-        error:
-          "GitHub repository scanning requires a paid plan. Please upgrade to Developer or higher.",
-      }));
-      return;
-    }
 
     if (!state.accessToken) {
       setState((prev) => ({
