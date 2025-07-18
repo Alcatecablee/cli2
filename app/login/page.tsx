@@ -195,18 +195,6 @@ export default function LoginPage() {
               </div>
 
               <div style={{ marginBottom: "2rem" }}>
-                <label
-                  htmlFor="password"
-                  style={{
-                    display: "block",
-                    fontSize: "0.875rem",
-                    fontWeight: "500",
-                    color: "#ffffff",
-                    marginBottom: "0.5rem",
-                  }}
-                >
-                  Password
-                </label>
                 <input
                   id="password"
                   name="password"
