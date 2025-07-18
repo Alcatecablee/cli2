@@ -46,16 +46,23 @@ function formatError(error: any): string {
   }
 
   if (typeof error === "object" && error !== null) {
-    // Try to extract meaningful error information
+    // Try to extract meaningful error information without consuming response bodies
     const errorObj: any = {};
 
-    // Extract common Supabase error properties
+    // Extract common Supabase/PostgREST error properties safely
     if (error.message) errorObj.message = error.message;
     if (error.details) errorObj.details = error.details;
     if (error.hint) errorObj.hint = error.hint;
     if (error.code) errorObj.code = error.code;
     if (error.status) errorObj.status = error.status;
     if (error.statusText) errorObj.statusText = error.statusText;
+
+    // Handle PostgREST specific error structure
+    if (error.error && typeof error.error === "object") {
+      if (error.error.message) errorObj.message = error.error.message;
+      if (error.error.details) errorObj.details = error.error.details;
+      if (error.error.code) errorObj.code = error.error.code;
+    }
 
     // If we have meaningful properties, format them nicely
     if (Object.keys(errorObj).length > 0) {
@@ -64,12 +71,35 @@ function formatError(error: any): string {
         .join(", ");
     }
 
-    // Fallback to JSON stringify with error handling
-    try {
-      return JSON.stringify(error, null, 2);
-    } catch {
-      return "[Complex object - unable to stringify]";
+    // Avoid trying to stringify objects that might contain response bodies
+    // or other non-serializable properties
+    if (error.constructor && error.constructor.name !== "Object") {
+      return `[${error.constructor.name}]: ${error.toString ? error.toString() : "Unknown error"}`;
     }
+
+    // Safe fallback for plain objects
+    try {
+      // Only stringify if it's a simple object without potential response bodies
+      const safeKeys = Object.keys(error).filter(
+        (key) =>
+          typeof error[key] !== "function" &&
+          !key.includes("body") &&
+          !key.includes("stream") &&
+          !key.includes("response"),
+      );
+
+      if (safeKeys.length > 0) {
+        const safeError = {};
+        safeKeys.forEach((key) => {
+          safeError[key] = error[key];
+        });
+        return JSON.stringify(safeError, null, 2);
+      }
+    } catch {
+      // If JSON.stringify fails, return a safe fallback
+    }
+
+    return "[Complex object - unable to safely stringify]";
   }
 
   return String(error);
