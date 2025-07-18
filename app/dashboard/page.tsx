@@ -591,6 +591,85 @@ export default function Dashboard() {
     [dashboardState.settings.autoSave, saveToHistory, session?.access_token],
   );
 
+  // Load collaboration sessions
+  const loadCollaborationSessions = useCallback(async () => {
+    if (!user?.id) return;
+
+    setDashboardState((prev) => ({ ...prev, loadingSessions: true }));
+
+    try {
+      const response = await fetch("/api/collaboration/sessions", {
+        headers: {
+          "x-user-id": user.id,
+          "x-user-name": user.firstName || user.email || "Anonymous",
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setDashboardState((prev) => ({
+          ...prev,
+          collaborationSessions: data.sessions || [],
+          loadingSessions: false,
+        }));
+      }
+    } catch (error) {
+      console.error("Failed to load collaboration sessions:", error);
+      setDashboardState((prev) => ({ ...prev, loadingSessions: false }));
+    }
+  }, [user]);
+
+  // Create new collaboration session
+  const createCollaborationSession = useCallback(async () => {
+    if (!user?.id) return;
+
+    const sessionName = prompt("Enter session name:");
+    if (!sessionName) return;
+
+    const filename = prompt(
+      "Enter filename (e.g., component.tsx):",
+      "component.tsx",
+    );
+    if (!filename) return;
+
+    try {
+      const response = await fetch("/api/collaboration/sessions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-user-id": user.id,
+          "x-user-name": user.firstName || user.email || "Anonymous",
+        },
+        body: JSON.stringify({
+          name: sessionName,
+          filename,
+          language: "typescript",
+          initialCode: "// Start coding here...\n",
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        window.open(`/collaborate?session=${data.session.id}`, "_blank");
+        loadCollaborationSessions();
+      } else {
+        const error = await response.json();
+        alert(`Failed to create session: ${error.error}`);
+      }
+    } catch (error) {
+      console.error("Failed to create session:", error);
+      alert("Failed to create session");
+    }
+  }, [user, loadCollaborationSessions]);
+
+  // Join collaboration session
+  const joinCollaborationSession = useCallback(() => {
+    const sessionId = prompt("Enter session ID:");
+    if (sessionId) {
+      window.open(`/collaborate?session=${sessionId}`, "_blank");
+    }
+  }, []);
+
   const loadSampleFile = useCallback(
     (sampleKey: string) => {
       const sample = sampleFiles[sampleKey as keyof typeof sampleFiles];
