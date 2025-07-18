@@ -1,5 +1,5 @@
 {
-  "name": "@neurolint/cli",
+  "name": "@neurolint-pro/cli",
   "version": "1.0.3",
   "description": "NeuroLint CLI - Advanced rule-based code analysis and transformation tool using AST parsing and sophisticated pattern matching",
   "main": "release/cli-production.js",
