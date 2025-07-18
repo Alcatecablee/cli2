@@ -79,6 +79,11 @@ export default function SystemMonitoring() {
   });
 
   const fetchSystemData = async () => {
+    // Don't make API calls if auth is still loading
+    if (authLoading || !isAdmin) {
+      return;
+    }
+
     setState((prev) => ({ ...prev, loading: true, error: null }));
 
     try {
@@ -135,8 +140,11 @@ export default function SystemMonitoring() {
   };
 
   useEffect(() => {
-    fetchSystemData();
-  }, []);
+    // Only fetch data when auth is ready and user is admin
+    if (!authLoading && isAdmin) {
+      fetchSystemData();
+    }
+  }, [authLoading, isAdmin]);
 
   useEffect(() => {
     let intervalId: NodeJS.Timeout;
