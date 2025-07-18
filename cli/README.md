@@ -11,7 +11,7 @@ NeuroLint CLI v1.0.4+ now includes integration with NeuroLint Pro for enhanced R
 
 ```bash
 # Install globally
-npm install -g @neurolint-pro/cli
+npm install -g @neurolint/cli
 
 # Initialize in your project
 neurolint init
