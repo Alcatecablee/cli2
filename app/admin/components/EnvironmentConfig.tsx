@@ -20,6 +20,7 @@ interface EnvironmentConfigState {
 }
 
 export default function EnvironmentConfig() {
+  const { session } = useAuth();
   const [state, setState] = useState<EnvironmentConfigState>({
     variables: {},
     loading: true,
