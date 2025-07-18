@@ -300,7 +300,7 @@ export default function CollaborationDashboard({
               );
               setConnectionStatus("disconnected");
               if (activeTab === "sessions") {
-                pollInterval.current = setInterval(onRefreshSessions, 30000);
+                pollInterval.current = setInterval(onRefreshSessions, 120000); // Poll every 2 minutes for less disruption
               }
             }
           };
