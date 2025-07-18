@@ -146,7 +146,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
           if (response.ok) {
             try {
-              const { user: currentUser } = await response.json();
+              // Clone the response to avoid "body stream already read" errors
+              const responseClone = response.clone();
+              let userData;
+              try {
+                userData = await response.json();
+              } catch (jsonError) {
+                // If the original response failed, try the clone
+                console.warn(
+                  "Failed to parse user data, trying clone:",
+                  jsonError,
+                );
+                userData = await responseClone.json();
+              }
+
+              const { user: currentUser } = userData;
 
               // Additional validation on user data
               if (currentUser && currentUser.id && currentUser.email) {
