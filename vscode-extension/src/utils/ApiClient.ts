@@ -219,7 +219,7 @@ export class ApiClient {
 
       if (apiKey) {
         config.headers = config.headers || {};
-        config.headers["Authorization"] = `Bearer ${apiKey}`;
+        config.headers["X-API-Key"] = apiKey;
       }
 
       config.baseURL = this.configManager.getApiUrl();
