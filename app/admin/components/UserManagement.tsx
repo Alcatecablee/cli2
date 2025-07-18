@@ -206,17 +206,37 @@ export default function UserManagement() {
       );
 
       if (!response.ok) {
-        throw new Error(`HTTP ${response.status}`);
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || `HTTP ${response.status}`);
       }
+
+      // Log successful user deletion
+      await logAdminAction("delete_user", "user", state.selectedUser.id, {
+        userEmail: state.selectedUser.email,
+        userPlan: state.selectedUser.plan,
+      });
 
       // Refresh users list
       fetchUsers(state.currentPage, state.searchTerm);
       closeDeleteConfirm();
     } catch (error) {
       console.error("Error deleting user:", error);
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
+
+      // Report error to admin system
+      await reportError(
+        error instanceof Error ? error : new Error(errorMessage),
+        "error",
+        {
+          action: "delete_user",
+          userId: state.selectedUser?.id,
+        },
+      );
+
       setState((prev) => ({
         ...prev,
-        error: error instanceof Error ? error.message : String(error),
+        error: errorMessage,
       }));
     }
   };
