@@ -266,6 +266,26 @@ export default function CollaborationDashboard({
 
       if (response.ok) {
         const data = await response.json();
+
+        // Track activity
+        await fetch("/api/collaboration/activity", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-user-id": user.id,
+            "x-user-name": user.firstName || user.email || "Anonymous",
+          },
+          body: JSON.stringify({
+            type: "session_created",
+            sessionId: data.session.id,
+            details: {
+              sessionName: sessionData.name,
+              filename: sessionData.filename,
+              language: sessionData.language,
+            },
+          }),
+        }).catch(console.error);
+
         window.open(`/collaborate?session=${data.session.id}`, "_blank");
         await onRefreshSessions();
         setShowCreateModal(false);
