@@ -105,6 +105,46 @@ export default function CollaborationDashboard({
         }
       };
     }
+
+    // Poll activity feed for real-time updates
+    if (activeTab === "activity") {
+      activityPollInterval.current = setInterval(async () => {
+        try {
+          const response = await fetch("/api/collaboration/activity", {
+            headers: {
+              "x-user-id": user.id,
+              "x-user-name": user.firstName || user.email || "Anonymous",
+            },
+          });
+          if (response.ok) {
+            const data = await response.json();
+            const formattedActivities = data.activities.map(
+              (activity: any) => ({
+                id: activity.id,
+                type: activity.type,
+                sessionId: activity.session_id,
+                userId: activity.user_id,
+                userName: activity.user_name,
+                timestamp: new Date(activity.timestamp),
+                details: activity.details,
+              }),
+            );
+            setActivities(formattedActivities);
+          }
+        } catch (error) {
+          console.error("Failed to poll activity:", error);
+        }
+      }, 10000); // Poll every 10 seconds
+
+      return () => {
+        if (pollInterval.current) {
+          clearInterval(pollInterval.current);
+        }
+        if (activityPollInterval.current) {
+          clearInterval(activityPollInterval.current);
+        }
+      };
+    }
   }, [activeTab, user.id, user.firstName, user.email, onUpdateSessions]);
 
   // Load team members
