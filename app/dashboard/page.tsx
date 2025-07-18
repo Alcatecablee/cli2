@@ -1720,21 +1720,18 @@ export default function Dashboard() {
                         color: "#ffffff",
                       }}
                     >
-                      Active Sessions
+                      Your Sessions
                     </h4>
-                    <div
-                      style={{
-                        padding: "0.25rem 0.75rem",
-                        background: "rgba(76, 175, 80, 0.12)",
-                        border: "1px solid rgba(76, 175, 80, 0.3)",
-                        borderRadius: "12px",
-                        fontSize: "0.75rem",
-                        color: "#4caf50",
-                        fontWeight: "500",
-                      }}
-                    >
-                      2 sessions running
-                    </div>
+                    {dashboardState.loadingSessions && (
+                      <div
+                        style={{
+                          fontSize: "0.875rem",
+                          color: "rgba(255, 255, 255, 0.6)",
+                        }}
+                      >
+                        Loading...
+                      </div>
+                    )}
                   </div>
 
                   <div style={{ display: "grid", gap: "1rem" }}>
