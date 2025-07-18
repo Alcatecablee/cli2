@@ -71,14 +71,26 @@ export default function AdminSetup() {
       });
     } catch (error) {
       console.error("Setup error:", error);
-      const errorMessage =
-        error instanceof Error ? error.message : String(error);
+      let errorMessage = error instanceof Error ? error.message : String(error);
+
+      // Provide more helpful error messages
+      if (errorMessage.includes("HTTP 500")) {
+        errorMessage =
+          "Server error occurred. This might be due to missing environment variables or database configuration issues.";
+      } else if (errorMessage.includes("HTTP 401")) {
+        errorMessage =
+          "Authentication failed. Please make sure you're logged in as an admin user.";
+      } else if (errorMessage.includes("HTTP 403")) {
+        errorMessage =
+          "Access denied. You need admin permissions to run setup.";
+      }
 
       await reportError(
         error instanceof Error ? error : new Error(errorMessage),
         "error",
         {
           action: "setup_database",
+          originalError: error instanceof Error ? error.message : String(error),
         },
       );
 
