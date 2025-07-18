@@ -86,8 +86,10 @@ export default function AnalyticsOverview() {
   };
 
   useEffect(() => {
-    fetchAnalytics();
-  }, []);
+    if (session?.access_token) {
+      fetchAnalytics();
+    }
+  }, [session?.access_token]);
 
   const handlePeriodChange = (newPeriod: string) => {
     fetchAnalytics(newPeriod);
