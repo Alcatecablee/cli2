@@ -277,28 +277,40 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       });
 
       let data;
+
+      // Create all necessary clones upfront before consuming any response
+      const responseClone = response.clone();
+      const responseTextClone = response.clone();
+
       try {
-        // Clone the response to avoid "body stream already read" errors
-        const responseClone = response.clone();
         try {
           data = await response.json();
         } catch (jsonError) {
-          // If the original response failed, try the clone
-          console.warn("Failed to parse response, trying clone:", jsonError);
-          data = await responseClone.json();
-        }
-      } catch (jsonError) {
-        console.error("Failed to parse login response:", jsonError);
+          console.warn(
+            "Failed to parse JSON response, trying clone:",
+            jsonError,
+          );
+          try {
+            data = await responseClone.json();
+          } catch (cloneJsonError) {
+            console.error(
+              "Failed to parse both original and cloned response:",
+              cloneJsonError,
+            );
 
-        // Try to get response text for debugging using a fresh clone
-        try {
-          const responseCloneForText = response.clone();
-          const responseText = await responseCloneForText.text();
-          console.error("Response text:", responseText);
-        } catch (textError) {
-          console.error("Could not read response text:", textError);
-        }
+            // Try to get response text for debugging
+            try {
+              const responseText = await responseTextClone.text();
+              console.error("Response text:", responseText);
+            } catch (textError) {
+              console.error("Could not read response text:", textError);
+            }
 
+            throw new Error("Server returned invalid response");
+          }
+        }
+      } catch (error) {
+        console.error("Failed to parse login response:", error);
         throw new Error("Server returned invalid response");
       }
 
