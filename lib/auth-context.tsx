@@ -382,6 +382,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.error("Logout error:", error);
     } finally {
       clearSession();
+
+      // Also clear session from centralized Supabase client
+      if (typeof window !== "undefined") {
+        try {
+          const { supabase } = await import("../lib/supabase-client");
+          await supabase.auth.signOut();
+          console.log("Supabase session cleared after logout");
+        } catch (error) {
+          console.error("Error clearing Supabase session:", error);
+        }
+      }
+
       setLoading(false);
       router.push("/");
     }
