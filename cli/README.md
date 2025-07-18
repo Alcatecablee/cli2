@@ -38,13 +38,13 @@ npm install -g @neurolint/cli
 
 ```bash
 # npm
-npm install --save-dev @neurolint/cli
+npm install --save-dev @neurolint-pro/cli
 
 # yarn
-yarn add --dev @neurolint/cli
+yarn add --dev @neurolint-pro/cli
 
 # pnpm
-pnpm add -D @neurolint/cli
+pnpm add -D @neurolint-pro/cli
 ```
 
 ### Requirements
@@ -219,7 +219,7 @@ neurolint analyze src/ --include="**/*.svelte"
 │   Layer 2 (Patterns): 3 issues                 │
 │   Layer 3 (Components): 2 issues               │
 │   Layer 4 (Hydration): 1 issue                 │
-└───────────────��─────────────────────────────────┘
+└─────────────────────────────────────────────────┘
 ```
 
 ### JSON Format
