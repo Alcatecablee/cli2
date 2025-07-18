@@ -3,6 +3,7 @@ import ora from "ora";
 import fs from "fs-extra";
 import path from "path";
 import axios from "axios";
+import { glob } from "glob";
 import { loadConfig, validateConfig } from "../utils/config";
 
 interface FixOptions {
@@ -29,11 +30,14 @@ interface FixResult {
     after: string;
     line: number;
   }>;
-  backupDir?: string;
+  performance: {
+    duration: number;
+  };
 }
 
 export async function fixCommand(files: string[], options: FixOptions) {
-  const spinner = ora("Preparing to fix code issues...").start();
+  const spinner = ora("Initializing NeuroLint fixes...").start();
+  const startTime = Date.now();
 
   try {
     // Load and validate configuration
@@ -67,13 +71,10 @@ export async function fixCommand(files: string[], options: FixOptions) {
     const premiumLayers = layers.filter((layer) => layer >= 5);
     if (premiumLayers.length > 0) {
       try {
-        const userResponse = await axios.get(
-          `${config.api.url}/api/user/profile`,
-          {
-            headers: { Authorization: `Bearer ${config.apiKey}` },
-            timeout: 10000,
-          },
-        );
+        const userResponse = await axios.get(`${config.api.url}/auth/user`, {
+          headers: { "X-API-Key": config.apiKey },
+          timeout: 10000,
+        });
 
         const plan = userResponse.data.plan || "free";
         if (plan === "free" && premiumLayers.length > 0) {
@@ -99,8 +100,49 @@ export async function fixCommand(files: string[], options: FixOptions) {
     if (files.length > 0) {
       targetFiles = files;
     } else {
-      // Use current directory
-      targetFiles = ["src/"];
+      // Use glob patterns from config
+      spinner.text = "Discovering files...";
+      try {
+        for (const pattern of config.files.include) {
+          const foundFiles = await glob(pattern, {
+            ignore: config.files.exclude,
+            cwd: process.cwd(),
+          });
+          targetFiles.push(...foundFiles);
+        }
+      } catch (error) {
+        spinner.fail("File discovery failed");
+        console.log(
+          chalk.red(
+            `Error: ${error instanceof Error ? error.message : String(error)}`,
+          ),
+        );
+        return;
+      }
+    }
+
+    if (targetFiles.length === 0) {
+      spinner.fail("No files found to fix");
+      console.log(
+        chalk.yellow(
+          "Try specifying files explicitly or check your include/exclude patterns",
+        ),
+      );
+      return;
+    }
+
+    // Remove duplicates and filter existing files
+    targetFiles = [...new Set(targetFiles)];
+    const existingFiles = [];
+    for (const file of targetFiles) {
+      if (await fs.pathExists(file)) {
+        existingFiles.push(file);
+      }
+    }
+
+    if (existingFiles.length === 0) {
+      spinner.fail("No valid files found");
+      return;
     }
 
     // Create backup directory if needed
@@ -120,199 +162,212 @@ export async function fixCommand(files: string[], options: FixOptions) {
     }
 
     if (options.dryRun) {
-      spinner.text = "Previewing potential fixes...";
+      spinner.text = `Previewing fixes for ${existingFiles.length} files...`;
     } else {
-      spinner.text = `Applying fixes with layers [${layers.join(", ")}]...`;
+      spinner.text = `Applying fixes to ${existingFiles.length} files with layers [${layers.join(", ")}]...`;
     }
 
-    // Send fix request to your API
-    const fixPayload = {
-      files: targetFiles,
-      layers: layers,
-      options: {
-        dryRun: options.dryRun,
-        recursive: options.recursive,
-        backup: !!backupDir,
+    // Process files one by one since the API expects single files
+    const allResults: any[] = [];
+    let totalFixed = 0;
+    let filesModified = 0;
+
+    for (const file of existingFiles) {
+      try {
+        const code = await fs.readFile(file, "utf-8");
+
+        // Create backup if needed
+        if (backupDir && !options.dryRun) {
+          const backupPath = path.join(backupDir, file);
+          await fs.ensureDir(path.dirname(backupPath));
+          await fs.copy(file, backupPath);
+        }
+
+        // Send fix request for single file
+        const fixPayload = {
+          code,
+          filename: file,
+          layers: layers.join(","),
+          applyFixes: !options.dryRun, // Apply fixes unless it's a dry run
+          metadata: {
+            recursive: options.recursive,
+            backup: !!backupDir,
+            dryRun: options.dryRun,
+          },
+        };
+
+        const response = await axios.post(
+          `${config.api.url}/analyze`,
+          fixPayload,
+          {
+            headers: {
+              "X-API-Key": config.apiKey,
+              "Content-Type": "application/json",
+            },
+            timeout: config.api.timeout,
+          },
+        );
+
+        const result = response.data;
+
+        // If fixes were applied and we have the fixed code, write it back
+        if (!options.dryRun && result.fixedCode && result.fixedCode !== code) {
+          await fs.writeFile(file, result.fixedCode, "utf-8");
+          filesModified++;
+        }
+
+        allResults.push({ file, result });
+        totalFixed +=
+          result.analysis?.detectedIssues?.filter((issue: any) => issue.fixed)
+            ?.length || 0;
+      } catch (fileError) {
+        console.log(chalk.yellow(`Warning: Could not fix ${file}`));
+        if (axios.isAxiosError(fileError)) {
+          if (fileError.response?.status === 401) {
+            console.log(
+              chalk.red(
+                "Authentication failed. Please run 'neurolint login' again.",
+              ),
+            );
+          } else if (fileError.response?.status === 403) {
+            console.log(
+              chalk.red("Access denied. Check your API permissions."),
+            );
+          } else {
+            console.log(
+              chalk.gray(
+                `API Error: ${fileError.response?.status} ${fileError.response?.statusText}`,
+              ),
+            );
+          }
+        } else {
+          console.log(
+            chalk.gray(
+              `Error: ${fileError instanceof Error ? fileError.message : String(fileError)}`,
+            ),
+          );
+        }
+      }
+    }
+
+    const processingTime = Date.now() - startTime;
+
+    if (options.dryRun) {
+      spinner.succeed(
+        `Fix preview completed for ${existingFiles.length} files`,
+      );
+    } else {
+      spinner.succeed(`Fixes applied to ${existingFiles.length} files`);
+    }
+
+    // Aggregate results
+    const aggregatedResult = {
+      filesModified: options.dryRun ? 0 : filesModified,
+      issuesFixed: totalFixed,
+      layersUsed: layers,
+      results: allResults,
+      performance: {
+        duration: processingTime,
       },
     };
 
-    try {
-      const response = await axios.post(
-        `${config.api.url}/api/fix`,
-        fixPayload,
-        {
-          headers: {
-            Authorization: `Bearer ${config.apiKey}`,
-            "Content-Type": "application/json",
-          },
-          timeout: config.api.timeout,
-        },
+    // Display results
+    console.log();
+    if (options.dryRun) {
+      console.log(chalk.white.bold("Fix Preview Results"));
+    } else {
+      console.log(chalk.white.bold("Fix Results"));
+    }
+    console.log();
+
+    console.log(
+      chalk.white("Files processed: ") + chalk.cyan(existingFiles.length),
+    );
+
+    if (!options.dryRun) {
+      console.log(
+        chalk.white("Files modified: ") +
+          chalk.cyan(aggregatedResult.filesModified),
       );
+    }
 
-      const result: FixResult = response.data;
-      spinner.succeed(
-        options.dryRun ? "Fix preview completed" : "Fixes applied successfully",
-      );
+    console.log(
+      chalk.white("Issues fixed: ") +
+        (aggregatedResult.issuesFixed > 0
+          ? chalk.green(aggregatedResult.issuesFixed)
+          : chalk.yellow("0")),
+    );
 
-      // Display results
-      console.log();
-      if (options.dryRun) {
-        console.log(chalk.white.bold("Fix Preview"));
-        console.log();
-        console.log(
-          chalk.white("Files that would be modified: ") +
-            chalk.cyan(result.filesModified),
-        );
-        console.log(
-          chalk.white("Total fixes: ") + chalk.green(result.issuesFixed),
-        );
-        console.log(
-          chalk.white("Layers used: ") +
-            chalk.gray(`[${result.layersUsed.join(", ")}]`),
-        );
-        console.log();
+    console.log(
+      chalk.white("Layers used: ") +
+        chalk.gray(`[${aggregatedResult.layersUsed.join(", ")}]`),
+    );
 
-        if (result.fixes.length > 0) {
-          console.log(chalk.white("Preview of fixes:"));
-          const fixesByLayer: Record<
-            number,
-            Array<(typeof result.fixes)[0]>
-          > = {};
-          result.fixes.forEach((fix) => {
-            if (!fixesByLayer[fix.layer]) {
-              fixesByLayer[fix.layer] = [];
-            }
-            fixesByLayer[fix.layer].push(fix);
-          });
+    console.log(
+      chalk.white("Duration: ") +
+        chalk.gray(`${aggregatedResult.performance.duration}ms`),
+    );
 
-          for (const layer of result.layersUsed) {
-            const layerFixes = fixesByLayer[layer] || [];
-            if (layerFixes.length > 0) {
-              const layerName =
-                config.layers.config[layer]?.name || `Layer ${layer}`;
-              console.log(
-                chalk.gray(`  ${layerName}: ${layerFixes.length} fixes`),
-              );
+    if (backupDir && !options.dryRun) {
+      console.log(chalk.white("Backups saved to: ") + chalk.gray(backupDir));
+    }
 
-              // Show first few fixes
-              layerFixes.slice(0, 3).forEach((fix) => {
-                console.log(
-                  chalk.gray(
-                    `    ${fix.file}:${fix.line} - ${fix.description}`,
-                  ),
-                );
-              });
-              if (layerFixes.length > 3) {
-                console.log(
-                  chalk.gray(`    ... and ${layerFixes.length - 3} more`),
-                );
+    console.log();
+
+    if (aggregatedResult.issuesFixed > 0) {
+      // Show summary of fixes by layer
+      const fixesByLayer: Record<number, any[]> = {};
+
+      allResults.forEach(({ file, result }) => {
+        if (result.analysis?.detectedIssues) {
+          result.analysis.detectedIssues.forEach((issue: any) => {
+            if (issue.fixed) {
+              const layer = issue.layer || 1;
+              if (!fixesByLayer[layer]) {
+                fixesByLayer[layer] = [];
               }
+              fixesByLayer[layer].push({ ...issue, file });
             }
-          }
-        }
-
-        console.log();
-        console.log(chalk.gray("Run without --dry-run to apply these fixes"));
-      } else {
-        console.log(chalk.white.bold("Fixes Applied"));
-        console.log();
-        console.log(
-          chalk.white("Files modified: ") + chalk.cyan(result.filesModified),
-        );
-        console.log(
-          chalk.white("Issues fixed: ") + chalk.green(result.issuesFixed),
-        );
-        console.log(
-          chalk.white("Layers used: ") +
-            chalk.gray(`[${result.layersUsed.join(", ")}]`),
-        );
-
-        if (backupDir && result.backupDir) {
-          console.log(
-            chalk.white("Backups created: ") + chalk.gray(result.backupDir),
-          );
-        }
-
-        console.log();
-
-        if (result.issuesFixed > 0) {
-          console.log(chalk.green("Your code has been improved!"));
-          console.log();
-          console.log(chalk.white("Summary of fixes:"));
-
-          // Group fixes by layer
-          const fixesByLayer: Record<number, number> = {};
-          result.fixes.forEach((fix) => {
-            fixesByLayer[fix.layer] = (fixesByLayer[fix.layer] || 0) + 1;
           });
-
-          for (const layer of result.layersUsed) {
-            const count = fixesByLayer[layer] || 0;
-            if (count > 0) {
-              const layerName =
-                config.layers.config[layer]?.name || `Layer ${layer}`;
-              console.log(chalk.gray(`  ${layerName}: ${count} fixes applied`));
-            }
-          }
-
-          console.log();
-          console.log(chalk.white("Next steps:"));
-          console.log(chalk.gray("  • Review the changes in your files"));
-          console.log(
-            chalk.gray("  • Run your tests to ensure everything works"),
-          );
-          console.log(
-            chalk.gray(
-              "  • Run 'neurolint analyze' to check for remaining issues",
-            ),
-          );
-        } else {
-          console.log(
-            chalk.green(
-              "No fixes were needed - your code is already optimized!",
-            ),
-          );
         }
-      }
-    } catch (error) {
-      spinner.fail(
-        options.dryRun ? "Fix preview failed" : "Fix process failed",
-      );
+      });
 
-      if (axios.isAxiosError(error)) {
-        if (error.response?.status === 401) {
-          console.log(
-            chalk.red(
-              "Authentication failed. Please run 'neurolint login' again.",
-            ),
-          );
-        } else if (error.response?.status === 403) {
-          console.log(chalk.red("Access denied. Check your API permissions."));
-        } else if (error.code === "ECONNREFUSED") {
-          console.log(
-            chalk.red(`Cannot connect to NeuroLint API at ${config.api.url}`),
-          );
-          console.log(chalk.gray("Make sure the NeuroLint server is running."));
-        } else {
-          console.log(
-            chalk.red(
-              `API Error: ${error.response?.status} ${error.response?.statusText}`,
-            ),
-          );
-          if (error.response?.data?.message) {
-            console.log(chalk.gray(error.response.data.message));
-          }
-        }
-      } else {
+      console.log(chalk.white("Fixes by Layer:"));
+      for (const layer of aggregatedResult.layersUsed) {
+        const layerFixes = fixesByLayer[layer] || [];
+        const layerName = config.layers.config[layer]?.name || `Layer ${layer}`;
         console.log(
-          chalk.red(
-            `Error: ${error instanceof Error ? error.message : String(error)}`,
+          chalk.gray(`  ${layerName}: `) +
+            (layerFixes.length > 0
+              ? chalk.green(`${layerFixes.length} fixes applied`)
+              : chalk.gray("no fixes")),
+        );
+      }
+      console.log();
+
+      if (options.dryRun) {
+        console.log(chalk.white("Next steps:"));
+        console.log(
+          chalk.gray(
+            "  • Run 'neurolint fix' without --dry-run to apply fixes",
           ),
         );
+        console.log(chalk.gray("  • Add --backup to create backup files"));
+      } else {
+        console.log(chalk.green("Fixes applied successfully!"));
+        console.log(
+          chalk.gray("  • Run 'neurolint analyze' to verify the fixes"),
+        );
+      }
+    } else {
+      if (options.dryRun) {
+        console.log(chalk.gray("No fixes would be applied."));
+      } else {
+        console.log(chalk.gray("No fixes were needed."));
       }
     }
   } catch (error) {
-    spinner.fail("Fix initialization failed");
+    spinner.fail("Fix operation failed");
     console.log(
       chalk.red(
         `Error: ${error instanceof Error ? error.message : String(error)}`,
