@@ -594,7 +594,9 @@ export default function Dashboard() {
         if (!response.ok) {
           let errorMessage = "Analysis failed";
           try {
-            const errorResult = await response.json();
+            // Clone response to avoid "body stream already read" error
+            const responseClone = response.clone();
+            const errorResult = await responseClone.json();
             errorMessage = errorResult.error || errorMessage;
           } catch (jsonError) {
             // If response isn't JSON, use status text or default message
