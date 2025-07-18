@@ -1596,113 +1596,58 @@ export default function Dashboard() {
           {/* Collaborate Tab */}
           {dashboardState.activeSection === "collaborate" && (
             <div className="tab-content">
-              <div className="collaborate-overview">
-                <h3>Team Collaboration</h3>
-                <p className="tab-description">
-                  Manage collaboration sessions and work together in real-time
-                </p>
-
-                <div className="collaborate-actions">
-                  <button
-                    onClick={async () => {
-                      if (!user?.id) return;
-                      const sessionName = prompt("Enter session name:");
-                      if (!sessionName) return;
-                      const filename = prompt(
-                        "Enter filename (e.g., component.tsx):",
-                        "component.tsx",
-                      );
-                      if (!filename) return;
-                      try {
-                        const response = await fetch(
-                          "/api/collaboration/sessions",
-                          {
-                            method: "POST",
-                            headers: {
-                              "Content-Type": "application/json",
-                              "x-user-id": user.id,
-                              "x-user-name":
-                                user.firstName || user.email || "Anonymous",
-                            },
-                            body: JSON.stringify({
-                              name: sessionName,
-                              filename,
-                              language: "typescript",
-                              initialCode: "// Start coding here...\n",
-                            }),
-                          },
-                        );
-                        if (response.ok) {
-                          const data = await response.json();
-                          window.open(
-                            `/collaborate?session=${data.session.id}`,
-                            "_blank",
-                          );
-                          // Refresh sessions list
-                          if (dashboardState.activeSection === "collaborate") {
-                            const sessionsResponse = await fetch(
-                              "/api/collaboration/sessions",
-                              {
-                                headers: {
-                                  "x-user-id": user.id,
-                                  "x-user-name":
-                                    user.firstName || user.email || "Anonymous",
-                                },
-                              },
-                            );
-                            if (sessionsResponse.ok) {
-                              const sessionsData =
-                                await sessionsResponse.json();
-                              setDashboardState((prev) => ({
-                                ...prev,
-                                collaborationSessions:
-                                  sessionsData.sessions || [],
-                              }));
-                            }
-                          }
-                        } else {
-                          const error = await response.json();
-                          alert(`Failed to create session: ${error.error}`);
-                        }
-                      } catch (error) {
-                        console.error("Failed to create session:", error);
-                        alert("Failed to create session");
-                      }
-                    }}
-                    className="btn btn-primary"
-                  >
-                    Start Collaboration Session
-                  </button>
-                  <button
-                    className="btn btn-secondary"
-                    onClick={() => {
-                      const sessionId = prompt("Enter session ID to join:");
-                      if (sessionId) {
-                        window.open(
-                          `/collaborate?session=${sessionId}`,
-                          "_blank",
-                        );
-                      }
-                    }}
-                  >
-                    Join Session by ID
-                  </button>
-                </div>
-
-                <div className="collaborate-info">
-                  <h4>Getting Started</h4>
-                  <ol className="getting-started-steps">
-                    <li>
-                      Click "Start Collaboration Session" to create a new
-                      session
-                    </li>
-                    <li>Share the session link with your team members</li>
-                    <li>Code together with live cursors and real-time sync</li>
-                    <li>Use built-in chat and comments for communication</li>
-                    <li>Run NeuroLint Pro analysis collaboratively</li>
-                  </ol>
-                </div>
-              </div>
+              <CollaborationDashboard
+                user={user}
+                sessions={dashboardState.collaborationSessions}
+                loadingSessions={dashboardState.loadingSessions}
+                onRefreshSessions={async () => {
+                  if (!user?.id) return;
+                  setDashboardState((prev) => ({
+                    ...prev,
+                    loadingSessions: true,
+                  }));
+                  try {
+                    const response = await fetch(
+                      "/api/collaboration/sessions",
+                      {
+                        headers: {
+                          "x-user-id": user.id,
+                          "x-user-name":
+                            user.firstName || user.email || "Anonymous",
+                        },
+                      },
+                    );
+                    if (response.ok) {
+                      const data = await response.json();
+                      setDashboardState((prev) => ({
+                        ...prev,
+                        collaborationSessions: data.sessions || [],
+                        loadingSessions: false,
+                      }));
+                    } else {
+                      setDashboardState((prev) => ({
+                        ...prev,
+                        loadingSessions: false,
+                      }));
+                    }
+                  } catch (error) {
+                    console.error(
+                      "Failed to load collaboration sessions:",
+                      error,
+                    );
+                    setDashboardState((prev) => ({
+                      ...prev,
+                      loadingSessions: false,
+                    }));
+                  }
+                }}
+                onUpdateSessions={(sessions) => {
+                  setDashboardState((prev) => ({
+                    ...prev,
+                    collaborationSessions: sessions,
+                  }));
+                }}
+              />
             </div>
           )}
 
