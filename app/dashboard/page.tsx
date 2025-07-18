@@ -2045,8 +2045,11 @@ export default function Dashboard() {
                               projects: [...prev.projects, newProject],
                             }));
                           } else {
+                            console.error(
+                              "Failed to create project - savedProject is null",
+                            );
                             alert(
-                              "Failed to create project. Please try again.",
+                              "Failed to create project. Please check the console for details and try again.",
                             );
                           }
                         } else {
