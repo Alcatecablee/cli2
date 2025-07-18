@@ -232,8 +232,8 @@ body::after {
   font-size: 2.5rem;
   font-weight: 900;
   margin-bottom: 1rem;
-  color: #ffffff;
-  text-shadow: 0 0 20px rgba(33, 150, 243, 0.3);
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 0 10px rgba(33, 150, 243, 0.1);
 }
 
 .onboarding-subtitle {
