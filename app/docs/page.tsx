@@ -23,10 +23,10 @@ interface DocPage {
 const docSections: DocSection[] = [
   {
     id: "introduction",
-    title: "🚀 Introduction",
+    title: "Introduction",
     description:
       "Learn the fundamentals of NeuroLint Pro's rule-based transformation system",
-    icon: "🧠",
+    icon: "intro",
     pages: [
       {
         slug: "what-is-neurolint",
@@ -63,9 +63,9 @@ const docSections: DocSection[] = [
   },
   {
     id: "getting-started",
-    title: "⚡ Getting Started",
+    title: "Getting Started",
     description: "Quick setup and your first successful transformation",
-    icon: "🛠️",
+    icon: "setup",
     pages: [
       {
         slug: "installation",
@@ -100,9 +100,9 @@ const docSections: DocSection[] = [
   },
   {
     id: "usage-guide",
-    title: "📖 Usage Guide",
+    title: "Usage Guide",
     description: "Master the command-line interface and execution options",
-    icon: "⚙️",
+    icon: "guide",
     pages: [
       {
         slug: "full-orchestration",
@@ -143,9 +143,9 @@ const docSections: DocSection[] = [
   },
   {
     id: "layer-reference",
-    title: "🔧 Layer Reference",
+    title: "Layer Reference",
     description: "Deep dive into each transformation layer",
-    icon: "📚",
+    icon: "layers",
     status: "complete",
     pages: [
       {
@@ -206,9 +206,9 @@ const docSections: DocSection[] = [
   },
   {
     id: "architecture",
-    title: "🏗️ Architecture",
+    title: "Architecture",
     description: "Understanding the rule engine and transformation patterns",
-    icon: "⚡",
+    icon: "arch",
     status: "beta",
     pages: [
       {
@@ -258,9 +258,9 @@ const docSections: DocSection[] = [
   },
   {
     id: "customization",
-    title: "🎨 Customization & Extending",
+    title: "Customization & Extending",
     description: "Adapt NeuroLint Pro to your specific needs",
-    icon: "🔧",
+    icon: "custom",
     status: "new",
     pages: [
       {
@@ -295,9 +295,9 @@ const docSections: DocSection[] = [
   },
   {
     id: "troubleshooting",
-    title: "🔍 Troubleshooting",
+    title: "Troubleshooting",
     description: "Solve common issues and debug transformation problems",
-    icon: "🛠️",
+    icon: "debug",
     pages: [
       {
         slug: "common-errors",
@@ -331,9 +331,9 @@ const docSections: DocSection[] = [
   },
   {
     id: "reference",
-    title: "📋 Reference",
+    title: "Reference",
     description: "Complete command reference and version information",
-    icon: "📖",
+    icon: "ref",
     pages: [
       {
         slug: "faq",
@@ -383,11 +383,11 @@ export default function DocsPage() {
   const getStatusBadge = (status?: string) => {
     switch (status) {
       case "complete":
-        return { label: "✅ Complete", color: "var(--status-active)" };
+        return { label: "Complete", color: "var(--status-active)" };
       case "beta":
-        return { label: "🚧 Beta", color: "var(--status-processing)" };
+        return { label: "Beta", color: "var(--status-processing)" };
       case "new":
-        return { label: "✨ New", color: "var(--status-info)" };
+        return { label: "New", color: "var(--status-info)" };
       default:
         return null;
     }
@@ -399,7 +399,22 @@ export default function DocsPage() {
       <div className="docs-hero">
         <div className="docs-hero-content">
           <div className="docs-logo">
-            <span className="docs-logo-icon">🧠</span>
+            <div className="docs-logo-icon">
+              <svg
+                viewBox="0 0 24 24"
+                width="48"
+                height="48"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+                <polyline points="14,2 14,8 20,8" />
+                <line x1="16" y1="13" x2="8" y2="13" />
+                <line x1="16" y1="17" x2="8" y2="17" />
+                <polyline points="10,9 9,9 8,9" />
+              </svg>
+            </div>
             <h1>NeuroLint Pro Documentation</h1>
           </div>
           <p className="docs-hero-description">
@@ -429,19 +444,19 @@ export default function DocsPage() {
               href="/docs/getting-started/installation"
               className="docs-cta-primary"
             >
-              🚀 Get Started
+              Get Started
             </Link>
             <Link
               href="/docs/layer-reference/layer-1-config"
               className="docs-cta-secondary"
             >
-              📚 Layer Reference
+              Layer Reference
             </Link>
             <Link
               href="/docs/architecture/6-layer-engine"
               className="docs-cta-secondary"
             >
-              🏗️ Architecture
+              Architecture
             </Link>
           </div>
         </div>
@@ -451,7 +466,19 @@ export default function DocsPage() {
       <div className="docs-search-section">
         <div className="docs-search-container">
           <div className="docs-search-input-wrapper">
-            <span className="docs-search-icon">🔍</span>
+            <div className="docs-search-icon">
+              <svg
+                viewBox="0 0 24 24"
+                width="18"
+                height="18"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <circle cx="11" cy="11" r="8" />
+                <path d="m21 21-4.35-4.35" />
+              </svg>
+            </div>
             <input
               type="text"
               placeholder="Search documentation..."
@@ -500,7 +527,7 @@ export default function DocsPage() {
                     </div>
                     <div className="docs-page-meta">
                       <span className="docs-read-time">
-                        ⏱️ {page.estimatedReadTime}
+                        {page.estimatedReadTime}
                       </span>
                       {page.difficulty && (
                         <span
@@ -523,7 +550,7 @@ export default function DocsPage() {
       <div className="docs-footer">
         <div className="docs-footer-content">
           <div className="docs-footer-section">
-            <h4>🚀 Quick Links</h4>
+            <h4>Quick Links</h4>
             <Link href="/docs/getting-started/installation">
               Installation Guide
             </Link>
@@ -533,7 +560,7 @@ export default function DocsPage() {
             </Link>
           </div>
           <div className="docs-footer-section">
-            <h4>🔧 Advanced</h4>
+            <h4>Advanced</h4>
             <Link href="/docs/architecture/6-layer-engine">
               Architecture Overview
             </Link>
@@ -545,7 +572,7 @@ export default function DocsPage() {
             </Link>
           </div>
           <div className="docs-footer-section">
-            <h4>📖 Reference</h4>
+            <h4>Reference</h4>
             <Link href="/docs/reference/faq">FAQ</Link>
             <Link href="/docs/reference/changelog">Changelog</Link>
             <Link href="/api-docs">API Documentation</Link>
@@ -589,7 +616,7 @@ export default function DocsPage() {
         }
 
         .docs-logo-icon {
-          font-size: 48px;
+          color: #2196f3;
           filter: drop-shadow(0 0 20px rgba(33, 150, 243, 0.5));
         }
 
@@ -698,8 +725,9 @@ export default function DocsPage() {
         .docs-search-icon {
           position: absolute;
           left: 16px;
-          font-size: 18px;
           color: rgba(255, 255, 255, 0.5);
+          display: flex;
+          align-items: center;
         }
 
         .docs-search-input {
