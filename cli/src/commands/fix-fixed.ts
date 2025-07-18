@@ -71,10 +71,13 @@ export async function fixCommand(files: string[], options: FixOptions) {
     const premiumLayers = layers.filter((layer) => layer >= 5);
     if (premiumLayers.length > 0) {
       try {
-        const userResponse = await axios.get(`${config.api.url}/auth/user`, {
-          headers: { "X-API-Key": config.apiKey },
-          timeout: 10000,
-        });
+        const userResponse = await axios.get(
+          `${config.api.url}/auth/api-keys`,
+          {
+            headers: { "X-API-Key": config.apiKey },
+            timeout: 10000,
+          },
+        );
 
         const plan = userResponse.data.plan || "free";
         if (plan === "free" && premiumLayers.length > 0) {
