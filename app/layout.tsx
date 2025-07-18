@@ -2,6 +2,7 @@ import React from "react";
 import type { Metadata } from "next";
 import Script from "next/script";
 import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { AuthProvider } from "../lib/auth-context";
 import ScrollToTop from "../src/components/ScrollToTop";
 import "./globals.css";
