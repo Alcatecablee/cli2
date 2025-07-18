@@ -232,6 +232,21 @@ export const dataService = {
           };
         }
 
+        // Handle 406 errors specifically (Not Acceptable - usually RLS or auth issues)
+        if (error.status === 406 || error.code === "406") {
+          console.warn(
+            `Supabase 406 error for user_settings: This might be due to RLS policies or missing table. Using defaults for user ${userId}`,
+          );
+          return {
+            id: "",
+            user_id: userId,
+            default_layers: [],
+            auto_save: true,
+            notifications: true,
+            theme: "dark",
+          };
+        }
+
         // Use safe error handling to prevent response consumption issues
         const { formattedError, isRetryable } = safeSupabaseErrorHandler(error);
         console.error("Error fetching user settings:", formattedError);
