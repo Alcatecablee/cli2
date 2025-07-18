@@ -299,6 +299,7 @@ export default function AdminDashboard() {
             {adminState.activeSection === "system" && <SystemMonitoring />}
             {adminState.activeSection === "api" && <ApiManagement />}
             {adminState.activeSection === "database" && <DatabaseManagement />}
+            {adminState.activeSection === "setup" && <AdminSetup />}
           </ErrorBoundary>
         </div>
       </div>
