@@ -302,6 +302,7 @@ export default function CollaborationDashboard({
       };
     } catch (error) {
       console.error("[WS] Failed to connect:", error);
+      setConnectionStatus("error");
       // Fall back to polling
       if (activeTab === "sessions") {
         pollInterval.current = setInterval(onRefreshSessions, 10000);
