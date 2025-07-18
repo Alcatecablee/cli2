@@ -29,6 +29,7 @@ interface DatabaseManagementState {
 }
 
 export default function DatabaseManagement() {
+  const { session } = useAuth();
   const [state, setState] = useState<DatabaseManagementState>({
     tables: [],
     stats: null,
