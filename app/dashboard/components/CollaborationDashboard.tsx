@@ -149,6 +149,44 @@ export default function CollaborationDashboard({
         }
       };
     }
+
+    // Always poll for online presence to show live indicators
+    presencePollInterval.current = setInterval(async () => {
+      try {
+        const response = await fetch("/api/collaboration/presence", {
+          headers: {
+            "x-user-id": user.id,
+            "x-user-name": user.firstName || user.email || "Anonymous",
+          },
+        });
+        if (response.ok) {
+          const data = await response.json();
+          const onlineMap = new Map();
+          data.presence.forEach((p: any) => {
+            onlineMap.set(p.userId, {
+              userName: p.userName,
+              lastSeen: new Date(p.lastSeen),
+              status: p.status,
+            });
+          });
+          setOnlineUsers(onlineMap);
+        }
+      } catch (error) {
+        console.error("Failed to poll presence:", error);
+      }
+    }, 15000); // Poll every 15 seconds
+
+    return () => {
+      if (pollInterval.current) {
+        clearInterval(pollInterval.current);
+      }
+      if (activityPollInterval.current) {
+        clearInterval(activityPollInterval.current);
+      }
+      if (presencePollInterval.current) {
+        clearInterval(presencePollInterval.current);
+      }
+    };
   }, [activeTab, user.id, user.firstName, user.email, onUpdateSessions]);
 
   // Load team members
