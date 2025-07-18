@@ -13,6 +13,7 @@ import AnalyticsDashboard from "./components/AnalyticsDashboard";
 import ApiKeysManager from "./components/ApiKeysManager";
 import SystemStatus from "./components/SystemStatus";
 import ErrorBoundary from "./components/ErrorBoundary";
+import CollaborationDashboard from "./components/CollaborationDashboard";
 
 // Import the same result interfaces from the demo
 interface DemoResult {
