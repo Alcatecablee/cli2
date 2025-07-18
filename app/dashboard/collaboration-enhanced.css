@@ -49,6 +49,29 @@
   margin: 0;
 }
 
+.online-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: rgba(76, 175, 80, 0.1);
+  border: 1px solid rgba(76, 175, 80, 0.3);
+  border-radius: 20px;
+  font-size: 0.875rem;
+  color: #4caf50;
+  font-weight: 500;
+  width: fit-content;
+}
+
+.online-dot {
+  width: 8px;
+  height: 8px;
+  background: #4caf50;
+  border-radius: 50%;
+  animation: pulse-online 2s infinite;
+}
+
 .header-actions {
   display: flex;
   gap: 1rem;
