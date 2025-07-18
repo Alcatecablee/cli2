@@ -144,7 +144,42 @@ async function createAuthenticatedClient() {
   }
 
   try {
-    // Get current session from Supabase auth
+    // First, try to get session from localStorage (where our auth system stores it)
+    const storedSessionStr = localStorage.getItem("supabase_session");
+    if (storedSessionStr) {
+      try {
+        const storedSession = JSON.parse(storedSessionStr);
+
+        // Check if session is not expired
+        if (
+          storedSession.expires_at &&
+          storedSession.expires_at * 1000 > Date.now()
+        ) {
+          console.log("Setting session from localStorage for user auth");
+
+          // Set the session on the Supabase client
+          const { error } = await supabase.auth.setSession({
+            access_token: storedSession.access_token,
+            refresh_token: storedSession.refresh_token,
+          });
+
+          if (error) {
+            console.error(
+              "Error setting session from localStorage:",
+              formatError(error),
+            );
+          } else {
+            console.log("Successfully set session from localStorage");
+          }
+        } else {
+          console.warn("Stored session has expired");
+        }
+      } catch (parseError) {
+        console.error("Error parsing stored session:", parseError);
+      }
+    }
+
+    // Now get current session from Supabase auth
     const {
       data: { session },
       error,
