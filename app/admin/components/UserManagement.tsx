@@ -69,11 +69,32 @@ export default function UserManagement() {
         currentPage: page,
         loading: false,
       }));
+
+      // Log successful user fetch for audit
+      await logAdminAction("fetch_users", "users", undefined, {
+        page,
+        search,
+        userCount: data.users?.length || 0,
+      });
     } catch (error) {
       console.error("Error fetching users:", error);
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
+
+      // Report error to admin system
+      await reportError(
+        error instanceof Error ? error : new Error(errorMessage),
+        "error",
+        {
+          action: "fetch_users",
+          page,
+          search,
+        },
+      );
+
       setState((prev) => ({
         ...prev,
-        error: error instanceof Error ? error.message : String(error),
+        error: errorMessage,
         loading: false,
       }));
     }
