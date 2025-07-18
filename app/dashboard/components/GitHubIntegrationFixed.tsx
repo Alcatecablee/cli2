@@ -315,14 +315,6 @@ export default function GitHubIntegrationFixed() {
             <span className="limit-value">{getPlanLimits().filesPerScan}</span>
           </div>
         </div>
-        {(user?.plan === "free" || !user?.plan) && (
-          <div className="upgrade-prompt">
-            <p>GitHub integration requires a paid plan</p>
-            <a href="/pricing" className="upgrade-link">
-              View Plans
-            </a>
-          </div>
-        )}
       </div>
 
       {!state.isConnected ? (
