@@ -256,11 +256,12 @@ export default function PricingPage() {
               style={{ position: "relative", marginBottom: "2rem" }}
             >
               <div className="nav-left">
-                <img
-                  src="https://cdn.builder.io/api/v1/image/assets%2F4b35a64a4a2c446c91402681adcf734e%2F485afb87468542eeba91d45b141bab95?format=webp&width=800"
-                  alt="NeuroLint Pro"
-                  className="nav-logo"
-                />
+                <Link href="/" className="brand-logo">
+                  <img
+                    src="https://cdn.builder.io/api/v1/image/assets%2F4b35a64a4a2c446c91402681adcf734e%2F485afb87468542eeba91d45b141bab95?format=webp&width=800"
+                    alt="NeuroLint Pro"
+                  />
+                </Link>
               </div>
               <div className="nav-center">
                 <a
