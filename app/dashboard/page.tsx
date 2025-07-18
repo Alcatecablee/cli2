@@ -2021,6 +2021,10 @@ export default function Dashboard() {
                       try {
                         if (user?.id) {
                           // Save to Supabase
+                          console.log(
+                            "Attempting to save project for user:",
+                            user.id,
+                          );
                           const savedProject = await dataService.saveProject(
                             user.id,
                             {
@@ -2029,6 +2033,7 @@ export default function Dashboard() {
                               files: [],
                             },
                           );
+                          console.log("SaveProject result:", savedProject);
 
                           if (savedProject) {
                             const newProject: Project = {
