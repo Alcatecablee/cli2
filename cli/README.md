@@ -3,9 +3,9 @@
 [![npm version](https://badge.fury.io/js/%40neurolint%2Fcli.svg)](https://badge.fury.io/js/%40neurolint%2Fcli)
 [![Repository](https://img.shields.io/badge/Repository-Private-red.svg)](https://github.com/neurolint-pro/neurolint-pro)
 
-> **Premium React/Next.js Code Fixing Service - Command Line Interface**
+> **Advanced rule-based code analysis and transformation tool with NeuroLint Pro integration**
 
-NeuroLint Pro CLI is the command-line interface for the NeuroLint Pro premium code fixing service. It provides direct access to advanced React/Next.js code analysis and automatic fixing capabilities from your terminal.
+NeuroLint CLI v1.0.4+ now includes integration with NeuroLint Pro for enhanced React/Next.js code analysis and automatic fixing capabilities. Works with both standalone analysis and NeuroLint Pro service.
 
 ## Quick Start
 
