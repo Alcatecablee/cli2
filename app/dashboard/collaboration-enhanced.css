@@ -274,7 +274,11 @@
   left: 0;
   right: 0;
   height: 3px;
-  background: linear-gradient(90deg, #2196f3 0%, #3f51b5 100%);
+  background: linear-gradient(
+    90deg,
+    rgba(33, 150, 243, 0.6) 0%,
+    rgba(63, 81, 181, 0.6) 100%
+  );
   opacity: 0;
   transition: opacity 0.2s ease;
 }
