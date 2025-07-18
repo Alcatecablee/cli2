@@ -801,6 +801,15 @@
   gap: 1rem;
   justify-content: flex-end;
   margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  position: sticky;
+  bottom: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(30, 30, 30, 0.95) 0%,
+    rgba(45, 45, 45, 0.95) 100%
+  );
 }
 
 /* Conflict Resolution Styles */
