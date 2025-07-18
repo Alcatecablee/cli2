@@ -21,7 +21,7 @@ export default function Layer1ConfigPage() {
           </span>
         </div>
 
-        <h1 className="docs-page-title">🔧 Layer 1: Configuration Fixes</h1>
+        <h1 className="docs-page-title">Layer 1: Configuration Fixes</h1>
         <p className="docs-page-subtitle">
           Foundation setup and configuration modernization for TypeScript,
           Next.js, and package.json
