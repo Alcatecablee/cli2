@@ -80,28 +80,53 @@ export interface UserSettings {
   updated_at?: string;
 }
 
-// Safe Supabase error handler that prevents response consumption issues
+// Ultra-safe Supabase error handler that completely avoids response body access
 function safeSupabaseErrorHandler(error: any): {
   formattedError: string;
   isRetryable: boolean;
 } {
-  // Prevent any attempts to read response bodies
-  const formattedError = formatError(error);
+  // Only access the most basic properties to prevent any response body consumption
+  let formattedError = "Unknown error";
+  let isRetryable = false;
 
-  // Determine if error is retryable based on error properties (not response body)
-  const isRetryable = (() => {
-    if (error?.code) {
-      // Network/connection errors that might be retryable
-      return ["ECONNRESET", "ENOTFOUND", "ETIMEDOUT", "ECONNREFUSED"].includes(
-        error.code,
-      );
+  try {
+    // Extract safe properties without deep object traversal
+    if (error && typeof error === "object") {
+      // Only access known safe properties
+      const safeMessage = error.message;
+      const safeCode = error.code;
+      const safeStatus = error.status;
+
+      if (safeMessage) {
+        formattedError = `Error: ${safeMessage}`;
+      } else if (safeCode) {
+        formattedError = `Error code: ${safeCode}`;
+      } else if (safeStatus) {
+        formattedError = `Status: ${safeStatus}`;
+      }
+
+      // Determine retry-ability from basic properties only
+      if (safeCode && typeof safeCode === "string") {
+        isRetryable = [
+          "ECONNRESET",
+          "ENOTFOUND",
+          "ETIMEDOUT",
+          "ECONNREFUSED",
+        ].includes(safeCode);
+      } else if (safeStatus && typeof safeStatus === "number") {
+        isRetryable = [408, 429, 500, 502, 503, 504].includes(safeStatus);
+      }
+    } else if (error instanceof Error) {
+      formattedError = `${error.name}: ${error.message}`;
+    } else {
+      formattedError = String(error);
     }
-    if (error?.status) {
-      // HTTP status codes that are retryable
-      return [408, 429, 500, 502, 503, 504].includes(error.status);
-    }
-    return false;
-  })();
+  } catch (e) {
+    // If even basic property access fails, use minimal fallback
+    formattedError =
+      "Error processing failed - potential response body consumption issue";
+    isRetryable = false;
+  }
 
   return { formattedError, isRetryable };
 }
