@@ -51,12 +51,15 @@ export default function AnalyticsOverview() {
         localStorage.getItem("supabase.auth.token") ||
         sessionStorage.getItem("supabase.auth.token");
 
-      const response = await fetch(`/api/admin/analytics?period=${period}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
+      const response = await fetch(
+        `/api/admin/analytics-safe?period=${period}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
         },
-      });
+      );
 
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
