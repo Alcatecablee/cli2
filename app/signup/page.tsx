@@ -173,9 +173,6 @@ export default function SignupPage() {
               </Link>
             </div>
             <h1 className="onboarding-title">Create your account</h1>
-            <p className="onboarding-subtitle">
-              Start fixing your React code with AI
-            </p>
 
             <form onSubmit={handleSubmit}>
               {error && (
