@@ -1562,879 +1562,130 @@ export default function Dashboard() {
           {dashboardState.activeSection === "collaborate" && (
             <div className="tab-content">
               <div className="collaborate-overview">
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    marginBottom: "2rem",
-                  }}
-                >
-                  <div>
-                    <h3
-                      style={{
-                        margin: "0",
-                        fontSize: "1.5rem",
-                        fontWeight: "600",
-                        color: "#ffffff",
-                      }}
-                    >
-                      Team Collaboration
-                    </h3>
-                    <p
-                      className="tab-description"
-                      style={{ margin: "0.5rem 0 0 0", fontSize: "0.9rem" }}
-                    >
-                      Manage your team and collaboration sessions
-                    </p>
-                  </div>
-                  <div style={{ display: "flex", gap: "0.75rem" }}>
-                    <Link
-                      href="/collaborate"
-                      className="btn btn-primary"
-                      style={{
-                        padding: "0.75rem 1.5rem",
-                        fontSize: "0.875rem",
-                      }}
-                    >
-                      New Session
-                    </Link>
-                    <button
-                      className="btn btn-secondary"
-                      onClick={() => {
-                        const sessionId = prompt("Enter session ID to join:");
-                        if (sessionId) {
-                          window.location.href = `/collaborate?session=${sessionId}`;
-                        }
-                      }}
-                      style={{
-                        padding: "0.75rem 1.5rem",
-                        fontSize: "0.875rem",
-                      }}
-                    >
-                      Join Session
-                    </button>
-                  </div>
-                </div>
+                <h3>Real-time Collaboration</h3>
+                <p className="tab-description">
+                  Code together with your team using NeuroLint Pro's real-time
+                  collaborative editor.
+                </p>
 
-                {/* Active Sessions */}
-                <div style={{ marginBottom: "2rem" }}>
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      marginBottom: "1rem",
-                    }}
-                  >
-                    <h4
-                      style={{
-                        margin: "0",
-                        fontSize: "1.125rem",
-                        fontWeight: "600",
-                        color: "#ffffff",
-                      }}
-                    >
-                      Active Sessions
-                    </h4>
-                    <div
-                      style={{
-                        padding: "0.25rem 0.75rem",
-                        background: "rgba(76, 175, 80, 0.12)",
-                        border: "1px solid rgba(76, 175, 80, 0.3)",
-                        borderRadius: "12px",
-                        fontSize: "0.75rem",
-                        color: "#4caf50",
-                        fontWeight: "500",
-                      }}
-                    >
-                      2 sessions running
-                    </div>
-                  </div>
-
-                  <div style={{ display: "grid", gap: "1rem" }}>
-                    {/* Session 1 */}
-                    <div
-                      style={{
-                        background: "rgba(255, 255, 255, 0.05)",
-                        border: "1px solid rgba(255, 255, 255, 0.15)",
-                        borderRadius: "12px",
-                        padding: "1.5rem",
-                        transition: "all 0.2s ease",
-                      }}
-                    >
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "space-between",
-                          marginBottom: "1rem",
-                        }}
-                      >
-                        <div
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "1rem",
-                          }}
+                <div className="collaborate-features">
+                  <div className="feature-grid">
+                    <div className="feature-card">
+                      <div className="feature-icon">
+                        <svg
+                          viewBox="0 0 24 24"
+                          width="24"
+                          height="24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
                         >
-                          <div
-                            style={{
-                              width: "8px",
-                              height: "8px",
-                              borderRadius: "50%",
-                              background: "#4caf50",
-                            }}
-                          />
-                          <div>
-                            <h5
-                              style={{
-                                margin: "0",
-                                fontSize: "1rem",
-                                fontWeight: "600",
-                                color: "#ffffff",
-                              }}
-                            >
-                              React Component Fixes
-                            </h5>
-                            <p
-                              style={{
-                                margin: "0.25rem 0 0 0",
-                                fontSize: "0.8rem",
-                                color: "rgba(255, 255, 255, 0.6)",
-                              }}
-                            >
-                              ProductCard.tsx
-                            </p>
-                          </div>
-                        </div>
-                        <div
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "1rem",
-                          }}
-                        >
-                          <div
-                            style={{
-                              display: "flex",
-                              alignItems: "center",
-                              gap: "0.5rem",
-                            }}
-                          >
-                            <div
-                              style={{
-                                fontSize: "0.75rem",
-                                color: "rgba(255, 255, 255, 0.6)",
-                              }}
-                            >
-                              3 members
-                            </div>
-                            <div style={{ display: "flex", gap: "0.25rem" }}>
-                              <div
-                                style={{
-                                  width: "24px",
-                                  height: "24px",
-                                  borderRadius: "50%",
-                                  background: "#2196f3",
-                                  fontSize: "0.7rem",
-                                  display: "flex",
-                                  alignItems: "center",
-                                  justifyContent: "center",
-                                  color: "#ffffff",
-                                  fontWeight: "600",
-                                }}
-                              >
-                                JD
-                              </div>
-                              <div
-                                style={{
-                                  width: "24px",
-                                  height: "24px",
-                                  borderRadius: "50%",
-                                  background: "#4caf50",
-                                  fontSize: "0.7rem",
-                                  display: "flex",
-                                  alignItems: "center",
-                                  justifyContent: "center",
-                                  color: "#ffffff",
-                                  fontWeight: "600",
-                                }}
-                              >
-                                SM
-                              </div>
-                              <div
-                                style={{
-                                  width: "24px",
-                                  height: "24px",
-                                  borderRadius: "50%",
-                                  background: "#ff9800",
-                                  fontSize: "0.7rem",
-                                  display: "flex",
-                                  alignItems: "center",
-                                  justifyContent: "center",
-                                  color: "#ffffff",
-                                  fontWeight: "600",
-                                }}
-                              >
-                                AL
-                              </div>
-                            </div>
-                          </div>
-                          <button
-                            style={{
-                              padding: "0.5rem 1rem",
-                              background: "rgba(33, 150, 243, 0.12)",
-                              border: "1px solid rgba(33, 150, 243, 0.4)",
-                              borderRadius: "6px",
-                              color: "#2196f3",
-                              fontSize: "0.8rem",
-                              cursor: "pointer",
-                              fontWeight: "500",
-                            }}
-                          >
-                            Join
-                          </button>
-                        </div>
+                          <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
+                          <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
+                        </svg>
                       </div>
-                      <div
-                        style={{
-                          display: "flex",
-                          gap: "1rem",
-                          fontSize: "0.8rem",
-                          color: "rgba(255, 255, 255, 0.7)",
-                        }}
-                      >
-                        <span>Started 45 minutes ago</span>
-                        <span>Last analysis: 2 minutes ago</span>
-                        <span>Issues found: 8</span>
-                      </div>
+                      <h4>Live Code Editing</h4>
+                      <p>
+                        Edit code together with real-time cursors and
+                        synchronized changes.
+                      </p>
                     </div>
 
-                    {/* Session 2 */}
-                    <div
-                      style={{
-                        background: "rgba(255, 255, 255, 0.05)",
-                        border: "1px solid rgba(255, 255, 255, 0.15)",
-                        borderRadius: "12px",
-                        padding: "1.5rem",
-                        transition: "all 0.2s ease",
-                      }}
-                    >
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "space-between",
-                          marginBottom: "1rem",
-                        }}
-                      >
-                        <div
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "1rem",
-                          }}
+                    <div className="feature-card">
+                      <div className="feature-icon">
+                        <svg
+                          viewBox="0 0 24 24"
+                          width="24"
+                          height="24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
                         >
-                          <div
-                            style={{
-                              width: "8px",
-                              height: "8px",
-                              borderRadius: "50%",
-                              background: "#4caf50",
-                            }}
-                          />
-                          <div>
-                            <h5
-                              style={{
-                                margin: "0",
-                                fontSize: "1rem",
-                                fontWeight: "600",
-                                color: "#ffffff",
-                              }}
-                            >
-                              Next.js Migration
-                            </h5>
-                            <p
-                              style={{
-                                margin: "0.25rem 0 0 0",
-                                fontSize: "0.8rem",
-                                color: "rgba(255, 255, 255, 0.6)",
-                              }}
-                            >
-                              app/layout.tsx
-                            </p>
-                          </div>
-                        </div>
-                        <div
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "1rem",
-                          }}
+                          <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+                        </svg>
+                      </div>
+                      <h4>Team Chat</h4>
+                      <p>
+                        Built-in chat and commenting system for seamless
+                        communication.
+                      </p>
+                    </div>
+
+                    <div className="feature-card">
+                      <div className="feature-icon">
+                        <svg
+                          viewBox="0 0 24 24"
+                          width="24"
+                          height="24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
                         >
-                          <div
-                            style={{
-                              display: "flex",
-                              alignItems: "center",
-                              gap: "0.5rem",
-                            }}
-                          >
-                            <div
-                              style={{
-                                fontSize: "0.75rem",
-                                color: "rgba(255, 255, 255, 0.6)",
-                              }}
-                            >
-                              2 members
-                            </div>
-                            <div style={{ display: "flex", gap: "0.25rem" }}>
-                              <div
-                                style={{
-                                  width: "24px",
-                                  height: "24px",
-                                  borderRadius: "50%",
-                                  background: "#e91e63",
-                                  fontSize: "0.7rem",
-                                  display: "flex",
-                                  alignItems: "center",
-                                  justifyContent: "center",
-                                  color: "#ffffff",
-                                  fontWeight: "600",
-                                }}
-                              >
-                                MK
-                              </div>
-                              <div
-                                style={{
-                                  width: "24px",
-                                  height: "24px",
-                                  borderRadius: "50%",
-                                  background: "#9c27b0",
-                                  fontSize: "0.7rem",
-                                  display: "flex",
-                                  alignItems: "center",
-                                  justifyContent: "center",
-                                  color: "#ffffff",
-                                  fontWeight: "600",
-                                }}
-                              >
-                                TC
-                              </div>
-                            </div>
-                          </div>
-                          <button
-                            style={{
-                              padding: "0.5rem 1rem",
-                              background: "rgba(33, 150, 243, 0.12)",
-                              border: "1px solid rgba(33, 150, 243, 0.4)",
-                              borderRadius: "6px",
-                              color: "#2196f3",
-                              fontSize: "0.8rem",
-                              cursor: "pointer",
-                              fontWeight: "500",
-                            }}
-                          >
-                            Join
-                          </button>
-                        </div>
+                          <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+                          <polyline points="14,2 14,8 20,8" />
+                          <line x1="16" y1="13" x2="8" y2="13" />
+                          <line x1="16" y1="17" x2="8" y2="17" />
+                        </svg>
                       </div>
-                      <div
-                        style={{
-                          display: "flex",
-                          gap: "1rem",
-                          fontSize: "0.8rem",
-                          color: "rgba(255, 255, 255, 0.7)",
-                        }}
-                      >
-                        <span>Started 1 hour ago</span>
-                        <span>Last analysis: 8 minutes ago</span>
-                        <span>Issues found: 3</span>
+                      <h4>Shared NeuroLint Analysis</h4>
+                      <p>
+                        Run collaborative code analysis with results visible to
+                        all team members.
+                      </p>
+                    </div>
+
+                    <div className="feature-card">
+                      <div className="feature-icon">
+                        <svg
+                          viewBox="0 0 24 24"
+                          width="24"
+                          height="24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                        >
+                          <circle cx="12" cy="12" r="3" />
+                          <path d="M12 1v6m0 6v6m11-7h-6m-6 0H1" />
+                        </svg>
                       </div>
+                      <h4>Session Management</h4>
+                      <p>
+                        Create and join coding sessions with invite links and
+                        host controls.
+                      </p>
                     </div>
                   </div>
                 </div>
 
-                {/* Team Members */}
-                <div style={{ marginBottom: "2rem" }}>
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      marginBottom: "1rem",
+                <div className="collaborate-actions">
+                  <Link href="/collaborate" className="btn btn-primary">
+                    Start Collaboration Session
+                  </Link>
+                  <button
+                    className="btn btn-secondary"
+                    onClick={() => {
+                      const sessionId = prompt("Enter session ID to join:");
+                      if (sessionId) {
+                        window.location.href = `/collaborate?session=${sessionId}`;
+                      }
                     }}
                   >
-                    <h4
-                      style={{
-                        margin: "0",
-                        fontSize: "1.125rem",
-                        fontWeight: "600",
-                        color: "#ffffff",
-                      }}
-                    >
-                      Team Members
-                    </h4>
-                    <button
-                      style={{
-                        padding: "0.5rem 1rem",
-                        background: "rgba(255, 255, 255, 0.05)",
-                        border: "1px solid rgba(255, 255, 255, 0.15)",
-                        borderRadius: "6px",
-                        color: "rgba(255, 255, 255, 0.8)",
-                        fontSize: "0.8rem",
-                        cursor: "pointer",
-                        fontWeight: "500",
-                      }}
-                    >
-                      Invite Member
-                    </button>
-                  </div>
-
-                  <div
-                    style={{
-                      display: "grid",
-                      gridTemplateColumns:
-                        "repeat(auto-fit, minmax(280px, 1fr))",
-                      gap: "1rem",
-                    }}
-                  >
-                    {/* Team Member 1 */}
-                    <div
-                      style={{
-                        background: "rgba(255, 255, 255, 0.05)",
-                        border: "1px solid rgba(255, 255, 255, 0.15)",
-                        borderRadius: "12px",
-                        padding: "1.25rem",
-                      }}
-                    >
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "1rem",
-                          marginBottom: "1rem",
-                        }}
-                      >
-                        <div
-                          style={{
-                            width: "40px",
-                            height: "40px",
-                            borderRadius: "50%",
-                            background: "#2196f3",
-                            fontSize: "0.9rem",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            color: "#ffffff",
-                            fontWeight: "600",
-                          }}
-                        >
-                          JD
-                        </div>
-                        <div>
-                          <h5
-                            style={{
-                              margin: "0",
-                              fontSize: "1rem",
-                              fontWeight: "600",
-                              color: "#ffffff",
-                            }}
-                          >
-                            John Doe
-                          </h5>
-                          <p
-                            style={{
-                              margin: "0.25rem 0 0 0",
-                              fontSize: "0.8rem",
-                              color: "rgba(255, 255, 255, 0.6)",
-                            }}
-                          >
-                            john@company.com
-                          </p>
-                        </div>
-                        <div
-                          style={{
-                            marginLeft: "auto",
-                            width: "8px",
-                            height: "8px",
-                            borderRadius: "50%",
-                            background: "#4caf50",
-                          }}
-                        />
-                      </div>
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                          fontSize: "0.8rem",
-                          color: "rgba(255, 255, 255, 0.7)",
-                        }}
-                      >
-                        <span>Last active: 2 minutes ago</span>
-                        <span>Role: Developer</span>
-                      </div>
-                    </div>
-
-                    {/* Team Member 2 */}
-                    <div
-                      style={{
-                        background: "rgba(255, 255, 255, 0.05)",
-                        border: "1px solid rgba(255, 255, 255, 0.15)",
-                        borderRadius: "12px",
-                        padding: "1.25rem",
-                      }}
-                    >
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "1rem",
-                          marginBottom: "1rem",
-                        }}
-                      >
-                        <div
-                          style={{
-                            width: "40px",
-                            height: "40px",
-                            borderRadius: "50%",
-                            background: "#4caf50",
-                            fontSize: "0.9rem",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            color: "#ffffff",
-                            fontWeight: "600",
-                          }}
-                        >
-                          SM
-                        </div>
-                        <div>
-                          <h5
-                            style={{
-                              margin: "0",
-                              fontSize: "1rem",
-                              fontWeight: "600",
-                              color: "#ffffff",
-                            }}
-                          >
-                            Sarah Miller
-                          </h5>
-                          <p
-                            style={{
-                              margin: "0.25rem 0 0 0",
-                              fontSize: "0.8rem",
-                              color: "rgba(255, 255, 255, 0.6)",
-                            }}
-                          >
-                            sarah@company.com
-                          </p>
-                        </div>
-                        <div
-                          style={{
-                            marginLeft: "auto",
-                            width: "8px",
-                            height: "8px",
-                            borderRadius: "50%",
-                            background: "#4caf50",
-                          }}
-                        />
-                      </div>
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                          fontSize: "0.8rem",
-                          color: "rgba(255, 255, 255, 0.7)",
-                        }}
-                      >
-                        <span>Last active: 5 minutes ago</span>
-                        <span>Role: Lead Dev</span>
-                      </div>
-                    </div>
-
-                    {/* Team Member 3 */}
-                    <div
-                      style={{
-                        background: "rgba(255, 255, 255, 0.05)",
-                        border: "1px solid rgba(255, 255, 255, 0.15)",
-                        borderRadius: "12px",
-                        padding: "1.25rem",
-                      }}
-                    >
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "1rem",
-                          marginBottom: "1rem",
-                        }}
-                      >
-                        <div
-                          style={{
-                            width: "40px",
-                            height: "40px",
-                            borderRadius: "50%",
-                            background: "#ff9800",
-                            fontSize: "0.9rem",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            color: "#ffffff",
-                            fontWeight: "600",
-                          }}
-                        >
-                          AL
-                        </div>
-                        <div>
-                          <h5
-                            style={{
-                              margin: "0",
-                              fontSize: "1rem",
-                              fontWeight: "600",
-                              color: "#ffffff",
-                            }}
-                          >
-                            Alex Lee
-                          </h5>
-                          <p
-                            style={{
-                              margin: "0.25rem 0 0 0",
-                              fontSize: "0.8rem",
-                              color: "rgba(255, 255, 255, 0.6)",
-                            }}
-                          >
-                            alex@company.com
-                          </p>
-                        </div>
-                        <div
-                          style={{
-                            marginLeft: "auto",
-                            width: "8px",
-                            height: "8px",
-                            borderRadius: "50%",
-                            background: "rgba(255, 255, 255, 0.3)",
-                          }}
-                        />
-                      </div>
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                          fontSize: "0.8rem",
-                          color: "rgba(255, 255, 255, 0.7)",
-                        }}
-                      >
-                        <span>Last active: 1 hour ago</span>
-                        <span>Role: Designer</span>
-                      </div>
-                    </div>
-                  </div>
+                    Join Session by ID
+                  </button>
                 </div>
 
-                {/* Recent Activity */}
-                <div>
-                  <h4
-                    style={{
-                      margin: "0 0 1rem 0",
-                      fontSize: "1.125rem",
-                      fontWeight: "600",
-                      color: "#ffffff",
-                    }}
-                  >
-                    Recent Activity
-                  </h4>
-
-                  <div style={{ display: "grid", gap: "0.75rem" }}>
-                    <div
-                      style={{
-                        background: "rgba(255, 255, 255, 0.05)",
-                        border: "1px solid rgba(255, 255, 255, 0.15)",
-                        borderRadius: "8px",
-                        padding: "1rem",
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "1rem",
-                      }}
-                    >
-                      <div
-                        style={{
-                          width: "32px",
-                          height: "32px",
-                          borderRadius: "50%",
-                          background: "#2196f3",
-                          fontSize: "0.8rem",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          color: "#ffffff",
-                          fontWeight: "600",
-                        }}
-                      >
-                        JD
-                      </div>
-                      <div style={{ flex: 1 }}>
-                        <p
-                          style={{
-                            margin: "0",
-                            fontSize: "0.875rem",
-                            color: "#ffffff",
-                          }}
-                        >
-                          <strong>John Doe</strong> ran analysis on
-                          ProductCard.tsx and found 8 issues
-                        </p>
-                        <p
-                          style={{
-                            margin: "0.25rem 0 0 0",
-                            fontSize: "0.75rem",
-                            color: "rgba(255, 255, 255, 0.6)",
-                          }}
-                        >
-                          2 minutes ago
-                        </p>
-                      </div>
-                      <div
-                        style={{
-                          padding: "0.25rem 0.75rem",
-                          background: "rgba(255, 193, 7, 0.12)",
-                          border: "1px solid rgba(255, 193, 7, 0.3)",
-                          borderRadius: "12px",
-                          fontSize: "0.75rem",
-                          color: "#ffc107",
-                          fontWeight: "500",
-                        }}
-                      >
-                        8 issues
-                      </div>
-                    </div>
-
-                    <div
-                      style={{
-                        background: "rgba(255, 255, 255, 0.05)",
-                        border: "1px solid rgba(255, 255, 255, 0.15)",
-                        borderRadius: "8px",
-                        padding: "1rem",
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "1rem",
-                      }}
-                    >
-                      <div
-                        style={{
-                          width: "32px",
-                          height: "32px",
-                          borderRadius: "50%",
-                          background: "#4caf50",
-                          fontSize: "0.8rem",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          color: "#ffffff",
-                          fontWeight: "600",
-                        }}
-                      >
-                        SM
-                      </div>
-                      <div style={{ flex: 1 }}>
-                        <p
-                          style={{
-                            margin: "0",
-                            fontSize: "0.875rem",
-                            color: "#ffffff",
-                          }}
-                        >
-                          <strong>Sarah Miller</strong> joined React Component
-                          Fixes session
-                        </p>
-                        <p
-                          style={{
-                            margin: "0.25rem 0 0 0",
-                            fontSize: "0.75rem",
-                            color: "rgba(255, 255, 255, 0.6)",
-                          }}
-                        >
-                          8 minutes ago
-                        </p>
-                      </div>
-                      <div
-                        style={{
-                          padding: "0.25rem 0.75rem",
-                          background: "rgba(76, 175, 80, 0.12)",
-                          border: "1px solid rgba(76, 175, 80, 0.3)",
-                          borderRadius: "12px",
-                          fontSize: "0.75rem",
-                          color: "#4caf50",
-                          fontWeight: "500",
-                        }}
-                      >
-                        Joined
-                      </div>
-                    </div>
-
-                    <div
-                      style={{
-                        background: "rgba(255, 255, 255, 0.05)",
-                        border: "1px solid rgba(255, 255, 255, 0.15)",
-                        borderRadius: "8px",
-                        padding: "1rem",
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "1rem",
-                      }}
-                    >
-                      <div
-                        style={{
-                          width: "32px",
-                          height: "32px",
-                          borderRadius: "50%",
-                          background: "#e91e63",
-                          fontSize: "0.8rem",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          color: "#ffffff",
-                          fontWeight: "600",
-                        }}
-                      >
-                        MK
-                      </div>
-                      <div style={{ flex: 1 }}>
-                        <p
-                          style={{
-                            margin: "0",
-                            fontSize: "0.875rem",
-                            color: "#ffffff",
-                          }}
-                        >
-                          <strong>Mike Kumar</strong> created Next.js Migration
-                          session
-                        </p>
-                        <p
-                          style={{
-                            margin: "0.25rem 0 0 0",
-                            fontSize: "0.75rem",
-                            color: "rgba(255, 255, 255, 0.6)",
-                          }}
-                        >
-                          1 hour ago
-                        </p>
-                      </div>
-                      <div
-                        style={{
-                          padding: "0.25rem 0.75rem",
-                          background: "rgba(33, 150, 243, 0.12)",
-                          border: "1px solid rgba(33, 150, 243, 0.3)",
-                          borderRadius: "12px",
-                          fontSize: "0.75rem",
-                          color: "#2196f3",
-                          fontWeight: "500",
-                        }}
-                      >
-                        Created
-                      </div>
-                    </div>
-                  </div>
+                <div className="collaborate-info">
+                  <h4>Getting Started</h4>
+                  <ol className="getting-started-steps">
+                    <li>
+                      Click "Start Collaboration Session" to create a new
+                      session
+                    </li>
+                    <li>Share the session link with your team members</li>
+                    <li>Code together with live cursors and real-time sync</li>
+                    <li>Use built-in chat and comments for communication</li>
+                    <li>Run NeuroLint Pro analysis collaboratively</li>
+                  </ol>
                 </div>
               </div>
             </div>
@@ -2886,10 +2137,7 @@ export default function Dashboard() {
           {/* Analysis History Tab */}
           {dashboardState.activeSection === "history" && (
             <div className="tab-content">
-              <div
-                className="history-header"
-                style={{ display: "flex", alignItems: "center", gap: "12px" }}
-              >
+              <div className="history-header" style={{ display: "flex", alignItems: "center", gap: "12px" }}>
                 <h3 style={{ margin: 0 }}>Analysis History</h3>
                 <input
                   type="text"
