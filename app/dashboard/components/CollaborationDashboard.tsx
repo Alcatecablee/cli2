@@ -540,6 +540,11 @@ export default function CollaborationDashboard({
             sessionData.template || "blank",
             sessionData.language,
           ),
+          // Enhanced collaborative options
+          collaborative: sessionData.collaborative !== false,
+          realTimeUpdates: sessionData.realTimeUpdates !== false,
+          sessionLocking: sessionData.sessionLocking || false,
+          conflictResolution: sessionData.conflictResolution || "merge",
         }),
       });
 
