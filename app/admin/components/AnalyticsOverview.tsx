@@ -61,6 +61,19 @@ export default function AnalyticsOverview() {
         },
       });
 
+      // Additional debug: Check what's in database
+      const dbDebugResponse = await fetch(`/api/admin/debug-admin-user`, {
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (dbDebugResponse.ok) {
+        const dbDebugData = await dbDebugResponse.json();
+        console.log("Database debug data:", dbDebugData);
+      }
+
       if (debugResponse.ok) {
         const debugData = await debugResponse.json();
         console.log("Admin check debug:", debugData);
