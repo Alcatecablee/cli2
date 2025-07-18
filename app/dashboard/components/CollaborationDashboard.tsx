@@ -156,6 +156,15 @@ export default function CollaborationDashboard({
 
     // Always poll for online presence to show live indicators
     presencePollInterval.current = setInterval(async () => {
+      const now = Date.now();
+      if (
+        lastPollTime.current.presence &&
+        now - lastPollTime.current.presence < 10000
+      ) {
+        return; // Rate limit: don't poll more than once per 10 seconds
+      }
+      lastPollTime.current.presence = now;
+
       try {
         const response = await fetch("/api/collaboration/presence", {
           headers: {
