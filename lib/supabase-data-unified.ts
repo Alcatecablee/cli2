@@ -80,6 +80,32 @@ export interface UserSettings {
   updated_at?: string;
 }
 
+// Safe Supabase error handler that prevents response consumption issues
+function safeSupabaseErrorHandler(error: any): {
+  formattedError: string;
+  isRetryable: boolean;
+} {
+  // Prevent any attempts to read response bodies
+  const formattedError = formatError(error);
+
+  // Determine if error is retryable based on error properties (not response body)
+  const isRetryable = (() => {
+    if (error?.code) {
+      // Network/connection errors that might be retryable
+      return ["ECONNRESET", "ENOTFOUND", "ETIMEDOUT", "ECONNREFUSED"].includes(
+        error.code,
+      );
+    }
+    if (error?.status) {
+      // HTTP status codes that are retryable
+      return [408, 429, 500, 502, 503, 504].includes(error.status);
+    }
+    return false;
+  })();
+
+  return { formattedError, isRetryable };
+}
+
 // Enhanced error formatting function
 function formatError(error: any): string {
   if (error instanceof Error) {
