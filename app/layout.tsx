@@ -42,6 +42,7 @@ export default function RootLayout({
         <div className="shooting-star"></div>
         <div className="shooting-star"></div>
         <AuthProvider>{children}</AuthProvider>
+        <Analytics />
         <Script
           src="https://www.paypal.com/sdk/js?client-id=AaZabZwUPYitlE5MOXwohkXxtMzI7GaSArFxw7JYMIDfZE_PHvsMzY1WEsZk_QwTdek4SEpjj_DC5ys7&currency=USD&intent=capture&enable-funding=venmo,card"
           strategy="lazyOnload"
