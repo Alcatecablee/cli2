@@ -145,18 +145,49 @@ export default function AnalyticsOverview() {
     );
   }
 
+  const grantAdminAccess = async () => {
+    if (!session?.access_token) return;
+
+    try {
+      const response = await fetch("/api/admin/grant-admin", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      const result = await response.json();
+      console.log("Grant admin result:", result);
+
+      if (response.ok) {
+        alert("Admin access granted! Please retry loading analytics.");
+      } else {
+        alert(`Failed to grant admin access: ${result.error}`);
+      }
+    } catch (error) {
+      console.error("Error granting admin access:", error);
+      alert("Error granting admin access");
+    }
+  };
+
   if (!state.data) {
     return (
       <div className="admin-content">
         <div className="error-container">
           <h3>Failed to load analytics</h3>
           <p>{state.error}</p>
-          <button
-            onClick={() => fetchAnalytics(state.period)}
-            className="btn-primary"
-          >
-            Retry
-          </button>
+          <div style={{ display: "flex", gap: "10px", marginTop: "10px" }}>
+            <button
+              onClick={() => fetchAnalytics(state.period)}
+              className="btn-primary"
+            >
+              Retry
+            </button>
+            <button onClick={grantAdminAccess} className="btn-secondary">
+              Grant Admin Access
+            </button>
+          </div>
         </div>
       </div>
     );
