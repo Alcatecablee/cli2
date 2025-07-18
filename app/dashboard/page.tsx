@@ -362,28 +362,31 @@ export default function Dashboard() {
         throw new Error("execCommand failed");
       }
     } catch (fallbackErr) {
-      console.error("All copy methods failed:", fallbackErr);
-      // Show user a manual copy option
-      const modal = document.createElement("div");
-      modal.style.cssText = `
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background: rgba(0, 0, 0, 0.9);
-        color: white;
-        padding: 20px;
-        border-radius: 8px;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        z-index: 10000;
-        max-width: 90vw;
-        max-height: 80vh;
-        overflow: auto;
-        backdrop-filter: blur(10px);
-      `;
+            console.error("All copy methods failed:", fallbackErr);
+      // Show user a manual copy option - optimized to prevent reflows
+      requestAnimationFrame(() => {
+        const modal = document.createElement("div");
+        modal.style.cssText = `
+          position: fixed;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          background: rgba(0, 0, 0, 0.9);
+          color: white;
+          padding: 20px;
+          border-radius: 8px;
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          z-index: 10000;
+          max-width: 90vw;
+          max-height: 80vh;
+          overflow: auto;
+          backdrop-filter: blur(10px);
+          opacity: 0;
+          transition: opacity 0.2s ease;
+        `;
 
-      const content = document.createElement("div");
-      content.innerHTML = `
+        const content = document.createElement("div");
+        content.innerHTML = `
                 <h3 style="margin-top: 0; color: rgba(33, 150, 243, 0.9);">Copy Code Manually</h3>
         <p style="color: rgba(255, 255, 255, 0.8);">Please copy the code below manually:</p>
         <textarea readonly style="
