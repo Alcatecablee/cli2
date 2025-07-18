@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import "../dashboard/dashboard.css";
 import "../dashboard/integrations.css";
+import "./admin.css";
 import ErrorBoundary from "../dashboard/components/ErrorBoundary";
 import UserManagement from "./components/UserManagement";
 import EnvironmentConfig from "./components/EnvironmentConfig";
