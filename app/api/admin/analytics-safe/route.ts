@@ -55,11 +55,27 @@ async function safeQuery(
 export async function GET(request: NextRequest) {
   try {
     const supabaseUrl = process.env.SUPABASE_URL;
-    const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    // Handle both naming conventions for service role key
+    const supabaseServiceKey =
+      process.env.SUPABASE_SERVICE_ROLE_KEY ||
+      process.env.SUPABASE_SERVICE_ROLE;
 
     if (!supabaseUrl || !supabaseServiceKey) {
       return NextResponse.json(
-        { error: "Service configuration error" },
+        {
+          error: "Service configuration error",
+          details: {
+            supabaseUrl: !!supabaseUrl,
+            supabaseServiceKey: !!supabaseServiceKey,
+            available: {
+              SUPABASE_URL: !!process.env.SUPABASE_URL,
+              SUPABASE_SERVICE_ROLE_KEY:
+                !!process.env.SUPABASE_SERVICE_ROLE_KEY,
+              SUPABASE_SERVICE_ROLE: !!process.env.SUPABASE_SERVICE_ROLE,
+              SUPABASE_ANON_KEY: !!process.env.SUPABASE_ANON_KEY,
+            },
+          },
+        },
         { status: 500 },
       );
     }
