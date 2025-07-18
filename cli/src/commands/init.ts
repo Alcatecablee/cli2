@@ -36,7 +36,7 @@ const defaultConfig = {
     verbose: false,
   },
   api: {
-    url: "https://api.neurolint.dev",
+    url: "http://localhost:3000/api",
     timeout: 60000,
   },
 };
