@@ -148,7 +148,7 @@
       "properties": {
         "neurolint.apiUrl": {
           "type": "string",
-          "default": "https://api.neurolint.dev",
+          "default": "http://localhost:3000/api",
           "description": "NeuroLint API server URL"
         },
         "neurolint.apiKey": {
