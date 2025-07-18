@@ -284,6 +284,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         localStorage.setItem("user_data", JSON.stringify(data.user));
         setUser(data.user);
         setSession(data.session);
+
+        // Also set the session on Supabase client for immediate use
+        if (typeof window !== "undefined") {
+          const { createClient } = await import("@supabase/supabase-js");
+          const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+          const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+          if (supabaseUrl && supabaseKey) {
+            const supabase = createClient(supabaseUrl, supabaseKey);
+            await supabase.auth.setSession({
+              access_token: data.session.access_token,
+              refresh_token: data.session.refresh_token,
+            });
+            console.log("Supabase session set after login");
+          }
+        }
       } catch (storageError) {
         console.error("Failed to save session to localStorage:", storageError);
         // Still set state even if localStorage fails
