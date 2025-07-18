@@ -242,7 +242,7 @@ export default function WhatIsNeuroLintPage() {
           <h2 id="rule-based-approach">The Rule-Based Approach</h2>
 
           <div className="docs-highlight-box info">
-            <h3>🎯 Why Rules, Not AI?</h3>
+            <h3>Why Rules, Not AI?</h3>
             <p>
               NeuroLint Pro uses{" "}
               <strong>deterministic transformation rules</strong> rather than
