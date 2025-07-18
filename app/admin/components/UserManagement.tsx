@@ -28,7 +28,7 @@ interface UserManagementState {
 }
 
 export default function UserManagement() {
-  const { user: currentUser } = useAuth();
+  const { user: currentUser, adminFetch } = useAdminAuth();
   const [state, setState] = useState<UserManagementState>({
     users: [],
     loading: true,
