@@ -19,12 +19,11 @@ export async function GET(request: NextRequest) {
 
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    // Get all tables in the public schema
-    const { data: tables, error } = await supabase
-      .from("information_schema.tables")
-      .select("table_name, table_schema")
-      .eq("table_schema", "public")
-      .order("table_name");
+    // Get all tables in the public schema using raw SQL
+    const { data: tables, error } = await supabase.rpc("execute_sql", {
+      query:
+        "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' ORDER BY table_name",
+    });
 
     if (error) {
       return NextResponse.json(
