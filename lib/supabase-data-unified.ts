@@ -217,7 +217,12 @@ export const dataService = {
         .single();
 
       if (error) {
-        if (error.code === "PGRST116") {
+        // Extract only safe properties immediately to avoid any response body access
+        const errorCode = error.code;
+        const errorStatus = error.status;
+        const errorMessage = error.message;
+
+        if (errorCode === "PGRST116") {
           // No settings found, return default settings without logging error
           console.log(
             `No user settings found for user ${userId}, using defaults`,
@@ -233,7 +238,7 @@ export const dataService = {
         }
 
         // Handle 406 errors specifically (Not Acceptable - usually RLS or auth issues)
-        if (error.status === 406 || error.code === "406") {
+        if (errorStatus === 406 || errorCode === "406") {
           console.warn(
             `Supabase 406 error for user_settings: This might be due to RLS policies or missing table. Using defaults for user ${userId}`,
           );
@@ -247,15 +252,10 @@ export const dataService = {
           };
         }
 
-        // Use safe error handling to prevent response consumption issues
-        const { formattedError, isRetryable } = safeSupabaseErrorHandler(error);
-        console.error("Error fetching user settings:", formattedError);
-
-        if (isRetryable) {
-          console.log(
-            "Error might be retryable, but falling back to defaults for now",
-          );
-        }
+        // Log error without accessing potentially consumed response bodies
+        console.error(
+          `Error fetching user settings: ${errorMessage || errorCode || "Unknown error"}`,
+        );
 
         // Return default settings as fallback
         return {
@@ -270,9 +270,10 @@ export const dataService = {
 
       return data;
     } catch (error) {
-      // Use safe error handling to prevent response consumption issues
-      const { formattedError } = safeSupabaseErrorHandler(error);
-      console.error("Error in getUserSettings:", formattedError);
+      // Extract only safe properties to avoid response body consumption
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
+      console.error("Error in getUserSettings:", errorMessage);
 
       // Return default settings as ultimate fallback
       return {
