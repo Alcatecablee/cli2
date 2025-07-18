@@ -103,7 +103,7 @@ export class ApiClient {
         },
       });
 
-      const response = await tempClient.get("/api/user/profile");
+      const response = await tempClient.get("/auth/api-keys");
 
       // Map plan to features
       const plan = response.data.plan || "free";
