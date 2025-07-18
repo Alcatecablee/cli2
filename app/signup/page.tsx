@@ -339,7 +339,7 @@ export default function SignupPage() {
                     transition: "all 0.3s ease",
                     outline: "none",
                   }}
-                  placeholder="At least 8 characters"
+                  placeholder="Enter Password"
                   onFocus={(e) => {
                     e.target.style.borderColor = "rgba(33, 150, 243, 0.4)";
                     e.target.style.boxShadow =
