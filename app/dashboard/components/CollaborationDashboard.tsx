@@ -316,10 +316,26 @@ export default function CollaborationDashboard({
         pollInterval.current = setInterval(onRefreshSessions, 30000);
       }
     }
-  }, [user, activeTab, onRefreshSessions]);
+  }, [user?.id, activeTab]); // Simplified dependencies
 
   // Alias for backward compatibility
   const connectWebSocket = connectRealTime;
+
+  // Reset connection state when changing tabs
+  useEffect(() => {
+    setIsConnectionInitialized(false);
+    setConnectionStatus("disconnected");
+
+    // Clear any existing intervals
+    if (pollInterval.current) {
+      clearInterval(pollInterval.current);
+      pollInterval.current = null;
+    }
+    if (activityPollInterval.current) {
+      clearInterval(activityPollInterval.current);
+      activityPollInterval.current = null;
+    }
+  }, [activeTab]);
 
   const handleWebSocketMessage = useCallback(
     (message: any) => {
