@@ -55,21 +55,57 @@ function safeLogError(error: any, prefix: string): void {
   }
 
   if (typeof error === "object" && error !== null) {
-    // Extract Supabase error details safely
+    // Extract error details safely
     const errorDetails: any = {};
 
-    // Common Supabase error properties
+    // Common error properties
     if (typeof error.message === "string") errorDetails.message = error.message;
     if (typeof error.code === "string") errorDetails.code = error.code;
     if (typeof error.details === "string") errorDetails.details = error.details;
     if (typeof error.hint === "string") errorDetails.hint = error.hint;
+    if (typeof error.status === "number") errorDetails.status = error.status;
+    if (typeof error.statusText === "string")
+      errorDetails.statusText = error.statusText;
 
-    // If no recognizable properties, try to get a string representation
+    // Try to extract all enumerable properties
+    try {
+      const keys = Object.keys(error);
+      for (const key of keys) {
+        if (
+          !errorDetails[key] &&
+          typeof error[key] !== "function" &&
+          typeof error[key] !== "object"
+        ) {
+          errorDetails[key] = error[key];
+        }
+      }
+    } catch (e) {
+      // Ignore errors in property extraction
+    }
+
+    // If still no useful properties, try toString or constructor name
     if (Object.keys(errorDetails).length === 0) {
       try {
-        errorDetails.raw = JSON.stringify(error);
+        if (error.toString && typeof error.toString === "function") {
+          const stringValue = error.toString();
+          if (stringValue !== "[object Object]") {
+            errorDetails.toString = stringValue;
+          }
+        }
+        if (error.constructor && error.constructor.name) {
+          errorDetails.type = error.constructor.name;
+        }
+        // Last resort: try JSON.stringify with replacer
+        if (Object.keys(errorDetails).length === 0) {
+          errorDetails.raw = JSON.stringify(error, (key, value) => {
+            if (typeof value === "function") return "[Function]";
+            if (typeof value === "object" && value !== null && key !== "")
+              return "[Object]";
+            return value;
+          });
+        }
       } catch {
-        errorDetails.raw = "[Circular object]";
+        errorDetails.raw = "[Unable to serialize error]";
       }
     }
 
