@@ -12,9 +12,9 @@ export default function Layer1ConfigPage() {
     <div className="docs-page">
       <div className="docs-page-header">
         <div className="docs-breadcrumb">
-          <Link href="/docs">📚 Docs</Link>
+          <Link href="/docs">Docs</Link>
           <span className="docs-breadcrumb-separator">→</span>
-          <Link href="/docs#layer-reference">🔧 Layer Reference</Link>
+          <Link href="/docs#layer-reference">Layer Reference</Link>
           <span className="docs-breadcrumb-separator">→</span>
           <span className="docs-breadcrumb-current">
             Layer 1: Configuration Fixes
