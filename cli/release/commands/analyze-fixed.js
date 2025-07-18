@@ -10,6 +10,53 @@ const glob_1 = require("glob");
 const fs_extra_1 = __importDefault(require("fs-extra"));
 const axios_1 = __importDefault(require("axios"));
 const config_1 = require("../utils/config");
+/**
+ * Layer Dependency Management (from IMPLEMENTATION_PATTERNS.md)
+ * Validates and corrects layer selection based on dependencies
+ */
+function validateAndCorrectLayers(requestedLayers) {
+    const DEPENDENCIES = {
+        1: [], // Configuration has no dependencies
+        2: [1], // Entity cleanup depends on config foundation
+        3: [1, 2], // Components depend on config + cleanup
+        4: [1, 2, 3], // Hydration depends on all previous layers
+        5: [1, 2, 3, 4], // Next.js depends on all core layers
+        6: [1, 2, 3, 4, 5], // Testing depends on all previous layers
+    };
+    const LAYER_INFO = {
+        1: { name: "Configuration", critical: true },
+        2: { name: "Entity Cleanup", critical: false },
+        3: { name: "Components", critical: false },
+        4: { name: "Hydration", critical: false },
+        5: { name: "Next.js App Router", critical: false },
+        6: { name: "Testing & Validation", critical: false },
+    };
+    const warnings = [];
+    const autoAdded = [];
+    let correctedLayers = [...requestedLayers];
+    // Sort layers in execution order
+    correctedLayers.sort((a, b) => a - b);
+    // Check dependencies for each requested layer
+    for (const layerId of requestedLayers) {
+        const dependencies = DEPENDENCIES[layerId] || [];
+        const missingDeps = dependencies.filter((dep) => !correctedLayers.includes(dep));
+        if (missingDeps.length > 0) {
+            // Auto-add missing dependencies
+            correctedLayers.push(...missingDeps);
+            autoAdded.push(...missingDeps);
+            warnings.push(`Layer ${layerId} (${LAYER_INFO[layerId]?.name}) requires ` +
+                `${missingDeps.map((dep) => `${dep} (${LAYER_INFO[dep]?.name})`).join(", ")}. ` +
+                `Auto-added missing dependencies.`);
+        }
+    }
+    // Remove duplicates and sort
+    correctedLayers = [...new Set(correctedLayers)].sort((a, b) => a - b);
+    return {
+        correctedLayers,
+        warnings,
+        autoAdded,
+    };
+}
 async function analyzeCommand(files, options) {
     const spinner = (0, ora_1.default)("Initializing NeuroLint analysis...").start();
     const startTime = Date.now();
@@ -35,12 +82,18 @@ async function analyzeCommand(files, options) {
             return;
         }
         // Parse layers
-        const layers = options.layers
+        const requestedLayers = options.layers
             ? options.layers
                 .split(",")
                 .map((l) => parseInt(l.trim()))
                 .filter((l) => l >= 1 && l <= 6)
             : config.layers.enabled;
+        // Apply Layer Dependency Management (from IMPLEMENTATION_PATTERNS.md)
+        const layerValidation = validateAndCorrectLayers(requestedLayers);
+        const layers = layerValidation.correctedLayers;
+        if (layerValidation.warnings.length > 0) {
+            layerValidation.warnings.forEach((warning) => console.log(chalk_1.default.yellow(`DEPENDENCY: ${warning}`)));
+        }
         // Check premium features for layers 5 and 6
         const premiumLayers = layers.filter((layer) => layer >= 5);
         if (premiumLayers.length > 0) {
@@ -132,6 +185,11 @@ async function analyzeCommand(files, options) {
                     timeout: config.api.timeout,
                 });
                 const result = response.data;
+                // Basic validation following IMPLEMENTATION_PATTERNS.md
+                if (!result || typeof result !== "object") {
+                    console.log(chalk_1.default.yellow(`Warning: Invalid response for ${file}`));
+                    continue;
+                }
                 allResults.push({ file, result });
                 // Handle different response structures
                 const detectedIssues = result.analysis?.detectedIssues ||
