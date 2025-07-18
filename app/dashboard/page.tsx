@@ -794,12 +794,36 @@ export default function Dashboard() {
                 }));
               }
             } catch (settingsError) {
-              console.error(
-                "Error fetching user settings:",
-                settingsError instanceof Error
-                  ? settingsError.message
-                  : String(settingsError),
-              );
+              // Enhanced error handling to prevent uncaught exceptions
+              const errorMessage = (() => {
+                if (settingsError instanceof Error) {
+                  return settingsError.message;
+                }
+                if (
+                  typeof settingsError === "object" &&
+                  settingsError !== null
+                ) {
+                  try {
+                    // Safely extract error information without consuming response bodies
+                    const errorObj = {};
+                    if (settingsError.message)
+                      errorObj.message = settingsError.message;
+                    if (settingsError.code) errorObj.code = settingsError.code;
+                    if (settingsError.status)
+                      errorObj.status = settingsError.status;
+                    return Object.keys(errorObj).length > 0
+                      ? Object.entries(errorObj)
+                          .map(([k, v]) => `${k}: ${v}`)
+                          .join(", ")
+                      : "Unknown object error";
+                  } catch {
+                    return "Error object processing failed";
+                  }
+                }
+                return String(settingsError);
+              })();
+
+              console.error("Error fetching user settings:", errorMessage);
               // Continue with default settings - this is not a critical error
             }
           } catch (error) {
