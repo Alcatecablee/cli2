@@ -1734,8 +1734,21 @@ export default function Dashboard() {
                     )}
                   </div>
 
-                  <div style={{ display: "grid", gap: "1rem" }}>
-                    {/* Session 1 */}
+                                    {dashboardState.collaborationSessions.length === 0 ? (
+                    <div style={{
+                      background: "rgba(255, 255, 255, 0.05)",
+                      border: "1px solid rgba(255, 255, 255, 0.15)",
+                      borderRadius: "12px",
+                      padding: "2rem",
+                      textAlign: "center",
+                      color: "rgba(255, 255, 255, 0.7)"
+                    }}>
+                      <p style={{ margin: "0 0 1rem 0", fontSize: "1rem" }}>No active collaboration sessions</p>
+                      <p style={{ margin: 0, fontSize: "0.875rem" }}>Create a new session to start collaborating with your team</p>
+                    </div>
+                  ) : (
+                    <div style={{ display: "grid", gap: "1rem" }}>
+                      {dashboardState.collaborationSessions.map((session: any) => (
                     <div
                       style={{
                         background: "rgba(255, 255, 255, 0.05)",
