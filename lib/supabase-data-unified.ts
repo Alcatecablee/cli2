@@ -232,8 +232,15 @@ export const dataService = {
           };
         }
 
-        // Log other errors but don't throw
-        console.error("Error fetching user settings:", formatError(error));
+        // Use safe error handling to prevent response consumption issues
+        const { formattedError, isRetryable } = safeSupabaseErrorHandler(error);
+        console.error("Error fetching user settings:", formattedError);
+
+        if (isRetryable) {
+          console.log(
+            "Error might be retryable, but falling back to defaults for now",
+          );
+        }
 
         // Return default settings as fallback
         return {
