@@ -90,7 +90,7 @@ export async function GET(request: NextRequest) {
         email: user.email,
       },
       userRecord,
-      userError,
+      dbUserError,
       usersTableExists,
       isAdmin,
       adminChecks: {
