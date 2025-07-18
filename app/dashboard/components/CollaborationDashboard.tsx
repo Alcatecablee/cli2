@@ -450,6 +450,12 @@ export default function CollaborationDashboard({
           <div className="header-info">
             <h2>Team Collaboration</h2>
             <p>Real-time code collaboration with your team</p>
+            {onlineUsers.size > 0 && (
+              <div className="online-indicator">
+                <div className="online-dot"></div>
+                <span>{onlineUsers.size} online now</span>
+              </div>
+            )}
           </div>
           <div className="header-actions">
             <button
