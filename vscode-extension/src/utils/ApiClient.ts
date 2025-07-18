@@ -85,7 +85,8 @@ export class ApiClient {
     }>,
   ): Promise<AnalysisResult> {
     try {
-      const response = await this.client.post("/api/analyze/workspace", {
+      // Root project doesn't have workspace endpoint, process files individually
+      const response = await this.client.post("/analyze", {
         files,
         layers: this.configManager.getEnabledLayers(),
         metadata: {
