@@ -4,6 +4,47 @@ import {
   setSupabaseSession,
 } from "./supabase-client";
 
+// Utility to safely handle responses that might be read multiple times
+function createSafeResponse(response: any): any {
+  if (!response || typeof response !== "object") {
+    return response;
+  }
+
+  // If it's already a cloned or safe response, return as-is
+  if (response._isSafeResponse) {
+    return response;
+  }
+
+  // Create a safe wrapper that prevents multiple consumption
+  const safeResponse = {
+    ...response,
+    _isSafeResponse: true,
+    _consumed: false,
+
+    async text() {
+      if (this._consumed) {
+        throw new Error(
+          "Response body already consumed - safe response cannot be read multiple times",
+        );
+      }
+      this._consumed = true;
+      return response.text ? await response.text() : String(response);
+    },
+
+    async json() {
+      if (this._consumed) {
+        throw new Error(
+          "Response body already consumed - safe response cannot be read multiple times",
+        );
+      }
+      this._consumed = true;
+      return response.json ? await response.json() : response;
+    },
+  };
+
+  return safeResponse;
+}
+
 // Types for database objects
 export interface AnalysisHistory {
   id: string;
