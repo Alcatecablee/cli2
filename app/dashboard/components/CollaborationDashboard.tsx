@@ -210,102 +210,69 @@ export default function CollaborationDashboard({
     };
   }, [activeTab, user.id, user.firstName, user.email, onUpdateSessions]);
 
-  // WebSocket connection management
+  // Real-time connection management (HTTP polling - WebSocket not supported in Next.js App Router)
   const connectWebSocket = useCallback(() => {
     if (!user?.id || (activeTab !== "sessions" && activeTab !== "activity")) {
       return;
     }
 
+    // Since Next.js App Router doesn't support WebSocket upgrades natively,
+    // we'll use HTTP polling for real-time updates
+    console.log("[RT] Starting real-time polling for collaboration updates");
+    setConnectionStatus("connecting");
+
     try {
-      setConnectionStatus("connecting");
-      const wsUrl = `ws://localhost:3000/api/collaboration/ws?userId=${user.id}&userName=${encodeURIComponent(user.firstName || user.email || "Anonymous")}`;
-      wsConnection.current = new WebSocket(wsUrl);
-
-      wsConnection.current.onopen = () => {
-        console.log("[WS] Connected to collaboration WebSocket");
-        setConnectionStatus("connected");
-        wsReconnectAttempts.current = 0;
-
-        // Send initial ping
-        wsConnection.current?.send(JSON.stringify({ type: "ping" }));
-      };
-
-      wsConnection.current.onmessage = (event) => {
-        try {
-          const message = JSON.parse(event.data);
-          handleWebSocketMessage(message);
-        } catch (error) {
-          console.error("[WS] Failed to parse message:", error);
-        }
-      };
-
-      wsConnection.current.onclose = () => {
-        console.log("[WS] WebSocket connection closed");
-        setConnectionStatus("disconnected");
-
-        // Attempt reconnection with exponential backoff
-        if (wsReconnectAttempts.current < wsMaxReconnectAttempts) {
-          const delay = Math.pow(2, wsReconnectAttempts.current) * 1000;
-          wsReconnectAttempts.current++;
-
-          setTimeout(() => {
+      // Test connection with health check
+      fetch("/api/collaboration/health")
+        .then((res) => {
+          if (res.ok) {
+            setConnectionStatus("connected");
             console.log(
-              `[WS] Attempting reconnection (${wsReconnectAttempts.current}/${wsMaxReconnectAttempts})`,
+              "[RT] Connected to collaboration service via HTTP polling",
             );
-            connectWebSocket();
-          }, delay);
-        } else {
-          console.warn(
-            "[WS] Max reconnection attempts reached, falling back to polling",
-          );
-          // Fall back to HTTP polling if WebSocket fails
+
+            // Start polling for updates based on active tab
+            if (activeTab === "sessions") {
+              pollInterval.current = setInterval(onRefreshSessions, 5000);
+            }
+            if (activeTab === "activity") {
+              activityPollInterval.current = setInterval(() => {
+                // Poll for activity updates
+                fetch(`/api/collaboration/activity?userId=${user.id}`)
+                  .then((res) => res.json())
+                  .then((data) => {
+                    if (data.success && data.activities) {
+                      setActivities(data.activities);
+                    }
+                  })
+                  .catch((error) => {
+                    console.error(
+                      "[RT] Failed to fetch activity updates:",
+                      error,
+                    );
+                  });
+              }, 8000);
+            }
+          } else {
+            throw new Error(`Health check failed: ${res.status}`);
+          }
+        })
+        .catch((error) => {
+          console.error("[RT] Connection failed, using offline mode:", error);
+          setConnectionStatus("error");
+
+          // Fall back to less frequent polling
           if (activeTab === "sessions") {
-            pollInterval.current = setInterval(onRefreshSessions, 10000);
+            pollInterval.current = setInterval(onRefreshSessions, 30000);
           }
-        }
-      };
-
-      wsConnection.current.onerror = (error) => {
-        // Enhanced WebSocket error handling with meaningful information
-        const errorInfo = (() => {
-          if (error instanceof Event) {
-            // Check WebSocket readyState for more context
-            const ws = wsConnection.current;
-            if (ws) {
-              const stateMap = {
-                0: "CONNECTING",
-                1: "OPEN",
-                2: "CLOSING",
-                3: "CLOSED",
-              };
-              return `WebSocket connection failed (state: ${stateMap[ws.readyState] || "UNKNOWN"})`;
-            }
-            return "WebSocket connection error occurred";
-          }
-          if (error instanceof Error) {
-            return `WebSocket error: ${error.message}`;
-          }
-          if (typeof error === "object" && error !== null) {
-            try {
-              return `WebSocket error: ${JSON.stringify(error)}`;
-            } catch {
-              return "WebSocket error: Unable to serialize error object";
-            }
-          }
-          return `WebSocket error: ${String(error)}`;
-        })();
-
-        console.error("[WS]", errorInfo);
-
-        // Set connection status to help with UI state
-        setConnectionStatus("disconnected");
-      };
+        });
     } catch (error) {
-      console.error("[WS] Failed to connect:", error);
+      console.error("[RT] Failed to initialize connection:", error);
       setConnectionStatus("error");
+
       // Fall back to polling
       if (activeTab === "sessions") {
-        pollInterval.current = setInterval(onRefreshSessions, 10000);
+        pollInterval.current = setInterval(onRefreshSessions, 30000);
       }
     }
   }, [user, activeTab, onRefreshSessions]);
