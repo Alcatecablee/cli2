@@ -153,7 +153,21 @@ export default function AdminSetup() {
           disabled={state.loading}
           className="btn-primary"
         >
-          {state.loading ? "Setting up..." : "Initialize Database"}
+          {state.loading ? "Setting up..." : "Run Setup Check"}
+        </button>
+
+        <button
+          onClick={() => {
+            // Simple connectivity test
+            fetch("/api/health")
+              .then((response) => response.json())
+              .then((data) => console.log("Health check:", data))
+              .catch((error) => console.error("Health check failed:", error));
+          }}
+          className="btn-secondary"
+          disabled={state.loading}
+        >
+          Test API Connection
         </button>
       </div>
 
