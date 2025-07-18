@@ -220,6 +220,13 @@ export default function CollaborationDashboard({
   // Load team members
   const loadTeamMembers = useCallback(async () => {
     setLoadingTeams(true);
+
+    // Set timeout for loading state
+    const timeoutId = setTimeout(() => {
+      setLoadingTeams(false);
+      console.warn("Team loading timed out");
+    }, 10000); // 10 second timeout
+
     try {
       const response = await fetch("/api/collaboration/teams", {
         headers: {
