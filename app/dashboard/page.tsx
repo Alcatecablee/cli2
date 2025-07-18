@@ -2349,8 +2349,8 @@ export default function Dashboard() {
                     <div className="profile-row">
                       <label>Member Since</label>
                       <div className="profile-value">
-                        {user?.created_at
-                          ? new Date(user.created_at).toLocaleDateString()
+                        {user?.createdAt
+                          ? new Date(user.createdAt).toLocaleDateString()
                           : "Recently"}
                       </div>
                     </div>
