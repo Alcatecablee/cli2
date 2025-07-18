@@ -53,7 +53,7 @@ export default function DatabaseManagement() {
 
       const response = await fetch("/api/admin/database", {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${session.access_token}`,
           "Content-Type": "application/json",
         },
       });
