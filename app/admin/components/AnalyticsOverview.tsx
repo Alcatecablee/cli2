@@ -49,15 +49,15 @@ export default function AnalyticsOverview() {
     setState((prev) => ({ ...prev, loading: true, error: null }));
 
     try {
-      const token =
-        localStorage.getItem("supabase.auth.token") ||
-        sessionStorage.getItem("supabase.auth.token");
+      if (!session?.access_token) {
+        throw new Error("Not authenticated");
+      }
 
       const response = await fetch(
         `/api/admin/analytics-safe?period=${period}`,
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${session.access_token}`,
             "Content-Type": "application/json",
           },
         },
