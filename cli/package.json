@@ -1,0 +1,57 @@
+{
+  "name": "@neurolint/cli",
+  "version": "1.0.3",
+  "description": "NeuroLint CLI - Advanced rule-based code analysis and transformation tool using AST parsing and sophisticated pattern matching",
+  "main": "release/cli-production.js",
+  "bin": {
+    "neurolint": "release/cli-production.js",
+    "nlint": "release/cli-production.js"
+  },
+  "scripts": {
+    "clean": "npx rimraf release",
+    "build": "npm run clean && npx tsc src/cli-production.ts src/commands/analyze-fixed.ts src/commands/fix-fixed.ts src/commands/init.ts src/commands/config.ts src/commands/status.ts src/commands/login.ts src/utils/config.ts src/types.ts --outDir release --target ES2020 --module CommonJS --esModuleInterop --skipLibCheck --moduleResolution node --declaration",
+    "build:full": "tsc",
+    "dev": "npx tsx src/cli-production.ts",
+    "start": "node release/cli-simple.js",
+    "test": "npm run dev -- --help",
+    "test:all": "npm run dev -- help && npm run dev -- init --force && npm run dev -- status",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "linting",
+    "code-analysis",
+    "typescript",
+    "react",
+    "nextjs",
+    "rule-based",
+    "transformation"
+  ],
+  "author": "NeuroLint",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.6.0",
+    "chalk": "^4.1.2",
+    "commander": "^11.0.0",
+    "dotenv": "^16.3.1",
+    "fs-extra": "^11.1.1",
+    "glob": "^8.1.0",
+    "inquirer": "^8.2.6",
+    "ora": "^5.4.1"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^11.0.0",
+    "@types/inquirer": "^9.0.0",
+    "@types/jest": "^29.5.0",
+    "@types/node": "^20.0.0",
+    "jest": "^29.7.0",
+    "rimraf": "^6.0.1",
+    "typescript": "^5.2.0"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Alcatecablee/nurolint.git"
+  }
+}
