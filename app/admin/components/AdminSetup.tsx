@@ -268,6 +268,37 @@ export default function AdminSetup() {
           color: #f44336;
         }
 
+        .setup-instructions {
+          background: rgba(33, 150, 243, 0.1);
+          border: 1px solid rgba(33, 150, 243, 0.3);
+          border-radius: 12px;
+          padding: 24px;
+          margin-bottom: 32px;
+        }
+
+        .setup-instructions h3 {
+          color: #2196f3;
+          margin: 0 0 16px 0;
+        }
+
+        .setup-instructions p {
+          color: rgba(255, 255, 255, 0.8);
+          margin: 0 0 16px 0;
+        }
+
+        .manual-tables h4 {
+          color: rgba(255, 255, 255, 0.9);
+          margin: 16px 0 8px 0;
+        }
+
+        .manual-tables code {
+          background: rgba(0, 0, 0, 0.3);
+          padding: 2px 6px;
+          border-radius: 4px;
+          font-family: var(--font-mono);
+          font-size: 0.8rem;
+        }
+
         .setup-info {
           background: rgba(255, 255, 255, 0.02);
           border: 1px solid rgba(255, 255, 255, 0.1);
