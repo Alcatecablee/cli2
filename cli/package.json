@@ -1,7 +1,7 @@
 {
   "name": "@neurolint-pro/cli",
   "version": "1.0.3",
-  "description": "NeuroLint CLI - Advanced rule-based code analysis and transformation tool using AST parsing and sophisticated pattern matching",
+  "description": "NeuroLint Pro CLI - Advanced React/Next.js code fixing and analysis tool",
   "main": "release/cli-production.js",
   "bin": {
     "neurolint": "release/cli-production.js",
