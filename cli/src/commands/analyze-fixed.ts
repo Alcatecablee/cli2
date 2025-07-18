@@ -190,7 +190,14 @@ export async function analyzeCommand(files: string[], options: AnalyzeOptions) {
 
         const result = response.data;
         allResults.push({ file, result });
-        totalIssues += result.analysis?.detectedIssues?.length || 0;
+
+        // Handle different response structures
+        const detectedIssues =
+          result.analysis?.detectedIssues ||
+          result.detectedIssues ||
+          result.layers?.flatMap((l) => l.detectedIssues) ||
+          [];
+        totalIssues += detectedIssues.length;
       } catch (fileError) {
         console.log(chalk.yellow(`Warning: Could not analyze ${file}`));
         if (axios.isAxiosError(fileError)) {
