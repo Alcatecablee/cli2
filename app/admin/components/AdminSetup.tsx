@@ -110,7 +110,28 @@ export default function AdminSetup() {
 
       {state.success && (
         <div className="success-banner">
-          <span>Database setup completed successfully!</span>
+          <span>Setup verification completed successfully!</span>
+        </div>
+      )}
+
+      {state.summary && (
+        <div className="setup-summary">
+          <h3>Setup Summary</h3>
+          <div className="summary-stats">
+            <div className="stat-item">
+              <span className="stat-value success">{state.summary.passed}</span>
+              <span className="stat-label">Passed</span>
+            </div>
+            <div className="stat-item">
+              <span className="stat-value error">{state.summary.failed}</span>
+              <span className="stat-label">Failed</span>
+            </div>
+            <div className="stat-item">
+              <span className="stat-value">{state.summary.totalChecks}</span>
+              <span className="stat-label">Total</span>
+            </div>
+          </div>
+          <p className="recommendation">{state.summary.recommendation}</p>
         </div>
       )}
 
