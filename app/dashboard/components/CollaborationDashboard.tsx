@@ -351,9 +351,14 @@ export default function CollaborationDashboard({
     }
 
     return () => {
-      if (wsConnection.current) {
-        wsConnection.current.close();
-        wsConnection.current = null;
+      // Cleanup polling intervals when changing tabs
+      if (pollInterval.current) {
+        clearInterval(pollInterval.current);
+        pollInterval.current = null;
+      }
+      if (activityPollInterval.current) {
+        clearInterval(activityPollInterval.current);
+        activityPollInterval.current = null;
       }
     };
   }, [activeTab, connectWebSocket]);
