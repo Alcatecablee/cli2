@@ -207,7 +207,19 @@ export default function AnalyticsDashboard({
           {/* Key Metrics */}
           <div className="metrics-grid">
             <div className="metric-card">
-              <div className="metric-icon">📊</div>
+              <div className="metric-icon">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="20"
+                  height="20"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path d="M3 3v18h18" />
+                  <path d="M7 12h4l3-8 4 8h3" />
+                </svg>
+              </div>
               <div className="metric-content">
                 <div className="metric-value">{analytics.totalAnalyses}</div>
                 <div className="metric-label">Total Analyses</div>
