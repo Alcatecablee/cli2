@@ -148,7 +148,7 @@ export default function CollaborationDashboard({
         } catch (error) {
           console.error("Failed to poll activity:", error);
         }
-      }, 10000); // Poll every 10 seconds
+      }, 120000); // Poll every 2 minutes (120 seconds) for less disruption
 
       return () => {
         if (pollInterval.current) {
