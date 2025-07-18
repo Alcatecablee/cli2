@@ -9,7 +9,8 @@ export const useAdminAuth = () => {
     return (
       user.email === "admin@neurolint.com" ||
       user.email === "info@neurolint.com" ||
-      user.role === "admin"
+      user.plan_type === "admin" ||
+      user.role === "admin" // Keep for backward compatibility
     );
   };
 
