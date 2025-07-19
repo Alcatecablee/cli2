@@ -472,37 +472,6 @@ export default function MyComponent() {
         )}
       </div>
 
-      {/* Sample Code Section */}
-      <div className="samples-section">
-        <div className="section-header">
-          <h3>Try Sample Code</h3>
-          <p>Quick examples to test NeuroLint Pro analysis capabilities</p>
-        </div>
-
-        <div className="samples-grid">
-          {sampleCodes.map((sample, index) => (
-            <div key={index} className="sample-card">
-              <div className="sample-header">
-                <h4>{sample.name}</h4>
-                <button
-                  className="try-btn warning"
-                  onClick={() => {
-                    setCodeInput(sample.code);
-                    setAnalysisMode("paste");
-                  }}
-                >
-                  Try This
-                </button>
-              </div>
-              <p className="sample-description">{sample.description}</p>
-              <div className="sample-preview">
-                <code>{sample.code.split("\n")[0]}...</code>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
       {/* Current File Info */}
       {currentFile && (
         <div className="current-file-section">
