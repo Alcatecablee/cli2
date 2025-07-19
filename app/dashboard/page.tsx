@@ -1803,7 +1803,7 @@ export default function Dashboard() {
               </span>
 
               <span className="setting-mode layers-badge">
-                <span className="badge-icon">⚡</span>
+                <span className="badge-icon">LAYERS</span>
                 {dashboardState.selectedLayers.length === 0
                   ? "Auto-Detect Layers"
                   : dashboardState.selectedLayers.length === 6
