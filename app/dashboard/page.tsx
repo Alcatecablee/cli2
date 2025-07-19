@@ -1801,7 +1801,7 @@ export default function Dashboard() {
                   ? "Apply Fixes Mode"
                   : "Dry-Run Mode"}
               </span>
-              {" �� "}
+
               <span className="setting-mode layers-badge">
                 <span className="badge-icon">⚡</span>
                 {dashboardState.selectedLayers.length === 0
