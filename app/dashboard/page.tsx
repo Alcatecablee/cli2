@@ -512,6 +512,12 @@ export default function Dashboard() {
   const [userExpandedSidebar, setUserExpandedSidebar] = useState(false);
   const [useEnhanced, setUseEnhanced] = useState(false);
 
+  // Refs for scrolling
+  const uploadSectionRef = useRef<HTMLDivElement>(null);
+  const pasteSectionRef = useRef<HTMLDivElement>(null);
+  const githubSectionRef = useRef<HTMLDivElement>(null);
+  const resultsSectionRef = useRef<HTMLDivElement>(null);
+
   // Save analysis to history
   const saveToHistory = useCallback(
     async (
@@ -545,6 +551,20 @@ export default function Dashboard() {
       });
     },
     [user?.id],
+  );
+
+  // Auto-scroll utility function
+  const scrollToSection = useCallback(
+    (sectionRef: React.RefObject<HTMLDivElement>) => {
+      if (sectionRef.current) {
+        sectionRef.current.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+          inline: "nearest",
+        });
+      }
+    },
+    [],
   );
 
   const analyzecode = useCallback(
@@ -646,6 +666,11 @@ export default function Dashboard() {
           progressStatus: "Analysis complete",
           uploadProgress: 100,
         }));
+
+        // Auto-scroll to results after analysis completes
+        setTimeout(() => {
+          scrollToSection(resultsSectionRef);
+        }, 100);
       } catch (error) {
         console.error("[DASHBOARD] Analysis failed:", error);
         setDashboardState((prev) => ({
@@ -662,6 +687,11 @@ export default function Dashboard() {
           progressStatus: "Analysis failed",
           uploadProgress: 0,
         }));
+
+        // Auto-scroll to results even on error
+        setTimeout(() => {
+          scrollToSection(resultsSectionRef);
+        }, 100);
       }
     },
     [dashboardState.settings.autoSave, saveToHistory, session?.access_token],
@@ -709,12 +739,22 @@ export default function Dashboard() {
             ? dashboardState.selectedLayers
             : "auto";
         analyzecode(code, file.name, layers, dashboardState.applyFixes);
+
+        // Auto-scroll to upload section
+        setTimeout(() => {
+          scrollToSection(uploadSectionRef);
+        }, 100);
       } catch (error) {
         console.error("[DASHBOARD] File upload failed:", error);
         alert("Failed to read the file. Please try again.");
       }
     },
-    [analyzecode, dashboardState.selectedLayers, dashboardState.applyFixes],
+    [
+      analyzecode,
+      dashboardState.selectedLayers,
+      dashboardState.applyFixes,
+      scrollToSection,
+    ],
   );
 
   const toggleLayerSelection = useCallback((layerId: number) => {
