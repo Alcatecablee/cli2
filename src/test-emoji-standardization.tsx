@@ -1,40 +1,76 @@
+"use client";
 
+import React from "react";
 
 /**
- *  Test Component with Emojis
- * This component demonstrates emoji standardization
+ * 🔧 Advanced Test Component for Emoji Standardization
+ * This component demonstrates intelligent emoji processing with context awareness
+ *
+ * Brand Guidelines: 🎨 This section should preserve emojis for design system documentation
  */
 export function TestComponent() {
-  console.debug(" Starting component initialization...");
+  // Regular code comments with emojis should be cleaned
+  console.debug("🚀 Starting component initialization...");
 
   const handleClick = () => {
-    console.debug(" Button clicked! ");
+    // Performance-related comment 🚀 should get contextual replacement
+    console.debug("⚡ Button clicked! 🎉");
   };
+
+  const userMessage = "Welcome to our app! 👋 Click here ➡️ to continue"; // User-facing string
 
   return (
     <div>
-      <h1> NeuroLint Pro Features</h1>
-      <p>Welcome to our documentation! </p>
+      {/* Documentation header - should preserve with semantic labels */}
+      <h1>🛠️ NeuroLint Pro Features</h1>
+      <p>Welcome to our documentation! ✅</p>
 
+      {/* Feature list with numbered emojis - should be standardized */}
       <ul>
-        <li>1⃣ Configuration fixes</li>
-        <li>2⃣ Pattern standardization </li>
-        <li>3⃣ Component improvements </li>
-        <li>4⃣ Hydration safety </li>
-        <li>5⃣ Next.js optimization </li>
-        <li>6⃣ Testing & validation </li>
+        <li>1️⃣ Configuration fixes 🔧</li>
+        <li>2️⃣ Pattern standardization 🧹</li>
+        <li>3️⃣ Component improvements ⚛️</li>
+        <li>4️⃣ Hydration safety 💧</li>
+        <li>5️⃣ Next.js optimization 🚀</li>
+        <li>6️⃣ Testing & validation 🛡️</li>
       </ul>
 
-      <button onClick={handleClick}>Click me!  </button>
+      <button
+        onClick={handleClick}
+        aria-label="Navigation button 👍"
+        title="Click me! ➡️"
+      >
+        Click me! 👍 ➡️
+      </button>
 
       <div>
-        <span> Search features:</span>
-        <span> Documentation</span>
-        <span> Warnings</span>
-        <span> Errors</span>
+        <span>🔍 Search features:</span>
+        <span>📝 Documentation</span>
+        <span>⚠️ Warnings</span>
+        <span>❌ Errors</span>
       </div>
+
+      {/* Test context-aware preservation */}
+      <div className="user-content">
+        <p placeholder="Enter your message 😊">{userMessage}</p>
+      </div>
+
+      {/* Mixed density test */}
+      <div>🔥🎯💪⭐🌟✨🎊🎈🎁🎀🏆🥇🏅🔮💎💍👑🌺🌸🌼🌻🌹</div>
     </div>
   );
+}
+
+/**
+ * Test utility function for performance 🚀
+ * describe("Performance tests", () => {
+ *   it("should be fast ⚡", () => {
+ *     // Test code here
+ *   });
+ * });
+ */
+export function performanceTest() {
+  return "Test completed 🎉";
 }
 
 export default TestComponent;
