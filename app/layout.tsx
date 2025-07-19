@@ -43,7 +43,9 @@ export default function RootLayout({
         <div className="shooting-star"></div>
         <div className="shooting-star"></div>
         <div className="shooting-star"></div>
-        <AuthProvider>{children}</AuthProvider>
+        <AuthErrorBoundary>
+          <AuthProvider>{children}</AuthProvider>
+        </AuthErrorBoundary>
         <Analytics />
         <SpeedInsights />
         <Script
