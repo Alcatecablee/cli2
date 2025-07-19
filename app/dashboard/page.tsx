@@ -714,6 +714,9 @@ export default function Dashboard() {
         layers,
         dashboardState.applyFixes,
       );
+
+      // Auto-scroll to sample section area (we'll scroll to results after analysis completes)
+      // This gives immediate feedback that the sample is being processed
     },
     [analyzecode, dashboardState.selectedLayers, dashboardState.applyFixes],
   );
