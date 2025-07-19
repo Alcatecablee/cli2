@@ -286,6 +286,123 @@ const advancedPatterns = [
   },
 ];
 
+// ===== ENTERPRISE EMOJI ANALYTICS =====
+// Advanced emoji tracking and reporting system
+class EmojiAnalytics {
+  constructor() {
+    this.stats = {
+      totalEmojisFound: 0,
+      totalEmojisRemoved: 0,
+      totalEmojisPreserved: 0,
+      emojisByCategory: {},
+      filesByEmojiDensity: [],
+      contextualReplacements: 0,
+      semanticMappings: {},
+    };
+  }
+
+  recordEmoji(emoji, action, context, filePath) {
+    this.stats.totalEmojisFound++;
+
+    if (action === "removed") {
+      this.stats.totalEmojisRemoved++;
+    } else if (action === "preserved") {
+      this.stats.totalEmojisPreserved++;
+    } else if (action === "replaced") {
+      this.stats.contextualReplacements++;
+    }
+
+    // Track semantic mappings
+    if (action === "replaced" && context.replacement) {
+      if (!this.stats.semanticMappings[emoji]) {
+        this.stats.semanticMappings[emoji] = {};
+      }
+      this.stats.semanticMappings[emoji][context.replacement] =
+        (this.stats.semanticMappings[emoji][context.replacement] || 0) + 1;
+    }
+  }
+
+  calculateEmojiDensity(content, filePath) {
+    const emojiCount = (
+      content.match(
+        /[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]/gu,
+      ) || []
+    ).length;
+    const density = (emojiCount / content.length) * 1000; // Emojis per 1000 characters
+
+    this.stats.filesByEmojiDensity.push({
+      file: filePath,
+      density: density,
+      count: emojiCount,
+      size: content.length,
+    });
+
+    return density;
+  }
+
+  generateReport() {
+    const report = {
+      summary: {
+        totalFiles: this.stats.filesByEmojiDensity.length,
+        totalEmojis: this.stats.totalEmojisFound,
+        removalRate:
+          this.stats.totalEmojisFound > 0
+            ? (
+                (this.stats.totalEmojisRemoved / this.stats.totalEmojisFound) *
+                100
+              ).toFixed(1) + "%"
+            : "0%",
+        preservationRate:
+          this.stats.totalEmojisFound > 0
+            ? (
+                (this.stats.totalEmojisPreserved /
+                  this.stats.totalEmojisFound) *
+                100
+              ).toFixed(1) + "%"
+            : "0%",
+        contextualReplacements: this.stats.contextualReplacements,
+      },
+      topEmojiDensityFiles: this.stats.filesByEmojiDensity
+        .sort((a, b) => b.density - a.density)
+        .slice(0, 5),
+      semanticMappings: this.stats.semanticMappings,
+      recommendations: this.generateRecommendations(),
+    };
+
+    return report;
+  }
+
+  generateRecommendations() {
+    const recommendations = [];
+
+    const highDensityFiles = this.stats.filesByEmojiDensity.filter(
+      (f) => f.density > 5,
+    );
+    if (highDensityFiles.length > 0) {
+      recommendations.push({
+        type: "High Emoji Density",
+        severity: "medium",
+        description: `${highDensityFiles.length} files have high emoji density (>5 per 1000 chars)`,
+        action: "Consider manual review for contextual emoji usage",
+      });
+    }
+
+    if (this.stats.totalEmojisPreserved > this.stats.totalEmojisRemoved) {
+      recommendations.push({
+        type: "Preservation Rate",
+        severity: "info",
+        description: "More emojis were preserved than removed",
+        action: "Review preservation logic for enterprise compliance",
+      });
+    }
+
+    return recommendations;
+  }
+}
+
+// Global analytics instance
+const emojiAnalytics = new EmojiAnalytics();
+
 // Get all relevant files
 function getFiles(extensions) {
   const patterns = extensions.map((ext) => `src/**/*.${ext}`);
