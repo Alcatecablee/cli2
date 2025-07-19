@@ -422,113 +422,161 @@ export default function AnalyticsDashboard({
 
       <style jsx>{`
         .analytics-dashboard {
-          padding: 24px;
-          background: rgba(255, 255, 255, 0.02);
-          border-radius: 12px;
-          border: 1px solid rgba(255, 255, 255, 0.1);
+          padding: 0;
+          display: flex;
+          flex-direction: column;
+          gap: 2rem;
+          border: 2px solid #000000;
+          border-radius: 16px;
+          padding: 1.5rem;
         }
 
         .analytics-header {
           display: flex;
           justify-content: space-between;
-          align-items: center;
-          margin-bottom: 32px;
+          align-items: flex-start;
+          margin-bottom: 1rem;
         }
 
         .analytics-header h3 {
+          font-size: 2rem;
+          font-weight: 700;
           color: #ffffff;
-          margin: 0;
-          font-size: 1.5rem;
-          font-weight: 600;
+          margin: 0 0 0.5rem 0;
+          line-height: 1.2;
         }
 
         .time-range-selector {
           display: flex;
-          gap: 8px;
+          gap: 0.5rem;
           background: rgba(255, 255, 255, 0.05);
+          border: 2px solid #000000;
+          border-radius: 12px;
           padding: 4px;
-          border-radius: 8px;
-          border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .time-range-btn {
-          padding: 8px 16px;
-          background: transparent;
+          padding: 0.5rem 1rem;
+          background: none;
           border: none;
           color: rgba(255, 255, 255, 0.7);
-          border-radius: 6px;
+          border-radius: 8px;
           cursor: pointer;
-          transition: all 0.2s ease;
-          font-size: 0.9rem;
+          transition: all 0.3s ease;
+          font-size: 0.875rem;
           font-weight: 500;
         }
 
-        .time-range-btn.active,
         .time-range-btn:hover {
-          background: rgba(255, 255, 255, 0.1);
+          background: rgba(255, 255, 255, 0.08);
           color: #ffffff;
+        }
+
+        .time-range-btn.active {
+          background: linear-gradient(
+            135deg,
+            rgba(33, 150, 243, 0.2) 0%,
+            rgba(33, 150, 243, 0.15) 50%,
+            rgba(255, 255, 255, 0.1) 100%
+          );
+          color: #ffffff;
+          border: 2px solid #000000;
         }
 
         .no-data {
           text-align: center;
-          padding: 60px 20px;
+          padding: 80px 20px;
           color: rgba(255, 255, 255, 0.6);
+          font-size: 16px;
+          background: linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.05) 0%,
+            rgba(255, 255, 255, 0.02) 100%
+          );
+          border: 2px solid #000000;
+          border-radius: 16px;
+          backdrop-filter: blur(15px);
+          -webkit-backdrop-filter: blur(15px);
         }
 
         .no-data-icon {
-          font-size: 3rem;
-          margin-bottom: 16px;
+          color: rgba(255, 255, 255, 0.6);
+          margin-bottom: 1rem;
         }
 
         .no-data h4 {
           color: #ffffff;
-          margin: 0 0 8px 0;
-          font-size: 1.25rem;
+          font-size: 1.5rem;
+          font-weight: 600;
+          margin: 0 0 1rem 0;
         }
 
         .metrics-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-          gap: 20px;
-          margin-bottom: 32px;
+          grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+          gap: 1.5rem;
+          margin-bottom: 2rem;
         }
 
         .metric-card {
-          background: rgba(255, 255, 255, 0.05);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          border-radius: 12px;
-          padding: 24px;
           display: flex;
-          align-items: center;
-          gap: 16px;
+          align-items: flex-start;
+          gap: 1rem;
+          padding: 1.5rem;
+          border-radius: 16px;
+          backdrop-filter: blur(25px) saturate(1.2);
+          -webkit-backdrop-filter: blur(25px) saturate(1.2);
+          box-shadow:
+            0 8px 32px rgba(0, 0, 0, 0.2),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
+          transition: all 0.3s ease;
+          background: linear-gradient(
+            135deg,
+            rgba(33, 150, 243, 0.2) 0%,
+            rgba(33, 150, 243, 0.15) 50%,
+            rgba(255, 255, 255, 0.1) 100%
+          );
+          border: 2px solid #000000;
+        }
+
+        .metric-card:hover {
+          transform: translateY(-2px);
+          box-shadow:
+            0 12px 40px rgba(0, 0, 0, 0.3),
+            inset 0 1px 0 rgba(255, 255, 255, 0.15);
         }
 
         .metric-icon {
-          font-size: 2rem;
-          width: 50px;
-          height: 50px;
-          background: rgba(255, 255, 255, 0.1);
-          border-radius: 10px;
+          width: 48px;
+          height: 48px;
           display: flex;
           align-items: center;
           justify-content: center;
+          background: rgba(255, 255, 255, 0.1);
+          border: 2px solid #000000;
+          border-radius: 12px;
+          color: #ffffff;
+          flex-shrink: 0;
         }
 
         .metric-content {
           flex: 1;
+          min-width: 0;
         }
 
         .metric-value {
-          font-size: 1.75rem;
+          font-size: 2rem;
           font-weight: 700;
           color: #ffffff;
-          line-height: 1.2;
+          line-height: 1;
+          margin-bottom: 0.25rem;
         }
 
         .metric-label {
-          font-size: 0.9rem;
-          color: rgba(255, 255, 255, 0.7);
-          margin-top: 4px;
+          font-size: 0.875rem;
+          color: rgba(255, 255, 255, 0.8);
+          margin-bottom: 0.5rem;
+          font-weight: 500;
         }
 
         .charts-section {
@@ -539,17 +587,35 @@ export default function AnalyticsDashboard({
         }
 
         .chart-card {
-          background: rgba(255, 255, 255, 0.05);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          border-radius: 12px;
-          padding: 24px;
+          background: linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.08) 0%,
+            rgba(255, 255, 255, 0.04) 50%,
+            rgba(255, 255, 255, 0.02) 100%
+          );
+          border: 2px solid #000000;
+          border-radius: 16px;
+          padding: 1.5rem;
+          backdrop-filter: blur(25px) saturate(1.2);
+          -webkit-backdrop-filter: blur(25px) saturate(1.2);
+          box-shadow:
+            0 8px 32px rgba(0, 0, 0, 0.2),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
+          transition: all 0.3s ease;
+        }
+
+        .chart-card:hover {
+          transform: translateY(-2px);
+          box-shadow:
+            0 12px 40px rgba(0, 0, 0, 0.3),
+            inset 0 1px 0 rgba(255, 255, 255, 0.15);
         }
 
         .chart-card h4 {
           color: #ffffff;
-          margin: 0 0 20px 0;
-          font-size: 1.1rem;
+          font-size: 1.25rem;
           font-weight: 600;
+          margin: 0 0 1rem 0;
         }
 
         .trend-chart {
