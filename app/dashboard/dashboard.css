@@ -2165,22 +2165,47 @@ legend {
   padding: 1rem;
 }
 
+.business-insights {
+  grid-column: 1 / -1;
+  padding: 1.5rem;
+  background: linear-gradient(
+    135deg,
+    rgba(33, 150, 243, 0.15) 0%,
+    rgba(33, 150, 243, 0.1) 50%,
+    rgba(255, 255, 255, 0.05) 100%
+  );
+  border: 2px solid #000000;
+  border-radius: 16px;
+  backdrop-filter: blur(20px) saturate(1.2);
+  -webkit-backdrop-filter: blur(20px) saturate(1.2);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+  margin-bottom: 1rem;
+}
+
 .analysis-overview,
 .code-comparison,
 .issues-section,
 .layers-section {
-  padding: 32px;
+  padding: 1.5rem;
   background: linear-gradient(
     135deg,
     rgba(255, 255, 255, 0.08) 0%,
-    rgba(255, 255, 255, 0.04) 100%
+    rgba(255, 255, 255, 0.04) 50%,
+    rgba(255, 255, 255, 0.02) 100%
   );
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 2px solid #000000;
   border-radius: 16px;
-  backdrop-filter: blur(20px) saturate(1.1);
-  -webkit-backdrop-filter: blur(20px) saturate(1.1);
-  box-shadow: var(--shadow-subtle);
-  transition: var(--transition-smooth);
+  backdrop-filter: blur(20px) saturate(1.2);
+  -webkit-backdrop-filter: blur(20px) saturate(1.2);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+  height: fit-content;
+  overflow: hidden;
 }
 
 .analysis-overview:hover,
