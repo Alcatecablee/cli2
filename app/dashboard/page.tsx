@@ -1536,13 +1536,13 @@ export default function Dashboard() {
         </div>
 
         <div className="dashboard-content">
-          {/* Global Controls - Always Visible - Demo Style */}
+          {/* Enhanced Analysis Configuration */}
           {(dashboardState.activeSection === "editor" ||
             dashboardState.activeSection === "samples") && (
             <div
-              className="demo-controls"
+              className="analysis-configuration"
               role="region"
-              aria-labelledby="controls-title"
+              aria-labelledby="config-title"
             >
               <h3 id="controls-title">Analysis Configuration</h3>
               <div className="controls-grid">
