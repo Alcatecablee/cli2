@@ -447,7 +447,7 @@
 .nav-icon svg {
   width: 20px;
   height: 20px;
-  stroke: currentColor;
+  stroke: rgba(255, 255, 255, 0.9);
   fill: none;
   stroke-width: 2;
   stroke-linecap: round;
