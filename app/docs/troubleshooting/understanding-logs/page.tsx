@@ -8,24 +8,64 @@ export const metadata: Metadata = {
 
 export default function UnderstandingLogsPage() {
   return (
-    <div className="min-h-screen bg-black text-white">
-      <div className="container mx-auto px-6 py-16">
-        {/* Header */}
-        <div className="text-center mb-16">
-          <h1 className="text-5xl font-bold bg-gradient-to-r from-white to-blue-400 bg-clip-text text-transparent mb-6">
+    <div className="min-h-screen bg-black text-white relative">
+      {/* Professional background with subtle patterns */}
+      <div className="absolute inset-0 bg-gradient-to-br from-black via-gray-900 to-black"></div>
+      <div className="absolute inset-0 opacity-20">
+        <div className="absolute top-20 left-10 w-72 h-72 bg-purple-500/10 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-40 right-20 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl"></div>
+      </div>
+
+      <div className="relative z-10 container mx-auto px-6 py-16">
+        {/* Enhanced Header */}
+        <div className="text-center mb-20">
+          <div className="inline-flex items-center justify-center w-16 h-16 mb-6 bg-gradient-to-br from-purple-500/20 to-indigo-500/20 rounded-2xl border border-purple-400/20">
+            <svg
+              className="w-8 h-8 text-purple-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
+              />
+            </svg>
+          </div>
+          <h1 className="text-6xl font-bold bg-gradient-to-r from-white via-gray-200 to-purple-400 bg-clip-text text-transparent mb-6">
             Understanding Logs
           </h1>
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-            Guide to reading and interpreting NeuroLint Pro logs for debugging
-            and monitoring
+          <p className="text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
+            Comprehensive guide to reading and interpreting NeuroLint Pro logs
+            for debugging and monitoring
           </p>
+          <div className="flex items-center justify-center space-x-6 mt-8 text-sm text-gray-400">
+            <span className="flex items-center space-x-2">
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <path
+                  fillRule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              <span>20 min read</span>
+            </span>
+            <span className="flex items-center space-x-2">
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span>Debug Guide</span>
+            </span>
+          </div>
         </div>
 
         {/* Main Content */}
-        <div className="max-w-4xl mx-auto space-y-12">
+        <div className="max-w-6xl mx-auto space-y-16">
           {/* Log Overview */}
-          <section className="bg-gray-900/50 backdrop-blur-sm rounded-2xl p-8 border border-white/10">
-            <h2 className="text-3xl font-bold text-blue-400 mb-6">
+          <section className="bg-gradient-to-br from-gray-900/60 via-gray-800/40 to-gray-900/60 backdrop-blur-xl rounded-3xl p-10 border border-white/10 shadow-2xl shadow-black/50">
+            <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent mb-8">
               Log System Overview
             </h2>
 
@@ -35,13 +75,13 @@ export default function UnderstandingLogsPage() {
                 <h3 className="text-xl font-semibold text-white mb-3">
                   Log File Locations
                 </h3>
-                <div className="bg-black/30 rounded-lg p-6">
+                <div className="bg-gradient-to-br from-black/40 to-gray-900/60 rounded-2xl p-8 border border-white/5 hover:border-white/10 transition-all duration-300">
                   <div className="bg-black/50 rounded-lg p-4 mb-4">
                     <pre className="text-green-400 text-sm">
                       {`# Default log directory structure
 .neurolint/
 ├── logs/
-│   ├── execution.log        # Main execution log
+│   ├��─ execution.log        # Main execution log
 │   ├── errors.log          # Error-specific log
 │   ├── performance.log     # Performance metrics
 │   ├── debug.log           # Debug information
@@ -84,7 +124,7 @@ export default function UnderstandingLogsPage() {
                   Log Levels & Meanings
                 </h3>
                 <div className="grid md:grid-cols-2 gap-6">
-                  <div className="bg-black/30 rounded-lg p-6">
+                  <div className="bg-gradient-to-br from-black/40 to-gray-900/60 rounded-2xl p-8 border border-white/5 hover:border-white/10 transition-all duration-300">
                     <h4 className="font-semibold text-green-400 mb-3">
                       Standard Levels
                     </h4>
@@ -124,7 +164,7 @@ export default function UnderstandingLogsPage() {
                     </div>
                   </div>
 
-                  <div className="bg-black/30 rounded-lg p-6">
+                  <div className="bg-gradient-to-br from-black/40 to-gray-900/60 rounded-2xl p-8 border border-white/5 hover:border-white/10 transition-all duration-300">
                     <h4 className="font-semibold text-blue-400 mb-3">
                       Special Categories
                     </h4>
@@ -169,8 +209,8 @@ export default function UnderstandingLogsPage() {
           </section>
 
           {/* Reading Execution Logs */}
-          <section className="bg-gray-900/50 backdrop-blur-sm rounded-2xl p-8 border border-white/10">
-            <h2 className="text-3xl font-bold text-blue-400 mb-6">
+          <section className="bg-gradient-to-br from-gray-900/60 via-gray-800/40 to-gray-900/60 backdrop-blur-xl rounded-3xl p-10 border border-white/10 shadow-2xl shadow-black/50">
+            <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent mb-8">
               Reading Execution Logs
             </h2>
 
@@ -180,7 +220,7 @@ export default function UnderstandingLogsPage() {
                 <h3 className="text-xl font-semibold text-white mb-3">
                   Normal Execution Flow
                 </h3>
-                <div className="bg-black/30 rounded-lg p-6">
+                <div className="bg-gradient-to-br from-black/40 to-gray-900/60 rounded-2xl p-8 border border-white/5 hover:border-white/10 transition-all duration-300">
                   <h4 className="font-semibold text-green-400 mb-3">
                     Typical Successful Run
                   </h4>
@@ -226,7 +266,7 @@ export default function UnderstandingLogsPage() {
                   Error Scenarios
                 </h3>
                 <div className="space-y-4">
-                  <div className="bg-black/30 rounded-lg p-6">
+                  <div className="bg-gradient-to-br from-black/40 to-gray-900/60 rounded-2xl p-8 border border-white/5 hover:border-white/10 transition-all duration-300">
                     <h4 className="font-semibold text-red-400 mb-3">
                       Configuration Error
                     </h4>
@@ -253,7 +293,7 @@ Configuration errors prevent startup:
                     </p>
                   </div>
 
-                  <div className="bg-black/30 rounded-lg p-6">
+                  <div className="bg-gradient-to-br from-black/40 to-gray-900/60 rounded-2xl p-8 border border-white/5 hover:border-white/10 transition-all duration-300">
                     <h4 className="font-semibold text-red-400 mb-3">
                       Pattern Execution Error
                     </h4>
@@ -281,8 +321,8 @@ Configuration errors prevent startup:
           </section>
 
           {/* Performance Logs */}
-          <section className="bg-gray-900/50 backdrop-blur-sm rounded-2xl p-8 border border-white/10">
-            <h2 className="text-3xl font-bold text-blue-400 mb-6">
+          <section className="bg-gradient-to-br from-gray-900/60 via-gray-800/40 to-gray-900/60 backdrop-blur-xl rounded-3xl p-10 border border-white/10 shadow-2xl shadow-black/50">
+            <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent mb-8">
               Performance Logs
             </h2>
 
@@ -292,7 +332,7 @@ Configuration errors prevent startup:
                 <h3 className="text-xl font-semibold text-white mb-3">
                   Understanding Performance Metrics
                 </h3>
-                <div className="bg-black/30 rounded-lg p-6">
+                <div className="bg-gradient-to-br from-black/40 to-gray-900/60 rounded-2xl p-8 border border-white/5 hover:border-white/10 transition-all duration-300">
                   <h4 className="font-semibold text-orange-400 mb-3">
                     Detailed Performance Log
                   </h4>
@@ -350,7 +390,7 @@ Recommendations:
                   Performance Warnings
                 </h3>
                 <div className="grid md:grid-cols-2 gap-6">
-                  <div className="bg-black/30 rounded-lg p-6">
+                  <div className="bg-gradient-to-br from-black/40 to-gray-900/60 rounded-2xl p-8 border border-white/5 hover:border-white/10 transition-all duration-300">
                     <h4 className="font-semibold text-yellow-400 mb-3">
                       Common Performance Issues
                     </h4>
@@ -382,7 +422,7 @@ Recommendations:
                     </div>
                   </div>
 
-                  <div className="bg-black/30 rounded-lg p-6">
+                  <div className="bg-gradient-to-br from-black/40 to-gray-900/60 rounded-2xl p-8 border border-white/5 hover:border-white/10 transition-all duration-300">
                     <h4 className="font-semibold text-green-400 mb-3">
                       Optimization Tips
                     </h4>
@@ -407,8 +447,8 @@ Recommendations:
           </section>
 
           {/* Audit Logs */}
-          <section className="bg-gray-900/50 backdrop-blur-sm rounded-2xl p-8 border border-white/10">
-            <h2 className="text-3xl font-bold text-blue-400 mb-6">
+          <section className="bg-gradient-to-br from-gray-900/60 via-gray-800/40 to-gray-900/60 backdrop-blur-xl rounded-3xl p-10 border border-white/10 shadow-2xl shadow-black/50">
+            <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent mb-8">
               Audit & Change Logs
             </h2>
 
@@ -418,7 +458,7 @@ Recommendations:
                 <h3 className="text-xl font-semibold text-white mb-3">
                   File Change Tracking
                 </h3>
-                <div className="bg-black/30 rounded-lg p-6">
+                <div className="bg-gradient-to-br from-black/40 to-gray-900/60 rounded-2xl p-8 border border-white/5 hover:border-white/10 transition-all duration-300">
                   <h4 className="font-semibold text-purple-400 mb-3">
                     Audit Trail Example
                   </h4>
@@ -463,7 +503,7 @@ File Changes:
                   Change Statistics
                 </h3>
                 <div className="grid md:grid-cols-2 gap-6">
-                  <div className="bg-black/30 rounded-lg p-6">
+                  <div className="bg-gradient-to-br from-black/40 to-gray-900/60 rounded-2xl p-8 border border-white/5 hover:border-white/10 transition-all duration-300">
                     <h4 className="font-semibold text-cyan-400 mb-3">
                       Summary Metrics
                     </h4>
@@ -495,7 +535,7 @@ File Changes:
                     </div>
                   </div>
 
-                  <div className="bg-black/30 rounded-lg p-6">
+                  <div className="bg-gradient-to-br from-black/40 to-gray-900/60 rounded-2xl p-8 border border-white/5 hover:border-white/10 transition-all duration-300">
                     <h4 className="font-semibold text-cyan-400 mb-3">
                       Change Breakdown
                     </h4>
@@ -528,8 +568,8 @@ File Changes:
           </section>
 
           {/* Debug Logs */}
-          <section className="bg-gray-900/50 backdrop-blur-sm rounded-2xl p-8 border border-white/10">
-            <h2 className="text-3xl font-bold text-blue-400 mb-6">
+          <section className="bg-gradient-to-br from-gray-900/60 via-gray-800/40 to-gray-900/60 backdrop-blur-xl rounded-3xl p-10 border border-white/10 shadow-2xl shadow-black/50">
+            <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent mb-8">
               Debug Logs
             </h2>
 
@@ -539,7 +579,7 @@ File Changes:
                 <h3 className="text-xl font-semibold text-white mb-3">
                   Enabling Debug Mode
                 </h3>
-                <div className="bg-black/30 rounded-lg p-6">
+                <div className="bg-gradient-to-br from-black/40 to-gray-900/60 rounded-2xl p-8 border border-white/5 hover:border-white/10 transition-all duration-300">
                   <div className="bg-black/50 rounded-lg p-4 mb-4">
                     <pre className="text-blue-400 text-sm">
                       {`# Enable debug logging
@@ -568,8 +608,8 @@ neurolint fix --debug --log-file=debug-session.log`}
           </section>
 
           {/* Log Analysis Tools */}
-          <section className="bg-gray-900/50 backdrop-blur-sm rounded-2xl p-8 border border-white/10">
-            <h2 className="text-3xl font-bold text-blue-400 mb-6">
+          <section className="bg-gradient-to-br from-gray-900/60 via-gray-800/40 to-gray-900/60 backdrop-blur-xl rounded-3xl p-10 border border-white/10 shadow-2xl shadow-black/50">
+            <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent mb-8">
               Log Analysis Tools
             </h2>
 
@@ -580,7 +620,7 @@ neurolint fix --debug --log-file=debug-session.log`}
                   Built-in Analysis Commands
                 </h3>
                 <div className="grid md:grid-cols-2 gap-6">
-                  <div className="bg-black/30 rounded-lg p-6">
+                  <div className="bg-gradient-to-br from-black/40 to-gray-900/60 rounded-2xl p-8 border border-white/5 hover:border-white/10 transition-all duration-300">
                     <h4 className="font-semibold text-green-400 mb-3">
                       Log Viewing
                     </h4>
@@ -604,7 +644,7 @@ neurolint logs --grep="Layer 2"`}
                     </div>
                   </div>
 
-                  <div className="bg-black/30 rounded-lg p-6">
+                  <div className="bg-gradient-to-br from-black/40 to-gray-900/60 rounded-2xl p-8 border border-white/5 hover:border-white/10 transition-all duration-300">
                     <h4 className="font-semibold text-blue-400 mb-3">
                       Analysis Reports
                     </h4>
@@ -635,7 +675,7 @@ neurolint logs --export=csv --output=analysis.csv`}
                 <h3 className="text-xl font-semibold text-white mb-3">
                   External Log Analysis
                 </h3>
-                <div className="bg-black/30 rounded-lg p-6">
+                <div className="bg-gradient-to-br from-black/40 to-gray-900/60 rounded-2xl p-8 border border-white/5 hover:border-white/10 transition-all duration-300">
                   <h4 className="font-semibold text-purple-400 mb-3">
                     Using Standard Unix Tools
                   </h4>
