@@ -15,6 +15,7 @@ import ApiKeysManager from "./components/ApiKeysManager";
 import SystemStatus from "./components/SystemStatus";
 import ErrorBoundary from "./components/ErrorBoundary";
 import Overview from "./components/Overview";
+import CodeAnalysis from "./components/CodeAnalysis";
 
 // Import the same result interfaces from the demo
 interface DemoResult {
