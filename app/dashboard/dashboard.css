@@ -2208,12 +2208,59 @@ legend {
   overflow: hidden;
 }
 
+.business-insights:hover,
 .analysis-overview:hover,
 .code-comparison:hover,
 .issues-section:hover,
 .layers-section:hover {
   transform: translateY(-2px);
-  box-shadow: var(--shadow-medium);
+  box-shadow:
+    0 12px 40px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+.business-insights h3 {
+  color: #ffffff;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0 0 1rem 0;
+  text-align: center;
+}
+
+.insights-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.insight-card {
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid #000000;
+  border-radius: 12px;
+  padding: 1rem;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.insight-card:hover {
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.insight-label {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.5rem;
+}
+
+.insight-value {
+  color: #ffffff;
+  font-size: 1.2rem;
+  font-weight: 700;
+  font-family: "JetBrains Mono", monospace;
 }
 
 .analysis-overview h3,
