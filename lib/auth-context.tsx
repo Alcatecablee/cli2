@@ -406,22 +406,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(data.user);
         setSession(data.session);
 
-        // Set session on centralized Supabase client
-        if (typeof window !== "undefined") {
-          try {
-            const { supabase } = await import("../lib/supabase-client");
-            await supabase.auth.setSession({
-              access_token: data.session.access_token,
-              refresh_token: data.session.refresh_token,
-            });
-            console.log("Supabase session set after signup");
-          } catch (error) {
-            console.error(
-              "Error setting Supabase session after signup:",
-              error,
-            );
-          }
-        }
+        // Note: We avoid setting session directly here to prevent refresh token conflicts
+        // The supabase client will be initialized from localStorage when needed
       }
 
       return data;
