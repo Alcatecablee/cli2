@@ -634,6 +634,7 @@ export default function Overview({ analysisHistory }: OverviewProps) {
           align-items: center;
           justify-content: center;
           background: rgba(255, 255, 255, 0.1);
+          border: 2px solid #000000;
           border-radius: 12px;
           color: #ffffff;
           flex-shrink: 0;
