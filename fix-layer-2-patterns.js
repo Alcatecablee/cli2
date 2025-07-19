@@ -415,14 +415,199 @@ function getFiles(extensions) {
   return [...new Set(files)]; // Remove duplicates
 }
 
+// ===== INTELLIGENT EMOJI PROCESSING =====
+// Smart preservation and context-aware processing
+class EmojiProcessor {
+  constructor() {
+    this.preservationRules = [
+      {
+        name: "Documentation Headers",
+        test: (context) => /#{1,6}\s+[^\n]*$/m.test(context.before),
+        action: "preserve_with_label",
+      },
+      {
+        name: "JSDoc Comments",
+        test: (context) => /\/\*\*[^*]*\*\/\s*$/m.test(context.before),
+        action: "preserve_with_label",
+      },
+      {
+        name: "Brand Guidelines Comments",
+        test: (context) =>
+          /\b(brand|style\s*guide|design\s*system)\b/i.test(
+            context.surrounding,
+          ),
+        action: "preserve",
+      },
+      {
+        name: "Test Descriptions",
+        test: (context) => /\b(describe|it|test)\s*\(["']/.test(context.before),
+        action: "preserve",
+      },
+      {
+        name: "User-Facing Strings",
+        test: (context) => {
+          const userFacingIndicators =
+            /\b(placeholder|label|title|aria-label|alt)\s*[:=]/i;
+          return userFacingIndicators.test(context.surrounding);
+        },
+        action: "preserve",
+      },
+    ];
+  }
+
+  shouldPreserveEmoji(emoji, offset, fullText) {
+    const context = {
+      before: fullText.substring(Math.max(0, offset - 50), offset),
+      after: fullText.substring(offset, Math.min(fullText.length, offset + 50)),
+      surrounding: fullText.substring(
+        Math.max(0, offset - 100),
+        Math.min(fullText.length, offset + 100),
+      ),
+    };
+
+    for (const rule of this.preservationRules) {
+      if (rule.test(context)) {
+        return {
+          preserve: true,
+          rule: rule.name,
+          action: rule.action,
+        };
+      }
+    }
+
+    return { preserve: false };
+  }
+
+  processEmojiInBatch(content, filePath) {
+    const emojiRegex =
+      /[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|🔧|⚙️|🛠️|🧹|⚛️|🚀|⚡|🛡️|✅|📝|⚠️|❌|🔍|💡|➡️|⬅️|⬆️|⬇️|1️⃣|2️⃣|3️⃣|4️⃣|5️⃣|6️⃣/gu;
+
+    let processedContent = content;
+    let totalChanges = 0;
+    const emojiReport = {
+      preserved: [],
+      removed: [],
+      replaced: [],
+    };
+
+    // Calculate initial emoji density
+    emojiAnalytics.calculateEmojiDensity(content, filePath);
+
+    // Process emojis with advanced logic
+    processedContent = content.replace(emojiRegex, (match, offset) => {
+      const preservationResult = this.shouldPreserveEmoji(
+        match,
+        offset,
+        content,
+      );
+
+      if (preservationResult.preserve) {
+        emojiAnalytics.recordEmoji(
+          match,
+          "preserved",
+          preservationResult,
+          filePath,
+        );
+        emojiReport.preserved.push({
+          emoji: match,
+          rule: preservationResult.rule,
+          position: offset,
+        });
+
+        if (preservationResult.action === "preserve_with_label") {
+          const label = this.getSemanticLabel(match);
+          emojiAnalytics.recordEmoji(
+            match,
+            "replaced",
+            { replacement: label },
+            filePath,
+          );
+          emojiReport.replaced.push({ emoji: match, replacement: label });
+          return label;
+        }
+
+        return match; // Keep original
+      } else {
+        emojiAnalytics.recordEmoji(match, "removed", {}, filePath);
+        emojiReport.removed.push({ emoji: match, position: offset });
+        totalChanges++;
+        return ""; // Remove
+      }
+    });
+
+    return {
+      content: processedContent,
+      changes: totalChanges,
+      emojiReport,
+    };
+  }
+
+  getSemanticLabel(emoji) {
+    const semanticMap = {
+      "🔧": "[Configuration]",
+      "⚙️": "[Settings]",
+      "🛠️": "[Tools]",
+      "🧹": "[Cleanup]",
+      "⚛️": "[React]",
+      "🚀": "[Performance]",
+      "⚡": "[Fast]",
+      "🛡️": "[Security]",
+      "✅": "[Success]",
+      "📝": "[Documentation]",
+      "⚠️": "[Warning]",
+      "❌": "[Error]",
+      "🔍": "[Search]",
+      "💡": "[Tip]",
+      "➡️": "→",
+      "⬅️": "←",
+      "⬆️": "↑",
+      "⬇️": "↓",
+      "1️⃣": "1",
+      "2️⃣": "2",
+      "3️⃣": "3",
+      "4️⃣": "4",
+      "5️⃣": "5",
+      "6️⃣": "6",
+    };
+
+    return semanticMap[emoji] || "[Symbol]";
+  }
+}
+
+// Global processor instance
+const emojiProcessor = new EmojiProcessor();
+
 // Apply pattern fixes to a file
 function applyPatternFixes(filePath, content) {
   let fixedContent = content;
   let changesCount = 0;
   const fileExt = path.extname(filePath).slice(1);
 
-  // Apply basic pattern replacements
+  // First, apply intelligent emoji processing
+  const emojiResult = emojiProcessor.processEmojiInBatch(content, filePath);
+  fixedContent = emojiResult.content;
+  changesCount += emojiResult.changes;
+
+  if (emojiResult.changes > 0) {
+    console.log(`  🎯 Smart Emoji Processing: ${emojiResult.changes} changes`);
+    console.log(
+      `    📊 Preserved: ${emojiResult.emojiReport.preserved.length}`,
+    );
+    console.log(`    🗑️ Removed: ${emojiResult.emojiReport.removed.length}`);
+    console.log(`    🔄 Replaced: ${emojiResult.emojiReport.replaced.length}`);
+  }
+
+  // Apply remaining pattern replacements (skip emoji patterns as they're handled above)
   patterns.forEach((pattern) => {
+    // Skip emoji-related patterns as they're handled by the smart processor
+    if (
+      pattern.name.includes("Emoji") ||
+      pattern.name.includes("Arrow") ||
+      pattern.name.includes("Number")
+    ) {
+      return;
+    }
+
     if (pattern.fileTypes.includes(fileExt)) {
       const before = fixedContent;
 
@@ -547,7 +732,7 @@ async function runLayer2Fixes() {
         }
       }
     } catch (error) {
-      console.error(`❌ Error processing ${filePath}:`, error.message);
+      console.error(`��� Error processing ${filePath}:`, error.message);
     }
   }
 
