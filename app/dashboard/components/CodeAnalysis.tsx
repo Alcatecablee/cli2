@@ -216,6 +216,11 @@ export default function BlogPost({ post }) {
           <div className="stat-content">
             <div className="stat-value">{recentFiles.length}</div>
             <div className="stat-label">Files Analyzed</div>
+            <div className="stat-change">
+              <span className="trend-indicator success">
+                ↗ Ready for Upload
+              </span>
+            </div>
           </div>
         </div>
 
@@ -235,6 +240,11 @@ export default function BlogPost({ post }) {
           <div className="stat-content">
             <div className="stat-value">Ready</div>
             <div className="stat-label">Analysis Engine</div>
+            <div className="stat-change">
+              <span className="trend-indicator success">
+                ↗ Online & Optimized
+              </span>
+            </div>
           </div>
         </div>
 
@@ -256,6 +266,11 @@ export default function BlogPost({ post }) {
           <div className="stat-content">
             <div className="stat-value">6</div>
             <div className="stat-label">Analysis Layers</div>
+            <div className="stat-breakdown">
+              <span className="high">Config</span>
+              <span className="medium">Patterns</span>
+              <span className="low">Components</span>
+            </div>
           </div>
         </div>
 
@@ -276,6 +291,22 @@ export default function BlogPost({ post }) {
           <div className="stat-content">
             <div className="stat-value">Fast</div>
             <div className="stat-label">Processing</div>
+            <div className="stat-trend">
+              <span className="trend-icon improving">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="16"
+                  height="16"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+                  <polyline points="17 6 23 6 23 12" />
+                </svg>
+              </span>
+              <span className="trend-text">optimized</span>
+            </div>
           </div>
         </div>
       </div>
@@ -667,6 +698,63 @@ export default function MyComponent() {
           color: rgba(255, 255, 255, 0.8);
           margin-bottom: 0.5rem;
           font-weight: 500;
+        }
+
+        .stat-change {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+        }
+
+        .trend-indicator {
+          font-size: 0.75rem;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+
+        .trend-indicator.success {
+          color: #4caf50;
+        }
+
+        .stat-breakdown {
+          display: flex;
+          gap: 0.75rem;
+          font-size: 0.75rem;
+          font-weight: 500;
+        }
+
+        .stat-breakdown .high {
+          color: #e53e3e;
+        }
+
+        .stat-breakdown .medium {
+          color: #ff9800;
+        }
+
+        .stat-breakdown .low {
+          color: #4caf50;
+        }
+
+        .stat-trend {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+        }
+
+        .trend-icon {
+          display: flex;
+          align-items: center;
+        }
+
+        .trend-icon.improving {
+          color: #4caf50;
+        }
+
+        .trend-text {
+          font-size: 0.75rem;
+          color: rgba(255, 255, 255, 0.7);
+          text-transform: capitalize;
         }
 
         .analysis-content {
