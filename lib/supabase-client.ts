@@ -107,9 +107,19 @@ async function refreshToken(refreshToken: string): Promise<boolean> {
     if (error) {
       console.error("Token refresh failed:", error.message);
 
+      // Handle specific refresh token errors
+      if (
+        error.message.includes("Invalid Refresh Token") ||
+        error.message.includes("Already Used") ||
+        error.message.includes("refresh_token_not_found")
+      ) {
+        console.log(
+          "Refresh token is invalid or already used, clearing session",
+        );
+      }
+
       // Clear invalid sessions
-      localStorage.removeItem("supabase_session");
-      localStorage.removeItem("user_data");
+      clearAuthStorage();
       return false;
     }
 
@@ -125,9 +135,18 @@ async function refreshToken(refreshToken: string): Promise<boolean> {
     return false;
   } catch (error) {
     console.error("Error during token refresh:", error);
+    clearAuthStorage();
+    return false;
+  }
+}
+
+// Helper function to safely clear auth storage
+function clearAuthStorage() {
+  try {
     localStorage.removeItem("supabase_session");
     localStorage.removeItem("user_data");
-    return false;
+  } catch (error) {
+    console.error("Error clearing auth storage:", error);
   }
 }
 
