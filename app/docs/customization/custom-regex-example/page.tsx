@@ -282,7 +282,8 @@ export default function CustomRegexExamplePage() {
                     <div className="text-gray-300 text-sm mt-3">
                       <strong>Before:</strong>{" "}
                       <code>
-                        &lt;Button size="large" type="primary" onClick={handler}
+                        &lt;Button size="large" type="primary" onClick=
+                        {`{handler}`}
                         &gt;
                       </code>
                       <br />
