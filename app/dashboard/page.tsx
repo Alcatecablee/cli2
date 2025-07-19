@@ -1544,8 +1544,22 @@ export default function Dashboard() {
               role="region"
               aria-labelledby="config-title"
             >
-              <h3 id="controls-title">Analysis Configuration</h3>
-              <div className="controls-grid">
+              <div className="config-header">
+                <div className="config-title">
+                  <h2 id="config-title">Analysis Configuration</h2>
+                  <p>
+                    Configure analysis mode, engine type, and layer selection
+                  </p>
+                </div>
+                <div className="config-status">
+                  <div className="status-indicator">
+                    <div className="status-dot"></div>
+                    <span>Configuration Ready</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="config-grid">
                 <fieldset className="control-group">
                   <legend className="control-label">MODE</legend>
                   <div
