@@ -1582,35 +1582,26 @@ body {
 }
 
 .enhanced-settings-spotlight .dry-run-mode {
-  background: rgba(76, 175, 80, 0.1);
-  border-color: rgba(76, 175, 80, 0.3);
-  color: rgba(76, 175, 80, 0.9);
+  color: #4caf50;
 }
 
 .enhanced-settings-spotlight .apply-mode {
-  background: rgba(255, 152, 0, 0.1);
-  border-color: rgba(255, 152, 0, 0.3);
-  color: rgba(255, 152, 0, 0.9);
+  color: #ff9800;
 }
 
 .enhanced-settings-spotlight .layers-badge {
-  background: rgba(33, 150, 243, 0.1);
-  border-color: rgba(33, 150, 243, 0.3);
   color: rgba(33, 150, 243, 0.9);
 }
 
 .enhanced-settings-spotlight .engine-badge {
-  background: rgba(156, 39, 176, 0.1);
-  border-color: rgba(156, 39, 176, 0.3);
-  color: rgba(156, 39, 176, 0.9);
+  color: rgba(255, 255, 255, 0.8);
 }
 
 .enhanced-settings-spotlight .badge-icon {
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  opacity: 0.8;
+  font-size: 0.7rem;
+  font-weight: 600;
+  opacity: 0.7;
+  margin-right: 0.25rem;
 }
 
 /* Mobile adjustments for enhanced settings */
