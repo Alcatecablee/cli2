@@ -290,7 +290,7 @@ export default function CustomRegexExamplePage() {
                       <strong>After:</strong>{" "}
                       <code>
                         &lt;Button size="large" variant="solid" onClick=
-                        {handler}&gt;
+                        {`{handler}`}&gt;
                       </code>
                     </div>
                   </div>
