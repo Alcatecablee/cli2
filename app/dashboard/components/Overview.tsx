@@ -958,6 +958,7 @@ export default function Overview({ analysisHistory }: OverviewProps) {
           width: 24px;
           height: 24px;
           border-radius: 50%;
+          border: 2px solid #000000;
           display: flex;
           align-items: center;
           justify-content: center;
