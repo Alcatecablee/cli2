@@ -4,13 +4,18 @@
   "buildCommand": "npm run build",
   "devCommand": "npm run dev",
   "installCommand": "npm install",
-  "outputDirectory": ".next",
   "env": {
     "STORAGE_URL_DATABASE": "@storage-url-database",
     "STORAGE_URL_REDIS": "@storage-url-redis",
     "STORAGE_URL_S3": "@storage-url-s3",
     "STORAGE_URL_BUCKET": "@storage-url-bucket",
-    "STORAGE_URL_CDN": "@storage-url-cdn"
+    "STORAGE_URL_CDN": "@storage-url-cdn",
+    "NEXT_PRIVATE_STANDALONE": "true"
+  },
+  "functions": {
+    "app/api/**/*.ts": {
+      "maxDuration": 30
+    }
   },
   "git": {
     "deploymentEnabled": {
