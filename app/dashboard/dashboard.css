@@ -3299,3 +3299,94 @@ legend {
     gap: 1rem;
   }
 }
+
+/* Analysis History Button Styles - GitHub Integration Style */
+.btn {
+  background: linear-gradient(
+    135deg,
+    rgba(33, 150, 243, 0.2) 0%,
+    rgba(33, 150, 243, 0.15) 50%,
+    rgba(255, 255, 255, 0.1) 100%
+  );
+  border: 2px solid #000000;
+  border-radius: 8px;
+  backdrop-filter: blur(20px) saturate(1.2);
+  -webkit-backdrop-filter: blur(20px) saturate(1.2);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 0.75rem 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.875rem;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.btn:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(33, 150, 243, 0.3) 0%,
+    rgba(33, 150, 243, 0.22) 50%,
+    rgba(255, 255, 255, 0.12) 100%
+  );
+  transform: translateY(-2px);
+  box-shadow:
+    0 12px 40px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Button variant styles */
+.btn.btn-secondary {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.15) 0%,
+    rgba(255, 255, 255, 0.1) 50%,
+    rgba(255, 255, 255, 0.05) 100%
+  );
+}
+
+.btn.btn-secondary:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.2) 0%,
+    rgba(255, 255, 255, 0.15) 50%,
+    rgba(255, 255, 255, 0.08) 100%
+  );
+}
+
+.btn.btn-sm {
+  padding: 0.5rem 1rem;
+  font-size: 0.8rem;
+}
+
+.btn.btn-primary {
+  background: linear-gradient(
+    135deg,
+    rgba(76, 175, 80, 0.2) 0%,
+    rgba(76, 175, 80, 0.15) 50%,
+    rgba(255, 255, 255, 0.1) 100%
+  );
+}
+
+.btn.btn-primary:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(76, 175, 80, 0.3) 0%,
+    rgba(76, 175, 80, 0.22) 50%,
+    rgba(255, 255, 255, 0.12) 100%
+  );
+}
