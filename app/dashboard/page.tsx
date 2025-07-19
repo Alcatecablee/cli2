@@ -1790,7 +1790,7 @@ export default function Dashboard() {
           {(dashboardState.activeSection === "editor" ||
             dashboardState.activeSection === "samples") && (
             <div className="enhanced-settings-spotlight">
-              <strong>CURRENT ANALYSIS CONFIGURATION</strong>
+              <strong>Current Settings:</strong>
               <span
                 className={`setting-mode ${dashboardState.applyFixes ? "apply-mode" : "dry-run-mode"}`}
               >
