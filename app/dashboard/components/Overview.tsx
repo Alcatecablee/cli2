@@ -556,7 +556,7 @@ export default function Overview({ analysisHistory }: OverviewProps) {
             rgba(255, 255, 255, 0.1) 100%
           );
           color: #ffffff;
-          border: 1px solid rgba(33, 150, 243, 0.3);
+          border: 2px solid #000000;
         }
 
         .metrics-grid {
