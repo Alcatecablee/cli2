@@ -2071,11 +2071,31 @@ export default function Dashboard() {
                       layers,
                       dashboardState.applyFixes,
                     );
+
+                    // Auto-scroll to paste section when analyzing pasted code
+                    setTimeout(() => {
+                      scrollToSection(pasteSectionRef);
+                    }, 100);
                   }}
                   onFileUpload={handleFileUpload}
                   isLoading={dashboardState.isLoading}
                   currentFile={dashboardState.currentFile}
                   fileInputRef={fileInputRef}
+                  uploadSectionRef={uploadSectionRef}
+                  pasteSectionRef={pasteSectionRef}
+                  githubSectionRef={githubSectionRef}
+                  onModeChange={(mode) => {
+                    // Auto-scroll to appropriate section when mode changes
+                    setTimeout(() => {
+                      if (mode === "upload") {
+                        scrollToSection(uploadSectionRef);
+                      } else if (mode === "paste") {
+                        scrollToSection(pasteSectionRef);
+                      } else if (mode === "github") {
+                        scrollToSection(githubSectionRef);
+                      }
+                    }, 100);
+                  }}
                 />
               </ErrorBoundary>
             </div>
@@ -2841,7 +2861,7 @@ export default function Dashboard() {
 
           {/* Results Section */}
           {dashboardState.showResults && (
-            <div className="results-section">
+            <div className="results-section" ref={resultsSectionRef}>
               {dashboardState.isLoading ? (
                 <div className="loading-state">
                   <div className="loading-spinner"></div>
