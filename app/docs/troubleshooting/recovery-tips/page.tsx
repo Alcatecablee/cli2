@@ -8,24 +8,64 @@ export const metadata: Metadata = {
 
 export default function RecoveryTipsPage() {
   return (
-    <div className="min-h-screen bg-black text-white">
-      <div className="container mx-auto px-6 py-16">
-        {/* Header */}
-        <div className="text-center mb-16">
-          <h1 className="text-5xl font-bold bg-gradient-to-r from-white to-blue-400 bg-clip-text text-transparent mb-6">
+    <div className="min-h-screen bg-black text-white relative">
+      {/* Professional background with subtle patterns */}
+      <div className="absolute inset-0 bg-gradient-to-br from-black via-gray-900 to-black"></div>
+      <div className="absolute inset-0 opacity-20">
+        <div className="absolute top-20 left-10 w-72 h-72 bg-green-500/10 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-40 right-20 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl"></div>
+      </div>
+
+      <div className="relative z-10 container mx-auto px-6 py-16">
+        {/* Enhanced Header */}
+        <div className="text-center mb-20">
+          <div className="inline-flex items-center justify-center w-16 h-16 mb-6 bg-gradient-to-br from-green-500/20 to-blue-500/20 rounded-2xl border border-green-400/20">
+            <svg
+              className="w-8 h-8 text-green-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+              />
+            </svg>
+          </div>
+          <h1 className="text-6xl font-bold bg-gradient-to-r from-white via-gray-200 to-green-400 bg-clip-text text-transparent mb-6">
             Recovery Tips
           </h1>
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-            Recovery strategies and best practices for handling NeuroLint Pro
-            issues
+          <p className="text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
+            Comprehensive recovery strategies and best practices for handling
+            NeuroLint Pro issues
           </p>
+          <div className="flex items-center justify-center space-x-6 mt-8 text-sm text-gray-400">
+            <span className="flex items-center space-x-2">
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <path
+                  fillRule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              <span>12 min read</span>
+            </span>
+            <span className="flex items-center space-x-2">
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span>Recovery Guide</span>
+            </span>
+          </div>
         </div>
 
         {/* Main Content */}
-        <div className="max-w-4xl mx-auto space-y-12">
+        <div className="max-w-6xl mx-auto space-y-16">
           {/* Emergency Recovery */}
-          <section className="bg-gray-900/50 backdrop-blur-sm rounded-2xl p-8 border border-white/10">
-            <h2 className="text-3xl font-bold text-blue-400 mb-6">
+          <section className="bg-gradient-to-br from-gray-900/60 via-gray-800/40 to-gray-900/60 backdrop-blur-xl rounded-3xl p-10 border border-white/10 shadow-2xl shadow-black/50">
+            <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent mb-8">
               Emergency Recovery
             </h2>
 
@@ -35,7 +75,7 @@ export default function RecoveryTipsPage() {
                 <h3 className="text-xl font-semibold text-white mb-3">
                   Immediate Recovery Steps
                 </h3>
-                <div className="bg-black/30 rounded-lg p-6">
+                <div className="bg-gradient-to-br from-black/40 to-gray-900/60 rounded-2xl p-8 border border-white/5 hover:border-white/10 transition-all duration-300">
                   <h4 className="font-semibold text-red-400 mb-4">
                     If NeuroLint Pro Breaks Your Code
                   </h4>
@@ -117,7 +157,7 @@ export default function RecoveryTipsPage() {
                   Backup Recovery Methods
                 </h3>
                 <div className="grid md:grid-cols-2 gap-6">
-                  <div className="bg-black/30 rounded-lg p-6">
+                  <div className="bg-gradient-to-br from-black/40 to-gray-900/60 rounded-2xl p-8 border border-white/5 hover:border-white/10 transition-all duration-300">
                     <h4 className="font-semibold text-green-400 mb-3">
                       Automatic Backup Restore
                     </h4>
@@ -142,7 +182,7 @@ neurolint restore --interactive`}
                     </p>
                   </div>
 
-                  <div className="bg-black/30 rounded-lg p-6">
+                  <div className="bg-gradient-to-br from-black/40 to-gray-900/60 rounded-2xl p-8 border border-white/5 hover:border-white/10 transition-all duration-300">
                     <h4 className="font-semibold text-blue-400 mb-3">
                       Manual Backup Restore
                     </h4>
@@ -173,8 +213,8 @@ cp -r .neurolint/backups/latest/src/ ./`}
           </section>
 
           {/* Selective Recovery */}
-          <section className="bg-gray-900/50 backdrop-blur-sm rounded-2xl p-8 border border-white/10">
-            <h2 className="text-3xl font-bold text-blue-400 mb-6">
+          <section className="bg-gradient-to-br from-gray-900/60 via-gray-800/40 to-gray-900/60 backdrop-blur-xl rounded-3xl p-10 border border-white/10 shadow-2xl shadow-black/50">
+            <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent mb-8">
               Selective Recovery
             </h2>
 
@@ -185,7 +225,7 @@ cp -r .neurolint/backups/latest/src/ ./`}
                   File-by-File Recovery
                 </h3>
                 <div className="space-y-4">
-                  <div className="bg-black/30 rounded-lg p-6">
+                  <div className="bg-gradient-to-br from-black/40 to-gray-900/60 rounded-2xl p-8 border border-white/5 hover:border-white/10 transition-all duration-300">
                     <h4 className="font-semibold text-yellow-400 mb-3">
                       When Only Some Files Have Issues
                     </h4>
@@ -215,7 +255,7 @@ neurolint restore --select-files`}
                     </div>
                   </div>
 
-                  <div className="bg-black/30 rounded-lg p-6">
+                  <div className="bg-gradient-to-br from-black/40 to-gray-900/60 rounded-2xl p-8 border border-white/5 hover:border-white/10 transition-all duration-300">
                     <h4 className="font-semibold text-yellow-400 mb-3">
                       Layer-Specific Recovery
                     </h4>
@@ -250,8 +290,8 @@ neurolint restore --exclude-layer=4`}
           </section>
 
           {/* Prevention Strategies */}
-          <section className="bg-gray-900/50 backdrop-blur-sm rounded-2xl p-8 border border-white/10">
-            <h2 className="text-3xl font-bold text-blue-400 mb-6">
+          <section className="bg-gradient-to-br from-gray-900/60 via-gray-800/40 to-gray-900/60 backdrop-blur-xl rounded-3xl p-10 border border-white/10 shadow-2xl shadow-black/50">
+            <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent mb-8">
               Prevention Strategies
             </h2>
 
@@ -262,7 +302,7 @@ neurolint restore --exclude-layer=4`}
                   Pre-execution Safety Measures
                 </h3>
                 <div className="grid md:grid-cols-2 gap-6">
-                  <div className="bg-black/30 rounded-lg p-6">
+                  <div className="bg-gradient-to-br from-black/40 to-gray-900/60 rounded-2xl p-8 border border-white/5 hover:border-white/10 transition-all duration-300">
                     <h4 className="font-semibold text-green-400 mb-3">
                       Always Use Dry Run First
                     </h4>
@@ -286,7 +326,7 @@ neurolint fix --dry-run --output=preview.json`}
                     </p>
                   </div>
 
-                  <div className="bg-black/30 rounded-lg p-6">
+                  <div className="bg-gradient-to-br from-black/40 to-gray-900/60 rounded-2xl p-8 border border-white/5 hover:border-white/10 transition-all duration-300">
                     <h4 className="font-semibold text-green-400 mb-3">
                       Git Best Practices
                     </h4>
@@ -312,7 +352,7 @@ neurolint config set backupRetention 10`}
                     </p>
                   </div>
 
-                  <div className="bg-black/30 rounded-lg p-6">
+                  <div className="bg-gradient-to-br from-black/40 to-gray-900/60 rounded-2xl p-8 border border-white/5 hover:border-white/10 transition-all duration-300">
                     <h4 className="font-semibold text-green-400 mb-3">
                       Incremental Approach
                     </h4>
@@ -338,7 +378,7 @@ neurolint fix src/components/`}
                     </p>
                   </div>
 
-                  <div className="bg-black/30 rounded-lg p-6">
+                  <div className="bg-gradient-to-br from-black/40 to-gray-900/60 rounded-2xl p-8 border border-white/5 hover:border-white/10 transition-all duration-300">
                     <h4 className="font-semibold text-green-400 mb-3">
                       Configuration Validation
                     </h4>
@@ -368,8 +408,8 @@ neurolint verify-layers`}
           </section>
 
           {/* Recovery Workflows */}
-          <section className="bg-gray-900/50 backdrop-blur-sm rounded-2xl p-8 border border-white/10">
-            <h2 className="text-3xl font-bold text-blue-400 mb-6">
+          <section className="bg-gradient-to-br from-gray-900/60 via-gray-800/40 to-gray-900/60 backdrop-blur-xl rounded-3xl p-10 border border-white/10 shadow-2xl shadow-black/50">
+            <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent mb-8">
               Recovery Workflows
             </h2>
 
@@ -379,7 +419,7 @@ neurolint verify-layers`}
                 <h3 className="text-xl font-semibold text-white mb-3">
                   Complete Recovery Workflow
                 </h3>
-                <div className="bg-black/30 rounded-lg p-6">
+                <div className="bg-gradient-to-br from-black/40 to-gray-900/60 rounded-2xl p-8 border border-white/5 hover:border-white/10 transition-all duration-300">
                   <div className="grid md:grid-cols-2 gap-8">
                     <div>
                       <h4 className="font-semibold text-purple-400 mb-4">
@@ -414,7 +454,7 @@ neurolint verify-layers`}
                 <h3 className="text-xl font-semibold text-white mb-3">
                   Post-Recovery Analysis
                 </h3>
-                <div className="bg-black/30 rounded-lg p-6">
+                <div className="bg-gradient-to-br from-black/40 to-gray-900/60 rounded-2xl p-8 border border-white/5 hover:border-white/10 transition-all duration-300">
                   <h4 className="font-semibold text-orange-400 mb-4">
                     Learn from Issues
                   </h4>
@@ -454,8 +494,8 @@ neurolint review-patterns --mark-problematic`}
           </section>
 
           {/* Recovery Checklist */}
-          <section className="bg-gray-900/50 backdrop-blur-sm rounded-2xl p-8 border border-white/10">
-            <h2 className="text-3xl font-bold text-blue-400 mb-6">
+          <section className="bg-gradient-to-br from-gray-900/60 via-gray-800/40 to-gray-900/60 backdrop-blur-xl rounded-3xl p-10 border border-white/10 shadow-2xl shadow-black/50">
+            <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent mb-8">
               Recovery Checklist
             </h2>
 
