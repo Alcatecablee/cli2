@@ -7,24 +7,50 @@ export const metadata: Metadata = {
 
 export default function CustomRegexExamplePage() {
   return (
-    <div className="min-h-screen bg-black text-white">
-      <div className="container mx-auto px-6 py-16">
-        {/* Header */}
-        <div className="text-center mb-16">
-          <h1 className="text-5xl font-bold bg-gradient-to-r from-white to-blue-400 bg-clip-text text-transparent mb-6">
+        <div className="min-h-screen bg-black text-white relative">
+      {/* Professional background with subtle patterns */}
+      <div className="absolute inset-0 bg-gradient-to-br from-black via-gray-900 to-black"></div>
+      <div className="absolute inset-0 opacity-20">
+        <div className="absolute top-20 left-10 w-72 h-72 bg-orange-500/10 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-40 right-20 w-96 h-96 bg-red-500/10 rounded-full blur-3xl"></div>
+      </div>
+
+      <div className="relative z-10 container mx-auto px-6 py-16">
+        {/* Enhanced Header */}
+        <div className="text-center mb-20">
+          <div className="inline-flex items-center justify-center w-16 h-16 mb-6 bg-gradient-to-br from-orange-500/20 to-red-500/20 rounded-2xl border border-orange-400/20">
+            <svg className="w-8 h-8 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+            </svg>
+          </div>
+          <h1 className="text-6xl font-bold bg-gradient-to-r from-white via-gray-200 to-orange-400 bg-clip-text text-transparent mb-6">
             Custom Regex Examples
           </h1>
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
             Practical examples and patterns for creating powerful regex transformations
           </p>
+          <div className="flex items-center justify-center space-x-6 mt-8 text-sm text-gray-400">
+            <span className="flex items-center space-x-2">
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
+              </svg>
+              <span>22 min read</span>
+            </span>
+            <span className="flex items-center space-x-2">
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span>Advanced Examples</span>
+            </span>
+          </div>
         </div>
 
-        {/* Main Content */}
-        <div className="max-w-4xl mx-auto space-y-12">
+                {/* Main Content */}
+        <div className="max-w-6xl mx-auto space-y-16">
           
           {/* Regex Fundamentals */}
-          <section className="bg-gray-900/50 backdrop-blur-sm rounded-2xl p-8 border border-white/10">
-            <h2 className="text-3xl font-bold text-blue-400 mb-6">Regex Pattern Fundamentals</h2>
+                    <section className="bg-gradient-to-br from-gray-900/60 via-gray-800/40 to-gray-900/60 backdrop-blur-xl rounded-3xl p-10 border border-white/10 shadow-2xl shadow-black/50">
+                        <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent mb-8">Regex Pattern Fundamentals</h2>
             <div className="grid md:grid-cols-2 gap-8">
               <div>
                 <h3 className="text-xl font-semibold text-white mb-4">Essential Patterns</h3>
@@ -72,8 +98,8 @@ export default function CustomRegexExamplePage() {
           </section>
 
           {/* Basic Transformation Examples */}
-          <section className="bg-gray-900/50 backdrop-blur-sm rounded-2xl p-8 border border-white/10">
-            <h2 className="text-3xl font-bold text-blue-400 mb-6">Basic Transformation Examples</h2>
+                    <section className="bg-gradient-to-br from-gray-900/60 via-gray-800/40 to-gray-900/60 backdrop-blur-xl rounded-3xl p-10 border border-white/10 shadow-2xl shadow-black/50">
+                        <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent mb-8">Basic Transformation Examples</h2>
             
             <div className="space-y-6">
               
@@ -159,8 +185,8 @@ export default function CustomRegexExamplePage() {
           </section>
 
           {/* Advanced Capture Groups */}
-          <section className="bg-gray-900/50 backdrop-blur-sm rounded-2xl p-8 border border-white/10">
-            <h2 className="text-3xl font-bold text-blue-400 mb-6">Advanced Capture Groups</h2>
+                    <section className="bg-gradient-to-br from-gray-900/60 via-gray-800/40 to-gray-900/60 backdrop-blur-xl rounded-3xl p-10 border border-white/10 shadow-2xl shadow-black/50">
+                        <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent mb-8">Advanced Capture Groups</h2>
             
             <div className="space-y-6">
               
@@ -239,8 +265,8 @@ export default function CustomRegexExamplePage() {
           </section>
 
           {/* Function and Hook Transformations */}
-          <section className="bg-gray-900/50 backdrop-blur-sm rounded-2xl p-8 border border-white/10">
-            <h2 className="text-3xl font-bold text-blue-400 mb-6">Function and Hook Transformations</h2>
+                    <section className="bg-gradient-to-br from-gray-900/60 via-gray-800/40 to-gray-900/60 backdrop-blur-xl rounded-3xl p-10 border border-white/10 shadow-2xl shadow-black/50">
+                        <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent mb-8">Function and Hook Transformations</h2>
             
             <div className="space-y-6">
               
@@ -323,8 +349,8 @@ export default function CustomRegexExamplePage() {
           </section>
 
           {/* Context-Aware Patterns */}
-          <section className="bg-gray-900/50 backdrop-blur-sm rounded-2xl p-8 border border-white/10">
-            <h2 className="text-3xl font-bold text-blue-400 mb-6">Context-Aware Patterns</h2>
+                    <section className="bg-gradient-to-br from-gray-900/60 via-gray-800/40 to-gray-900/60 backdrop-blur-xl rounded-3xl p-10 border border-white/10 shadow-2xl shadow-black/50">
+                        <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent mb-8">Context-Aware Patterns</h2>
             
             <div className="space-y-6">
               
@@ -419,8 +445,8 @@ export default function CustomRegexExamplePage() {
           </section>
 
           {/* Multi-Step Transformations */}
-          <section className="bg-gray-900/50 backdrop-blur-sm rounded-2xl p-8 border border-white/10">
-            <h2 className="text-3xl font-bold text-blue-400 mb-6">Multi-Step Transformations</h2>
+                    <section className="bg-gradient-to-br from-gray-900/60 via-gray-800/40 to-gray-900/60 backdrop-blur-xl rounded-3xl p-10 border border-white/10 shadow-2xl shadow-black/50">
+                        <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent mb-8">Multi-Step Transformations</h2>
             
             <div className="space-y-6">
               
@@ -547,8 +573,8 @@ const multiStepMigration = {
           </section>
 
           {/* Testing Regex Patterns */}
-          <section className="bg-gray-900/50 backdrop-blur-sm rounded-2xl p-8 border border-white/10">
-            <h2 className="text-3xl font-bold text-blue-400 mb-6">Testing Regex Patterns</h2>
+                    <section className="bg-gradient-to-br from-gray-900/60 via-gray-800/40 to-gray-900/60 backdrop-blur-xl rounded-3xl p-10 border border-white/10 shadow-2xl shadow-black/50">
+                        <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent mb-8">Testing Regex Patterns</h2>
             
             <div className="space-y-6">
               
@@ -747,8 +773,8 @@ edgeCaseTester.runTests();`}
           </section>
 
           {/* Best Practices */}
-          <section className="bg-gray-900/50 backdrop-blur-sm rounded-2xl p-8 border border-white/10">
-            <h2 className="text-3xl font-bold text-blue-400 mb-6">Regex Best Practices</h2>
+                    <section className="bg-gradient-to-br from-gray-900/60 via-gray-800/40 to-gray-900/60 backdrop-blur-xl rounded-3xl p-10 border border-white/10 shadow-2xl shadow-black/50">
+                        <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent mb-8">Regex Best Practices</h2>
             
             <div className="grid md:grid-cols-2 gap-6">
               <div className="space-y-4">
