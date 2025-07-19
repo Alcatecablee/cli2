@@ -6,6 +6,10 @@ interface CodeAnalysisProps {
   isLoading: boolean;
   currentFile: string | null;
   fileInputRef: React.RefObject<HTMLInputElement>;
+  uploadSectionRef?: React.RefObject<HTMLDivElement>;
+  pasteSectionRef?: React.RefObject<HTMLDivElement>;
+  githubSectionRef?: React.RefObject<HTMLDivElement>;
+  onModeChange?: (mode: "upload" | "paste" | "github") => void;
 }
 
 export default function CodeAnalysis({
@@ -14,6 +18,10 @@ export default function CodeAnalysis({
   isLoading,
   currentFile,
   fileInputRef,
+  uploadSectionRef,
+  pasteSectionRef,
+  githubSectionRef,
+  onModeChange,
 }: CodeAnalysisProps) {
   const [codeInput, setCodeInput] = useState("");
   const [dragActive, setDragActive] = useState(false);
@@ -182,7 +190,10 @@ export default function BlogPost({ post }) {
           {(["upload", "paste", "github"] as const).map((mode) => (
             <button
               key={mode}
-              onClick={() => setAnalysisMode(mode)}
+              onClick={() => {
+                setAnalysisMode(mode);
+                onModeChange?.(mode);
+              }}
               className={`mode-btn ${analysisMode === mode ? "active" : ""}`}
             >
               {mode === "upload"
@@ -314,7 +325,7 @@ export default function BlogPost({ post }) {
       {/* Main Analysis Area */}
       <div className="analysis-content">
         {analysisMode === "upload" && (
-          <div className="upload-section">
+          <div className="upload-section" ref={uploadSectionRef}>
             <div
               className={`upload-area ${dragActive ? "drag-active" : ""}`}
               onClick={() => fileInputRef.current?.click()}
@@ -361,7 +372,7 @@ export default function BlogPost({ post }) {
         )}
 
         {analysisMode === "paste" && (
-          <div className="paste-section">
+          <div className="paste-section" ref={pasteSectionRef}>
             <div className="code-editor-container">
               <div className="editor-header">
                 <div className="editor-tabs">
@@ -442,7 +453,7 @@ export default function MyComponent() {
         )}
 
         {analysisMode === "github" && (
-          <div className="github-section">
+          <div className="github-section" ref={githubSectionRef}>
             <div className="github-card">
               <div className="github-icon">
                 <svg
