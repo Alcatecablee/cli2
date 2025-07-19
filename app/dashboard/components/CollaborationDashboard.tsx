@@ -251,8 +251,15 @@ export default function CollaborationDashboard() {
       };
 
       wsRef.current.onerror = (error) => {
-        console.error("WebSocket error:", error);
-        setError("Connection error occurred");
+        console.error("WebSocket error details:", {
+          type: error.type,
+          target: error.target,
+          timeStamp: error.timeStamp,
+          eventPhase: error.eventPhase,
+        });
+        setError(
+          `WebSocket connection failed: ${error.type || "Connection error"}`,
+        );
       };
     } catch (e) {
       console.error("Failed to initialize WebSocket:", e);
