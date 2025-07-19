@@ -54,7 +54,16 @@ export default function CodeAnalysis({
     }
 
     onAnalyzeCode(code, filename);
-  }, [codeInput, onAnalyzeCode]);
+
+    // Scroll to paste section to show analysis is starting
+    if (pasteSectionRef?.current) {
+      pasteSectionRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+        inline: "nearest",
+      });
+    }
+  }, [codeInput, onAnalyzeCode, pasteSectionRef]);
 
   const handleClearCode = useCallback(() => {
     setCodeInput("");
