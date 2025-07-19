@@ -1790,7 +1790,7 @@ export default function Dashboard() {
           {(dashboardState.activeSection === "editor" ||
             dashboardState.activeSection === "samples") && (
             <div className="enhanced-settings-spotlight">
-              <strong>Current Settings:</strong>{" "}
+              <strong>🎯 CURRENT ANALYSIS CONFIGURATION</strong>
               <span
                 style={{
                   color: dashboardState.applyFixes ? "#ff9800" : "#4caf50",
