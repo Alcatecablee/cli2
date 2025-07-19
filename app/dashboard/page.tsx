@@ -1810,8 +1810,8 @@ export default function Dashboard() {
                     ? "All 6 Layers"
                     : `Custom Layers [${dashboardState.selectedLayers.join(",")}]`}
               </span>
-              {" • "}
-              <span style={{ color: "rgba(255, 255, 255, 0.8)" }}>
+              <span className="setting-mode engine-badge">
+                <span className="badge-icon">🚀</span>
                 {useEnhanced ? "Enhanced AST Engine" : "Standard Engine"}
               </span>
             </div>
