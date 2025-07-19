@@ -38,6 +38,7 @@ export default function RootLayout({
         />
       </head>
       <body suppressHydrationWarning={true}>
+        <AuthErrorHandler />
         <ScrollToTop />
         {/* Space Shooting Stars */}
         <div className="shooting-star"></div>
