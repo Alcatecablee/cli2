@@ -8,30 +8,71 @@ export const metadata: Metadata = {
 
 export default function DryRunSafetyPage() {
   return (
-    <div className="min-h-screen bg-black text-white">
-      <div className="container mx-auto px-6 py-16">
-        {/* Header */}
-        <div className="text-center mb-16">
-          <h1 className="text-5xl font-bold bg-gradient-to-r from-white to-blue-400 bg-clip-text text-transparent mb-6">
+    <div className="min-h-screen bg-black text-white relative">
+      {/* Professional background with subtle patterns */}
+      <div className="absolute inset-0 bg-gradient-to-br from-black via-gray-900 to-black"></div>
+      <div className="absolute inset-0 opacity-20">
+        <div className="absolute top-20 left-10 w-72 h-72 bg-cyan-500/10 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-40 right-20 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl"></div>
+      </div>
+
+      <div className="relative z-10 container mx-auto px-6 py-16">
+        {/* Enhanced Header */}
+        <div className="text-center mb-20">
+          <div className="inline-flex items-center justify-center w-16 h-16 mb-6 bg-gradient-to-br from-cyan-500/20 to-blue-500/20 rounded-2xl border border-cyan-400/20">
+            <svg
+              className="w-8 h-8 text-cyan-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+              />
+            </svg>
+          </div>
+          <h1 className="text-6xl font-bold bg-gradient-to-r from-white via-gray-200 to-cyan-400 bg-clip-text text-transparent mb-6">
             Dry Run Safety
           </h1>
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-            Understanding and using dry run mode for safe code transformations
+          <p className="text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
+            Complete guide to understanding and using dry run mode for safe code
+            transformations
           </p>
+          <div className="flex items-center justify-center space-x-6 mt-8 text-sm text-gray-400">
+            <span className="flex items-center space-x-2">
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <path
+                  fillRule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              <span>18 min read</span>
+            </span>
+            <span className="flex items-center space-x-2">
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span>Safety Guide</span>
+            </span>
+          </div>
         </div>
 
         {/* Main Content */}
-        <div className="max-w-4xl mx-auto space-y-12">
+        <div className="max-w-6xl mx-auto space-y-16">
           {/* What is Dry Run */}
-          <section className="bg-gray-900/50 backdrop-blur-sm rounded-2xl p-8 border border-white/10">
-            <h2 className="text-3xl font-bold text-blue-400 mb-6">
+          <section className="bg-gradient-to-br from-gray-900/60 via-gray-800/40 to-gray-900/60 backdrop-blur-xl rounded-3xl p-10 border border-white/10 shadow-2xl shadow-black/50">
+            <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent mb-8">
               What is Dry Run Mode?
             </h2>
 
             <div className="space-y-6">
               {/* Core Concept */}
               <div>
-                <div className="bg-black/30 rounded-lg p-6">
+                <div className="bg-gradient-to-br from-black/40 to-gray-900/60 rounded-2xl p-8 border border-white/5 hover:border-white/10 transition-all duration-300">
                   <h3 className="text-xl font-semibold text-white mb-4">
                     Core Concept
                   </h3>
@@ -64,7 +105,7 @@ export default function DryRunSafetyPage() {
                   How Dry Run Works
                 </h3>
                 <div className="grid md:grid-cols-2 gap-6">
-                  <div className="bg-black/30 rounded-lg p-6">
+                  <div className="bg-gradient-to-br from-black/40 to-gray-900/60 rounded-2xl p-8 border border-white/5 hover:border-white/10 transition-all duration-300">
                     <h4 className="font-semibold text-green-400 mb-3">
                       Normal Execution
                     </h4>
@@ -82,7 +123,7 @@ export default function DryRunSafetyPage() {
                     </ol>
                   </div>
 
-                  <div className="bg-black/30 rounded-lg p-6">
+                  <div className="bg-gradient-to-br from-black/40 to-gray-900/60 rounded-2xl p-8 border border-white/5 hover:border-white/10 transition-all duration-300">
                     <h4 className="font-semibold text-blue-400 mb-3">
                       Dry Run Execution
                     </h4>
@@ -105,8 +146,8 @@ export default function DryRunSafetyPage() {
           </section>
 
           {/* Basic Dry Run Usage */}
-          <section className="bg-gray-900/50 backdrop-blur-sm rounded-2xl p-8 border border-white/10">
-            <h2 className="text-3xl font-bold text-blue-400 mb-6">
+          <section className="bg-gradient-to-br from-gray-900/60 via-gray-800/40 to-gray-900/60 backdrop-blur-xl rounded-3xl p-10 border border-white/10 shadow-2xl shadow-black/50">
+            <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent mb-8">
               Basic Dry Run Usage
             </h2>
 
@@ -117,7 +158,7 @@ export default function DryRunSafetyPage() {
                   Basic Commands
                 </h3>
                 <div className="space-y-4">
-                  <div className="bg-black/30 rounded-lg p-6">
+                  <div className="bg-gradient-to-br from-black/40 to-gray-900/60 rounded-2xl p-8 border border-white/5 hover:border-white/10 transition-all duration-300">
                     <h4 className="font-semibold text-green-400 mb-3">
                       Standard Dry Run
                     </h4>
@@ -142,7 +183,7 @@ neurolint fix --pattern="*.tsx" --dry-run`}
                     </p>
                   </div>
 
-                  <div className="bg-black/30 rounded-lg p-6">
+                  <div className="bg-gradient-to-br from-black/40 to-gray-900/60 rounded-2xl p-8 border border-white/5 hover:border-white/10 transition-all duration-300">
                     <h4 className="font-semibold text-green-400 mb-3">
                       Layer-Specific Dry Run
                     </h4>
@@ -171,8 +212,8 @@ neurolint fix --skip=layer5,layer6 --dry-run`}
           </section>
 
           {/* Advanced Dry Run Features */}
-          <section className="bg-gray-900/50 backdrop-blur-sm rounded-2xl p-8 border border-white/10">
-            <h2 className="text-3xl font-bold text-blue-400 mb-6">
+          <section className="bg-gradient-to-br from-gray-900/60 via-gray-800/40 to-gray-900/60 backdrop-blur-xl rounded-3xl p-10 border border-white/10 shadow-2xl shadow-black/50">
+            <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent mb-8">
               Advanced Dry Run Features
             </h2>
 
@@ -183,7 +224,7 @@ neurolint fix --skip=layer5,layer6 --dry-run`}
                   Output Formats & Analysis
                 </h3>
                 <div className="grid md:grid-cols-2 gap-6">
-                  <div className="bg-black/30 rounded-lg p-6">
+                  <div className="bg-gradient-to-br from-black/40 to-gray-900/60 rounded-2xl p-8 border border-white/5 hover:border-white/10 transition-all duration-300">
                     <h4 className="font-semibold text-blue-400 mb-3">
                       Output Formats
                     </h4>
@@ -204,7 +245,7 @@ neurolint fix --dry-run --output=preview.json`}
                     </div>
                   </div>
 
-                  <div className="bg-black/30 rounded-lg p-6">
+                  <div className="bg-gradient-to-br from-black/40 to-gray-900/60 rounded-2xl p-8 border border-white/5 hover:border-white/10 transition-all duration-300">
                     <h4 className="font-semibold text-blue-400 mb-3">
                       Analysis Options
                     </h4>
@@ -225,7 +266,7 @@ neurolint fix --dry-run --validate-syntax`}
                     </div>
                   </div>
 
-                  <div className="bg-black/30 rounded-lg p-6">
+                  <div className="bg-gradient-to-br from-black/40 to-gray-900/60 rounded-2xl p-8 border border-white/5 hover:border-white/10 transition-all duration-300">
                     <h4 className="font-semibold text-blue-400 mb-3">
                       Filtering Options
                     </h4>
@@ -246,7 +287,7 @@ neurolint fix --dry-run --exclude="**/*.test.tsx"`}
                     </div>
                   </div>
 
-                  <div className="bg-black/30 rounded-lg p-6">
+                  <div className="bg-gradient-to-br from-black/40 to-gray-900/60 rounded-2xl p-8 border border-white/5 hover:border-white/10 transition-all duration-300">
                     <h4 className="font-semibold text-blue-400 mb-3">
                       Interactive Preview
                     </h4>
@@ -272,8 +313,8 @@ neurolint fix --dry-run --html-report`}
           </section>
 
           {/* Safety Checklist */}
-          <section className="bg-gray-900/50 backdrop-blur-sm rounded-2xl p-8 border border-white/10">
-            <h2 className="text-3xl font-bold text-blue-400 mb-6">
+          <section className="bg-gradient-to-br from-gray-900/60 via-gray-800/40 to-gray-900/60 backdrop-blur-xl rounded-3xl p-10 border border-white/10 shadow-2xl shadow-black/50">
+            <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent mb-8">
               Pre-Execution Safety Checklist
             </h2>
 
@@ -395,8 +436,8 @@ neurolint fix --dry-run --html-report`}
           </section>
 
           {/* Common Dry Run Scenarios */}
-          <section className="bg-gray-900/50 backdrop-blur-sm rounded-2xl p-8 border border-white/10">
-            <h2 className="text-3xl font-bold text-blue-400 mb-6">
+          <section className="bg-gradient-to-br from-gray-900/60 via-gray-800/40 to-gray-900/60 backdrop-blur-xl rounded-3xl p-10 border border-white/10 shadow-2xl shadow-black/50">
+            <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent mb-8">
               Common Dry Run Scenarios
             </h2>
 
@@ -406,7 +447,7 @@ neurolint fix --dry-run --html-report`}
                 <h3 className="text-xl font-semibold text-white mb-3">
                   Testing New Patterns
                 </h3>
-                <div className="bg-black/30 rounded-lg p-6">
+                <div className="bg-gradient-to-br from-black/40 to-gray-900/60 rounded-2xl p-8 border border-white/5 hover:border-white/10 transition-all duration-300">
                   <h4 className="font-semibold text-yellow-400 mb-3">
                     Scenario: Adding Custom Transformation Pattern
                   </h4>
@@ -443,7 +484,7 @@ neurolint fix --dry-run --output=pattern-test-results.json`}
                 <h3 className="text-xl font-semibold text-white mb-3">
                   Large Codebase Migration
                 </h3>
-                <div className="bg-black/30 rounded-lg p-6">
+                <div className="bg-gradient-to-br from-black/40 to-gray-900/60 rounded-2xl p-8 border border-white/5 hover:border-white/10 transition-all duration-300">
                   <h4 className="font-semibold text-purple-400 mb-3">
                     Scenario: Migrating 1000+ Files
                   </h4>
@@ -482,8 +523,8 @@ neurolint fix --dry-run --execution-plan=migration-plan.json`}
           </section>
 
           {/* Interpreting Dry Run Results */}
-          <section className="bg-gray-900/50 backdrop-blur-sm rounded-2xl p-8 border border-white/10">
-            <h2 className="text-3xl font-bold text-blue-400 mb-6">
+          <section className="bg-gradient-to-br from-gray-900/60 via-gray-800/40 to-gray-900/60 backdrop-blur-xl rounded-3xl p-10 border border-white/10 shadow-2xl shadow-black/50">
+            <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent mb-8">
               Interpreting Dry Run Results
             </h2>
 
@@ -494,7 +535,7 @@ neurolint fix --dry-run --execution-plan=migration-plan.json`}
                   Understanding the Output
                 </h3>
                 <div className="grid md:grid-cols-2 gap-6">
-                  <div className="bg-black/30 rounded-lg p-6">
+                  <div className="bg-gradient-to-br from-black/40 to-gray-900/60 rounded-2xl p-8 border border-white/5 hover:border-white/10 transition-all duration-300">
                     <h4 className="font-semibold text-green-400 mb-3">
                       Good Signs
                     </h4>
@@ -508,7 +549,7 @@ neurolint fix --dry-run --execution-plan=migration-plan.json`}
                     </ul>
                   </div>
 
-                  <div className="bg-black/30 rounded-lg p-6">
+                  <div className="bg-gradient-to-br from-black/40 to-gray-900/60 rounded-2xl p-8 border border-white/5 hover:border-white/10 transition-all duration-300">
                     <h4 className="font-semibold text-red-400 mb-3">
                       Warning Signs
                     </h4>
@@ -556,8 +597,8 @@ Ready for execution: YES`}
           </section>
 
           {/* Best Practices */}
-          <section className="bg-gray-900/50 backdrop-blur-sm rounded-2xl p-8 border border-white/10">
-            <h2 className="text-3xl font-bold text-blue-400 mb-6">
+          <section className="bg-gradient-to-br from-gray-900/60 via-gray-800/40 to-gray-900/60 backdrop-blur-xl rounded-3xl p-10 border border-white/10 shadow-2xl shadow-black/50">
+            <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent mb-8">
               Dry Run Best Practices
             </h2>
 
