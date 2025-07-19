@@ -1556,75 +1556,24 @@ body {
   background: linear-gradient(
     135deg,
     rgba(33, 150, 243, 0.15) 0%,
-    rgba(33, 150, 243, 0.12) 25%,
-    rgba(255, 152, 0, 0.08) 50%,
-    rgba(76, 175, 80, 0.08) 75%,
+    rgba(33, 150, 243, 0.08) 50%,
     rgba(255, 255, 255, 0.05) 100%
   );
-  backdrop-filter: blur(30px) saturate(1.3);
-  -webkit-backdrop-filter: blur(30px) saturate(1.3);
-  border: 3px solid #000000;
-  border-radius: 20px;
+  backdrop-filter: blur(25px) saturate(1.2);
+  -webkit-backdrop-filter: blur(25px) saturate(1.2);
+  border: 2px solid #000000;
+  border-radius: 16px;
   box-shadow:
-    0 16px 64px rgba(33, 150, 243, 0.2),
-    0 8px 32px rgba(255, 152, 0, 0.1),
-    inset 0 2px 0 rgba(255, 255, 255, 0.15),
-    inset 0 -2px 0 rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-  animation: spotlightPulse 3s ease-in-out infinite;
+    0 8px 32px rgba(33, 150, 243, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
   text-align: center;
 }
 
-@keyframes spotlightPulse {
-  0%,
-  100% {
-    box-shadow:
-      0 16px 64px rgba(33, 150, 243, 0.2),
-      0 8px 32px rgba(255, 152, 0, 0.1),
-      inset 0 2px 0 rgba(255, 255, 255, 0.15),
-      inset 0 -2px 0 rgba(0, 0, 0, 0.1);
-  }
-  50% {
-    box-shadow:
-      0 20px 80px rgba(33, 150, 243, 0.3),
-      0 12px 48px rgba(255, 152, 0, 0.15),
-      inset 0 2px 0 rgba(255, 255, 255, 0.2),
-      inset 0 -2px 0 rgba(0, 0, 0, 0.15);
-  }
-}
-
-.enhanced-settings-spotlight::before {
-  content: "⚙️";
-  font-size: 2rem;
-  margin-right: 1rem;
-  animation: settingsRotate 6s linear infinite;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
-}
-
-@keyframes settingsRotate {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
 .enhanced-settings-spotlight strong {
-  font-size: 1.5rem;
-  font-weight: 800;
-  background: linear-gradient(
-    135deg,
-    #ffffff 0%,
-    rgba(33, 150, 243, 0.9) 25%,
-    rgba(255, 152, 0, 0.9) 50%,
-    rgba(76, 175, 80, 0.9) 75%,
-    #ffffff 100%
-  );
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  letter-spacing: 0.05em;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.025em;
   text-transform: uppercase;
   margin-right: 1.5rem;
 }
