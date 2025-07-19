@@ -723,9 +723,9 @@ export default function AnalyticsDashboard({
 
         .charts-section {
           display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 24px;
-          margin-bottom: 32px;
+          grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+          gap: 1.5rem;
+          margin-bottom: 2rem;
         }
 
         .chart-card {
@@ -765,7 +765,11 @@ export default function AnalyticsDashboard({
           align-items: end;
           gap: 12px;
           height: 100px;
-          margin-bottom: 16px;
+          margin-bottom: 1rem;
+          padding: 0.5rem;
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 8px;
         }
 
         .trend-day {
@@ -790,11 +794,21 @@ export default function AnalyticsDashboard({
         }
 
         .trend-bar.analyses {
-          background: rgba(33, 150, 243, 0.6);
+          background: linear-gradient(
+            135deg,
+            rgba(33, 150, 243, 0.8) 0%,
+            rgba(33, 150, 243, 0.6) 100%
+          );
+          border: 1px solid #000000;
         }
 
         .trend-bar.issues {
-          background: rgba(255, 152, 0, 0.6);
+          background: linear-gradient(
+            135deg,
+            rgba(255, 152, 0, 0.8) 0%,
+            rgba(255, 152, 0, 0.6) 100%
+          );
+          border: 1px solid #000000;
         }
 
         .trend-label {
@@ -804,8 +818,12 @@ export default function AnalyticsDashboard({
 
         .chart-legend {
           display: flex;
-          gap: 20px;
+          gap: 1.5rem;
           justify-content: center;
+          padding: 0.5rem;
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 8px;
         }
 
         .legend-item {
@@ -819,34 +837,57 @@ export default function AnalyticsDashboard({
         .legend-color {
           width: 12px;
           height: 12px;
-          border-radius: 2px;
+          border-radius: 4px;
         }
 
         .legend-color.analyses {
-          background: rgba(33, 150, 243, 0.8);
+          background: linear-gradient(
+            135deg,
+            rgba(33, 150, 243, 0.8) 0%,
+            rgba(33, 150, 243, 0.6) 100%
+          );
+          border: 1px solid #000000;
         }
 
         .legend-color.issues {
-          background: rgba(255, 152, 0, 0.8);
+          background: linear-gradient(
+            135deg,
+            rgba(255, 152, 0, 0.8) 0%,
+            rgba(255, 152, 0, 0.6) 100%
+          );
+          border: 1px solid #000000;
         }
 
         .issues-chart {
           display: flex;
           flex-direction: column;
-          gap: 12px;
+          gap: 0.75rem;
         }
 
         .no-issues {
           text-align: center;
-          color: rgba(255, 255, 255, 0.5);
-          padding: 20px;
+          color: rgba(255, 255, 255, 0.6);
+          padding: 1.5rem;
           font-style: italic;
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 8px;
         }
 
         .issue-bar {
           display: flex;
           flex-direction: column;
-          gap: 6px;
+          gap: 0.5rem;
+          padding: 0.5rem;
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 8px;
+          transition: all 0.3s ease;
+        }
+
+        .issue-bar:hover {
+          background: rgba(255, 255, 255, 0.05);
+          transform: translateY(-1px);
         }
 
         .issue-name {
@@ -859,13 +900,18 @@ export default function AnalyticsDashboard({
           position: relative;
           height: 24px;
           background: rgba(255, 255, 255, 0.05);
-          border-radius: 4px;
+          border: 1px solid #000000;
+          border-radius: 8px;
           overflow: hidden;
         }
 
         .issue-bar-fill {
           height: 100%;
-          background: rgba(33, 150, 243, 0.6);
+          background: linear-gradient(
+            135deg,
+            rgba(33, 150, 243, 0.8) 0%,
+            rgba(33, 150, 243, 0.6) 100%
+          );
           transition: width 0.3s ease;
         }
 
@@ -881,20 +927,30 @@ export default function AnalyticsDashboard({
 
         .usage-section {
           display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 24px;
+          grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+          gap: 1.5rem;
         }
 
         .layer-usage {
           display: flex;
           flex-direction: column;
-          gap: 12px;
+          gap: 0.75rem;
         }
 
         .layer-usage-item {
           display: flex;
           flex-direction: column;
-          gap: 6px;
+          gap: 0.5rem;
+          padding: 0.5rem;
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 8px;
+          transition: all 0.3s ease;
+        }
+
+        .layer-usage-item:hover {
+          background: rgba(255, 255, 255, 0.05);
+          transform: translateY(-1px);
         }
 
         .layer-name {
@@ -907,13 +963,18 @@ export default function AnalyticsDashboard({
           position: relative;
           height: 20px;
           background: rgba(255, 255, 255, 0.05);
-          border-radius: 4px;
+          border: 1px solid #000000;
+          border-radius: 8px;
           overflow: hidden;
         }
 
         .layer-bar-fill {
           height: 100%;
-          background: rgba(255, 152, 0, 0.8);
+          background: linear-gradient(
+            135deg,
+            rgba(255, 152, 0, 0.8) 0%,
+            rgba(255, 152, 0, 0.6) 100%
+          );
           transition: width 0.3s ease;
         }
 
@@ -930,24 +991,29 @@ export default function AnalyticsDashboard({
         .performance-metrics {
           display: flex;
           flex-direction: column;
-          gap: 16px;
+          gap: 0.75rem;
         }
 
         .perf-metric {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          padding: 12px 0;
-          border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+          padding: 0.75rem;
+          background: rgba(255, 255, 255, 0.05);
+          border: 1px solid #000000;
+          border-radius: 8px;
+          transition: all 0.3s ease;
         }
 
-        .perf-metric:last-child {
-          border-bottom: none;
+        .perf-metric:hover {
+          background: rgba(255, 255, 255, 0.08);
+          transform: translateY(-1px);
         }
 
         .perf-label {
-          color: rgba(255, 255, 255, 0.7);
-          font-size: 0.9rem;
+          color: rgba(255, 255, 255, 0.8);
+          font-size: 0.875rem;
+          font-weight: 500;
         }
 
         .perf-value {
