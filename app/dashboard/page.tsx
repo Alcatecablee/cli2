@@ -2099,6 +2099,13 @@ export default function Dashboard() {
                       }
                     }, 100);
                   }}
+                  onNavigateToGitHub={() => {
+                    // Navigate to GitHub integration section
+                    setDashboardState((prev) => ({
+                      ...prev,
+                      activeSection: "bulk",
+                    }));
+                  }}
                 />
               </ErrorBoundary>
             </div>
