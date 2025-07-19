@@ -694,7 +694,13 @@ export default function Dashboard() {
         }, 100);
       }
     },
-    [dashboardState.settings.autoSave, saveToHistory, session?.access_token],
+    [
+      dashboardState.settings.autoSave,
+      saveToHistory,
+      session?.access_token,
+      scrollToSection,
+      resultsSectionRef,
+    ],
   );
 
   const loadSampleFile = useCallback(
