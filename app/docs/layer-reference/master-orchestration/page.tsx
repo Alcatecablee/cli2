@@ -8,24 +8,75 @@ export const metadata: Metadata = {
 
 export default function MasterOrchestrationPage() {
   return (
-    <div className="min-h-screen bg-black text-white">
-      <div className="container mx-auto px-6 py-16">
-        {/* Header */}
-        <div className="text-center mb-16">
-          <h1 className="text-5xl font-bold bg-gradient-to-r from-white to-blue-400 bg-clip-text text-transparent mb-6">
+    <div className="min-h-screen bg-black text-white relative">
+      {/* Professional background with subtle patterns */}
+      <div className="absolute inset-0 bg-gradient-to-br from-black via-gray-900 to-black"></div>
+      <div className="absolute inset-0 opacity-20">
+        <div className="absolute top-20 left-10 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-40 right-20 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-128 h-128 bg-gradient-to-r from-cyan-500/5 to-blue-500/5 rounded-full blur-3xl"></div>
+      </div>
+
+      <div className="relative z-10 container mx-auto px-6 py-16">
+        {/* Enhanced Header */}
+        <div className="text-center mb-20">
+          <div className="inline-flex items-center justify-center w-20 h-20 mb-6 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-3xl border border-blue-400/20">
+            <svg
+              className="w-10 h-10 text-blue-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+              />
+            </svg>
+          </div>
+          <h1 className="text-7xl font-bold bg-gradient-to-r from-white via-blue-200 to-blue-400 bg-clip-text text-transparent mb-6">
             Master Orchestration
           </h1>
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-            Complete guide to NeuroLint Pro's 6-layer master orchestration
-            system
+          <p className="text-xl text-gray-300 max-w-5xl mx-auto leading-relaxed">
+            Complete guide to NeuroLint Pro's sophisticated 6-layer master
+            orchestration system
           </p>
+          <div className="flex items-center justify-center space-x-8 mt-8 text-sm text-gray-400">
+            <span className="flex items-center space-x-2">
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <path
+                  fillRule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              <span>25 min read</span>
+            </span>
+            <span className="flex items-center space-x-2">
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span>Advanced</span>
+            </span>
+            <span className="flex items-center space-x-2">
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <path
+                  fillRule="evenodd"
+                  d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              <span>6 Layers</span>
+            </span>
+          </div>
         </div>
 
         {/* Main Content */}
-        <div className="max-w-4xl mx-auto space-y-12">
+        <div className="max-w-7xl mx-auto space-y-16">
           {/* Orchestration Overview */}
-          <section className="bg-gray-900/50 backdrop-blur-sm rounded-2xl p-8 border border-white/10">
-            <h2 className="text-3xl font-bold text-blue-400 mb-6">
+          <section className="bg-gradient-to-br from-gray-900/60 via-gray-800/40 to-gray-900/60 backdrop-blur-xl rounded-3xl p-12 border border-white/10 shadow-2xl shadow-black/50">
+            <h2 className="text-5xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent mb-10">
               Orchestration Overview
             </h2>
 
@@ -35,7 +86,7 @@ export default function MasterOrchestrationPage() {
                 <h3 className="text-xl font-semibold text-white mb-3">
                   6-Layer Architecture
                 </h3>
-                <div className="bg-black/30 rounded-lg p-6">
+                <div className="bg-gradient-to-br from-black/40 to-gray-900/60 rounded-2xl p-8 border border-white/5 hover:border-white/10 transition-all duration-300">
                   <p className="text-gray-300 mb-6">
                     The Master Orchestration system coordinates all six
                     transformation layers, managing dependencies, data flow, and
@@ -143,8 +194,8 @@ export default function MasterOrchestrationPage() {
           </section>
 
           {/* Execution Flow */}
-          <section className="bg-gray-900/50 backdrop-blur-sm rounded-2xl p-8 border border-white/10">
-            <h2 className="text-3xl font-bold text-blue-400 mb-6">
+          <section className="bg-gradient-to-br from-gray-900/60 via-gray-800/40 to-gray-900/60 backdrop-blur-xl rounded-3xl p-12 border border-white/10 shadow-2xl shadow-black/50">
+            <h2 className="text-5xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent mb-10">
               Execution Flow
             </h2>
 
@@ -154,7 +205,7 @@ export default function MasterOrchestrationPage() {
                 <h3 className="text-xl font-semibold text-white mb-3">
                   Sequential Layer Processing
                 </h3>
-                <div className="bg-black/30 rounded-lg p-6">
+                <div className="bg-gradient-to-br from-black/40 to-gray-900/60 rounded-2xl p-8 border border-white/5 hover:border-white/10 transition-all duration-300">
                   <div className="space-y-4">
                     <div className="flex items-center space-x-4">
                       <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-black font-bold">
@@ -231,7 +282,7 @@ export default function MasterOrchestrationPage() {
                 <h3 className="text-xl font-semibold text-white mb-3">
                   Inter-Layer Data Flow
                 </h3>
-                <div className="bg-black/30 rounded-lg p-6">
+                <div className="bg-gradient-to-br from-black/40 to-gray-900/60 rounded-2xl p-8 border border-white/5 hover:border-white/10 transition-all duration-300">
                   <div className="bg-black/50 rounded-lg p-4 overflow-x-auto">
                     <pre className="text-cyan-400 text-sm">
                       {`Master Orchestration Data Pipeline:
@@ -280,8 +331,8 @@ Final Aggregated Results → File Writer → Backup System → Report Generator`
           </section>
 
           {/* Orchestration Modes */}
-          <section className="bg-gray-900/50 backdrop-blur-sm rounded-2xl p-8 border border-white/10">
-            <h2 className="text-3xl font-bold text-blue-400 mb-6">
+          <section className="bg-gradient-to-br from-gray-900/60 via-gray-800/40 to-gray-900/60 backdrop-blur-xl rounded-3xl p-12 border border-white/10 shadow-2xl shadow-black/50">
+            <h2 className="text-5xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent mb-10">
               Orchestration Modes
             </h2>
 
@@ -292,7 +343,7 @@ Final Aggregated Results → File Writer → Backup System → Report Generator`
                   Full Orchestration Mode
                 </h3>
                 <div className="grid md:grid-cols-2 gap-6">
-                  <div className="bg-black/30 rounded-lg p-6">
+                  <div className="bg-gradient-to-br from-black/40 to-gray-900/60 rounded-2xl p-8 border border-white/5 hover:border-white/10 transition-all duration-300">
                     <h4 className="font-semibold text-green-400 mb-3">
                       Complete Pipeline
                     </h4>
@@ -317,7 +368,7 @@ neurolint fix --full-report`}
                     </p>
                   </div>
 
-                  <div className="bg-black/30 rounded-lg p-6">
+                  <div className="bg-gradient-to-br from-black/40 to-gray-900/60 rounded-2xl p-8 border border-white/5 hover:border-white/10 transition-all duration-300">
                     <h4 className="font-semibold text-blue-400 mb-3">
                       Selective Orchestration
                     </h4>
@@ -349,7 +400,7 @@ neurolint fix --conditional`}
                 <h3 className="text-xl font-semibold text-white mb-3">
                   Parallel Orchestration
                 </h3>
-                <div className="bg-black/30 rounded-lg p-6">
+                <div className="bg-gradient-to-br from-black/40 to-gray-900/60 rounded-2xl p-8 border border-white/5 hover:border-white/10 transition-all duration-300">
                   <h4 className="font-semibold text-purple-400 mb-3">
                     Advanced Parallel Processing
                   </h4>
@@ -388,8 +439,8 @@ neurolint fix --parallel=4 --memory-limit=2gb`}
           </section>
 
           {/* Error Handling & Recovery */}
-          <section className="bg-gray-900/50 backdrop-blur-sm rounded-2xl p-8 border border-white/10">
-            <h2 className="text-3xl font-bold text-blue-400 mb-6">
+          <section className="bg-gradient-to-br from-gray-900/60 via-gray-800/40 to-gray-900/60 backdrop-blur-xl rounded-3xl p-12 border border-white/10 shadow-2xl shadow-black/50">
+            <h2 className="text-5xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent mb-10">
               Error Handling & Recovery
             </h2>
 
@@ -399,7 +450,7 @@ neurolint fix --parallel=4 --memory-limit=2gb`}
                 <h3 className="text-xl font-semibold text-white mb-3">
                   Error Propagation Strategy
                 </h3>
-                <div className="bg-black/30 rounded-lg p-6">
+                <div className="bg-gradient-to-br from-black/40 to-gray-900/60 rounded-2xl p-8 border border-white/5 hover:border-white/10 transition-all duration-300">
                   <div className="grid md:grid-cols-2 gap-6">
                     <div>
                       <h4 className="font-semibold text-red-400 mb-3">
@@ -455,7 +506,7 @@ neurolint fix --parallel=4 --memory-limit=2gb`}
                 <h3 className="text-xl font-semibold text-white mb-3">
                   Recovery Mechanisms
                 </h3>
-                <div className="bg-black/30 rounded-lg p-6">
+                <div className="bg-gradient-to-br from-black/40 to-gray-900/60 rounded-2xl p-8 border border-white/5 hover:border-white/10 transition-all duration-300">
                   <div className="bg-black/50 rounded-lg p-4 overflow-x-auto">
                     <pre className="text-orange-400 text-sm">
                       {`Master Orchestration Error Recovery:
@@ -487,8 +538,8 @@ neurolint fix --parallel=4 --memory-limit=2gb`}
           </section>
 
           {/* Performance Optimization */}
-          <section className="bg-gray-900/50 backdrop-blur-sm rounded-2xl p-8 border border-white/10">
-            <h2 className="text-3xl font-bold text-blue-400 mb-6">
+          <section className="bg-gradient-to-br from-gray-900/60 via-gray-800/40 to-gray-900/60 backdrop-blur-xl rounded-3xl p-12 border border-white/10 shadow-2xl shadow-black/50">
+            <h2 className="text-5xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent mb-10">
               Performance Optimization
             </h2>
 
@@ -499,7 +550,7 @@ neurolint fix --parallel=4 --memory-limit=2gb`}
                   Optimization Strategies
                 </h3>
                 <div className="grid md:grid-cols-2 gap-6">
-                  <div className="bg-black/30 rounded-lg p-6">
+                  <div className="bg-gradient-to-br from-black/40 to-gray-900/60 rounded-2xl p-8 border border-white/5 hover:border-white/10 transition-all duration-300">
                     <h4 className="font-semibold text-cyan-400 mb-3">
                       Memory Management
                     </h4>
@@ -512,7 +563,7 @@ neurolint fix --parallel=4 --memory-limit=2gb`}
                     </ul>
                   </div>
 
-                  <div className="bg-black/30 rounded-lg p-6">
+                  <div className="bg-gradient-to-br from-black/40 to-gray-900/60 rounded-2xl p-8 border border-white/5 hover:border-white/10 transition-all duration-300">
                     <h4 className="font-semibold text-cyan-400 mb-3">
                       CPU Optimization
                     </h4>
@@ -525,7 +576,7 @@ neurolint fix --parallel=4 --memory-limit=2gb`}
                     </ul>
                   </div>
 
-                  <div className="bg-black/30 rounded-lg p-6">
+                  <div className="bg-gradient-to-br from-black/40 to-gray-900/60 rounded-2xl p-8 border border-white/5 hover:border-white/10 transition-all duration-300">
                     <h4 className="font-semibold text-cyan-400 mb-3">
                       I/O Optimization
                     </h4>
@@ -538,7 +589,7 @@ neurolint fix --parallel=4 --memory-limit=2gb`}
                     </ul>
                   </div>
 
-                  <div className="bg-black/30 rounded-lg p-6">
+                  <div className="bg-gradient-to-br from-black/40 to-gray-900/60 rounded-2xl p-8 border border-white/5 hover:border-white/10 transition-all duration-300">
                     <h4 className="font-semibold text-cyan-400 mb-3">
                       Intelligent Skipping
                     </h4>
@@ -556,8 +607,8 @@ neurolint fix --parallel=4 --memory-limit=2gb`}
           </section>
 
           {/* Configuration Examples */}
-          <section className="bg-gray-900/50 backdrop-blur-sm rounded-2xl p-8 border border-white/10">
-            <h2 className="text-3xl font-bold text-blue-400 mb-6">
+          <section className="bg-gradient-to-br from-gray-900/60 via-gray-800/40 to-gray-900/60 backdrop-blur-xl rounded-3xl p-12 border border-white/10 shadow-2xl shadow-black/50">
+            <h2 className="text-5xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent mb-10">
               Configuration Examples
             </h2>
 
@@ -567,7 +618,7 @@ neurolint fix --parallel=4 --memory-limit=2gb`}
                 <h3 className="text-xl font-semibold text-white mb-3">
                   Advanced Orchestration Configuration
                 </h3>
-                <div className="bg-black/30 rounded-lg p-6">
+                <div className="bg-gradient-to-br from-black/40 to-gray-900/60 rounded-2xl p-8 border border-white/5 hover:border-white/10 transition-all duration-300">
                   <div className="bg-black/50 rounded-lg p-4 overflow-x-auto">
                     <pre className="text-blue-400 text-sm">
                       {`// neurolint.config.js - Master Orchestration Setup
@@ -645,8 +696,8 @@ module.exports = {
           </section>
 
           {/* Best Practices */}
-          <section className="bg-gray-900/50 backdrop-blur-sm rounded-2xl p-8 border border-white/10">
-            <h2 className="text-3xl font-bold text-blue-400 mb-6">
+          <section className="bg-gradient-to-br from-gray-900/60 via-gray-800/40 to-gray-900/60 backdrop-blur-xl rounded-3xl p-12 border border-white/10 shadow-2xl shadow-black/50">
+            <h2 className="text-5xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent mb-10">
               Orchestration Best Practices
             </h2>
 
