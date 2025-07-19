@@ -732,13 +732,108 @@ async function runLayer2Fixes() {
         }
       }
     } catch (error) {
-      console.error(`��� Error processing ${filePath}:`, error.message);
+      console.error(`❌ Error processing ${filePath}:`, error.message);
     }
   }
+
+  // Generate comprehensive emoji analytics report
+  const analyticsReport = emojiAnalytics.generateReport();
 
   console.log(
     `\n🎉 Layer 2 completed: ${totalChanges} fixes applied to ${filesChanged} files`,
   );
+
+  // Enhanced reporting with emoji analytics
+  console.log("\n📊 EMOJI STANDARDIZATION ANALYTICS:");
+  console.log(
+    `   📝 Total Emojis Processed: ${analyticsReport.summary.totalEmojis}`,
+  );
+  console.log(`   🗑️ Removal Rate: ${analyticsReport.summary.removalRate}`);
+  console.log(
+    `   🛡️ Preservation Rate: ${analyticsReport.summary.preservationRate}`,
+  );
+  console.log(
+    `   🔄 Contextual Replacements: ${analyticsReport.summary.contextualReplacements}`,
+  );
+
+  if (analyticsReport.topEmojiDensityFiles.length > 0) {
+    console.log("\n🔥 TOP EMOJI DENSITY FILES:");
+    analyticsReport.topEmojiDensityFiles.forEach((file, index) => {
+      console.log(
+        `   ${index + 1}. ${file.file} (${file.density.toFixed(2)} emojis/1000 chars, ${file.count} total)`,
+      );
+    });
+  }
+
+  if (Object.keys(analyticsReport.semanticMappings).length > 0) {
+    console.log("\n🔀 SEMANTIC MAPPINGS:");
+    Object.entries(analyticsReport.semanticMappings).forEach(
+      ([emoji, mappings]) => {
+        const topMapping = Object.entries(mappings).sort(
+          (a, b) => b[1] - a[1],
+        )[0];
+        console.log(`   ${emoji} → ${topMapping[0]} (${topMapping[1]} times)`);
+      },
+    );
+  }
+
+  if (analyticsReport.recommendations.length > 0) {
+    console.log("\n💡 RECOMMENDATIONS:");
+    analyticsReport.recommendations.forEach((rec, index) => {
+      const icon =
+        rec.severity === "high"
+          ? "🔴"
+          : rec.severity === "medium"
+            ? "🟡"
+            : "🟢";
+      console.log(`   ${icon} ${rec.type}: ${rec.description}`);
+      console.log(`      → ${rec.action}`);
+    });
+  }
+
+  // Export analytics for CI/CD integration
+  const analyticsFile = path.join(
+    process.cwd(),
+    "emoji-standardization-report.json",
+  );
+  fs.writeFileSync(analyticsFile, JSON.stringify(analyticsReport, null, 2));
+  console.log(`\n📄 Detailed analytics exported to: ${analyticsFile}`);
+
+  // Professional summary for enterprise reporting
+  const enterpriseSummary = {
+    timestamp: new Date().toISOString(),
+    layer: "Layer 2 - Content Standardization",
+    totalFilesProcessed: files.length,
+    filesChanged: filesChanged,
+    totalFixes: totalChanges,
+    emojiMetrics: {
+      processed: analyticsReport.summary.totalEmojis,
+      removalEfficiency: parseFloat(analyticsReport.summary.removalRate),
+      preservationRate: parseFloat(analyticsReport.summary.preservationRate),
+      contextualIntelligence:
+        analyticsReport.summary.contextualReplacements > 0,
+    },
+    complianceLevel:
+      analyticsReport.summary.removalRate > "70%"
+        ? "Enterprise"
+        : analyticsReport.summary.removalRate > "50%"
+          ? "Professional"
+          : "Basic",
+  };
+
+  console.log("\n🏢 ENTERPRISE COMPLIANCE SUMMARY:");
+  console.log(`   🏆 Compliance Level: ${enterpriseSummary.complianceLevel}`);
+  console.log(
+    `   ⚖️ Removal Efficiency: ${enterpriseSummary.emojiMetrics.removalEfficiency}%`,
+  );
+  console.log(
+    `   🤖 Contextual Intelligence: ${enterpriseSummary.emojiMetrics.contextualIntelligence ? "Active" : "Inactive"}`,
+  );
+  console.log(
+    `   🔒 Enterprise Ready: ${enterpriseSummary.complianceLevel === "Enterprise" ? "Yes" : "Needs Review"}`,
+  );
+
+  return enterpriseSummary;
 }
 
 // Check if glob is available, if not provide fallback
