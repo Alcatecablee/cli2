@@ -121,14 +121,31 @@ class LayerDependencyManager {
     recommended.push(1);
     reasons.push("Configuration layer provides essential foundation");
 
-    // Check for HTML entities or old patterns
-    if (
+    // Check for HTML entities, old patterns, or emoji usage needing standardization
+    const hasEntityIssues =
       /&quot;|&amp;|&lt;|&gt;|&#36;|&amp;#36;|&nbsp;|&copy;|&reg;|&trade;|&#39;|&apos;|&ndash;|&mdash;|&hellip;|&euro;|&pound;|console\.log/.test(
         code,
-      )
-    ) {
+      );
+    const hasEmojiContent =
+      /[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|🔧|⚙️|🛠️|🧹|⚛️|🚀|⚡|🛡️|✅|📝|⚠️|❌|🔍|💡|➡️|⬅️|⬆️|⬇️|1️⃣|2️⃣|3️⃣|4️⃣|5️⃣|6️⃣/u.test(
+        code,
+      );
+
+    if (hasEntityIssues || hasEmojiContent) {
       recommended.push(2);
-      reasons.push("Entity cleanup needed for HTML entities and old patterns");
+      if (hasEntityIssues && hasEmojiContent) {
+        reasons.push(
+          "Content standardization needed for HTML entities and professional emoji cleanup",
+        );
+      } else if (hasEntityIssues) {
+        reasons.push(
+          "Entity cleanup needed for HTML entities and old patterns",
+        );
+      } else {
+        reasons.push(
+          "Professional content standardization needed for emoji cleanup",
+        );
+      }
     }
 
     // Check for React components needing fixes
