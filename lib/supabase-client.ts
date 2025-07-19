@@ -131,10 +131,48 @@ async function refreshToken(refreshToken: string): Promise<boolean> {
   }
 }
 
+// Safe session initialization that avoids conflicts
+export async function initializeSession(): Promise<boolean> {
+  if (typeof window === "undefined") {
+    return false;
+  }
+
+  try {
+    const storedSessionStr = localStorage.getItem("supabase_session");
+    if (!storedSessionStr) {
+      return false;
+    }
+
+    const storedSession = JSON.parse(storedSessionStr);
+
+    // Only initialize if we have valid tokens and session isn't expired
+    if (storedSession.access_token && storedSession.refresh_token) {
+      const expirationBuffer = 5 * 60 * 1000; // 5 minutes buffer
+      const isExpiringSoon =
+        storedSession.expires_at &&
+        storedSession.expires_at * 1000 <= Date.now() + expirationBuffer;
+
+      if (!isExpiringSoon) {
+        // Session is still valid, use it
+        return await setSupabaseSession();
+      } else {
+        // Session is expiring soon, trigger refresh
+        console.log("Session expiring soon, will refresh on next API call");
+        return true; // Return true but let API calls handle refresh
+      }
+    }
+
+    return false;
+  } catch (error) {
+    console.error("Error initializing session:", error);
+    return false;
+  }
+}
+
 // Helper function to get authenticated user
 export async function getAuthenticatedUser() {
-  // First try to set session from localStorage
-  await setSupabaseSession();
+  // Initialize session if needed
+  await initializeSession();
 
   const {
     data: { user },
