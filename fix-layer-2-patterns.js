@@ -86,6 +86,112 @@ const patterns = [
     },
     fileTypes: ["tsx", "jsx"],
   },
+
+  // Professional Content Standardization - Emoji Removal & Standardization
+  // Core technical symbols
+  {
+    name: "Technical Tool Emojis",
+    pattern: /🔧|⚙️|🛠️|🔩/g,
+    replacement: "",
+    fileTypes: ["ts", "tsx", "js", "jsx", "md", "mdx"],
+  },
+  {
+    name: "Cleaning Organization Emojis",
+    pattern: /🧹|🗂️|📁|📂/g,
+    replacement: "",
+    fileTypes: ["ts", "tsx", "js", "jsx", "md", "mdx"],
+  },
+  {
+    name: "React Component Emojis",
+    pattern: /⚛️|🔄|🔀/g,
+    replacement: "",
+    fileTypes: ["ts", "tsx", "js", "jsx", "md", "mdx"],
+  },
+  {
+    name: "Performance Speed Emojis",
+    pattern: /🚀|⚡|💨/g,
+    replacement: "",
+    fileTypes: ["ts", "tsx", "js", "jsx", "md", "mdx"],
+  },
+  {
+    name: "Security Safety Emojis",
+    pattern: /🛡️|🔒|🔐|🔑/g,
+    replacement: "",
+    fileTypes: ["ts", "tsx", "js", "jsx", "md", "mdx"],
+  },
+  {
+    name: "Success Validation Emojis",
+    pattern: /✅|✔️|☑️/g,
+    replacement: "",
+    fileTypes: ["ts", "tsx", "js", "jsx", "md", "mdx"],
+  },
+  {
+    name: "Documentation Emojis",
+    pattern: /📝|📄|📋|📊|📈|📉/g,
+    replacement: "",
+    fileTypes: ["ts", "tsx", "js", "jsx", "md", "mdx"],
+  },
+  {
+    name: "Warning Alert Emojis",
+    pattern: /⚠️|🚨|❌|⛔/g,
+    replacement: "",
+    fileTypes: ["ts", "tsx", "js", "jsx", "md", "mdx"],
+  },
+  {
+    name: "Comprehensive Emoji Cleanup",
+    pattern:
+      /[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]|[\u{1F900}-\u{1F9FF}]|[\u{1F018}-\u{1F270}]|[\u{238C}]|[\u{2194}-\u{2199}]|[\u{21A9}-\u{21AA}]|[\u{231A}-\u{231B}]|[\u{2328}]|[\u{23CF}]|[\u{23E9}-\u{23F3}]|[\u{23F8}-\u{23FA}]|[\u{24C2}]|[\u{25AA}-\u{25AB}]|[\u{25B6}]|[\u{25C0}]|[\u{25FB}-\u{25FE}]|[\u{2B00}-\u{2BFF}]|[\u{1F004}]|[\u{1F0CF}]|[\u{1F170}-\u{1F171}]|[\u{1F17E}-\u{1F17F}]|[\u{1F18E}]|[\u{3030}]|[\u{2049}]|[\u{203C}]|[\u{2139}]|[\u{2122}]|[\u{2B50}]|[\u{2B55}]|[\u{00A9}]|[\u{00AE}]|[\u{FE0F}]/gu,
+    replacement: "",
+    fileTypes: ["ts", "tsx", "js", "jsx", "md", "mdx"],
+  },
+
+  // Smart Arrow standardization (convert to clean Unicode)
+  {
+    name: "Right Arrow Standardization",
+    pattern: /➡️|→/g,
+    replacement: "→",
+    fileTypes: ["ts", "tsx", "js", "jsx", "md", "mdx"],
+  },
+  {
+    name: "Left Arrow Standardization",
+    pattern: /⬅️|←/g,
+    replacement: "←",
+    fileTypes: ["ts", "tsx", "js", "jsx", "md", "mdx"],
+  },
+  {
+    name: "Up Arrow Standardization",
+    pattern: /⬆️|↑/g,
+    replacement: "↑",
+    fileTypes: ["ts", "tsx", "js", "jsx", "md", "mdx"],
+  },
+  {
+    name: "Down Arrow Standardization",
+    pattern: /⬇️|↓/g,
+    replacement: "↓",
+    fileTypes: ["ts", "tsx", "js", "jsx", "md", "mdx"],
+  },
+
+  // Number emoji standardization
+  {
+    name: "Number Emoji to Text",
+    pattern: /1️⃣|2️⃣|3️⃣|4️⃣|5️⃣|6️⃣|7️⃣|8️⃣|9️⃣|0️⃣/g,
+    replacement: (match) => {
+      const map = {
+        "1️⃣": "1",
+        "2️⃣": "2",
+        "3️⃣": "3",
+        "4️⃣": "4",
+        "5️⃣": "5",
+        "6️⃣": "6",
+        "7️⃣": "7",
+        "8️⃣": "8",
+        "9️⃣": "9",
+        "0️⃣": "0",
+      };
+      return map[match] || match;
+    },
+    fileTypes: ["ts", "tsx", "js", "jsx", "md", "mdx"],
+  },
 ];
 
 // Advanced pattern fixes
