@@ -458,21 +458,21 @@ export default function CollaborationDashboard() {
   const getActivityIcon = (type: Activity["type"]) => {
     switch (type) {
       case "session_created":
-        return "➕";
+        return "+";
       case "session_joined":
-        return "👥";
+        return "Users";
       case "session_left":
-        return "👋";
+        return "Left";
       case "document_edited":
-        return "✏️";
+        return "Edit";
       case "comment_added":
-        return "💬";
+        return "Comment";
       case "analysis_run":
-        return "🔍";
+        return "Analyze";
       case "session_deleted":
-        return "🗑️";
+        return "Delete";
       default:
-        return "📝";
+        return "Activity";
     }
   };
 
@@ -553,7 +553,7 @@ export default function CollaborationDashboard() {
             onClick={() => setIsCreateModalOpen(true)}
             className="create-session-btn"
           >
-            ➕ New Session
+            + New Session
           </button>
         </div>
       </div>
@@ -561,14 +561,14 @@ export default function CollaborationDashboard() {
       {/* Error Display */}
       {error && (
         <div className="error-banner">
-          <span className="error-icon">⚠️</span>
+          <span className="error-icon">!</span>
           <span className="error-text">{error}</span>
           <button
             onClick={() => setError(null)}
             className="error-dismiss"
             aria-label="Dismiss error"
           >
-            ✕
+            ×
           </button>
         </div>
       )}
@@ -635,7 +635,7 @@ export default function CollaborationDashboard() {
                       <div className="session-info">
                         <h4 className="session-name">{session.name}</h4>
                         <p className="session-file">
-                          📄 {session.document_filename}
+                          File: {session.document_filename}
                         </p>
                         <div className="session-meta">
                           <span className="language-tag">
@@ -646,7 +646,7 @@ export default function CollaborationDashboard() {
                               session.is_locked ? "locked" : "active"
                             }`}
                           >
-                            {session.is_locked ? "🔒 Locked" : "🟢 Active"}
+                            {session.is_locked ? "Locked" : "Active"}
                           </span>
                         </div>
                       </div>
@@ -664,7 +664,7 @@ export default function CollaborationDashboard() {
                             onClick={() => handleDeleteSession(session.id)}
                             className="delete-btn"
                           >
-                            🗑️
+                            Delete
                           </button>
                         )}
                       </div>
@@ -695,7 +695,7 @@ export default function CollaborationDashboard() {
                                     .toUpperCase()}
                                 </div>
                                 {participant.is_host && (
-                                  <span className="host-badge">👑</span>
+                                  <span className="host-badge">Host</span>
                                 )}
                               </div>
                             ))}
@@ -728,7 +728,7 @@ export default function CollaborationDashboard() {
                 ))
               ) : (
                 <div className="empty-state">
-                  <div className="empty-icon">👥</div>
+                  <div className="empty-icon">Users</div>
                   <h3>No collaboration sessions found</h3>
                   <p>
                     {searchTerm
@@ -779,7 +779,7 @@ export default function CollaborationDashboard() {
                 ))
               ) : (
                 <div className="empty-state">
-                  <div className="empty-icon">👥</div>
+                  <div className="empty-icon">Users</div>
                   <h3>No teams yet</h3>
                   <p>Create or join a team to collaborate with others</p>
                   <button className="create-first-team-btn">Create Team</button>
@@ -868,7 +868,7 @@ export default function CollaborationDashboard() {
                 ))
               ) : (
                 <div className="empty-state">
-                  <div className="empty-icon">📝</div>
+                  <div className="empty-icon">Activity</div>
                   <h3>No recent activity</h3>
                   <p>Start collaborating to see activity here</p>
                 </div>
@@ -888,7 +888,7 @@ export default function CollaborationDashboard() {
                 onClick={() => setIsCreateModalOpen(false)}
                 className="modal-close"
               >
-                ✕
+                ×
               </button>
             </div>
             <form onSubmit={handleCreateSession} className="session-form">
