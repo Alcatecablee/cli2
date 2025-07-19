@@ -7,8 +7,18 @@ if (!supabaseUrl || !supabaseAnonKey) {
   throw new Error("Missing Supabase environment variables");
 }
 
-// Create the main Supabase client
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+// Track if token refresh is in progress to prevent race conditions
+let isRefreshing = false;
+let refreshPromise: Promise<any> | null = null;
+
+// Create the main Supabase client with auto token refresh disabled to prevent conflicts
+export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    autoRefreshToken: false, // Disable auto refresh to prevent conflicts
+    persistSession: false, // Disable auto persistence to handle manually
+    detectSessionInUrl: false, // Disable URL session detection
+  },
+});
 
 // Helper function to set session from localStorage
 export async function setSupabaseSession(): Promise<boolean> {
