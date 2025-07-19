@@ -806,12 +806,12 @@ export default function Overview({ analysisHistory }: OverviewProps) {
             rgba(33, 150, 243, 0.15) 50%,
             rgba(255, 255, 255, 0.1) 100%
           );
-          border: 1px solid rgba(33, 150, 243, 0.3);
+          border: 2px solid #000000;
         }
 
         .action-card.secondary {
           background: rgba(255, 255, 255, 0.1);
-          border: 1px solid rgba(255, 255, 255, 0.2);
+          border: 2px solid #000000;
         }
 
         .action-card.warning {
@@ -821,7 +821,7 @@ export default function Overview({ analysisHistory }: OverviewProps) {
             rgba(255, 152, 0, 0.15) 50%,
             rgba(255, 255, 255, 0.1) 100%
           );
-          border: 1px solid rgba(255, 152, 0, 0.3);
+          border: 2px solid #000000;
         }
 
         .action-card.danger {
@@ -831,7 +831,7 @@ export default function Overview({ analysisHistory }: OverviewProps) {
             rgba(229, 62, 62, 0.15) 50%,
             rgba(255, 255, 255, 0.1) 100%
           );
-          border: 1px solid rgba(229, 62, 62, 0.3);
+          border: 2px solid #000000;
         }
 
         .action-icon {
