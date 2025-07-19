@@ -1802,7 +1802,8 @@ export default function Dashboard() {
                   : "Dry-Run Mode"}
               </span>
               {" �� "}
-              <span style={{ color: "rgba(33, 150, 243, 0.9)" }}>
+              <span className="setting-mode layers-badge">
+                <span className="badge-icon">⚡</span>
                 {dashboardState.selectedLayers.length === 0
                   ? "Auto-Detect Layers"
                   : dashboardState.selectedLayers.length === 6
