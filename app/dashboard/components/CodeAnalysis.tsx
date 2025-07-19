@@ -10,6 +10,7 @@ interface CodeAnalysisProps {
   pasteSectionRef?: React.RefObject<HTMLDivElement>;
   githubSectionRef?: React.RefObject<HTMLDivElement>;
   onModeChange?: (mode: "upload" | "paste" | "github") => void;
+  onNavigateToGitHub?: () => void;
 }
 
 export default function CodeAnalysis({
@@ -22,6 +23,7 @@ export default function CodeAnalysis({
   pasteSectionRef,
   githubSectionRef,
   onModeChange,
+  onNavigateToGitHub,
 }: CodeAnalysisProps) {
   const [codeInput, setCodeInput] = useState("");
   const [dragActive, setDragActive] = useState(false);
@@ -467,7 +469,10 @@ export default function MyComponent() {
               </div>
               <h3>GitHub Repository Analysis</h3>
               <p>Connect your GitHub account to analyze entire repositories</p>
-              <button className="github-btn secondary">
+              <button
+                className="github-btn secondary"
+                onClick={onNavigateToGitHub}
+              >
                 <svg
                   viewBox="0 0 24 24"
                   width="16"
