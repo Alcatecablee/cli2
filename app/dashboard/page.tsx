@@ -1998,166 +1998,31 @@ export default function Dashboard() {
           {/* Code Analysis Tab */}
           {dashboardState.activeSection === "editor" && (
             <div className="tab-content">
-              <div className="demo-upload-section">
-                <div
-                  className="upload-area"
-                  onClick={() => fileInputRef.current?.click()}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      e.preventDefault();
-                      fileInputRef.current?.click();
-                    }
+              <ErrorBoundary>
+                <CodeAnalysis
+                  onAnalyzeCode={(code, filename) => {
+                    setDashboardState((prev) => ({
+                      ...prev,
+                      currentFile: filename,
+                    }));
+
+                    const layers =
+                      dashboardState.selectedLayers.length > 0
+                        ? dashboardState.selectedLayers
+                        : "auto";
+                    analyzecode(
+                      code,
+                      filename,
+                      layers,
+                      dashboardState.applyFixes,
+                    );
                   }}
-                  role="button"
-                  tabIndex={0}
-                  aria-label="Upload React or Next.js files for analysis"
-                >
-                  <h3>Upload Your Files</h3>
-                  <p>Drop React/Next.js files here or click to browse</p>
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    className="file-input"
-                    accept=".jsx,.tsx,.js,.ts"
-                    onChange={handleFileUpload}
-                  />
-                </div>
-
-                <div className="upload-area" role="region">
-                  <h3>Paste Your Code</h3>
-                  <div className="paste-code-container">
-                    <textarea
-                      className="code-textarea"
-                      placeholder="Paste your React/Next.js code here..."
-                      rows={12}
-                      style={{
-                        width: "100%",
-                        minHeight: "300px",
-                        padding: "1rem",
-                        background: "rgba(255, 255, 255, 0.05)",
-                        border: "1px solid rgba(255, 255, 255, 0.15)",
-                        borderRadius: "8px",
-                        color: "#ffffff",
-                        fontFamily: "JetBrains Mono, monospace",
-                        fontSize: "0.85rem",
-                        lineHeight: "1.5",
-                        resize: "vertical",
-                        outline: "none",
-                        transition: "border-color 0.2s ease",
-                      }}
-                      onFocus={(e) => {
-                        e.target.style.borderColor = "rgba(33, 150, 243, 0.4)";
-                      }}
-                      onBlur={(e) => {
-                        e.target.style.borderColor =
-                          "rgba(255, 255, 255, 0.15)";
-                      }}
-                      aria-label="Code input area"
-                      aria-describedby="paste-instructions"
-                    />
-                    <div
-                      className="paste-actions"
-                      style={{
-                        marginTop: "1rem",
-                        display: "flex",
-                        gap: "0.75rem",
-                        alignItems: "center",
-                      }}
-                    >
-                      <button
-                        className="btn btn-primary"
-                        onClick={() => {
-                          const textarea = document.querySelector(
-                            ".code-textarea",
-                          ) as HTMLTextAreaElement;
-                          const code = textarea?.value.trim();
-                          if (!code) {
-                            alert("Please paste some code first");
-                            return;
-                          }
-
-                          // Generate a filename based on code content
-                          let filename = "pasted-code.tsx";
-                          if (code.includes("export default")) {
-                            const match = code.match(
-                              /export default function (\w+)/,
-                            );
-                            if (match) {
-                              filename = `${match[1]}.tsx`;
-                            }
-                          } else if (code.includes("function ")) {
-                            const match = code.match(/function (\w+)/);
-                            if (match) {
-                              filename = `${match[1]}.tsx`;
-                            }
-                          }
-
-                          setDashboardState((prev) => ({
-                            ...prev,
-                            currentFile: filename,
-                          }));
-
-                          const layers =
-                            dashboardState.selectedLayers.length > 0
-                              ? dashboardState.selectedLayers
-                              : "auto";
-                          analyzecode(
-                            code,
-                            filename,
-                            layers,
-                            dashboardState.applyFixes,
-                          );
-                        }}
-                        disabled={dashboardState.isLoading}
-                        style={{ minWidth: "120px" }}
-                      >
-                        {dashboardState.isLoading
-                          ? "Analyzing..."
-                          : "Analyze Code"}
-                      </button>
-                      <button
-                        className="btn btn-secondary"
-                        onClick={() => {
-                          const textarea = document.querySelector(
-                            ".code-textarea",
-                          ) as HTMLTextAreaElement;
-                          if (textarea) {
-                            textarea.value = "";
-                            textarea.focus();
-                          }
-                        }}
-                        disabled={dashboardState.isLoading}
-                      >
-                        Clear
-                      </button>
-                      <span
-                        style={{
-                          color: "rgba(255, 255, 255, 0.6)",
-                          fontSize: "0.85rem",
-                        }}
-                      >
-                        or use the upload area above
-                      </span>
-                    </div>
-                  </div>
-                  <div id="paste-instructions" className="sr-only">
-                    Paste React or Next.js code into the textarea and click
-                    Analyze Code to run NeuroLint Pro analysis
-                  </div>
-                </div>
-              </div>
-
-              {dashboardState.currentFile && (
-                <div className="current-file-info">
-                  <h4>Current File</h4>
-                  <div className="file-card">
-                    <span className="file-name">
-                      {dashboardState.currentFile}
-                    </span>
-                    <span className="file-status">Ready for analysis</span>
-                  </div>
-                </div>
-              )}
+                  onFileUpload={handleFileUpload}
+                  isLoading={dashboardState.isLoading}
+                  currentFile={dashboardState.currentFile}
+                  fileInputRef={fileInputRef}
+                />
+              </ErrorBoundary>
             </div>
           )}
 
