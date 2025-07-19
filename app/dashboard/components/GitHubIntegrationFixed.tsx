@@ -871,7 +871,7 @@ export default function GitHubIntegrationFixed() {
 
         .scan-results {
           background: rgba(33, 150, 243, 0.1);
-          border: 1px solid rgba(33, 150, 243, 0.3);
+          border: 2px solid #000000;
           border-radius: 12px;
           padding: 1.5rem;
         }
@@ -916,7 +916,7 @@ export default function GitHubIntegrationFixed() {
             rgba(33, 150, 243, 0.15) 50%,
             rgba(255, 255, 255, 0.1) 100%
           );
-          border: 1px solid rgba(33, 150, 243, 0.4);
+          border: 2px solid #000000;
           color: #ffffff;
           padding: 0.75rem 1.5rem;
           border-radius: 8px;
@@ -938,7 +938,7 @@ export default function GitHubIntegrationFixed() {
 
         .error-message {
           background: rgba(239, 68, 68, 0.1);
-          border: 1px solid rgba(239, 68, 68, 0.3);
+          border: 2px solid #000000;
           border-radius: 8px;
           padding: 1rem;
           display: flex;
