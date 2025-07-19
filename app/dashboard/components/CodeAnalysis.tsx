@@ -330,7 +330,17 @@ export default function BlogPost({ post }) {
           <div className="upload-section" ref={uploadSectionRef}>
             <div
               className={`upload-area ${dragActive ? "drag-active" : ""}`}
-              onClick={() => fileInputRef.current?.click()}
+              onClick={() => {
+                fileInputRef.current?.click();
+                // Scroll to upload section when clicking
+                if (uploadSectionRef?.current) {
+                  uploadSectionRef.current.scrollIntoView({
+                    behavior: "smooth",
+                    block: "center",
+                    inline: "nearest",
+                  });
+                }
+              }}
               onDragEnter={handleDrag}
               onDragLeave={handleDrag}
               onDragOver={handleDrag}
