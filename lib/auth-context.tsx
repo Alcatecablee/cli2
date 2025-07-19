@@ -432,14 +432,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } finally {
       clearSession();
 
-      // Also clear session from centralized Supabase client
+      // Clear session from centralized Supabase client
       if (typeof window !== "undefined") {
         try {
           const { supabase } = await import("../lib/supabase-client");
-          await supabase.auth.signOut();
+          await supabase.auth.signOut({ scope: "local" }); // Only sign out locally to avoid API call issues
           console.log("Supabase session cleared after logout");
         } catch (error) {
           console.error("Error clearing Supabase session:", error);
+          // Don't throw - logout should always succeed locally
         }
       }
 
