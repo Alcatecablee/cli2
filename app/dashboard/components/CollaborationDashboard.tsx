@@ -1005,16 +1005,24 @@ export default function CollaborationDashboard() {
         .create-session-btn {
           background: linear-gradient(
             135deg,
-            rgba(33, 150, 243, 0.3) 0%,
-            rgba(33, 150, 243, 0.2) 100%
+            rgba(33, 150, 243, 0.2) 0%,
+            rgba(33, 150, 243, 0.15) 50%,
+            rgba(255, 255, 255, 0.1) 100%
           );
           border: 2px solid #000000;
-          border-radius: 12px;
+          border-radius: 8px;
+          backdrop-filter: blur(20px) saturate(1.2);
+          -webkit-backdrop-filter: blur(20px) saturate(1.2);
+          box-shadow:
+            0 8px 32px rgba(0, 0, 0, 0.2),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
           color: #ffffff;
+          font-weight: 500;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
           padding: 0.75rem 1.5rem;
-          font-weight: 600;
           cursor: pointer;
-          transition: all 0.2s ease;
+          transition: all 0.3s ease;
           display: flex;
           align-items: center;
           gap: 0.5rem;
@@ -1023,10 +1031,14 @@ export default function CollaborationDashboard() {
         .create-session-btn:hover {
           background: linear-gradient(
             135deg,
-            rgba(33, 150, 243, 0.4) 0%,
-            rgba(33, 150, 243, 0.3) 100%
+            rgba(33, 150, 243, 0.3) 0%,
+            rgba(33, 150, 243, 0.22) 50%,
+            rgba(255, 255, 255, 0.12) 100%
           );
-          transform: translateY(-1px);
+          transform: translateY(-2px);
+          box-shadow:
+            0 12px 40px rgba(0, 0, 0, 0.3),
+            inset 0 1px 0 rgba(255, 255, 255, 0.15);
         }
 
         .error-banner {
@@ -1281,25 +1293,37 @@ export default function CollaborationDashboard() {
         .join-btn {
           background: linear-gradient(
             135deg,
-            rgba(76, 175, 80, 0.3) 0%,
-            rgba(76, 175, 80, 0.2) 100%
+            rgba(76, 175, 80, 0.2) 0%,
+            rgba(76, 175, 80, 0.15) 50%,
+            rgba(255, 255, 255, 0.1) 100%
           );
           border: 2px solid #000000;
           border-radius: 8px;
+          backdrop-filter: blur(20px) saturate(1.2);
+          -webkit-backdrop-filter: blur(20px) saturate(1.2);
+          box-shadow:
+            0 8px 32px rgba(0, 0, 0, 0.2),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
           color: #ffffff;
+          font-weight: 500;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
           padding: 0.5rem 1rem;
           cursor: pointer;
-          transition: all 0.2s ease;
-          font-weight: 500;
+          transition: all 0.3s ease;
         }
 
         .join-btn:hover:not(:disabled) {
           background: linear-gradient(
             135deg,
-            rgba(76, 175, 80, 0.4) 0%,
-            rgba(76, 175, 80, 0.3) 100%
+            rgba(76, 175, 80, 0.3) 0%,
+            rgba(76, 175, 80, 0.22) 50%,
+            rgba(255, 255, 255, 0.12) 100%
           );
-          transform: translateY(-1px);
+          transform: translateY(-2px);
+          box-shadow:
+            0 12px 40px rgba(0, 0, 0, 0.3),
+            inset 0 1px 0 rgba(255, 255, 255, 0.15);
         }
 
         .join-btn:disabled {
@@ -1429,25 +1453,37 @@ export default function CollaborationDashboard() {
         .create-team-btn {
           background: linear-gradient(
             135deg,
-            rgba(156, 39, 176, 0.3) 0%,
-            rgba(156, 39, 176, 0.2) 100%
+            rgba(156, 39, 176, 0.2) 0%,
+            rgba(156, 39, 176, 0.15) 50%,
+            rgba(255, 255, 255, 0.1) 100%
           );
           border: 2px solid #000000;
           border-radius: 8px;
+          backdrop-filter: blur(20px) saturate(1.2);
+          -webkit-backdrop-filter: blur(20px) saturate(1.2);
+          box-shadow:
+            0 8px 32px rgba(0, 0, 0, 0.2),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
           color: #ffffff;
+          font-weight: 500;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
           padding: 0.75rem 1.5rem;
           cursor: pointer;
-          transition: all 0.2s ease;
-          font-weight: 500;
+          transition: all 0.3s ease;
         }
 
         .create-team-btn:hover {
           background: linear-gradient(
             135deg,
-            rgba(156, 39, 176, 0.4) 0%,
-            rgba(156, 39, 176, 0.3) 100%
+            rgba(156, 39, 176, 0.3) 0%,
+            rgba(156, 39, 176, 0.22) 50%,
+            rgba(255, 255, 255, 0.12) 100%
           );
-          transform: translateY(-1px);
+          transform: translateY(-2px);
+          box-shadow:
+            0 12px 40px rgba(0, 0, 0, 0.3),
+            inset 0 1px 0 rgba(255, 255, 255, 0.15);
         }
 
         .teams-grid {
@@ -1745,26 +1781,38 @@ export default function CollaborationDashboard() {
         .create-first-team-btn {
           background: linear-gradient(
             135deg,
-            rgba(33, 150, 243, 0.3) 0%,
-            rgba(33, 150, 243, 0.2) 100%
+            rgba(33, 150, 243, 0.2) 0%,
+            rgba(33, 150, 243, 0.15) 50%,
+            rgba(255, 255, 255, 0.1) 100%
           );
           border: 2px solid #000000;
-          border-radius: 12px;
+          border-radius: 8px;
+          backdrop-filter: blur(20px) saturate(1.2);
+          -webkit-backdrop-filter: blur(20px) saturate(1.2);
+          box-shadow:
+            0 8px 32px rgba(0, 0, 0, 0.2),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
           color: #ffffff;
+          font-weight: 500;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
           padding: 0.75rem 1.5rem;
           cursor: pointer;
-          transition: all 0.2s ease;
-          font-weight: 600;
+          transition: all 0.3s ease;
         }
 
         .create-first-session-btn:hover,
         .create-first-team-btn:hover {
           background: linear-gradient(
             135deg,
-            rgba(33, 150, 243, 0.4) 0%,
-            rgba(33, 150, 243, 0.3) 100%
+            rgba(33, 150, 243, 0.3) 0%,
+            rgba(33, 150, 243, 0.22) 50%,
+            rgba(255, 255, 255, 0.12) 100%
           );
-          transform: translateY(-1px);
+          transform: translateY(-2px);
+          box-shadow:
+            0 12px 40px rgba(0, 0, 0, 0.3),
+            inset 0 1px 0 rgba(255, 255, 255, 0.15);
         }
 
         .modal-overlay {
@@ -1895,25 +1943,37 @@ export default function CollaborationDashboard() {
         .create-btn {
           background: linear-gradient(
             135deg,
-            rgba(76, 175, 80, 0.3) 0%,
-            rgba(76, 175, 80, 0.2) 100%
+            rgba(76, 175, 80, 0.2) 0%,
+            rgba(76, 175, 80, 0.15) 50%,
+            rgba(255, 255, 255, 0.1) 100%
           );
           border: 2px solid #000000;
           border-radius: 8px;
+          backdrop-filter: blur(20px) saturate(1.2);
+          -webkit-backdrop-filter: blur(20px) saturate(1.2);
+          box-shadow:
+            0 8px 32px rgba(0, 0, 0, 0.2),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
           color: #ffffff;
+          font-weight: 500;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
           padding: 0.75rem 1.5rem;
           cursor: pointer;
-          transition: all 0.2s ease;
-          font-weight: 600;
+          transition: all 0.3s ease;
         }
 
         .create-btn:hover {
           background: linear-gradient(
             135deg,
-            rgba(76, 175, 80, 0.4) 0%,
-            rgba(76, 175, 80, 0.3) 100%
+            rgba(76, 175, 80, 0.3) 0%,
+            rgba(76, 175, 80, 0.22) 50%,
+            rgba(255, 255, 255, 0.12) 100%
           );
-          transform: translateY(-1px);
+          transform: translateY(-2px);
+          box-shadow:
+            0 12px 40px rgba(0, 0, 0, 0.3),
+            inset 0 1px 0 rgba(255, 255, 255, 0.15);
         }
 
         @media (max-width: 768px) {
