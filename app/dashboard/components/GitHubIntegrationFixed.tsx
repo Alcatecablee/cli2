@@ -667,7 +667,7 @@ export default function GitHubIntegrationFixed() {
 
         .repository-card {
           background: rgba(255, 255, 255, 0.05);
-          border: 1px solid rgba(255, 255, 255, 0.1);
+          border: 2px solid #000000;
           border-radius: 12px;
           padding: 1.5rem;
           transition: all 0.3s ease;
@@ -708,6 +708,7 @@ export default function GitHubIntegrationFixed() {
 
         .repo-icon {
           background: rgba(255, 255, 255, 0.1);
+          border: 1px solid #000000;
           color: rgba(255, 255, 255, 0.8);
           width: 2rem;
           height: 2rem;
@@ -757,6 +758,7 @@ export default function GitHubIntegrationFixed() {
         .language,
         .size {
           background: rgba(255, 255, 255, 0.1);
+          border: 1px solid #000000;
           color: rgba(255, 255, 255, 0.8);
           padding: 0.2rem 0.5rem;
           border-radius: 4px;
@@ -767,7 +769,7 @@ export default function GitHubIntegrationFixed() {
         .scan-btn {
           width: 100%;
           background: rgba(33, 150, 243, 0.2);
-          border: 1px solid rgba(33, 150, 243, 0.4);
+          border: 2px solid #000000;
           color: #ffffff;
           padding: 0.75rem 1rem;
           border-radius: 8px;
