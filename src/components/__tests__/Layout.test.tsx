@@ -1,20 +1,13 @@
-import { render, screen } from '@testing-library/react';
-import Layout from '../Layout';
+import { render, screen } from "@testing-library/react";
+import Layout from "../Layout";
 
-
-
-
-
-
-
-
-describe('Layout', () => {
-  it('renders without crashing', () => {
+describe("Layout", () => {
+  it("renders without crashing", () => {
     render(
       <Layout>
         <div>Test content</div>
-      </Layout>
+      </Layout>,
     );
-    expect(screen.getByText('Test content')).toBeInTheDocument();
+    expect(screen.getByText("Test content")).toBeInTheDocument();
   });
 });
