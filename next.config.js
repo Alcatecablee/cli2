@@ -10,6 +10,9 @@ const nextConfig = {
   experimental: {
     missingSuspenseWithCSRBailout: false,
   },
+  async generateBuildId() {
+    return "neurolint-build";
+  },
   images: {
     domains: ["cdn.builder.io"],
   },
