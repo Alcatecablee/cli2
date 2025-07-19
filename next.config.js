@@ -8,6 +8,9 @@ const nextConfig = {
   },
   output: "standalone",
   trailingSlash: false,
+  experimental: {
+    missingSuspenseWithCSRBailout: false,
+  },
   images: {
     domains: ["cdn.builder.io"],
   },
