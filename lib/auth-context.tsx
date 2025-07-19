@@ -329,19 +329,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(data.user);
         setSession(data.session);
 
-        // Also set the session on the centralized Supabase client
-        if (typeof window !== "undefined") {
-          try {
-            const { supabase } = await import("../lib/supabase-client");
-            await supabase.auth.setSession({
-              access_token: data.session.access_token,
-              refresh_token: data.session.refresh_token,
-            });
-            console.log("Supabase session set after login");
-          } catch (error) {
-            console.error("Error setting Supabase session:", error);
-          }
-        }
+        // Note: We avoid setting session directly here to prevent refresh token conflicts
+        // The supabase client will be initialized from localStorage when needed
       } catch (storageError) {
         console.error("Failed to save session to localStorage:", storageError);
         // Still set state even if localStorage fails
