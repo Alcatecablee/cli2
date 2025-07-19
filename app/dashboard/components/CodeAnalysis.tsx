@@ -502,6 +502,7 @@ export default function MyComponent() {
 
       <style jsx>{`
         .code-analysis-root {
+          padding: 0;
           display: flex;
           flex-direction: column;
           gap: 2rem;
@@ -576,10 +577,10 @@ export default function MyComponent() {
 
         .stat-card {
           display: flex;
-          align-items: center;
+          align-items: flex-start;
           gap: 1rem;
-          padding: 1rem;
-          border-radius: 12px;
+          padding: 1.5rem;
+          border-radius: 16px;
           backdrop-filter: blur(25px) saturate(1.2);
           -webkit-backdrop-filter: blur(25px) saturate(1.2);
           box-shadow:
@@ -590,6 +591,9 @@ export default function MyComponent() {
 
         .stat-card:hover {
           transform: translateY(-2px);
+          box-shadow:
+            0 12px 40px rgba(0, 0, 0, 0.3),
+            inset 0 1px 0 rgba(255, 255, 255, 0.15);
         }
 
         .stat-card.primary {
@@ -633,24 +637,25 @@ export default function MyComponent() {
         }
 
         .stat-icon {
-          width: 40px;
-          height: 40px;
+          width: 48px;
+          height: 48px;
           display: flex;
           align-items: center;
           justify-content: center;
           background: rgba(255, 255, 255, 0.1);
           border: 2px solid #000000;
-          border-radius: 8px;
+          border-radius: 12px;
           color: #ffffff;
           flex-shrink: 0;
         }
 
         .stat-content {
           flex: 1;
+          min-width: 0;
         }
 
         .stat-value {
-          font-size: 1.25rem;
+          font-size: 2rem;
           font-weight: 700;
           color: #ffffff;
           line-height: 1;
@@ -658,8 +663,9 @@ export default function MyComponent() {
         }
 
         .stat-label {
-          font-size: 0.8rem;
+          font-size: 0.875rem;
           color: rgba(255, 255, 255, 0.8);
+          margin-bottom: 0.5rem;
           font-weight: 500;
         }
 
@@ -954,14 +960,17 @@ export default function MyComponent() {
         }
 
         .section-header {
-          margin-bottom: 1.5rem;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 1rem;
         }
 
         .section-header h3 {
           color: #ffffff;
-          font-size: 1.5rem;
+          font-size: 1.25rem;
           font-weight: 600;
-          margin: 0 0 0.5rem 0;
+          margin: 0;
         }
 
         .section-header p {
@@ -976,16 +985,23 @@ export default function MyComponent() {
         }
 
         .sample-card {
-          background: rgba(255, 255, 255, 0.05);
+          background: linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.08) 0%,
+            rgba(255, 255, 255, 0.04) 50%,
+            rgba(255, 255, 255, 0.02) 100%
+          );
           border: 2px solid #000000;
-          border-radius: 12px;
+          border-radius: 16px;
           padding: 1.5rem;
           transition: all 0.3s ease;
         }
 
         .sample-card:hover {
           transform: translateY(-2px);
-          background: rgba(255, 255, 255, 0.08);
+          box-shadow:
+            0 8px 32px rgba(0, 0, 0, 0.2),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
         }
 
         .sample-header {
@@ -1004,13 +1020,16 @@ export default function MyComponent() {
         }
 
         .try-btn {
-          padding: 0.5rem 1rem;
-          border: 2px solid #000000;
-          border-radius: 6px;
-          font-size: 0.8rem;
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          padding: 0.75rem 1.5rem;
+          border: none;
+          border-radius: 8px;
           font-weight: 600;
           cursor: pointer;
           transition: all 0.3s ease;
+          font-size: 0.875rem;
         }
 
         .try-btn.warning {
@@ -1020,11 +1039,13 @@ export default function MyComponent() {
             rgba(255, 152, 0, 0.15) 50%,
             rgba(255, 255, 255, 0.1) 100%
           );
+          border: 2px solid #000000;
           color: #ffffff;
         }
 
         .try-btn:hover {
-          transform: translateY(-1px);
+          transform: translateY(-2px);
+          box-shadow: 0 8px 25px rgba(255, 152, 0, 0.3);
         }
 
         .sample-description {
