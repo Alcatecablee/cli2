@@ -800,7 +800,7 @@ export default function GitHubIntegrationFixed() {
           align-items: center;
           padding: 1.5rem;
           background: rgba(76, 175, 80, 0.1);
-          border: 1px solid rgba(76, 175, 80, 0.3);
+          border: 2px solid #000000;
           border-radius: 12px;
         }
 
@@ -814,7 +814,7 @@ export default function GitHubIntegrationFixed() {
           width: 48px;
           height: 48px;
           border-radius: 50%;
-          border: 2px solid rgba(76, 175, 80, 0.5);
+          border: 2px solid #000000;
         }
 
         .user-details h4 {
@@ -838,6 +838,7 @@ export default function GitHubIntegrationFixed() {
 
         .repo-stats span {
           background: rgba(255, 255, 255, 0.1);
+          border: 1px solid #000000;
           color: rgba(255, 255, 255, 0.8);
           padding: 0.2rem 0.5rem;
           border-radius: 4px;
@@ -846,7 +847,7 @@ export default function GitHubIntegrationFixed() {
 
         .refresh-btn {
           background: rgba(255, 255, 255, 0.1);
-          border: 1px solid rgba(255, 255, 255, 0.2);
+          border: 2px solid #000000;
           color: #ffffff;
           padding: 0.5rem 1rem;
           border-radius: 6px;
