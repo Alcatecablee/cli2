@@ -3456,51 +3456,6 @@ legend {
   }
 }
 
-/* Fullscreen Results Layout */
-.results-section-fullscreen {
-  position: fixed;
-  top: 0;
-  left: 280px; /* sidebar width */
-  right: 0;
-  bottom: 0;
-  background: #000000;
-  overflow-y: auto;
-  z-index: 50;
-  padding: 2rem;
-}
-
-.analysis-results-fullscreen {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-  max-width: 1400px;
-  margin: 0 auto;
-  height: fit-content;
-}
-
-.clear-results-section {
-  position: fixed;
-  top: 1rem;
-  right: 1rem;
-  z-index: 60;
-}
-
-.dashboard-main.results-active {
-  display: none;
-}
-
-@media (max-width: 768px) {
-  .results-section-fullscreen {
-    left: 0;
-    padding: 1rem;
-  }
-
-  .analysis-results-fullscreen {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-}
-
 /* Analysis History Button Styles - GitHub Integration Style */
 .btn {
   background: linear-gradient(
