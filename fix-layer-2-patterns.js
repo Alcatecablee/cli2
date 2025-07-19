@@ -90,12 +90,31 @@ const patterns = [
     fileTypes: ["tsx", "jsx"],
   },
 
-  // Professional Content Standardization - Emoji Removal & Standardization
-  // Core technical symbols
+  // ===== PROFESSIONAL CONTENT STANDARDIZATION =====
+  // Advanced Context-Aware Emoji Standardization System
+  // Implements semantic mapping, contextual preservation, and enterprise reporting
+
+  // Smart Semantic Replacement - Replace with meaningful professional text
   {
     name: "Technical Tool Emojis",
     pattern: /🔧|⚙️|🛠️|🔩/g,
-    replacement: "",
+    replacement: (match, offset, string) => {
+      // Context-aware replacement: preserve in documentation titles
+      const beforeText = string.substring(Math.max(0, offset - 20), offset);
+      const afterText = string.substring(offset, offset + 20);
+
+      // Preserve in markdown headers or JSDoc comments
+      if (/#{1,6}\s*$/.test(beforeText) || /\/\*\*[^*]*$/.test(beforeText)) {
+        return "[Tool]"; // Professional placeholder
+      }
+
+      // In code comments, replace with descriptive text
+      if (/\/\/\s*$/.test(beforeText) || /\/\*[^*]*$/.test(beforeText)) {
+        return "CONFIG:"; // Clear context indicator
+      }
+
+      return ""; // Remove elsewhere
+    },
     fileTypes: ["ts", "tsx", "js", "jsx", "md", "mdx"],
   },
   {
@@ -107,13 +126,51 @@ const patterns = [
   {
     name: "React Component Emojis",
     pattern: /⚛️|🔄|🔀/g,
-    replacement: "",
+    replacement: (match, offset, string) => {
+      const contextMap = {
+        "⚛️": "[React]",
+        "🔄": "[Refresh]",
+        "🔀": "[Switch]",
+      };
+
+      const beforeText = string.substring(Math.max(0, offset - 15), offset);
+
+      // In documentation or comments, use professional labels
+      if (
+        /#{1,6}\s*$/.test(beforeText) ||
+        /\/\*\*?[^*]*$/.test(beforeText) ||
+        /\/\/\s*$/.test(beforeText)
+      ) {
+        return contextMap[match] || "";
+      }
+
+      return ""; // Remove from code
+    },
     fileTypes: ["ts", "tsx", "js", "jsx", "md", "mdx"],
   },
   {
     name: "Performance Speed Emojis",
     pattern: /🚀|⚡|💨/g,
-    replacement: "",
+    replacement: (match, offset, string) => {
+      const performanceMap = {
+        "🚀": "[Fast]",
+        "⚡": "[Optimized]",
+        "💨": "[Quick]",
+      };
+
+      const beforeText = string.substring(Math.max(0, offset - 20), offset);
+
+      // Smart context detection
+      if (/\b(performance|speed|optimization|fast)\b/i.test(beforeText)) {
+        return " (" + performanceMap[match].slice(1, -1).toLowerCase() + ")"; // Convert to lowercase in context
+      }
+
+      if (/#{1,6}\s*$/.test(beforeText) || /\/\*\*?[^*]*$/.test(beforeText)) {
+        return performanceMap[match];
+      }
+
+      return "";
+    },
     fileTypes: ["ts", "tsx", "js", "jsx", "md", "mdx"],
   },
   {
