@@ -467,15 +467,15 @@ export default function GitHubIntegrationFixed() {
             rgba(255, 255, 255, 0.04) 50%,
             rgba(255, 255, 255, 0.02) 100%
           );
-          border: 1px solid rgba(255, 255, 255, 0.15);
-          border-radius: 20px;
+          border: 2px solid #000000;
+          border-radius: 16px;
           padding: 2rem;
           margin-bottom: 2rem;
           backdrop-filter: blur(25px) saturate(1.2);
           -webkit-backdrop-filter: blur(25px) saturate(1.2);
           box-shadow:
-            0 12px 40px rgba(0, 0, 0, 0.3),
-            inset 0 1px 0 rgba(255, 255, 255, 0.15);
+            0 8px 32px rgba(0, 0, 0, 0.2),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
           transition: all 0.3s ease;
         }
 
@@ -495,8 +495,8 @@ export default function GitHubIntegrationFixed() {
 
         .plan-info-card {
           background: rgba(255, 255, 255, 0.05);
-          border: 1px solid rgba(255, 255, 255, 0.15);
-          border-radius: 16px;
+          border: 2px solid #000000;
+          border-radius: 12px;
           padding: 1.5rem;
           margin-bottom: 2rem;
         }
@@ -546,7 +546,7 @@ export default function GitHubIntegrationFixed() {
             rgba(33, 150, 243, 0.15) 50%,
             rgba(255, 255, 255, 0.1) 100%
           );
-          border: 1px solid rgba(33, 150, 243, 0.4);
+          border: 2px solid #000000;
           border-radius: 8px;
           color: #ffffff;
           padding: 0.5rem 1rem;
@@ -579,8 +579,8 @@ export default function GitHubIntegrationFixed() {
           text-align: center;
           padding: 2.5rem;
           background: rgba(255, 255, 255, 0.03);
-          border: 2px dashed rgba(255, 255, 255, 0.2);
-          border-radius: 16px;
+          border: 2px solid #000000;
+          border-radius: 12px;
           gap: 1rem;
         }
 
@@ -610,7 +610,7 @@ export default function GitHubIntegrationFixed() {
             rgba(33, 150, 243, 0.15) 50%,
             rgba(255, 255, 255, 0.1) 100%
           );
-          border: 1px solid rgba(33, 150, 243, 0.4);
+          border: 2px solid #000000;
           border-radius: 8px;
           backdrop-filter: blur(20px) saturate(1.2);
           -webkit-backdrop-filter: blur(20px) saturate(1.2);
