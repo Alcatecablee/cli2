@@ -496,6 +496,9 @@ export default function Overview({ analysisHistory }: OverviewProps) {
           display: flex;
           flex-direction: column;
           gap: 2rem;
+          border: 2px solid #000000;
+          border-radius: 16px;
+          padding: 1.5rem;
         }
 
         .overview-header {
