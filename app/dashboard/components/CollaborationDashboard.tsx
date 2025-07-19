@@ -48,1266 +48,816 @@ interface Activity {
   userId: string;
   userName: string;
   timestamp: Date;
-  details: any;
+  details?: string;
+  fileName?: string;
 }
 
-interface CollaborationDashboardProps {
-  user: any;
-  sessions: CollaborationSession[];
-  loadingSessions: boolean;
-  onRefreshSessions: () => Promise<void>;
-  onUpdateSessions: (sessions: CollaborationSession[]) => void;
+interface Team {
+  id: string;
+  name: string;
+  description?: string;
+  memberCount: number;
+  owner: string;
+  created_at: string;
 }
 
-export default function CollaborationDashboard({
-  user,
-  sessions,
-  loadingSessions,
-  onRefreshSessions,
-  onUpdateSessions,
-}: CollaborationDashboardProps) {
+export default function CollaborationDashboard() {
   const [activeTab, setActiveTab] = useState<"sessions" | "teams" | "activity">(
     "sessions",
   );
+  const [sessions, setSessions] = useState<CollaborationSession[]>([]);
+  const [teams, setTeams] = useState<Team[]>([]);
   const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
   const [activities, setActivities] = useState<Activity[]>([]);
-  const [loadingTeams, setLoadingTeams] = useState(false);
-  const [loadingActivity, setLoadingActivity] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [filterStatus, setFilterStatus] = useState<
-    "all" | "active" | "inactive"
-  >("all");
-  const [showCreateModal, setShowCreateModal] = useState(false);
-  const [showInviteModal, setShowInviteModal] = useState(false);
-  const [showConflictModal, setShowConflictModal] = useState(false);
-  const [conflictData, setConflictData] = useState<any>(null);
-  const [onlineUsers, setOnlineUsers] = useState<
-    Map<string, { userName: string; lastSeen: Date; status: string }>
-  >(new Map());
-  const [connectionStatus, setConnectionStatus] = useState<
-    "connecting" | "connected" | "disconnected" | "error"
-  >("disconnected");
-  const [isConnectionInitialized, setIsConnectionInitialized] = useState(false);
-  const pollInterval = useRef<NodeJS.Timeout | null>(null);
-  const activityPollInterval = useRef<NodeJS.Timeout | null>(null);
-  const presencePollInterval = useRef<NodeJS.Timeout | null>(null);
-  const lastPollTime = useRef<{ [key: string]: number }>({});
-
-  // Real-time polling for live updates
-  useEffect(() => {
-    if (activeTab === "sessions") {
-      pollInterval.current = setInterval(async () => {
-        try {
-          const response = await fetch("/api/collaboration/sessions", {
-            headers: {
-              "x-user-id": user.id,
-              "x-user-name": user.firstName || user.email || "Anonymous",
-            },
-          });
-          if (response.ok) {
-            const data = await response.json();
-            onUpdateSessions(data.sessions || []);
-          }
-        } catch (error) {
-          console.error("Failed to poll sessions:", error);
-        }
-      }, 120000); // Poll every 2 minutes (120 seconds) for less disruption
-
-      return () => {
-        if (pollInterval.current) {
-          clearInterval(pollInterval.current);
-        }
-      };
-    }
-
-    // Poll activity feed for real-time updates
-    if (activeTab === "activity") {
-      activityPollInterval.current = setInterval(async () => {
-        try {
-          const response = await fetch("/api/collaboration/activity", {
-            headers: {
-              "x-user-id": user.id,
-              "x-user-name": user.firstName || user.email || "Anonymous",
-            },
-          });
-          if (response.ok) {
-            const data = await response.json();
-            const formattedActivities = data.activities.map(
-              (activity: any) => ({
-                id: activity.id,
-                type: activity.type,
-                sessionId: activity.session_id,
-                userId: activity.user_id,
-                userName: activity.user_name,
-                timestamp: new Date(activity.timestamp),
-                details: activity.details,
-              }),
-            );
-            setActivities(formattedActivities);
-          }
-        } catch (error) {
-          console.error("Failed to poll activity:", error);
-        }
-      }, 120000); // Poll every 2 minutes (120 seconds) for less disruption
-
-      return () => {
-        if (pollInterval.current) {
-          clearInterval(pollInterval.current);
-        }
-        if (activityPollInterval.current) {
-          clearInterval(activityPollInterval.current);
-        }
-      };
-    }
-
-    // Always poll for online presence to show live indicators
-    presencePollInterval.current = setInterval(async () => {
-      const now = Date.now();
-      if (
-        lastPollTime.current.presence &&
-        now - lastPollTime.current.presence < 120000
-      ) {
-        return; // Rate limit: don't poll more than once per 10 seconds
-      }
-      lastPollTime.current.presence = now;
-
-      try {
-        const response = await fetch("/api/collaboration/presence", {
-          headers: {
-            "x-user-id": user.id,
-            "x-user-name": user.firstName || user.email || "Anonymous",
-          },
-        });
-        if (response.ok) {
-          const data = await response.json();
-          const onlineMap = new Map();
-          data.presence.forEach((p: any) => {
-            onlineMap.set(p.userId, {
-              userName: p.userName,
-              lastSeen: new Date(p.lastSeen),
-              status: p.status,
-            });
-          });
-          setOnlineUsers(onlineMap);
-        }
-      } catch (error) {
-        console.error("Failed to poll presence:", error);
-      }
-    }, 120000); // Poll every 2 minutes (120 seconds) for less disruption
-
-    return () => {
-      if (pollInterval.current) {
-        clearInterval(pollInterval.current);
-      }
-      if (activityPollInterval.current) {
-        clearInterval(activityPollInterval.current);
-      }
-      if (presencePollInterval.current) {
-        clearInterval(presencePollInterval.current);
-      }
-    };
-  }, [activeTab, user.id, user.firstName, user.email, onUpdateSessions]);
-
-  // Real-time connection management (HTTP polling - WebSocket not supported in Next.js App Router)
-  const connectRealTime = useCallback(() => {
-    if (!user?.id || (activeTab !== "sessions" && activeTab !== "activity")) {
-      return;
-    }
-
-    // Prevent duplicate connections
-    if (connectionStatus === "connecting" || connectionStatus === "connected") {
-      console.log("[RT] Connection already active, skipping");
-      return;
-    }
-
-    // Since Next.js App Router doesn't support WebSocket upgrades natively,
-    // we'll use HTTP polling for real-time updates
-    console.log("[RT] Starting real-time polling for collaboration updates");
-    setConnectionStatus("connecting");
-
-    try {
-      // Test connection with health check
-      fetch("/api/collaboration/health")
-        .then((res) => {
-          if (res.ok) {
-            setConnectionStatus("connected");
-            console.log(
-              "[RT] Connected to collaboration service via HTTP polling",
-            );
-
-            // Start polling for updates based on active tab
-            if (activeTab === "sessions") {
-              pollInterval.current = setInterval(onRefreshSessions, 120000); // Poll every 2 minutes for less disruption
-            }
-            if (activeTab === "activity") {
-              activityPollInterval.current = setInterval(() => {
-                // Poll for activity updates
-                fetch(`/api/collaboration/activity?userId=${user.id}`)
-                  .then((res) => res.json())
-                  .then((data) => {
-                    if (data.success && data.activities) {
-                      setActivities(data.activities);
-                    }
-                  })
-                  .catch((error) => {
-                    console.error(
-                      "[RT] Failed to fetch activity updates:",
-                      error,
-                    );
-                  });
-              }, 120000); // Poll every 2 minutes (120 seconds) for less disruption
-            }
-          } else {
-            throw new Error(`Health check failed: ${res.status}`);
-          }
-        })
-        .catch((error) => {
-          console.error(
-            "[RT] Connection failed, implementing fallback strategy:",
-            error,
-          );
-          setConnectionStatus("error");
-
-          // Implement progressive fallback strategy
-          const retryWithBackoff = (retryCount = 0) => {
-            if (retryCount < 3) {
-              const delay = Math.pow(2, retryCount) * 2000; // 2s, 4s, 8s
-              setTimeout(() => {
-                console.log(
-                  `[RT] Retrying connection (attempt ${retryCount + 1}/3)`,
-                );
-                fetch("/api/collaboration/health")
-                  .then((res) => {
-                    if (res.ok) {
-                      setConnectionStatus("connected");
-                      console.log("[RT] Reconnected successfully");
-                      if (activeTab === "sessions") {
-                        pollInterval.current = setInterval(
-                          onRefreshSessions,
-                          5000,
-                        );
-                      }
-                    } else {
-                      retryWithBackoff(retryCount + 1);
-                    }
-                  })
-                  .catch(() => retryWithBackoff(retryCount + 1));
-              }, delay);
-            } else {
-              // Final fallback to less frequent polling
-              console.log(
-                "[RT] All reconnection attempts failed, using degraded mode",
-              );
-              setConnectionStatus("disconnected");
-              if (activeTab === "sessions") {
-                pollInterval.current = setInterval(onRefreshSessions, 120000); // Poll every 2 minutes for less disruption
-              }
-            }
-          };
-
-          retryWithBackoff();
-        });
-    } catch (error) {
-      console.error("[RT] Failed to initialize connection:", error);
-      setConnectionStatus("error");
-
-      // Fall back to polling
-      if (activeTab === "sessions") {
-        pollInterval.current = setInterval(onRefreshSessions, 120000); // Poll every 2 minutes for less disruption
-      }
-    }
-  }, [user?.id, activeTab]); // Simplified dependencies
-
-  // Alias for backward compatibility
-  const connectWebSocket = connectRealTime;
-
-  // Reset connection state when changing tabs
-  useEffect(() => {
-    setIsConnectionInitialized(false);
-    setConnectionStatus("disconnected");
-
-    // Clear any existing intervals
-    if (pollInterval.current) {
-      clearInterval(pollInterval.current);
-      pollInterval.current = null;
-    }
-    if (activityPollInterval.current) {
-      clearInterval(activityPollInterval.current);
-      activityPollInterval.current = null;
-    }
-  }, [activeTab]);
-
-  const handleWebSocketMessage = useCallback(
-    (message: any) => {
-      const { type, data } = message;
-
-      switch (type) {
-        case "sessions_updated":
-          onUpdateSessions(data.sessions || []);
-          break;
-
-        case "activity_update":
-          if (data.activity) {
-            setActivities((prev) => [data.activity, ...prev.slice(0, 49)]); // Keep last 50
-          }
-          break;
-
-        case "presence_update":
-          if (data.presence) {
-            setOnlineUsers((prev) => {
-              const newMap = new Map(prev);
-              data.presence.forEach((p: any) => {
-                newMap.set(p.userId, {
-                  userName: p.userName,
-                  lastSeen: new Date(p.lastSeen),
-                  status: p.status,
-                });
-              });
-              return newMap;
-            });
-          }
-          break;
-
-        case "session_created":
-          onRefreshSessions(); // Refresh to get new session
-          if (data.activity) {
-            setActivities((prev) => [data.activity, ...prev.slice(0, 49)]);
-          }
-          break;
-
-        case "user_joined":
-        case "user_left":
-          // Update presence and activity
-          onRefreshSessions();
-          if (data.activity) {
-            setActivities((prev) => [data.activity, ...prev.slice(0, 49)]);
-          }
-          break;
-
-        case "pong":
-          // Keep-alive response
-          break;
-
-        case "conflict_detected":
-          setConflictData(data);
-          setShowConflictModal(true);
-          break;
-
-        case "error":
-          console.error("[WS] Server error:", data.message);
-          break;
-
-        default:
-          console.warn("[WS] Unknown message type:", type);
-      }
-    },
-    [onUpdateSessions],
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState<"all" | "active" | "locked">(
+    "all",
   );
+  const [newSessionName, setNewSessionName] = useState("");
+  const [newFileName, setNewFileName] = useState("");
+  const [newLanguage, setNewLanguage] = useState("javascript");
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+  const wsRef = useRef<WebSocket | null>(null);
+  const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const lastHeartbeatRef = useRef<Date>(new Date());
 
-  // Real-time connection effect
-  useEffect(() => {
-    if (
-      (activeTab === "sessions" || activeTab === "activity") &&
-      !isConnectionInitialized
-    ) {
-      connectWebSocket();
-      setIsConnectionInitialized(true);
+  // Initialize WebSocket connection
+  const initializeWebSocket = useCallback(() => {
+    try {
+      const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+      const wsUrl = `${protocol}//${window.location.host}/api/collaboration/ws`;
+
+      if (wsRef.current?.readyState === WebSocket.OPEN) {
+        return;
+      }
+
+      wsRef.current = new WebSocket(wsUrl);
+
+      wsRef.current.onopen = () => {
+        console.log("Connected to collaboration WebSocket");
+        setError(null);
+        lastHeartbeatRef.current = new Date();
+
+        // Send heartbeat every 30 seconds
+        const heartbeatInterval = setInterval(() => {
+          if (wsRef.current?.readyState === WebSocket.OPEN) {
+            wsRef.current.send(
+              JSON.stringify({ type: "heartbeat", timestamp: new Date() }),
+            );
+            lastHeartbeatRef.current = new Date();
+          } else {
+            clearInterval(heartbeatInterval);
+          }
+        }, 30000);
+      };
+
+      wsRef.current.onmessage = (event) => {
+        try {
+          const data = JSON.parse(event.data);
+          console.log("WebSocket message received:", data);
+
+          switch (data.type) {
+            case "session_updated":
+              if (data.session) {
+                setSessions((prev) =>
+                  prev.map((session) =>
+                    session.id === data.session.id ? data.session : session,
+                  ),
+                );
+              }
+              break;
+
+            case "session_created":
+              if (data.session) {
+                setSessions((prev) => [...prev, data.session]);
+                setActivities((prev) => [
+                  {
+                    id: `activity_${Date.now()}`,
+                    type: "session_created",
+                    sessionId: data.session.id,
+                    userId: data.session.host_user_id || "unknown",
+                    userName: data.session.host_name || "Unknown User",
+                    timestamp: new Date(),
+                    details: `Created session "${data.session.name}"`,
+                    fileName: data.session.document_filename,
+                  },
+                  ...prev.slice(0, 49),
+                ]);
+              }
+              break;
+
+            case "participant_joined":
+              if (data.sessionId && data.participant) {
+                setSessions((prev) =>
+                  prev.map((session) => {
+                    if (session.id === data.sessionId) {
+                      const updatedParticipants = [
+                        ...(session.participants || []),
+                        data.participant,
+                      ];
+                      return {
+                        ...session,
+                        participants: updatedParticipants,
+                      };
+                    }
+                    return session;
+                  }),
+                );
+
+                setActivities((prev) => [
+                  {
+                    id: `activity_${Date.now()}`,
+                    type: "session_joined",
+                    sessionId: data.sessionId,
+                    userId: data.participant.user_id,
+                    userName: data.participant.user_name,
+                    timestamp: new Date(),
+                    details: `Joined collaboration session`,
+                  },
+                  ...prev.slice(0, 49),
+                ]);
+              }
+              break;
+
+            case "participant_left":
+              if (data.sessionId && data.userId) {
+                setSessions((prev) =>
+                  prev.map((session) => {
+                    if (session.id === data.sessionId) {
+                      const updatedParticipants = (
+                        session.participants || []
+                      ).filter((p) => p.user_id !== data.userId);
+                      return {
+                        ...session,
+                        participants: updatedParticipants,
+                      };
+                    }
+                    return session;
+                  }),
+                );
+
+                setActivities((prev) => [
+                  {
+                    id: `activity_${Date.now()}`,
+                    type: "session_left",
+                    sessionId: data.sessionId,
+                    userId: data.userId,
+                    userName: data.userName || "Unknown User",
+                    timestamp: new Date(),
+                    details: `Left collaboration session`,
+                  },
+                  ...prev.slice(0, 49),
+                ]);
+              }
+              break;
+
+            case "heartbeat_response":
+              lastHeartbeatRef.current = new Date();
+              break;
+
+            default:
+              console.log("Unknown message type:", data.type);
+          }
+        } catch (e) {
+          console.error("Error parsing WebSocket message:", e);
+        }
+      };
+
+      wsRef.current.onclose = (event) => {
+        console.log("WebSocket connection closed:", event.code, event.reason);
+
+        if (event.code !== 1000) {
+          setError("Connection lost. Attempting to reconnect...");
+
+          if (reconnectTimeoutRef.current) {
+            clearTimeout(reconnectTimeoutRef.current);
+          }
+
+          reconnectTimeoutRef.current = setTimeout(() => {
+            console.log("Attempting to reconnect WebSocket...");
+            initializeWebSocket();
+          }, 3000);
+        }
+      };
+
+      wsRef.current.onerror = (error) => {
+        console.error("WebSocket error:", error);
+        setError("Connection error occurred");
+      };
+    } catch (e) {
+      console.error("Failed to initialize WebSocket:", e);
+      setError("Failed to establish real-time connection");
     }
-
-    return () => {
-      // Cleanup polling intervals when changing tabs
-      if (pollInterval.current) {
-        clearInterval(pollInterval.current);
-        pollInterval.current = null;
-      }
-      if (activityPollInterval.current) {
-        clearInterval(activityPollInterval.current);
-        activityPollInterval.current = null;
-      }
-    };
-  }, [activeTab]); // Removed connectWebSocket from dependencies to prevent infinite loop
-
-  // Cleanup all intervals on unmount
-  useEffect(() => {
-    return () => {
-      if (pollInterval.current) {
-        clearInterval(pollInterval.current);
-      }
-      if (activityPollInterval.current) {
-        clearInterval(activityPollInterval.current);
-      }
-      if (presencePollInterval.current) {
-        clearInterval(presencePollInterval.current);
-      }
-    };
   }, []);
 
-  // Load team members
-  const loadTeamMembers = useCallback(async () => {
-    setLoadingTeams(true);
-
-    // Set timeout for loading state
-    const timeoutId = setTimeout(() => {
-      setLoadingTeams(false);
-      console.warn("Team loading timed out");
-    }, 10000); // 10 second timeout
-
-    try {
-      const response = await fetch("/api/collaboration/teams", {
-        headers: {
-          "x-user-id": user.id,
-          "x-user-name": user.firstName || user.email || "Anonymous",
-        },
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        // Extract all unique members from all teams
-        const allMembers = new Map<string, TeamMember>();
-
-        data.teams.forEach((team: any) => {
-          team.members.forEach((member: any) => {
-            if (!allMembers.has(member.user_id)) {
-              allMembers.set(member.user_id, {
-                id: member.user_id,
-                name: member.user_name || member.user_email || "Unknown",
-                email: member.user_email || "",
-                role: member.role,
-                status: member.status || "offline",
-                lastSeen: new Date(member.lastSeen || Date.now()),
-              });
-            }
-          });
-        });
-
-        // Add current user if not already included
-        if (!allMembers.has(user.id)) {
-          allMembers.set(user.id, {
-            id: user.id,
-            name: user.firstName || user.email || "You",
-            email: user.email || "",
-            role: "owner",
-            status: "online",
-            lastSeen: new Date(),
-          });
-        }
-
-        setTeamMembers(Array.from(allMembers.values()));
-      } else {
-        console.error(
-          "Failed to load teams:",
-          response.status,
-          response.statusText,
-        );
-        // Show user-friendly error and fallback
-        if (response.status === 401) {
-          console.warn("Authentication required for team data");
-        } else if (response.status >= 500) {
-          console.error("Server error loading teams");
-        }
-        // Fallback to current user only
-        setTeamMembers([
-          {
-            id: user.id,
-            name: user.firstName || user.email || "You",
-            email: user.email || "",
-            role: "owner",
-            status: "online",
-            lastSeen: new Date(),
-          },
-        ]);
-      }
-    } catch (error) {
-      console.error("Failed to load team members:", error);
-      // Fallback to basic user data
-      setTeamMembers([
-        {
-          id: user.id,
-          name: user.firstName || user.email || "You",
-          email: user.email || "",
-          role: "owner",
-          status: "online",
-          lastSeen: new Date(),
-        },
-      ]);
-    } finally {
-      clearTimeout(timeoutId);
-      setLoadingTeams(false);
-    }
-  }, [user]);
-
-  // Load activity feed
-  const loadActivity = useCallback(async () => {
-    setLoadingActivity(true);
-    try {
-      const response = await fetch("/api/collaboration/activity", {
-        headers: {
-          "x-user-id": user.id,
-          "x-user-name": user.firstName || user.email || "Anonymous",
-        },
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        const formattedActivities: Activity[] = data.activities.map(
-          (activity: any) => ({
-            id: activity.id,
-            type: activity.type,
-            sessionId: activity.session_id,
-            userId: activity.user_id,
-            userName: activity.user_name,
-            timestamp: new Date(activity.timestamp),
-            details: activity.details,
-          }),
-        );
-        setActivities(formattedActivities);
-      } else {
-        console.error("Failed to load activity:", response.statusText);
-        // Fallback to sample activities for demo
-        const sampleActivities: Activity[] = [
-          {
-            id: "sample1",
-            type: "session_created",
-            sessionId: sessions[0]?.id,
-            userId: user.id,
-            userName: user.firstName || user.email || "You",
-            timestamp: new Date(Date.now() - 1000 * 60 * 10),
-            details: { sessionName: sessions[0]?.name || "Sample Session" },
-          },
-        ];
-        setActivities(sampleActivities);
-      }
-    } catch (error) {
-      console.error("Failed to load activity:", error);
-      setActivities([]);
-    } finally {
-      setLoadingActivity(false);
-    }
-  }, [user, sessions]);
-
+  // Fetch data from APIs
   useEffect(() => {
-    if (activeTab === "teams") {
-      loadTeamMembers();
-    } else if (activeTab === "activity") {
-      loadActivity();
-    }
-  }, [activeTab, loadTeamMembers, loadActivity]);
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        // Fetch current user
+        const userResponse = await fetch("/api/auth/current-user");
+        if (userResponse.ok) {
+          const userData = await userResponse.json();
+          setCurrentUserId(userData.user?.id);
+        }
 
-  const createSession = async (sessionData: {
-    name: string;
-    filename: string;
-    language: string;
-    template?: string;
-    collaborative?: boolean;
-    realTimeUpdates?: boolean;
-    sessionLocking?: boolean;
-    conflictResolution?: "merge" | "overwrite" | "strict";
-  }) => {
+        // Fetch collaboration sessions
+        const sessionsResponse = await fetch("/api/collaboration/sessions");
+        if (sessionsResponse.ok) {
+          const sessionsData = await sessionsResponse.json();
+          setSessions(Array.isArray(sessionsData) ? sessionsData : []);
+        }
+
+        // Fetch teams
+        const teamsResponse = await fetch("/api/teams");
+        if (teamsResponse.ok) {
+          const teamsData = await teamsResponse.json();
+          setTeams(Array.isArray(teamsData) ? teamsData : []);
+        }
+
+        // Fetch activities
+        const activitiesResponse = await fetch("/api/collaboration/activity");
+        if (activitiesResponse.ok) {
+          const activitiesData = await activitiesResponse.json();
+          const formattedActivities = (
+            Array.isArray(activitiesData) ? activitiesData : []
+          ).map((activity: any) => ({
+            ...activity,
+            timestamp: new Date(activity.timestamp),
+          }));
+          setActivities(formattedActivities);
+        }
+
+        setError(null);
+      } catch (error) {
+        console.error("Error fetching collaboration data:", error);
+        setError("Failed to load collaboration data");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+    initializeWebSocket();
+
+    return () => {
+      if (wsRef.current) {
+        wsRef.current.close(1000, "Component unmounting");
+      }
+      if (reconnectTimeoutRef.current) {
+        clearTimeout(reconnectTimeoutRef.current);
+      }
+    };
+  }, [initializeWebSocket]);
+
+  // Monitor WebSocket health
+  useEffect(() => {
+    const healthCheckInterval = setInterval(() => {
+      const now = new Date();
+      const timeSinceLastHeartbeat =
+        now.getTime() - lastHeartbeatRef.current.getTime();
+
+      if (timeSinceLastHeartbeat > 60000) {
+        console.log("WebSocket seems unhealthy, reconnecting...");
+        if (wsRef.current) {
+          wsRef.current.close();
+        }
+        initializeWebSocket();
+      }
+    }, 30000);
+
+    return () => clearInterval(healthCheckInterval);
+  }, [initializeWebSocket]);
+
+  const filteredSessions = sessions.filter((session) => {
+    const matchesSearch = session.name
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+    const matchesStatus =
+      statusFilter === "all" ||
+      (statusFilter === "active" && !session.is_locked) ||
+      (statusFilter === "locked" && session.is_locked);
+    return matchesSearch && matchesStatus;
+  });
+
+  const handleCreateSession = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newSessionName.trim() || !newFileName.trim()) return;
+
     try {
       const response = await fetch("/api/collaboration/sessions", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "x-user-id": user.id,
-          "x-user-name": user.firstName || user.email || "Anonymous",
         },
         body: JSON.stringify({
-          name: sessionData.name,
-          filename: sessionData.filename,
-          language: sessionData.language,
-          initialCode: getInitialCode(
-            sessionData.template || "blank",
-            sessionData.language,
-          ),
-          // Enhanced collaborative options
-          collaborative: sessionData.collaborative !== false,
-          realTimeUpdates: sessionData.realTimeUpdates !== false,
-          sessionLocking: sessionData.sessionLocking || false,
-          conflictResolution: sessionData.conflictResolution || "merge",
+          name: newSessionName,
+          document_filename: newFileName,
+          document_language: newLanguage,
         }),
       });
 
       if (response.ok) {
-        const data = await response.json();
-
-        // Track activity
-        await fetch("/api/collaboration/activity", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "x-user-id": user.id,
-            "x-user-name": user.firstName || user.email || "Anonymous",
-          },
-          body: JSON.stringify({
-            type: "session_created",
-            sessionId: data.session.id,
-            details: {
-              sessionName: sessionData.name,
-              filename: sessionData.filename,
-              language: sessionData.language,
-            },
-          }),
-        }).catch(console.error);
-
-        window.open(`/collaborate?session=${data.session.id}`, "_blank");
-        await onRefreshSessions();
-        setShowCreateModal(false);
+        const newSession = await response.json();
+        setSessions((prev) => [newSession, ...prev]);
+        setNewSessionName("");
+        setNewFileName("");
+        setNewLanguage("javascript");
+        setIsCreateModalOpen(false);
       } else {
-        const error = await response.json();
-        alert(`Failed to create session: ${error.error}`);
+        const errorData = await response.json();
+        setError(errorData.error || "Failed to create session");
       }
     } catch (error) {
-      console.error("Failed to create session:", error);
-      alert("Failed to create session");
+      console.error("Error creating session:", error);
+      setError("Failed to create session");
     }
   };
 
-  const getInitialCode = (template: string, language: string) => {
-    const templates = {
-      blank: "// Start coding here...\n",
-      component:
-        language === "typescript"
-          ? `import React from 'react';\n\ninterface Props {\n  // Add your props here\n}\n\nexport default function Component({ }: Props) {\n  return (\n    <div>\n      {/* Your component JSX */}\n    </div>\n  );\n}\n`
-          : `import React from 'react';\n\nexport default function Component() {\n  return (\n    <div>\n      {/* Your component JSX */}\n    </div>\n  );\n}\n`,
-      hook: `import { useState, useEffect } from 'react';\n\nexport function useCustomHook() {\n  const [state, setState] = useState(null);\n\n  useEffect(() => {\n    // Hook logic here\n  }, []);\n\n  return { state, setState };\n}\n`,
-      api: `import { NextRequest, NextResponse } from 'next/server';\n\nexport async function GET(request: NextRequest) {\n  try {\n    // API logic here\n    return NextResponse.json({ success: true });\n  } catch (error) {\n    return NextResponse.json(\n      { error: 'Internal server error' },\n      { status: 500 }\n    );\n  }\n}\n`,
-    };
-    return templates[template as keyof typeof templates] || templates.blank;
+  const handleJoinSession = async (sessionId: string) => {
+    try {
+      const response = await fetch(
+        `/api/collaboration/sessions/${sessionId}/join`,
+        {
+          method: "POST",
+        },
+      );
+
+      if (response.ok) {
+        // Session joined successfully, navigate or update UI as needed
+        console.log("Joined session successfully");
+      } else {
+        const errorData = await response.json();
+        setError(errorData.error || "Failed to join session");
+      }
+    } catch (error) {
+      console.error("Error joining session:", error);
+      setError("Failed to join session");
+    }
   };
 
-  const filteredSessions = sessions.filter((session) => {
-    const matchesSearch =
-      session.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      session.document_filename
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase());
+  const handleDeleteSession = async (sessionId: string) => {
+    try {
+      const response = await fetch(`/api/collaboration/sessions/${sessionId}`, {
+        method: "DELETE",
+      });
 
-    if (filterStatus === "all") return matchesSearch;
-    if (filterStatus === "active") {
-      const lastActivity = new Date(session.last_activity);
-      const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
-      return matchesSearch && lastActivity > fiveMinutesAgo;
+      if (response.ok) {
+        setSessions((prev) => prev.filter((s) => s.id !== sessionId));
+        setActivities((prev) => [
+          {
+            id: `activity_${Date.now()}`,
+            type: "session_deleted",
+            sessionId,
+            userId: currentUserId || "unknown",
+            userName: "You",
+            timestamp: new Date(),
+            details: "Deleted collaboration session",
+          },
+          ...prev.slice(0, 49),
+        ]);
+      } else {
+        const errorData = await response.json();
+        setError(errorData.error || "Failed to delete session");
+      }
+    } catch (error) {
+      console.error("Error deleting session:", error);
+      setError("Failed to delete session");
     }
-    if (filterStatus === "inactive") {
-      const lastActivity = new Date(session.last_activity);
-      const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
-      return matchesSearch && lastActivity <= fiveMinutesAgo;
-    }
-    return matchesSearch;
-  });
+  };
 
-  const getStatusColor = (status: string) => {
+  const formatTimeAgo = (date: Date | string) => {
+    const now = new Date();
+    const past = new Date(date);
+    const diffInMinutes = Math.floor((now.getTime() - past.getTime()) / 60000);
+
+    if (diffInMinutes < 1) return "Just now";
+    if (diffInMinutes < 60) return `${diffInMinutes}m ago`;
+    if (diffInMinutes < 1440) return `${Math.floor(diffInMinutes / 60)}h ago`;
+    return `${Math.floor(diffInMinutes / 1440)}d ago`;
+  };
+
+  const getActivityIcon = (type: Activity["type"]) => {
+    switch (type) {
+      case "session_created":
+        return "➕";
+      case "session_joined":
+        return "👥";
+      case "session_left":
+        return "👋";
+      case "document_edited":
+        return "✏️";
+      case "comment_added":
+        return "💬";
+      case "analysis_run":
+        return "🔍";
+      case "session_deleted":
+        return "🗑️";
+      default:
+        return "📝";
+    }
+  };
+
+  const getStatusColor = (status: TeamMember["status"]) => {
     switch (status) {
       case "online":
-        return "#4caf50";
+        return "#4CAF50";
       case "away":
-        return "#ff9800";
-      case "offline":
-        return "#9e9e9e";
+        return "#FF9800";
       default:
-        return "#9e9e9e";
+        return "#757575";
     }
   };
 
-  const formatTimeAgo = (date: Date) => {
-    const now = new Date();
-    const diff = now.getTime() - date.getTime();
-    const minutes = Math.floor(diff / (1000 * 60));
-    const hours = Math.floor(diff / (1000 * 60 * 60));
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  if (isLoading) {
+    return (
+      <div className="collaboration-dashboard">
+        <div className="loading-state">
+          <div className="loading-spinner"></div>
+          <p>Loading collaboration data...</p>
+        </div>
+        <style jsx>{`
+          .collaboration-dashboard {
+            min-height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(
+              135deg,
+              rgba(255, 255, 255, 0.08) 0%,
+              rgba(255, 255, 255, 0.04) 50%,
+              rgba(255, 255, 255, 0.02) 100%
+            );
+            border: 2px solid #000000;
+            border-radius: 16px;
+            margin: 1rem 0;
+          }
 
-    if (minutes < 1) return "Just now";
-    if (minutes < 60) return `${minutes}m ago`;
-    if (hours < 24) return `${hours}h ago`;
-    return `${days}d ago`;
-  };
+          .loading-state {
+            text-align: center;
+            color: #ffffff;
+          }
+
+          .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top: 3px solid #ffffff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+          }
+
+          @keyframes spin {
+            0% {
+              transform: rotate(0deg);
+            }
+            100% {
+              transform: rotate(360deg);
+            }
+          }
+        `}</style>
+      </div>
+    );
+  }
 
   return (
     <div className="collaboration-dashboard">
       {/* Header */}
       <div className="collaboration-header">
-        <div className="header-content">
-          <div className="header-info">
-            <h2>Team Collaboration</h2>
-            <p>Real-time code collaboration with your team</p>
-            {onlineUsers.size > 0 && (
-              <div className="online-indicator">
-                <div className="online-dot"></div>
-                <span>{onlineUsers.size} online now</span>
-              </div>
-            )}
-          </div>
-          {/* Only show header actions when sessions exist to avoid duplication with empty state */}
-          {sessions.length > 0 && (
-            <div className="header-actions">
-              <button
-                className="btn btn-primary"
-                onClick={() => setShowCreateModal(true)}
-              >
-                <svg
-                  viewBox="0 0 24 24"
-                  width="16"
-                  height="16"
-                  fill="currentColor"
-                >
-                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" />
-                </svg>
-                New Session
-              </button>
-              <button
-                className="btn btn-secondary"
-                onClick={() => setShowInviteModal(true)}
-              >
-                <svg
-                  viewBox="0 0 24 24"
-                  width="16"
-                  height="16"
-                  fill="currentColor"
-                >
-                  <path d="M16 4c0-1.11.89-2 2-2s2 .89 2 2-.89 2-2 2-2-.89-2-2zm4 18v-6h2.5l-2.54-7.63A1.49 1.49 0 0 0 18.5 7.5h-3A1.49 1.49 0 0 0 14.04 8.37L11.5 16H14v6h6zM12.5 11.5c.83 0 1.5-.67 1.5-1.5s-.67-1.5-1.5-1.5S11 9.17 11 10s.67 1.5 1.5 1.5zm-2 1L8.96 15H10v5H4v-5h1.04L3.5 12.5C3.18 11.75 3.73 11 4.54 11h3.92c.81 0 1.36.75 1.04 1.5z" />
-                </svg>
-                Invite Members
-              </button>
-            </div>
-          )}
+        <div className="header-title">
+          <h2>Collaboration Dashboard</h2>
+          <p>Manage sessions, teams, and collaborative work</p>
         </div>
 
-        {/* Navigation Tabs */}
-        <div className="collaboration-tabs">
+        <div className="header-actions">
           <button
-            className={`tab-button ${activeTab === "sessions" ? "active" : ""}`}
-            onClick={() => setActiveTab("sessions")}
+            onClick={() => setIsCreateModalOpen(true)}
+            className="create-session-btn"
           >
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
-              <path d="M20 6h-2.18c.11-.31.18-.65.18-1a2.996 2.996 0 0 0-5.5-1.65l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-5-2c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM9 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1z" />
-            </svg>
-            Active Sessions
-            <span className="tab-badge">{sessions.length}</span>
-          </button>
-          <button
-            className={`tab-button ${activeTab === "teams" ? "active" : ""}`}
-            onClick={() => setActiveTab("teams")}
-          >
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
-              <path d="M16 4c0-1.11.89-2 2-2s2 .89 2 2-.89 2-2 2-2-.89-2-2zm4 18v-6h2.5l-2.54-7.63A1.49 1.49 0 0 0 18.5 7.5h-3A1.49 1.49 0 0 0 14.04 8.37L11.5 16H14v6h6zM12.5 11.5c.83 0 1.5-.67 1.5-1.5s-.67-1.5-1.5-1.5S11 9.17 11 10s.67 1.5 1.5 1.5zm-2 1L8.96 15H10v5H4v-5h1.04L3.5 12.5C3.18 11.75 3.73 11 4.54 11h3.92c.81 0 1.36.75 1.04 1.5z" />
-            </svg>
-            Team Members
-            <span className="tab-badge">{teamMembers.length}</span>
-          </button>
-          <button
-            className={`tab-button ${activeTab === "activity" ? "active" : ""}`}
-            onClick={() => setActiveTab("activity")}
-          >
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
-              <path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z" />
-            </svg>
-            Recent Activity
-            <span className="tab-badge">{activities.length}</span>
+            ➕ New Session
           </button>
         </div>
       </div>
 
-      {/* Content Area */}
-      <div className="collaboration-content">
-        {/* Sessions Tab */}
+      {/* Error Display */}
+      {error && (
+        <div className="error-banner">
+          <span className="error-icon">⚠️</span>
+          <span className="error-text">{error}</span>
+          <button
+            onClick={() => setError(null)}
+            className="error-dismiss"
+            aria-label="Dismiss error"
+          >
+            ✕
+          </button>
+        </div>
+      )}
+
+      {/* Navigation Tabs */}
+      <div className="tab-navigation">
+        {[
+          { id: "sessions", label: "Sessions", count: sessions.length },
+          { id: "teams", label: "Teams", count: teams.length },
+          { id: "activity", label: "Activity", count: activities.length },
+        ].map((tab) => (
+          <button
+            key={tab.id}
+            onClick={() => setActiveTab(tab.id as any)}
+            className={`tab-button ${activeTab === tab.id ? "active" : ""}`}
+          >
+            {tab.label}
+            <span className="tab-count">{tab.count}</span>
+          </button>
+        ))}
+      </div>
+
+      {/* Tab Content */}
+      <div className="tab-content">
         {activeTab === "sessions" && (
-          <div className="sessions-panel">
-            {/* Search and Filters */}
-            <div className="panel-controls">
+          <div className="sessions-section">
+            {/* Sessions Controls */}
+            <div className="sessions-controls">
               <div className="search-container">
-                <svg
-                  viewBox="0 0 24 24"
-                  width="16"
-                  height="16"
-                  fill="currentColor"
-                  className="search-icon"
-                >
-                  <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
-                </svg>
                 <input
                   type="text"
                   placeholder="Search sessions..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
                   className="search-input"
                 />
               </div>
-              <div className="filter-container">
-                <select
-                  value={filterStatus}
-                  onChange={(e) =>
-                    setFilterStatus(
-                      e.target.value as "all" | "active" | "inactive",
-                    )
-                  }
-                  className="filter-select"
-                >
-                  <option value="all">All Sessions</option>
-                  <option value="active">Active (Last 5 min)</option>
-                  <option value="inactive">Inactive</option>
-                </select>
+
+              <div className="filter-buttons">
+                {[
+                  { id: "all", label: "All" },
+                  { id: "active", label: "Active" },
+                  { id: "locked", label: "Locked" },
+                ].map((filter) => (
+                  <button
+                    key={filter.id}
+                    onClick={() => setStatusFilter(filter.id as any)}
+                    className={`filter-btn ${
+                      statusFilter === filter.id ? "active" : ""
+                    }`}
+                  >
+                    {filter.label}
+                  </button>
+                ))}
               </div>
-              <button
-                className="btn btn-secondary"
-                onClick={onRefreshSessions}
-                disabled={loadingSessions}
-              >
-                {loadingSessions ? "..." : "Refresh"}
-              </button>
             </div>
 
             {/* Sessions Grid */}
             <div className="sessions-grid">
-              {loadingSessions ? (
-                <div className="loading-placeholder">
-                  <div className="loading-spinner"></div>
-                  <p>Loading sessions...</p>
-                </div>
-              ) : filteredSessions.length === 0 ? (
-                <div className="empty-state">
-                  <svg
-                    viewBox="0 0 24 24"
-                    width="48"
-                    height="48"
-                    fill="currentColor"
-                    className="empty-icon"
-                  >
-                    <path d="M20 6h-2.18c.11-.31.18-.65.18-1a2.996 2.996 0 0 0-5.5-1.65l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-5-2c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM9 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1z" />
-                  </svg>
-                  <h3>No collaboration sessions found</h3>
-                  <p>
-                    Create a new session to start collaborating with your team
-                  </p>
-                  <button
-                    className="btn btn-primary"
-                    onClick={() => setShowCreateModal(true)}
-                  >
-                    Create Your First Session
-                  </button>
-                </div>
-              ) : (
+              {filteredSessions.length > 0 ? (
                 filteredSessions.map((session) => (
                   <div key={session.id} className="session-card">
                     <div className="session-header">
                       <div className="session-info">
                         <h4 className="session-name">{session.name}</h4>
                         <p className="session-file">
-                          {session.document_filename}
+                          📄 {session.document_filename}
                         </p>
+                        <div className="session-meta">
+                          <span className="language-tag">
+                            {session.document_language}
+                          </span>
+                          <span
+                            className={`status-indicator ${
+                              session.is_locked ? "locked" : "active"
+                            }`}
+                          >
+                            {session.is_locked ? "🔒 Locked" : "🟢 Active"}
+                          </span>
+                        </div>
                       </div>
-                      <div className="session-status">
-                        <div
-                          className={`status-indicator ${new Date(session.last_activity) > new Date(Date.now() - 5 * 60 * 1000) ? "active" : "inactive"}`}
-                        ></div>
-                        <span className="status-text">
-                          {new Date(session.last_activity) >
-                          new Date(Date.now() - 5 * 60 * 1000)
-                            ? "Active"
-                            : "Inactive"}
-                        </span>
+
+                      <div className="session-actions">
+                        <button
+                          onClick={() => handleJoinSession(session.id)}
+                          className="join-btn"
+                          disabled={session.is_locked}
+                        >
+                          Join
+                        </button>
+                        {session.host_user_id === currentUserId && (
+                          <button
+                            onClick={() => handleDeleteSession(session.id)}
+                            className="delete-btn"
+                          >
+                            🗑️
+                          </button>
+                        )}
                       </div>
                     </div>
 
-                    <div className="session-meta">
-                      <div className="meta-item">
-                        <svg
-                          viewBox="0 0 24 24"
-                          width="14"
-                          height="14"
-                          fill="currentColor"
-                        >
-                          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
-                        </svg>
-                        <span>{session.document_language}</span>
-                      </div>
-                      <div className="meta-item">
-                        <svg
-                          viewBox="0 0 24 24"
-                          width="14"
-                          height="14"
-                          fill="currentColor"
-                        >
-                          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
-                        </svg>
-                        <span>
-                          {session.participants?.length || 0} participants
-                        </span>
-                      </div>
-                      <div className="meta-item">
-                        <svg
-                          viewBox="0 0 24 24"
-                          width="14"
-                          height="14"
-                          fill="currentColor"
-                        >
-                          <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z" />
-                          <path d="M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z" />
-                        </svg>
-                        <span>
-                          {formatTimeAgo(new Date(session.last_activity))}
-                        </span>
-                      </div>
-                    </div>
-
-                    {session.participants &&
-                      session.participants.length > 0 && (
-                        <div className="session-participants">
-                          <div className="participants-avatars">
-                            {session.participants
-                              .slice(0, 4)
-                              .map((participant) => (
+                    <div className="session-details">
+                      <div className="participants-section">
+                        <h5>
+                          Participants ({session.participants?.length || 0})
+                        </h5>
+                        <div className="participants-list">
+                          {session.participants
+                            ?.slice(0, 5)
+                            .map((participant) => (
+                              <div
+                                key={participant.id}
+                                className="participant-item"
+                                title={participant.user_name}
+                              >
                                 <div
-                                  key={participant.id}
                                   className="participant-avatar"
                                   style={{
-                                    borderColor: participant.user_color,
+                                    backgroundColor: participant.user_color,
                                   }}
-                                  title={participant.user_name}
                                 >
                                   {participant.user_name
                                     .charAt(0)
                                     .toUpperCase()}
                                 </div>
-                              ))}
-                            {session.participants.length > 4 && (
-                              <div className="participant-overflow">
-                                +{session.participants.length - 4}
+                                {participant.is_host && (
+                                  <span className="host-badge">👑</span>
+                                )}
                               </div>
-                            )}
-                          </div>
+                            ))}
+                          {(session.participants?.length || 0) > 5 && (
+                            <div className="participant-overflow">
+                              +{(session.participants?.length || 0) - 5}
+                            </div>
+                          )}
                         </div>
-                      )}
+                      </div>
 
-                    <div className="session-actions">
-                      <button
-                        className="btn btn-primary btn-sm"
-                        onClick={() =>
-                          window.open(
-                            `/collaborate?session=${session.id}`,
-                            "_blank",
-                          )
-                        }
-                      >
-                        <svg
-                          viewBox="0 0 24 24"
-                          width="14"
-                          height="14"
-                          fill="currentColor"
-                        >
-                          <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
-                        </svg>
-                        Join Session
-                      </button>
-                      <button
-                        className="btn btn-secondary btn-sm"
-                        onClick={async (event) => {
-                          try {
-                            await navigator.clipboard.writeText(
-                              `${window.location.origin}/collaborate?session=${session.id}`,
-                            );
-                            // Show temporary success feedback
-                            const button =
-                              event.currentTarget as HTMLButtonElement;
-                            if (button) {
-                              const originalText = button.textContent;
-                              button.textContent = "Copied!";
-                              button.style.background =
-                                "linear-gradient(135deg, rgba(76, 175, 80, 0.3) 0%, rgba(76, 175, 80, 0.2) 100%)";
-                              setTimeout(() => {
-                                button.textContent = originalText;
-                                button.style.background = "";
-                              }, 2000);
-                            }
-                          } catch (error) {
-                            alert("Failed to copy link");
-                          }
-                        }}
-                      >
-                        <svg
-                          viewBox="0 0 24 24"
-                          width="14"
-                          height="14"
-                          fill="currentColor"
-                        >
-                          <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z" />
-                        </svg>
-                        Copy Link
-                      </button>
-                      {session.host_user_id === user.id && (
-                        <>
-                          <button
-                            className="btn btn-secondary btn-sm"
-                            onClick={async () => {
-                              try {
-                                const response = await fetch(
-                                  "/api/collaboration/sessions",
-                                  {
-                                    method: "PUT",
-                                    headers: {
-                                      "Content-Type": "application/json",
-                                      "x-user-id": user.id,
-                                    },
-                                    body: JSON.stringify({
-                                      sessionId: session.id,
-                                      action: "lock_session",
-                                      data: { locked: !session.is_locked },
-                                    }),
-                                  },
-                                );
-                                if (response.ok) {
-                                  await onRefreshSessions();
-                                }
-                              } catch (error) {
-                                console.error("Failed to toggle lock:", error);
-                              }
-                            }}
-                            title={
-                              session.is_locked
-                                ? "Unlock session"
-                                : "Lock session"
-                            }
-                          >
-                            <svg
-                              viewBox="0 0 24 24"
-                              width="14"
-                              height="14"
-                              fill="currentColor"
-                            >
-                              {session.is_locked ? (
-                                <path d="M12,17A2,2 0 0,0 14,15C14,13.89 13.1,13 12,13A2,2 0 0,0 10,15A2,2 0 0,0 12,17M18,8A2,2 0 0,1 20,10V20A2,2 0 0,1 18,22H6A2,2 0 0,1 4,20V10C4,8.89 4.9,8 6,8H7V6A5,5 0 0,1 12,1A5,5 0 0,1 17,6V8H18M12,3A3,3 0 0,0 9,6V8H15V6A3,3 0 0,0 12,3Z" />
-                              ) : (
-                                <path d="M12,17A2,2 0 0,0 14,15C14,13.89 13.1,13 12,13A2,2 0 0,0 10,15A2,2 0 0,0 12,17M18,8A2,2 0 0,1 20,10V20A2,2 0 0,1 18,22H6A2,2 0 0,1 4,20V10C4,8.89 4.9,8 6,8H15V6A3,3 0 0,0 12,3A3,3 0 0,0 9,6H7A5,5 0 0,1 12,1A5,5 0 0,1 17,6V8H18Z" />
-                              )}
-                            </svg>
-                            {session.is_locked ? "Unlock" : "Lock"}
-                          </button>
-                          <button
-                            className="btn btn-secondary btn-sm"
-                            onClick={() => {
-                              const sessionUrl = `${window.location.origin}/collaborate?session=${session.id}`;
-                              const subject = encodeURIComponent(
-                                `Join my NeuroLint collaboration session: ${session.name}`,
-                              );
-                              const body = encodeURIComponent(
-                                `Hi!\n\nI'd like to invite you to collaborate on "${session.name}".\n\nClick this link to join: ${sessionUrl}\n\nWe'll be working on: ${session.document_filename}\n\nBest regards`,
-                              );
-                              window.open(
-                                `mailto:?subject=${subject}&body=${body}`,
-                              );
-                            }}
-                            title="Send invitation via email"
-                          >
-                            <svg
-                              viewBox="0 0 24 24"
-                              width="14"
-                              height="14"
-                              fill="currentColor"
-                            >
-                              <path d="M20,8L12,13L4,8V6L12,11L20,6M20,4H4C2.89,4 2,4.89 2,6V18A2,2 0 0,0 4,20H20A2,2 0 0,0 22,18V6C22,4.89 21.1,4 20,4Z" />
-                            </svg>
-                            Invite
-                          </button>
-                          <button
-                            className="btn btn-danger btn-sm"
-                            onClick={async () => {
-                              if (
-                                confirm(
-                                  `Are you sure you want to delete "${session.name}"? This action cannot be undone.`,
-                                )
-                              ) {
-                                try {
-                                  const response = await fetch(
-                                    `/api/collaboration/sessions?sessionId=${session.id}`,
-                                    {
-                                      method: "DELETE",
-                                      headers: {
-                                        "x-user-id": user.id,
-                                      },
-                                    },
-                                  );
-                                  if (response.ok) {
-                                    // Track activity
-                                    await fetch("/api/collaboration/activity", {
-                                      method: "POST",
-                                      headers: {
-                                        "Content-Type": "application/json",
-                                        "x-user-id": user.id,
-                                        "x-user-name":
-                                          user.firstName ||
-                                          user.email ||
-                                          "Anonymous",
-                                      },
-                                      body: JSON.stringify({
-                                        type: "session_deleted",
-                                        sessionId: session.id,
-                                        details: { sessionName: session.name },
-                                      }),
-                                    }).catch(console.error);
-
-                                    await onRefreshSessions();
-                                  }
-                                } catch (error) {
-                                  console.error(
-                                    "Failed to delete session:",
-                                    error,
-                                  );
-                                  alert("Failed to delete session");
-                                }
-                              }
-                            }}
-                            title="Delete session"
-                          >
-                            <svg
-                              viewBox="0 0 24 24"
-                              width="14"
-                              height="14"
-                              fill="currentColor"
-                            >
-                              <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" />
-                            </svg>
-                            Delete
-                          </button>
-                        </>
-                      )}
+                      <div className="session-timestamps">
+                        <div className="timestamp-item">
+                          <span className="timestamp-label">Created:</span>
+                          <span className="timestamp-value">
+                            {formatTimeAgo(session.created_at)}
+                          </span>
+                        </div>
+                        <div className="timestamp-item">
+                          <span className="timestamp-label">
+                            Last Activity:
+                          </span>
+                          <span className="timestamp-value">
+                            {formatTimeAgo(session.last_activity)}
+                          </span>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 ))
+              ) : (
+                <div className="empty-state">
+                  <div className="empty-icon">👥</div>
+                  <h3>No collaboration sessions found</h3>
+                  <p>
+                    {searchTerm
+                      ? "Try adjusting your search terms"
+                      : "Create your first session to start collaborating"}
+                  </p>
+                  {!searchTerm && (
+                    <button
+                      onClick={() => setIsCreateModalOpen(true)}
+                      className="create-first-session-btn"
+                    >
+                      Create Session
+                    </button>
+                  )}
+                </div>
               )}
             </div>
           </div>
         )}
 
-        {/* Teams Tab */}
         {activeTab === "teams" && (
-          <div className="teams-panel">
-            <div className="panel-header">
-              <h3>Team Members</h3>
-              <button
-                className="btn btn-primary"
-                onClick={() => setShowInviteModal(true)}
-              >
-                Invite Members
-              </button>
+          <div className="teams-section">
+            <div className="teams-header">
+              <h3>Your Teams</h3>
+              <button className="create-team-btn">Create Team</button>
             </div>
 
-            <div className="team-grid">
-              {loadingTeams ? (
-                <div className="loading-placeholder">
-                  <div className="loading-spinner"></div>
-                  <p>Loading team members...</p>
-                </div>
+            <div className="teams-grid">
+              {teams.length > 0 ? (
+                teams.map((team) => (
+                  <div key={team.id} className="team-card">
+                    <div className="team-header">
+                      <h4 className="team-name">{team.name}</h4>
+                      <span className="member-count">
+                        {team.memberCount} members
+                      </span>
+                    </div>
+                    {team.description && (
+                      <p className="team-description">{team.description}</p>
+                    )}
+                    <div className="team-footer">
+                      <span className="team-owner">Owner: {team.owner}</span>
+                      <span className="team-created">
+                        Created {formatTimeAgo(team.created_at)}
+                      </span>
+                    </div>
+                  </div>
+                ))
               ) : (
-                teamMembers.map((member) => {
-                  const livePresence = onlineUsers.get(member.id);
-                  const actualStatus = livePresence?.status || member.status;
-                  const isOnline = livePresence && actualStatus === "online";
+                <div className="empty-state">
+                  <div className="empty-icon">👥</div>
+                  <h3>No teams yet</h3>
+                  <p>Create or join a team to collaborate with others</p>
+                  <button className="create-first-team-btn">Create Team</button>
+                </div>
+              )}
+            </div>
 
-                  return (
+            {/* Team Members Section */}
+            {teamMembers.length > 0 && (
+              <div className="team-members-section">
+                <h3>Team Members</h3>
+                <div className="members-grid">
+                  {teamMembers.map((member) => (
                     <div key={member.id} className="member-card">
                       <div className="member-avatar">
+                        {member.avatar ? (
+                          <img src={member.avatar} alt={member.name} />
+                        ) : (
+                          <div className="avatar-placeholder">
+                            {member.name.charAt(0).toUpperCase()}
+                          </div>
+                        )}
                         <div
-                          className="avatar-circle"
+                          className="status-dot"
                           style={{
-                            backgroundColor: getStatusColor(actualStatus),
+                            backgroundColor: getStatusColor(member.status),
                           }}
-                        >
-                          {member.name.charAt(0).toUpperCase()}
-                        </div>
-                        <div
-                          className={`status-dot ${isOnline ? "pulse" : ""}`}
-                          style={{
-                            backgroundColor: getStatusColor(actualStatus),
-                          }}
-                          title={
-                            isOnline
-                              ? "Online now"
-                              : `Last seen ${formatTimeAgo(livePresence?.lastSeen || member.lastSeen)}`
-                          }
-                        ></div>
+                        />
                       </div>
                       <div className="member-info">
-                        <h4 className="member-name">{member.name}</h4>
+                        <h5 className="member-name">{member.name}</h5>
                         <p className="member-email">{member.email}</p>
                         <div className="member-meta">
-                          <span className={`role-badge role-${member.role}`}>
-                            {member.role}
-                          </span>
+                          <span className="member-role">{member.role}</span>
+                          <span className="member-status">{member.status}</span>
+                        </div>
+                        {member.status !== "online" && (
                           <span className="last-seen">
-                            {member.status === "online"
-                              ? "Online now"
-                              : `Last seen ${formatTimeAgo(member.lastSeen)}`}
+                            Last seen {formatTimeAgo(member.lastSeen)}
                           </span>
-                        </div>
+                        )}
                       </div>
-                      {member.id !== user.id && (
-                        <div className="member-actions">
-                          <button className="btn btn-secondary btn-sm">
-                            Message
-                          </button>
-                          <button className="btn btn-secondary btn-sm">
-                            ...
-                          </button>
-                        </div>
-                      )}
                     </div>
-                  );
-                })
-              )}
-            </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         )}
 
-        {/* Activity Tab */}
         {activeTab === "activity" && (
-          <div className="activity-panel">
-            <div className="panel-header">
+          <div className="activity-section">
+            <div className="activity-header">
               <h3>Recent Activity</h3>
-              <button
-                className="btn btn-secondary"
-                onClick={loadActivity}
-                disabled={loadingActivity}
-              >
-                {loadingActivity ? "..." : "Refresh"}
-              </button>
+              <span className="activity-count">
+                {activities.length} activities
+              </span>
             </div>
 
-            <div className="activity-feed">
-              {loadingActivity ? (
-                <div className="loading-placeholder">
-                  <div className="loading-spinner"></div>
-                  <p>Loading activity...</p>
-                </div>
-              ) : activities.length === 0 ? (
-                <div className="empty-state">
-                  <svg
-                    viewBox="0 0 24 24"
-                    width="48"
-                    height="48"
-                    fill="currentColor"
-                    className="empty-icon"
-                  >
-                    <path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z" />
-                  </svg>
-                  <h3>No recent activity</h3>
-                  <p>Team activity will appear here when members collaborate</p>
-                </div>
-              ) : (
+            <div className="activity-list">
+              {activities.length > 0 ? (
                 activities.map((activity) => (
                   <div key={activity.id} className="activity-item">
-                    <div className="activity-avatar">
-                      {activity.userName.charAt(0).toUpperCase()}
+                    <div className="activity-icon">
+                      {getActivityIcon(activity.type)}
                     </div>
                     <div className="activity-content">
-                      <div className="activity-text">
-                        <strong>{activity.userName}</strong>
-                        {getActivityText(activity)}
+                      <div className="activity-main">
+                        <span className="activity-user">
+                          {activity.userName}
+                        </span>
+                        <span className="activity-action">
+                          {activity.details || activity.type.replace("_", " ")}
+                        </span>
+                        {activity.fileName && (
+                          <span className="activity-file">
+                            on {activity.fileName}
+                          </span>
+                        )}
                       </div>
-                      <div className="activity-time">
+                      <div className="activity-timestamp">
                         {formatTimeAgo(activity.timestamp)}
                       </div>
                     </div>
                   </div>
                 ))
+              ) : (
+                <div className="empty-state">
+                  <div className="empty-icon">📝</div>
+                  <h3>No recent activity</h3>
+                  <p>Start collaborating to see activity here</p>
+                </div>
               )}
             </div>
           </div>
@@ -1315,392 +865,1124 @@ export default function CollaborationDashboard({
       </div>
 
       {/* Create Session Modal */}
-      {showCreateModal && (
-        <CreateSessionModal
-          onClose={() => setShowCreateModal(false)}
-          onCreateSession={createSession}
-        />
+      {isCreateModalOpen && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h3>Create New Session</h3>
+              <button
+                onClick={() => setIsCreateModalOpen(false)}
+                className="modal-close"
+              >
+                ✕
+              </button>
+            </div>
+            <form onSubmit={handleCreateSession} className="session-form">
+              <div className="form-group">
+                <label htmlFor="sessionName">Session Name</label>
+                <input
+                  type="text"
+                  id="sessionName"
+                  value={newSessionName}
+                  onChange={(e) => setNewSessionName(e.target.value)}
+                  placeholder="Enter session name..."
+                  required
+                  className="form-input"
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="fileName">File Name</label>
+                <input
+                  type="text"
+                  id="fileName"
+                  value={newFileName}
+                  onChange={(e) => setNewFileName(e.target.value)}
+                  placeholder="example.js"
+                  required
+                  className="form-input"
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="language">Language</label>
+                <select
+                  id="language"
+                  value={newLanguage}
+                  onChange={(e) => setNewLanguage(e.target.value)}
+                  className="form-select"
+                >
+                  <option value="javascript">JavaScript</option>
+                  <option value="typescript">TypeScript</option>
+                  <option value="python">Python</option>
+                  <option value="java">Java</option>
+                  <option value="css">CSS</option>
+                  <option value="html">HTML</option>
+                  <option value="json">JSON</option>
+                  <option value="markdown">Markdown</option>
+                </select>
+              </div>
+
+              <div className="form-actions">
+                <button
+                  type="button"
+                  onClick={() => setIsCreateModalOpen(false)}
+                  className="cancel-btn"
+                >
+                  Cancel
+                </button>
+                <button type="submit" className="create-btn">
+                  Create Session
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
       )}
 
-      {/* Invite Modal */}
-      {showInviteModal && (
-        <InviteModal
-          onClose={() => setShowInviteModal(false)}
-          onInvite={(emails) => {
-            console.log("Inviting:", emails);
-            setShowInviteModal(false);
-          }}
-        />
-      )}
+      <style jsx>{`
+        .collaboration-dashboard {
+          background: linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.08) 0%,
+            rgba(255, 255, 255, 0.04) 50%,
+            rgba(255, 255, 255, 0.02) 100%
+          );
+          border: 2px solid #000000;
+          border-radius: 16px;
+          padding: 2rem;
+          margin: 1rem 0;
+          color: #ffffff;
+          backdrop-filter: blur(12px);
+          transition: transform 0.2s ease;
+        }
 
-      {/* Conflict Resolution Modal */}
-      {showConflictModal && conflictData && (
-        <ConflictResolutionModal
-          conflictData={conflictData}
-          onResolve={(resolution) => {
-            console.log("Conflict resolved:", resolution);
-            setShowConflictModal(false);
-            setConflictData(null);
-          }}
-          onClose={() => {
-            setShowConflictModal(false);
-            setConflictData(null);
-          }}
-        />
-      )}
-    </div>
-  );
-}
+        .collaboration-dashboard:hover {
+          transform: translateY(-2px);
+        }
 
-function ConflictResolutionModal({
-  conflictData,
-  onResolve,
-  onClose,
-}: {
-  conflictData: any;
-  onResolve: (resolution: { strategy: string; resolvedCode: string }) => void;
-  onClose: () => void;
-}) {
-  const [selectedStrategy, setSelectedStrategy] = useState<
-    "merge" | "overwrite" | "manual"
-  >("merge");
-  const [resolvedCode, setResolvedCode] = useState(
-    conflictData.userChanges || "",
-  );
+        .collaboration-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 2rem;
+          padding-bottom: 1rem;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
 
-  const handleResolve = () => {
-    onResolve({
-      strategy: selectedStrategy,
-      resolvedCode:
-        selectedStrategy === "manual" ? resolvedCode : conflictData.userChanges,
-    });
-  };
+        .header-title h2 {
+          color: #ffffff;
+          font-size: 1.8rem;
+          font-weight: 700;
+          margin: 0 0 0.5rem 0;
+        }
 
-  return (
-    <div className="modal-overlay">
-      <div
-        className="modal-content"
-        style={{ maxWidth: "800px", width: "90vw" }}
-      >
-        <div className="modal-header">
-          <h3>Merge Conflict Detected</h3>
-          <button className="modal-close" onClick={onClose}>
-            ×
-          </button>
-        </div>
-        <div className="modal-form">
-          <div className="conflict-info">
-            <p>
-              A conflict has been detected with recent changes. Please choose a
-              resolution strategy:
-            </p>
-            <div className="conflict-details">
-              <strong>Conflict ID:</strong> {conflictData.conflictId}
-              <br />
-              <strong>Last modified by:</strong> Another user
-              <br />
-              <strong>Conflict ranges:</strong>{" "}
-              {conflictData.conflictRanges?.length || 0} areas
-            </div>
-          </div>
+        .header-title p {
+          color: rgba(255, 255, 255, 0.7);
+          margin: 0;
+          font-size: 0.95rem;
+        }
 
-          <div className="form-group">
-            <label>Resolution Strategy:</label>
-            <div className="resolution-options">
-              <label className="radio-option">
-                <input
-                  type="radio"
-                  value="merge"
-                  checked={selectedStrategy === "merge"}
-                  onChange={(e) =>
-                    setSelectedStrategy(e.target.value as "merge")
-                  }
-                />
-                <span>Auto-merge (recommended)</span>
-                <small>Automatically merge non-conflicting changes</small>
-              </label>
-              <label className="radio-option">
-                <input
-                  type="radio"
-                  value="overwrite"
-                  checked={selectedStrategy === "overwrite"}
-                  onChange={(e) =>
-                    setSelectedStrategy(e.target.value as "overwrite")
-                  }
-                />
-                <span>Use my changes</span>
-                <small>Overwrite with your version</small>
-              </label>
-              <label className="radio-option">
-                <input
-                  type="radio"
-                  value="manual"
-                  checked={selectedStrategy === "manual"}
-                  onChange={(e) =>
-                    setSelectedStrategy(e.target.value as "manual")
-                  }
-                />
-                <span>Manual resolution</span>
-                <small>Edit the code manually to resolve conflicts</small>
-              </label>
-            </div>
-          </div>
+        .header-actions {
+          display: flex;
+          gap: 1rem;
+        }
 
-          {selectedStrategy === "manual" && (
-            <div className="form-group">
-              <label>Resolved Code:</label>
-              <textarea
-                value={resolvedCode}
-                onChange={(e) => setResolvedCode(e.target.value)}
-                rows={15}
-                className="conflict-editor"
-                placeholder="Edit the code to resolve conflicts..."
-              />
-            </div>
-          )}
+        .create-session-btn {
+          background: linear-gradient(
+            135deg,
+            rgba(33, 150, 243, 0.3) 0%,
+            rgba(33, 150, 243, 0.2) 100%
+          );
+          border: 2px solid #000000;
+          border-radius: 12px;
+          color: #ffffff;
+          padding: 0.75rem 1.5rem;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+        }
 
-          <div className="modal-actions">
-            <button
-              type="button"
-              className="btn btn-secondary"
-              onClick={onClose}
-            >
-              Cancel
-            </button>
-            <button
-              type="button"
-              className="btn btn-primary"
-              onClick={handleResolve}
-            >
-              Resolve Conflict
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
+        .create-session-btn:hover {
+          background: linear-gradient(
+            135deg,
+            rgba(33, 150, 243, 0.4) 0%,
+            rgba(33, 150, 243, 0.3) 100%
+          );
+          transform: translateY(-1px);
+        }
 
-function getActivityText(activity: Activity): string {
-  switch (activity.type) {
-    case "session_created":
-      return ` created session "${activity.details.sessionName}"`;
-    case "session_joined":
-      return ` joined session "${activity.details.sessionName}"`;
-    case "session_left":
-      return ` left session "${activity.details.sessionName}"`;
-    case "document_edited":
-      return ` edited ${activity.details.filename} (${activity.details.linesChanged} lines changed)`;
-    case "comment_added":
-      return ` added a comment`;
-    case "analysis_run":
-      return ` ran analysis on ${activity.details.layers?.join(", ") || "unknown"} layers (${activity.details.issuesFound || 0} issues found)`;
-    case "session_deleted":
-      return ` deleted session "${activity.details.sessionName || "Unknown Session"}"`;
-    case "member_invited":
-      return ` invited ${activity.details.inviteeEmail || "someone"} to the team`;
-    case "member_joined":
-      return ` joined the team`;
-    default:
-      return " performed an action";
-  }
-}
+        .error-banner {
+          background: linear-gradient(
+            135deg,
+            rgba(229, 62, 62, 0.2) 0%,
+            rgba(229, 62, 62, 0.1) 100%
+          );
+          border: 2px solid #000000;
+          border-radius: 12px;
+          padding: 1rem;
+          margin-bottom: 1.5rem;
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+          color: #ffffff;
+        }
 
-// Modal Components
-function CreateSessionModal({
-  onClose,
-  onCreateSession,
-}: {
-  onClose: () => void;
-  onCreateSession: (data: any) => void;
-}) {
-  const [formData, setFormData] = useState({
-    name: "",
-    filename: "",
-    language: "typescript",
-    template: "blank",
-  });
+        .error-icon {
+          font-size: 1.2rem;
+        }
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+        .error-text {
+          flex: 1;
+          font-weight: 500;
+        }
 
-    // Validate session name
-    if (!formData.name.trim()) {
-      alert("Session name is required");
-      return;
-    }
+        .error-dismiss {
+          background: none;
+          border: none;
+          color: #ffffff;
+          cursor: pointer;
+          font-size: 1.1rem;
+          padding: 0.25rem;
+          border-radius: 4px;
+          transition: background-color 0.2s ease;
+        }
 
-    if (formData.name.trim().length < 3) {
-      alert("Session name must be at least 3 characters long");
-      return;
-    }
+        .error-dismiss:hover {
+          background: rgba(255, 255, 255, 0.1);
+        }
 
-    // Validate filename
-    if (!formData.filename.trim()) {
-      alert("Filename is required");
-      return;
-    }
+        .tab-navigation {
+          display: flex;
+          gap: 0.5rem;
+          margin-bottom: 2rem;
+          background: rgba(255, 255, 255, 0.05);
+          border: 2px solid #000000;
+          border-radius: 12px;
+          padding: 0.5rem;
+        }
 
-    // Validate filename format
-    const validExtensions = [".ts", ".tsx", ".js", ".jsx"];
-    const hasValidExtension = validExtensions.some((ext) =>
-      formData.filename.toLowerCase().endsWith(ext),
-    );
+        .tab-button {
+          background: none;
+          border: none;
+          color: rgba(255, 255, 255, 0.7);
+          padding: 0.75rem 1.5rem;
+          border-radius: 8px;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          font-weight: 500;
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          flex: 1;
+          justify-content: center;
+        }
 
-    if (!hasValidExtension) {
-      alert("Filename must end with .ts, .tsx, .js, or .jsx");
-      return;
-    }
+        .tab-button.active {
+          background: linear-gradient(
+            135deg,
+            rgba(33, 150, 243, 0.3) 0%,
+            rgba(33, 150, 243, 0.2) 100%
+          );
+          border: 2px solid #000000;
+          color: #ffffff;
+        }
 
-    onCreateSession(formData);
-  };
+        .tab-button:hover:not(.active) {
+          background: rgba(255, 255, 255, 0.1);
+          color: #ffffff;
+        }
 
-  return (
-    <div className="modal-overlay">
-      <div className="modal-content">
-        <div className="modal-header">
-          <h3>Create New Collaboration Session</h3>
-          <button className="modal-close" onClick={onClose}>
-            ×
-          </button>
-        </div>
-        <form onSubmit={handleSubmit} className="modal-form">
-          <div className="form-group">
-            <label htmlFor="sessionName">Session Name *</label>
-            <input
-              id="sessionName"
-              type="text"
-              value={formData.name}
-              onChange={(e) =>
-                setFormData({ ...formData, name: e.target.value })
-              }
-              placeholder="e.g., React Component Review"
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="filename">Filename *</label>
-            <input
-              id="filename"
-              type="text"
-              value={formData.filename}
-              onChange={(e) =>
-                setFormData({ ...formData, filename: e.target.value })
-              }
-              placeholder="e.g., component.tsx"
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="language">Language</label>
-            <select
-              id="language"
-              value={formData.language}
-              onChange={(e) =>
-                setFormData({ ...formData, language: e.target.value })
-              }
-            >
-              <option value="typescript">TypeScript</option>
-              <option value="javascript">JavaScript</option>
-              <option value="jsx">JSX</option>
-              <option value="tsx">TSX</option>
-            </select>
-          </div>
-          <div className="form-group">
-            <label htmlFor="template">Template</label>
-            <select
-              id="template"
-              value={formData.template}
-              onChange={(e) =>
-                setFormData({ ...formData, template: e.target.value })
-              }
-            >
-              <option value="blank">Blank File</option>
-              <option value="component">React Component</option>
-              <option value="hook">Custom Hook</option>
-              <option value="api">API Route</option>
-            </select>
-          </div>
-          <div className="modal-actions">
-            <button
-              type="button"
-              className="btn btn-secondary"
-              onClick={onClose}
-            >
-              Cancel
-            </button>
-            <button type="submit" className="btn btn-primary">
-              Create Session
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-  );
-}
+        .tab-count {
+          background: rgba(255, 255, 255, 0.2);
+          border: 1px solid #000000;
+          border-radius: 10px;
+          padding: 0.2rem 0.5rem;
+          font-size: 0.75rem;
+          font-weight: 600;
+        }
 
-function InviteModal({
-  onClose,
-  onInvite,
-}: {
-  onClose: () => void;
-  onInvite: (emails: string[]) => void;
-}) {
-  const [emails, setEmails] = useState("");
+        .tab-content {
+          min-height: 400px;
+        }
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const emailList = emails
-      .split(",")
-      .map((email) => email.trim())
-      .filter((email) => email.length > 0);
+        .sessions-controls {
+          display: flex;
+          gap: 1rem;
+          margin-bottom: 2rem;
+          flex-wrap: wrap;
+        }
 
-    if (emailList.length === 0) {
-      alert("Please enter at least one email address");
-      return;
-    }
+        .search-container {
+          flex: 1;
+          min-width: 300px;
+        }
 
-    onInvite(emailList);
-  };
+        .search-input {
+          width: 100%;
+          background: rgba(255, 255, 255, 0.1);
+          border: 2px solid #000000;
+          border-radius: 12px;
+          padding: 0.75rem 1rem;
+          color: #ffffff;
+          font-size: 0.95rem;
+          transition: all 0.2s ease;
+        }
 
-  return (
-    <div className="modal-overlay">
-      <div className="modal-content">
-        <div className="modal-header">
-          <h3>Invite Team Members</h3>
-          <button className="modal-close" onClick={onClose}>
-            ×
-          </button>
-        </div>
-        <form onSubmit={handleSubmit} className="modal-form">
-          <div className="form-group">
-            <label htmlFor="emails">Email Addresses</label>
-            <textarea
-              id="emails"
-              value={emails}
-              onChange={(e) => setEmails(e.target.value)}
-              placeholder="Enter email addresses separated by commas"
-              rows={4}
-              required
-            />
-            <p className="form-help">
-              Separate multiple email addresses with commas
-            </p>
-          </div>
-          <div className="modal-actions">
-            <button
-              type="button"
-              className="btn btn-secondary"
-              onClick={onClose}
-            >
-              Cancel
-            </button>
-            <button type="submit" className="btn btn-primary">
-              Send Invitations
-            </button>
-          </div>
-        </form>
-      </div>
+        .search-input::placeholder {
+          color: rgba(255, 255, 255, 0.5);
+        }
+
+        .search-input:focus {
+          outline: none;
+          background: rgba(255, 255, 255, 0.15);
+          border-color: rgba(33, 150, 243, 0.5);
+        }
+
+        .filter-buttons {
+          display: flex;
+          gap: 0.5rem;
+        }
+
+        .filter-btn {
+          background: rgba(255, 255, 255, 0.1);
+          border: 2px solid #000000;
+          border-radius: 8px;
+          color: rgba(255, 255, 255, 0.7);
+          padding: 0.5rem 1rem;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          font-weight: 500;
+        }
+
+        .filter-btn.active {
+          background: linear-gradient(
+            135deg,
+            rgba(33, 150, 243, 0.3) 0%,
+            rgba(33, 150, 243, 0.2) 100%
+          );
+          color: #ffffff;
+        }
+
+        .filter-btn:hover:not(.active) {
+          background: rgba(255, 255, 255, 0.15);
+          color: #ffffff;
+        }
+
+        .sessions-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+          gap: 1.5rem;
+        }
+
+        .session-card {
+          background: linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.08) 0%,
+            rgba(255, 255, 255, 0.04) 50%,
+            rgba(255, 255, 255, 0.02) 100%
+          );
+          border: 2px solid #000000;
+          border-radius: 16px;
+          padding: 1.5rem;
+          transition: all 0.2s ease;
+        }
+
+        .session-card:hover {
+          transform: translateY(-2px);
+          background: linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.12) 0%,
+            rgba(255, 255, 255, 0.08) 50%,
+            rgba(255, 255, 255, 0.04) 100%
+          );
+        }
+
+        .session-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+          margin-bottom: 1rem;
+        }
+
+        .session-info {
+          flex: 1;
+        }
+
+        .session-name {
+          color: #ffffff;
+          font-size: 1.1rem;
+          font-weight: 600;
+          margin: 0 0 0.5rem 0;
+        }
+
+        .session-file {
+          color: rgba(255, 255, 255, 0.8);
+          font-size: 0.9rem;
+          margin: 0 0 0.75rem 0;
+        }
+
+        .session-meta {
+          display: flex;
+          gap: 0.75rem;
+          align-items: center;
+        }
+
+        .language-tag {
+          background: rgba(76, 175, 80, 0.2);
+          border: 1px solid #000000;
+          border-radius: 8px;
+          padding: 0.25rem 0.5rem;
+          font-size: 0.75rem;
+          font-weight: 600;
+          color: #4caf50;
+          text-transform: uppercase;
+        }
+
+        .status-indicator {
+          display: flex;
+          align-items: center;
+          gap: 0.25rem;
+          font-size: 0.8rem;
+          font-weight: 500;
+        }
+
+        .status-indicator.active {
+          color: #4caf50;
+        }
+
+        .status-indicator.locked {
+          color: #ff9800;
+        }
+
+        .session-actions {
+          display: flex;
+          gap: 0.5rem;
+          flex-direction: column;
+        }
+
+        .join-btn {
+          background: linear-gradient(
+            135deg,
+            rgba(76, 175, 80, 0.3) 0%,
+            rgba(76, 175, 80, 0.2) 100%
+          );
+          border: 2px solid #000000;
+          border-radius: 8px;
+          color: #ffffff;
+          padding: 0.5rem 1rem;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          font-weight: 500;
+        }
+
+        .join-btn:hover:not(:disabled) {
+          background: linear-gradient(
+            135deg,
+            rgba(76, 175, 80, 0.4) 0%,
+            rgba(76, 175, 80, 0.3) 100%
+          );
+          transform: translateY(-1px);
+        }
+
+        .join-btn:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+        }
+
+        .delete-btn {
+          background: linear-gradient(
+            135deg,
+            rgba(229, 62, 62, 0.3) 0%,
+            rgba(229, 62, 62, 0.2) 100%
+          );
+          border: 2px solid #000000;
+          border-radius: 8px;
+          color: #ffffff;
+          padding: 0.5rem;
+          cursor: pointer;
+          transition: all 0.2s ease;
+        }
+
+        .delete-btn:hover {
+          background: linear-gradient(
+            135deg,
+            rgba(229, 62, 62, 0.4) 0%,
+            rgba(229, 62, 62, 0.3) 100%
+          );
+          transform: translateY(-1px);
+        }
+
+        .session-details {
+          border-top: 1px solid rgba(255, 255, 255, 0.1);
+          padding-top: 1rem;
+        }
+
+        .participants-section h5 {
+          color: #ffffff;
+          font-size: 0.9rem;
+          font-weight: 600;
+          margin: 0 0 0.75rem 0;
+        }
+
+        .participants-list {
+          display: flex;
+          gap: 0.5rem;
+          margin-bottom: 1rem;
+          flex-wrap: wrap;
+        }
+
+        .participant-item {
+          position: relative;
+          display: flex;
+          align-items: center;
+        }
+
+        .participant-avatar {
+          width: 32px;
+          height: 32px;
+          border-radius: 50%;
+          border: 2px solid #000000;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #ffffff;
+          font-weight: 600;
+          font-size: 0.8rem;
+        }
+
+        .host-badge {
+          position: absolute;
+          top: -4px;
+          right: -4px;
+          font-size: 0.7rem;
+        }
+
+        .participant-overflow {
+          background: rgba(255, 255, 255, 0.1);
+          border: 2px solid #000000;
+          border-radius: 50%;
+          width: 32px;
+          height: 32px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #ffffff;
+          font-size: 0.7rem;
+          font-weight: 600;
+        }
+
+        .session-timestamps {
+          display: flex;
+          gap: 1rem;
+          flex-wrap: wrap;
+        }
+
+        .timestamp-item {
+          display: flex;
+          flex-direction: column;
+          gap: 0.25rem;
+        }
+
+        .timestamp-label {
+          color: rgba(255, 255, 255, 0.6);
+          font-size: 0.75rem;
+          font-weight: 500;
+        }
+
+        .timestamp-value {
+          color: #ffffff;
+          font-size: 0.8rem;
+        }
+
+        .teams-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 2rem;
+        }
+
+        .teams-header h3 {
+          color: #ffffff;
+          font-size: 1.3rem;
+          font-weight: 600;
+          margin: 0;
+        }
+
+        .create-team-btn {
+          background: linear-gradient(
+            135deg,
+            rgba(156, 39, 176, 0.3) 0%,
+            rgba(156, 39, 176, 0.2) 100%
+          );
+          border: 2px solid #000000;
+          border-radius: 8px;
+          color: #ffffff;
+          padding: 0.75rem 1.5rem;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          font-weight: 500;
+        }
+
+        .create-team-btn:hover {
+          background: linear-gradient(
+            135deg,
+            rgba(156, 39, 176, 0.4) 0%,
+            rgba(156, 39, 176, 0.3) 100%
+          );
+          transform: translateY(-1px);
+        }
+
+        .teams-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+          gap: 1.5rem;
+          margin-bottom: 2rem;
+        }
+
+        .team-card {
+          background: linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.08) 0%,
+            rgba(255, 255, 255, 0.04) 50%,
+            rgba(255, 255, 255, 0.02) 100%
+          );
+          border: 2px solid #000000;
+          border-radius: 16px;
+          padding: 1.5rem;
+          transition: all 0.2s ease;
+        }
+
+        .team-card:hover {
+          transform: translateY(-2px);
+          background: linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.12) 0%,
+            rgba(255, 255, 255, 0.08) 50%,
+            rgba(255, 255, 255, 0.04) 100%
+          );
+        }
+
+        .team-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 1rem;
+        }
+
+        .team-name {
+          color: #ffffff;
+          font-size: 1.1rem;
+          font-weight: 600;
+          margin: 0;
+        }
+
+        .member-count {
+          background: rgba(33, 150, 243, 0.2);
+          border: 1px solid #000000;
+          border-radius: 12px;
+          padding: 0.25rem 0.5rem;
+          font-size: 0.75rem;
+          color: #2196f3;
+          font-weight: 600;
+        }
+
+        .team-description {
+          color: rgba(255, 255, 255, 0.8);
+          font-size: 0.9rem;
+          margin: 0 0 1rem 0;
+          line-height: 1.4;
+        }
+
+        .team-footer {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          font-size: 0.8rem;
+          color: rgba(255, 255, 255, 0.6);
+        }
+
+        .team-members-section {
+          border-top: 1px solid rgba(255, 255, 255, 0.1);
+          padding-top: 2rem;
+        }
+
+        .team-members-section h3 {
+          color: #ffffff;
+          font-size: 1.3rem;
+          font-weight: 600;
+          margin: 0 0 1.5rem 0;
+        }
+
+        .members-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+          gap: 1rem;
+        }
+
+        .member-card {
+          background: rgba(255, 255, 255, 0.05);
+          border: 2px solid #000000;
+          border-radius: 12px;
+          padding: 1rem;
+          display: flex;
+          gap: 1rem;
+          align-items: center;
+          transition: all 0.2s ease;
+        }
+
+        .member-card:hover {
+          background: rgba(255, 255, 255, 0.08);
+          transform: translateY(-1px);
+        }
+
+        .member-avatar {
+          position: relative;
+          width: 48px;
+          height: 48px;
+          border-radius: 50%;
+          overflow: hidden;
+          border: 2px solid #000000;
+          flex-shrink: 0;
+        }
+
+        .member-avatar img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+
+        .avatar-placeholder {
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(135deg, #2196f3, #9c27b0);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #ffffff;
+          font-weight: 600;
+          font-size: 1.2rem;
+        }
+
+        .status-dot {
+          position: absolute;
+          bottom: 2px;
+          right: 2px;
+          width: 12px;
+          height: 12px;
+          border-radius: 50%;
+          border: 2px solid #000000;
+        }
+
+        .member-info {
+          flex: 1;
+        }
+
+        .member-name {
+          color: #ffffff;
+          font-size: 1rem;
+          font-weight: 600;
+          margin: 0 0 0.25rem 0;
+        }
+
+        .member-email {
+          color: rgba(255, 255, 255, 0.7);
+          font-size: 0.85rem;
+          margin: 0 0 0.5rem 0;
+        }
+
+        .member-meta {
+          display: flex;
+          gap: 0.75rem;
+          margin-bottom: 0.25rem;
+        }
+
+        .member-role {
+          background: rgba(76, 175, 80, 0.2);
+          border: 1px solid #000000;
+          border-radius: 8px;
+          padding: 0.2rem 0.4rem;
+          font-size: 0.7rem;
+          color: #4caf50;
+          font-weight: 600;
+          text-transform: capitalize;
+        }
+
+        .member-status {
+          font-size: 0.75rem;
+          color: rgba(255, 255, 255, 0.6);
+          text-transform: capitalize;
+        }
+
+        .last-seen {
+          font-size: 0.7rem;
+          color: rgba(255, 255, 255, 0.5);
+        }
+
+        .activity-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 2rem;
+        }
+
+        .activity-header h3 {
+          color: #ffffff;
+          font-size: 1.3rem;
+          font-weight: 600;
+          margin: 0;
+        }
+
+        .activity-count {
+          color: rgba(255, 255, 255, 0.6);
+          font-size: 0.9rem;
+        }
+
+        .activity-list {
+          display: flex;
+          flex-direction: column;
+          gap: 1rem;
+        }
+
+        .activity-item {
+          background: rgba(255, 255, 255, 0.05);
+          border: 2px solid #000000;
+          border-radius: 12px;
+          padding: 1rem;
+          display: flex;
+          gap: 1rem;
+          transition: all 0.2s ease;
+        }
+
+        .activity-item:hover {
+          background: rgba(255, 255, 255, 0.08);
+          transform: translateX(4px);
+        }
+
+        .activity-icon {
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          background: rgba(255, 255, 255, 0.1);
+          border: 2px solid #000000;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 1.1rem;
+          flex-shrink: 0;
+        }
+
+        .activity-content {
+          flex: 1;
+        }
+
+        .activity-main {
+          margin-bottom: 0.5rem;
+        }
+
+        .activity-user {
+          color: #ffffff;
+          font-weight: 600;
+          margin-right: 0.5rem;
+        }
+
+        .activity-action {
+          color: rgba(255, 255, 255, 0.8);
+          margin-right: 0.5rem;
+        }
+
+        .activity-file {
+          color: rgba(255, 255, 255, 0.6);
+          font-style: italic;
+        }
+
+        .activity-timestamp {
+          color: rgba(255, 255, 255, 0.5);
+          font-size: 0.8rem;
+        }
+
+        .empty-state {
+          text-align: center;
+          padding: 3rem 2rem;
+          color: rgba(255, 255, 255, 0.6);
+        }
+
+        .empty-icon {
+          font-size: 3rem;
+          margin-bottom: 1rem;
+        }
+
+        .empty-state h3 {
+          color: #ffffff;
+          font-size: 1.2rem;
+          font-weight: 600;
+          margin: 0 0 0.5rem 0;
+        }
+
+        .empty-state p {
+          margin: 0 0 1.5rem 0;
+          font-size: 0.95rem;
+        }
+
+        .create-first-session-btn,
+        .create-first-team-btn {
+          background: linear-gradient(
+            135deg,
+            rgba(33, 150, 243, 0.3) 0%,
+            rgba(33, 150, 243, 0.2) 100%
+          );
+          border: 2px solid #000000;
+          border-radius: 12px;
+          color: #ffffff;
+          padding: 0.75rem 1.5rem;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          font-weight: 600;
+        }
+
+        .create-first-session-btn:hover,
+        .create-first-team-btn:hover {
+          background: linear-gradient(
+            135deg,
+            rgba(33, 150, 243, 0.4) 0%,
+            rgba(33, 150, 243, 0.3) 100%
+          );
+          transform: translateY(-1px);
+        }
+
+        .modal-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: rgba(0, 0, 0, 0.8);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 1000;
+          backdrop-filter: blur(8px);
+        }
+
+        .modal-content {
+          background: linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.1) 0%,
+            rgba(255, 255, 255, 0.05) 100%
+          );
+          border: 2px solid #000000;
+          border-radius: 16px;
+          padding: 2rem;
+          width: 90%;
+          max-width: 500px;
+          color: #ffffff;
+          backdrop-filter: blur(12px);
+        }
+
+        .modal-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 2rem;
+        }
+
+        .modal-header h3 {
+          color: #ffffff;
+          font-size: 1.5rem;
+          font-weight: 600;
+          margin: 0;
+        }
+
+        .modal-close {
+          background: none;
+          border: none;
+          color: #ffffff;
+          font-size: 1.5rem;
+          cursor: pointer;
+          padding: 0.25rem;
+          border-radius: 4px;
+          transition: background-color 0.2s ease;
+        }
+
+        .modal-close:hover {
+          background: rgba(255, 255, 255, 0.1);
+        }
+
+        .session-form {
+          display: flex;
+          flex-direction: column;
+          gap: 1.5rem;
+        }
+
+        .form-group {
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+        }
+
+        .form-group label {
+          color: #ffffff;
+          font-weight: 500;
+          font-size: 0.9rem;
+        }
+
+        .form-input,
+        .form-select {
+          background: rgba(255, 255, 255, 0.1);
+          border: 2px solid #000000;
+          border-radius: 8px;
+          padding: 0.75rem;
+          color: #ffffff;
+          font-size: 0.95rem;
+          transition: all 0.2s ease;
+        }
+
+        .form-input::placeholder {
+          color: rgba(255, 255, 255, 0.5);
+        }
+
+        .form-input:focus,
+        .form-select:focus {
+          outline: none;
+          background: rgba(255, 255, 255, 0.15);
+          border-color: rgba(33, 150, 243, 0.5);
+        }
+
+        .form-select option {
+          background: #1a1a1a;
+          color: #ffffff;
+        }
+
+        .form-actions {
+          display: flex;
+          gap: 1rem;
+          justify-content: flex-end;
+          margin-top: 1rem;
+        }
+
+        .cancel-btn {
+          background: rgba(255, 255, 255, 0.1);
+          border: 2px solid #000000;
+          border-radius: 8px;
+          color: #ffffff;
+          padding: 0.75rem 1.5rem;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          font-weight: 500;
+        }
+
+        .cancel-btn:hover {
+          background: rgba(255, 255, 255, 0.15);
+        }
+
+        .create-btn {
+          background: linear-gradient(
+            135deg,
+            rgba(76, 175, 80, 0.3) 0%,
+            rgba(76, 175, 80, 0.2) 100%
+          );
+          border: 2px solid #000000;
+          border-radius: 8px;
+          color: #ffffff;
+          padding: 0.75rem 1.5rem;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          font-weight: 600;
+        }
+
+        .create-btn:hover {
+          background: linear-gradient(
+            135deg,
+            rgba(76, 175, 80, 0.4) 0%,
+            rgba(76, 175, 80, 0.3) 100%
+          );
+          transform: translateY(-1px);
+        }
+
+        @media (max-width: 768px) {
+          .collaboration-dashboard {
+            padding: 1.5rem;
+          }
+
+          .collaboration-header {
+            flex-direction: column;
+            gap: 1rem;
+            align-items: flex-start;
+          }
+
+          .sessions-controls {
+            flex-direction: column;
+          }
+
+          .search-container {
+            min-width: unset;
+          }
+
+          .sessions-grid {
+            grid-template-columns: 1fr;
+          }
+
+          .teams-grid {
+            grid-template-columns: 1fr;
+          }
+
+          .members-grid {
+            grid-template-columns: 1fr;
+          }
+
+          .tab-navigation {
+            flex-direction: column;
+          }
+
+          .tab-button {
+            justify-content: flex-start;
+          }
+
+          .modal-content {
+            margin: 1rem;
+            padding: 1.5rem;
+          }
+
+          .form-actions {
+            flex-direction: column;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .session-header {
+            flex-direction: column;
+            gap: 1rem;
+            align-items: flex-start;
+          }
+
+          .session-actions {
+            flex-direction: row;
+            width: 100%;
+          }
+
+          .join-btn {
+            flex: 1;
+          }
+
+          .teams-header {
+            flex-direction: column;
+            gap: 1rem;
+            align-items: flex-start;
+          }
+
+          .member-card {
+            flex-direction: column;
+            text-align: center;
+          }
+
+          .member-meta {
+            justify-content: center;
+          }
+        }
+      `}</style>
     </div>
   );
 }
