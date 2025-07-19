@@ -87,6 +87,13 @@ export default function CollaborationDashboard() {
   // Initialize WebSocket connection
   const initializeWebSocket = useCallback(() => {
     try {
+      // Skip WebSocket connection in demo mode since the backend doesn't support it
+      console.log(
+        "WebSocket connection skipped - using REST API polling instead",
+      );
+      setError(null);
+      return;
+
       const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
       const wsUrl = `${protocol}//${window.location.host}/api/collaboration/ws`;
 
