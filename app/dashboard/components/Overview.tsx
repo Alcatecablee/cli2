@@ -901,6 +901,7 @@ export default function Overview({ analysisHistory }: OverviewProps) {
           align-items: center;
           padding: 0.75rem;
           background: rgba(255, 255, 255, 0.05);
+          border: 1px solid #000000;
           border-radius: 8px;
         }
 
@@ -914,6 +915,7 @@ export default function Overview({ analysisHistory }: OverviewProps) {
           background: rgba(255, 152, 0, 0.2);
           color: #ff9800;
           padding: 0.25rem 0.5rem;
+          border: 1px solid #000000;
           border-radius: 12px;
           font-size: 0.8rem;
           font-weight: 600;
@@ -931,6 +933,7 @@ export default function Overview({ analysisHistory }: OverviewProps) {
           align-items: center;
           padding: 0.75rem;
           background: rgba(255, 255, 255, 0.05);
+          border: 1px solid #000000;
           border-radius: 8px;
         }
 
