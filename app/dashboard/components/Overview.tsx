@@ -738,7 +738,7 @@ export default function Overview({ analysisHistory }: OverviewProps) {
             rgba(255, 255, 255, 0.04) 50%,
             rgba(255, 255, 255, 0.02) 100%
           );
-          border: 1px solid rgba(255, 255, 255, 0.15);
+          border: 2px solid #000000;
           border-radius: 16px;
           padding: 1.5rem;
         }
