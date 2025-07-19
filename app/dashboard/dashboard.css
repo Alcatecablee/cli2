@@ -1544,38 +1544,27 @@ body {
   );
 }
 
-/* Enhanced Current Settings Spotlight */
+/* Current Settings Info Bar */
 .enhanced-settings-spotlight {
-  position: relative;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 1.5rem;
-  margin-bottom: 2rem;
-  padding: 1.5rem 2rem;
-  background: linear-gradient(
-    135deg,
-    rgba(33, 150, 243, 0.15) 0%,
-    rgba(33, 150, 243, 0.08) 50%,
-    rgba(255, 255, 255, 0.05) 100%
-  );
-  backdrop-filter: blur(25px) saturate(1.2);
-  -webkit-backdrop-filter: blur(25px) saturate(1.2);
-  border: 2px solid #000000;
-  border-radius: 16px;
-  box-shadow:
-    0 8px 32px rgba(33, 150, 243, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  text-align: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  padding: 1rem 1.5rem;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .enhanced-settings-spotlight strong {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: #ffffff;
-  letter-spacing: 0.025em;
-  text-transform: uppercase;
-  margin-right: 1.5rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.8);
+  margin-right: 1rem;
+  text-transform: none;
+  letter-spacing: normal;
 }
 
 .enhanced-settings-spotlight .setting-mode {
