@@ -4,6 +4,8 @@ import Script from "next/script";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { AuthProvider } from "../lib/auth-context";
+import { AuthErrorBoundary } from "../lib/auth-error-boundary";
+import { AuthErrorHandler } from "../lib/auth-error-handler";
 import ScrollToTop from "../src/components/ScrollToTop";
 import "./globals.css";
 
@@ -36,13 +38,16 @@ export default function RootLayout({
         />
       </head>
       <body suppressHydrationWarning={true}>
+        <AuthErrorHandler />
         <ScrollToTop />
         {/* Space Shooting Stars */}
         <div className="shooting-star"></div>
         <div className="shooting-star"></div>
         <div className="shooting-star"></div>
         <div className="shooting-star"></div>
-        <AuthProvider>{children}</AuthProvider>
+        <AuthErrorBoundary>
+          <AuthProvider>{children}</AuthProvider>
+        </AuthErrorBoundary>
         <Analytics />
         <SpeedInsights />
         <Script

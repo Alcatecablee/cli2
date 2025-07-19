@@ -277,27 +277,40 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       });
 
       let data;
+
+      // Create all necessary clones upfront before consuming any response
+      const responseClone = response.clone();
+      const responseTextClone = response.clone();
+
       try {
-        // Clone the response to avoid "body stream already read" errors
-        const responseClone = response.clone();
         try {
           data = await response.json();
         } catch (jsonError) {
-          // If the original response failed, try the clone
-          console.warn("Failed to parse response, trying clone:", jsonError);
-          data = await responseClone.json();
-        }
-      } catch (jsonError) {
-        console.error("Failed to parse login response:", jsonError);
+          console.warn(
+            "Failed to parse JSON response, trying clone:",
+            jsonError,
+          );
+          try {
+            data = await responseClone.json();
+          } catch (cloneJsonError) {
+            console.error(
+              "Failed to parse both original and cloned response:",
+              cloneJsonError,
+            );
 
-        // Try to get response text for debugging
-        try {
-          const responseText = await response.text();
-          console.error("Response text:", responseText);
-        } catch (textError) {
-          console.error("Could not read response text:", textError);
-        }
+            // Try to get response text for debugging
+            try {
+              const responseText = await responseTextClone.text();
+              console.error("Response text:", responseText);
+            } catch (textError) {
+              console.error("Could not read response text:", textError);
+            }
 
+            throw new Error("Server returned invalid response");
+          }
+        }
+      } catch (error) {
+        console.error("Failed to parse login response:", error);
         throw new Error("Server returned invalid response");
       }
 
@@ -316,19 +329,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(data.user);
         setSession(data.session);
 
-        // Also set the session on the centralized Supabase client
-        if (typeof window !== "undefined") {
-          try {
-            const { supabase } = await import("../lib/supabase-client");
-            await supabase.auth.setSession({
-              access_token: data.session.access_token,
-              refresh_token: data.session.refresh_token,
-            });
-            console.log("Supabase session set after login");
-          } catch (error) {
-            console.error("Error setting Supabase session:", error);
-          }
-        }
+        // Note: We avoid setting session directly here to prevent refresh token conflicts
+        // The supabase client will be initialized from localStorage when needed
       } catch (storageError) {
         console.error("Failed to save session to localStorage:", storageError);
         // Still set state even if localStorage fails
@@ -357,30 +359,40 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       });
 
       let data;
+
+      // Create all necessary clones upfront before consuming any response
+      const responseClone = response.clone();
+      const responseTextClone = response.clone();
+
       try {
-        // Clone the response to avoid "body stream already read" errors
-        const responseClone = response.clone();
         try {
           data = await response.json();
         } catch (jsonError) {
-          // If the original response failed, try the clone
           console.warn(
-            "Failed to parse signup response, trying clone:",
+            "Failed to parse JSON signup response, trying clone:",
             jsonError,
           );
-          data = await responseClone.json();
-        }
-      } catch (jsonError) {
-        console.error("Failed to parse signup response:", jsonError);
+          try {
+            data = await responseClone.json();
+          } catch (cloneJsonError) {
+            console.error(
+              "Failed to parse both original and cloned signup response:",
+              cloneJsonError,
+            );
 
-        // Try to get response text for debugging
-        try {
-          const responseText = await response.text();
-          console.error("Signup response text:", responseText);
-        } catch (textError) {
-          console.error("Could not read signup response text:", textError);
-        }
+            // Try to get response text for debugging
+            try {
+              const responseText = await responseTextClone.text();
+              console.error("Signup response text:", responseText);
+            } catch (textError) {
+              console.error("Could not read signup response text:", textError);
+            }
 
+            throw new Error("Server returned invalid response");
+          }
+        }
+      } catch (error) {
+        console.error("Failed to parse signup response:", error);
         throw new Error("Server returned invalid response");
       }
 
@@ -394,22 +406,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(data.user);
         setSession(data.session);
 
-        // Set session on centralized Supabase client
-        if (typeof window !== "undefined") {
-          try {
-            const { supabase } = await import("../lib/supabase-client");
-            await supabase.auth.setSession({
-              access_token: data.session.access_token,
-              refresh_token: data.session.refresh_token,
-            });
-            console.log("Supabase session set after signup");
-          } catch (error) {
-            console.error(
-              "Error setting Supabase session after signup:",
-              error,
-            );
-          }
-        }
+        // Note: We avoid setting session directly here to prevent refresh token conflicts
+        // The supabase client will be initialized from localStorage when needed
       }
 
       return data;
@@ -434,14 +432,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } finally {
       clearSession();
 
-      // Also clear session from centralized Supabase client
+      // Clear session from centralized Supabase client
       if (typeof window !== "undefined") {
         try {
           const { supabase } = await import("../lib/supabase-client");
-          await supabase.auth.signOut();
+          await supabase.auth.signOut({ scope: "local" }); // Only sign out locally to avoid API call issues
           console.log("Supabase session cleared after logout");
         } catch (error) {
           console.error("Error clearing Supabase session:", error);
+          // Don't throw - logout should always succeed locally
         }
       }
 
@@ -465,33 +464,42 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     });
 
     let data;
+
+    // Create all necessary clones upfront before consuming any response
+    const responseClone = response.clone();
+    const responseTextClone = response.clone();
+
     try {
-      // Clone the response to avoid "body stream already read" errors
-      const responseClone = response.clone();
       try {
         data = await response.json();
       } catch (jsonError) {
-        // If the original response failed, try the clone
         console.warn(
-          "Failed to parse profile update response, trying clone:",
+          "Failed to parse JSON profile update response, trying clone:",
           jsonError,
         );
-        data = await responseClone.json();
-      }
-    } catch (jsonError) {
-      console.error("Failed to parse profile update response:", jsonError);
+        try {
+          data = await responseClone.json();
+        } catch (cloneJsonError) {
+          console.error(
+            "Failed to parse both original and cloned profile update response:",
+            cloneJsonError,
+          );
 
-      // Try to get response text for debugging
-      try {
-        const responseText = await response.text();
-        console.error("Profile update response text:", responseText);
-      } catch (textError) {
-        console.error(
-          "Could not read profile update response text:",
-          textError,
-        );
-      }
+          // Try to get response text for debugging
+          try {
+            const responseText = await responseTextClone.text();
+            console.error("Profile update response text:", responseText);
+          } catch (textError) {
+            console.error(
+              "Could not read profile update response text:",
+              textError,
+            );
+          }
 
+          throw new Error("Server returned invalid response");
+        }
+      }
+    } catch (error) {
       throw new Error("Server returned invalid response");
     }
 

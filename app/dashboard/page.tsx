@@ -14,6 +14,9 @@ import AnalyticsDashboard from "./components/AnalyticsDashboard";
 import ApiKeysManager from "./components/ApiKeysManager";
 import SystemStatus from "./components/SystemStatus";
 import ErrorBoundary from "./components/ErrorBoundary";
+import Overview from "./components/Overview";
+import CodeAnalysis from "./components/CodeAnalysis";
+import CollaborationDashboard from "./components/CollaborationDashboard";
 
 // Import the same result interfaces from the demo
 interface DemoResult {
@@ -509,6 +512,12 @@ export default function Dashboard() {
   const [userExpandedSidebar, setUserExpandedSidebar] = useState(false);
   const [useEnhanced, setUseEnhanced] = useState(false);
 
+  // Refs for scrolling
+  const uploadSectionRef = useRef<HTMLDivElement>(null);
+  const pasteSectionRef = useRef<HTMLDivElement>(null);
+  const githubSectionRef = useRef<HTMLDivElement>(null);
+  const resultsSectionRef = useRef<HTMLDivElement>(null);
+
   // Save analysis to history
   const saveToHistory = useCallback(
     async (
@@ -542,6 +551,20 @@ export default function Dashboard() {
       });
     },
     [user?.id],
+  );
+
+  // Auto-scroll utility function
+  const scrollToSection = useCallback(
+    (sectionRef: React.RefObject<HTMLDivElement>) => {
+      if (sectionRef.current) {
+        sectionRef.current.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+          inline: "nearest",
+        });
+      }
+    },
+    [],
   );
 
   const analyzecode = useCallback(
@@ -643,6 +666,11 @@ export default function Dashboard() {
           progressStatus: "Analysis complete",
           uploadProgress: 100,
         }));
+
+        // Auto-scroll to results after analysis completes
+        setTimeout(() => {
+          scrollToSection(resultsSectionRef);
+        }, 100);
       } catch (error) {
         console.error("[DASHBOARD] Analysis failed:", error);
         setDashboardState((prev) => ({
@@ -659,9 +687,20 @@ export default function Dashboard() {
           progressStatus: "Analysis failed",
           uploadProgress: 0,
         }));
+
+        // Auto-scroll to results even on error
+        setTimeout(() => {
+          scrollToSection(resultsSectionRef);
+        }, 100);
       }
     },
-    [dashboardState.settings.autoSave, saveToHistory, session?.access_token],
+    [
+      dashboardState.settings.autoSave,
+      saveToHistory,
+      session?.access_token,
+      scrollToSection,
+      resultsSectionRef,
+    ],
   );
 
   const loadSampleFile = useCallback(
@@ -681,6 +720,9 @@ export default function Dashboard() {
         layers,
         dashboardState.applyFixes,
       );
+
+      // Auto-scroll to sample section area (we'll scroll to results after analysis completes)
+      // This gives immediate feedback that the sample is being processed
     },
     [analyzecode, dashboardState.selectedLayers, dashboardState.applyFixes],
   );
@@ -706,12 +748,22 @@ export default function Dashboard() {
             ? dashboardState.selectedLayers
             : "auto";
         analyzecode(code, file.name, layers, dashboardState.applyFixes);
+
+        // Auto-scroll to upload section
+        setTimeout(() => {
+          scrollToSection(uploadSectionRef);
+        }, 100);
       } catch (error) {
         console.error("[DASHBOARD] File upload failed:", error);
         alert("Failed to read the file. Please try again.");
       }
     },
-    [analyzecode, dashboardState.selectedLayers, dashboardState.applyFixes],
+    [
+      analyzecode,
+      dashboardState.selectedLayers,
+      dashboardState.applyFixes,
+      scrollToSection,
+    ],
   );
 
   const toggleLayerSelection = useCallback((layerId: number) => {
@@ -1093,7 +1145,14 @@ export default function Dashboard() {
     {
       id: "overview",
       icon: (
-        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2">
+        <svg
+          viewBox="0 0 24 24"
+          width="20"
+          height="20"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+        >
           <path d="M3 3h18v4H3z" />
           <path d="M3 10h18v4H3z" />
           <path d="M3 17h18v4H3z" />
@@ -1298,6 +1357,26 @@ export default function Dashboard() {
       description: "Profile & billing",
     },
     {
+      id: "docs",
+      icon: (
+        <svg
+          viewBox="0 0 24 24"
+          width="20"
+          height="20"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+        >
+          <path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z" />
+          <path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z" />
+        </svg>
+      ),
+      label: "Documentation",
+      description: "Guides & API reference",
+      isExternal: true,
+      href: "/docs",
+    },
+    {
       id: "settings",
       icon: (
         <svg
@@ -1368,54 +1447,87 @@ export default function Dashboard() {
         </div>
 
         <nav className="sidebar-nav" role="menu">
-          {sidebarItems.map((item, index) => (
-            <button
-              key={item.id}
-              className={`nav-item ${dashboardState.activeSection === item.id ? "active" : ""}`}
-              onClick={() =>
-                setDashboardState((prev) => ({
-                  ...prev,
-                  activeSection: item.id,
-                  // Auto-hide results when switching tabs
-                  showResults:
-                    item.id === "editor" || item.id === "samples"
-                      ? prev.showResults
-                      : false,
-                }))
-              }
-              role="menuitem"
-              aria-current={
-                dashboardState.activeSection === item.id ? "page" : undefined
-              }
-              aria-label={`${item.label}: ${item.description}`}
-              tabIndex={0}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  e.preventDefault();
+          {sidebarItems.map((item, index) => {
+            if (item.isExternal) {
+              return (
+                <Link
+                  key={item.id}
+                  href={item.href}
+                  className="nav-item"
+                  role="menuitem"
+                  aria-label={`${item.label}: ${item.description}`}
+                  tabIndex={0}
+                  style={{
+                    animationDelay: `${index * 0.1}s`,
+                    display: "flex",
+                    alignItems: "center",
+                    textDecoration: "none",
+                  }}
+                >
+                  <span className="nav-icon" aria-hidden="true">
+                    {item.icon}
+                  </span>
+                  {!dashboardState.sidebarCollapsed && (
+                    <div className="nav-content">
+                      <span className="nav-label">{item.label}</span>
+                      <span className="nav-description">
+                        {item.description}
+                      </span>
+                    </div>
+                  )}
+                </Link>
+              );
+            }
+
+            return (
+              <button
+                key={item.id}
+                className={`nav-item ${dashboardState.activeSection === item.id ? "active" : ""}`}
+                onClick={() =>
                   setDashboardState((prev) => ({
                     ...prev,
                     activeSection: item.id,
-                    // Auto-hide results when switching tabs via keyboard
+                    // Auto-hide results when switching tabs
                     showResults:
                       item.id === "editor" || item.id === "samples"
                         ? prev.showResults
                         : false,
-                  }));
+                  }))
                 }
-              }}
-              style={{ animationDelay: `${index * 0.1}s` }}
-            >
-              <span className="nav-icon" aria-hidden="true">
-                {item.icon}
-              </span>
-              {!dashboardState.sidebarCollapsed && (
-                <div className="nav-content">
-                  <span className="nav-label">{item.label}</span>
-                  <span className="nav-description">{item.description}</span>
-                </div>
-              )}
-            </button>
-          ))}
+                role="menuitem"
+                aria-current={
+                  dashboardState.activeSection === item.id ? "page" : undefined
+                }
+                aria-label={`${item.label}: ${item.description}`}
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    setDashboardState((prev) => ({
+                      ...prev,
+                      activeSection: item.id,
+                      // Auto-hide results when switching tabs via keyboard
+                      showResults:
+                        item.id === "editor" || item.id === "samples"
+                          ? prev.showResults
+                          : false,
+                    }));
+                  }
+                }}
+                style={{ animationDelay: `${index * 0.1}s` }}
+              >
+                <span className="nav-icon" aria-hidden="true">
+                  {item.icon}
+                </span>
+                {!dashboardState.sidebarCollapsed && (
+                  <div className="nav-content">
+                    <span className="nav-label">{item.label}</span>
+                    <span className="nav-description">{item.description}</span>
+                  </div>
+                )}
+              </button>
+            );
+          })}
         </nav>
 
         <div
@@ -1474,16 +1586,30 @@ export default function Dashboard() {
         </div>
 
         <div className="dashboard-content">
-          {/* Global Controls - Always Visible - Demo Style */}
+          {/* Enhanced Analysis Configuration */}
           {(dashboardState.activeSection === "editor" ||
             dashboardState.activeSection === "samples") && (
             <div
-              className="demo-controls"
+              className="analysis-configuration"
               role="region"
-              aria-labelledby="controls-title"
+              aria-labelledby="config-title"
             >
-              <h3 id="controls-title">Analysis Configuration</h3>
-              <div className="controls-grid">
+              <div className="config-header">
+                <div className="config-title">
+                  <h2 id="config-title">Analysis Configuration</h2>
+                  <p>
+                    Configure analysis mode, engine type, and layer selection
+                  </p>
+                </div>
+                <div className="config-status">
+                  <div className="status-indicator">
+                    <div className="status-dot"></div>
+                    <span>Configuration Ready</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="config-grid">
                 <fieldset className="control-group">
                   <legend className="control-label">MODE</legend>
                   <div
@@ -1663,39 +1789,29 @@ export default function Dashboard() {
           {/* Demo Settings Status */}
           {(dashboardState.activeSection === "editor" ||
             dashboardState.activeSection === "samples") && (
-            <div
-              style={{
-                textAlign: "center",
-                marginBottom: "1rem",
-                padding: "0.75rem",
-                background: "rgba(33, 150, 243, 0.08)",
-                border: "1px solid rgba(33, 150, 243, 0.2)",
-                borderRadius: "8px",
-                fontSize: "0.9rem",
-                color: "rgba(255, 255, 255, 0.9)",
-                boxShadow: "0 2px 8px rgba(33, 150, 243, 0.1)",
-              }}
-            >
-              <strong>Current Settings:</strong>{" "}
+            <div className="enhanced-settings-spotlight">
+              <strong>Current Settings:</strong>
               <span
-                style={{
-                  color: dashboardState.applyFixes ? "#ff9800" : "#4caf50",
-                }}
+                className={`setting-mode ${dashboardState.applyFixes ? "apply-mode" : "dry-run-mode"}`}
               >
+                <span className="badge-icon">
+                  {dashboardState.applyFixes ? "FIX" : "DRY"}
+                </span>
                 {dashboardState.applyFixes
                   ? "Apply Fixes Mode"
                   : "Dry-Run Mode"}
               </span>
-              {" �� "}
-              <span style={{ color: "rgba(33, 150, 243, 0.9)" }}>
+
+              <span className="setting-mode layers-badge">
+                <span className="badge-icon">LAYERS</span>
                 {dashboardState.selectedLayers.length === 0
                   ? "Auto-Detect Layers"
                   : dashboardState.selectedLayers.length === 6
                     ? "All 6 Layers"
                     : `Custom Layers [${dashboardState.selectedLayers.join(",")}]`}
               </span>
-              {" • "}
-              <span style={{ color: "rgba(255, 255, 255, 0.8)" }}>
+              <span className="setting-mode engine-badge">
+                <span className="badge-icon">ENGINE</span>
                 {useEnhanced ? "Enhanced AST Engine" : "Standard Engine"}
               </span>
             </div>
@@ -1936,166 +2052,58 @@ export default function Dashboard() {
           {/* Code Analysis Tab */}
           {dashboardState.activeSection === "editor" && (
             <div className="tab-content">
-              <div className="demo-upload-section">
-                <div
-                  className="upload-area"
-                  onClick={() => fileInputRef.current?.click()}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      e.preventDefault();
-                      fileInputRef.current?.click();
-                    }
+              <ErrorBoundary>
+                <CodeAnalysis
+                  onAnalyzeCode={(code, filename) => {
+                    setDashboardState((prev) => ({
+                      ...prev,
+                      currentFile: filename,
+                    }));
+
+                    const layers =
+                      dashboardState.selectedLayers.length > 0
+                        ? dashboardState.selectedLayers
+                        : "auto";
+                    analyzecode(
+                      code,
+                      filename,
+                      layers,
+                      dashboardState.applyFixes,
+                    );
+
+                    // Auto-scroll to paste section when analyzing pasted code
+                    setTimeout(() => {
+                      scrollToSection(pasteSectionRef);
+                    }, 100);
                   }}
-                  role="button"
-                  tabIndex={0}
-                  aria-label="Upload React or Next.js files for analysis"
-                >
-                  <h3>Upload Your Files</h3>
-                  <p>Drop React/Next.js files here or click to browse</p>
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    className="file-input"
-                    accept=".jsx,.tsx,.js,.ts"
-                    onChange={handleFileUpload}
-                  />
-                </div>
-
-                <div className="upload-area" role="region">
-                  <h3>Paste Your Code</h3>
-                  <div className="paste-code-container">
-                    <textarea
-                      className="code-textarea"
-                      placeholder="Paste your React/Next.js code here..."
-                      rows={12}
-                      style={{
-                        width: "100%",
-                        minHeight: "300px",
-                        padding: "1rem",
-                        background: "rgba(255, 255, 255, 0.05)",
-                        border: "1px solid rgba(255, 255, 255, 0.15)",
-                        borderRadius: "8px",
-                        color: "#ffffff",
-                        fontFamily: "JetBrains Mono, monospace",
-                        fontSize: "0.85rem",
-                        lineHeight: "1.5",
-                        resize: "vertical",
-                        outline: "none",
-                        transition: "border-color 0.2s ease",
-                      }}
-                      onFocus={(e) => {
-                        e.target.style.borderColor = "rgba(33, 150, 243, 0.4)";
-                      }}
-                      onBlur={(e) => {
-                        e.target.style.borderColor =
-                          "rgba(255, 255, 255, 0.15)";
-                      }}
-                      aria-label="Code input area"
-                      aria-describedby="paste-instructions"
-                    />
-                    <div
-                      className="paste-actions"
-                      style={{
-                        marginTop: "1rem",
-                        display: "flex",
-                        gap: "0.75rem",
-                        alignItems: "center",
-                      }}
-                    >
-                      <button
-                        className="btn btn-primary"
-                        onClick={() => {
-                          const textarea = document.querySelector(
-                            ".code-textarea",
-                          ) as HTMLTextAreaElement;
-                          const code = textarea?.value.trim();
-                          if (!code) {
-                            alert("Please paste some code first");
-                            return;
-                          }
-
-                          // Generate a filename based on code content
-                          let filename = "pasted-code.tsx";
-                          if (code.includes("export default")) {
-                            const match = code.match(
-                              /export default function (\w+)/,
-                            );
-                            if (match) {
-                              filename = `${match[1]}.tsx`;
-                            }
-                          } else if (code.includes("function ")) {
-                            const match = code.match(/function (\w+)/);
-                            if (match) {
-                              filename = `${match[1]}.tsx`;
-                            }
-                          }
-
-                          setDashboardState((prev) => ({
-                            ...prev,
-                            currentFile: filename,
-                          }));
-
-                          const layers =
-                            dashboardState.selectedLayers.length > 0
-                              ? dashboardState.selectedLayers
-                              : "auto";
-                          analyzecode(
-                            code,
-                            filename,
-                            layers,
-                            dashboardState.applyFixes,
-                          );
-                        }}
-                        disabled={dashboardState.isLoading}
-                        style={{ minWidth: "120px" }}
-                      >
-                        {dashboardState.isLoading
-                          ? "Analyzing..."
-                          : "Analyze Code"}
-                      </button>
-                      <button
-                        className="btn btn-secondary"
-                        onClick={() => {
-                          const textarea = document.querySelector(
-                            ".code-textarea",
-                          ) as HTMLTextAreaElement;
-                          if (textarea) {
-                            textarea.value = "";
-                            textarea.focus();
-                          }
-                        }}
-                        disabled={dashboardState.isLoading}
-                      >
-                        Clear
-                      </button>
-                      <span
-                        style={{
-                          color: "rgba(255, 255, 255, 0.6)",
-                          fontSize: "0.85rem",
-                        }}
-                      >
-                        or use the upload area above
-                      </span>
-                    </div>
-                  </div>
-                  <div id="paste-instructions" className="sr-only">
-                    Paste React or Next.js code into the textarea and click
-                    Analyze Code to run NeuroLint Pro analysis
-                  </div>
-                </div>
-              </div>
-
-              {dashboardState.currentFile && (
-                <div className="current-file-info">
-                  <h4>Current File</h4>
-                  <div className="file-card">
-                    <span className="file-name">
-                      {dashboardState.currentFile}
-                    </span>
-                    <span className="file-status">Ready for analysis</span>
-                  </div>
-                </div>
-              )}
+                  onFileUpload={handleFileUpload}
+                  isLoading={dashboardState.isLoading}
+                  currentFile={dashboardState.currentFile}
+                  fileInputRef={fileInputRef}
+                  uploadSectionRef={uploadSectionRef}
+                  pasteSectionRef={pasteSectionRef}
+                  githubSectionRef={githubSectionRef}
+                  onModeChange={(mode) => {
+                    // Auto-scroll to appropriate section when mode changes
+                    setTimeout(() => {
+                      if (mode === "upload") {
+                        scrollToSection(uploadSectionRef);
+                      } else if (mode === "paste") {
+                        scrollToSection(pasteSectionRef);
+                      } else if (mode === "github") {
+                        scrollToSection(githubSectionRef);
+                      }
+                    }, 100);
+                  }}
+                  onNavigateToGitHub={() => {
+                    // Navigate to GitHub integration section
+                    setDashboardState((prev) => ({
+                      ...prev,
+                      activeSection: "bulk",
+                    }));
+                  }}
+                />
+              </ErrorBoundary>
             </div>
           )}
 
@@ -2372,6 +2380,11 @@ export default function Dashboard() {
                             showResults: true,
                             currentFile: item.filename,
                           }));
+
+                          // Auto-scroll to results when viewing details
+                          setTimeout(() => {
+                            scrollToSection(resultsSectionRef);
+                          }, 100);
                         }}
                       >
                         View Details
@@ -2859,7 +2872,7 @@ export default function Dashboard() {
 
           {/* Results Section */}
           {dashboardState.showResults && (
-            <div className="results-section">
+            <div className="results-section" ref={resultsSectionRef}>
               {dashboardState.isLoading ? (
                 <div className="loading-state">
                   <div className="loading-spinner"></div>

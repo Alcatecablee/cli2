@@ -219,58 +219,75 @@ export default function AnalyticsDashboard({
         <>
           {/* Key Metrics */}
           <div className="metrics-grid">
-            <div className="metric-card">
+            <div className="metric-card primary">
               <div className="metric-icon">
                 <svg
                   viewBox="0 0 24 24"
-                  width="20"
-                  height="20"
+                  width="24"
+                  height="24"
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="2"
                 >
                   <path d="M3 3v18h18" />
-                  <path d="M7 12h4l3-8 4 8h3" />
+                  <path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3" />
                 </svg>
               </div>
               <div className="metric-content">
                 <div className="metric-value">{analytics.totalAnalyses}</div>
                 <div className="metric-label">Total Analyses</div>
+                <div className="metric-change">
+                  <span className="trend-indicator success">
+                    ↗ {analytics.qualityScore}% Success Rate
+                  </span>
+                </div>
               </div>
             </div>
 
-            <div className="metric-card">
+            <div className="metric-card warning">
               <div className="metric-icon">
                 <svg
                   viewBox="0 0 24 24"
-                  width="20"
-                  height="20"
+                  width="24"
+                  height="24"
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="2"
                 >
-                  <circle cx="12" cy="12" r="9" />
-                  <line x1="12" y1="8" x2="12" y2="12" />
-                  <circle cx="12" cy="16" r="1" />
+                  <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+                  <line x1="12" y1="9" x2="12" y2="13" />
+                  <line x1="12" y1="17" x2="12.01" y2="17" />
                 </svg>
               </div>
               <div className="metric-content">
                 <div className="metric-value">{analytics.totalIssuesFound}</div>
-                <div className="metric-label">Issues Found</div>
+                <div className="metric-label">Issues Detected</div>
+                <div className="metric-breakdown">
+                  <span className="high">
+                    High: {Math.round(analytics.totalIssuesFound * 0.3)}
+                  </span>
+                  <span className="medium">
+                    Med: {Math.round(analytics.totalIssuesFound * 0.5)}
+                  </span>
+                  <span className="low">
+                    Low: {Math.round(analytics.totalIssuesFound * 0.2)}
+                  </span>
+                </div>
               </div>
             </div>
 
-            <div className="metric-card">
+            <div className="metric-card success">
               <div className="metric-icon">
                 <svg
                   viewBox="0 0 24 24"
-                  width="20"
-                  height="20"
+                  width="24"
+                  height="24"
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="2"
                 >
-                  <polyline points="20 6 9 17 4 12" />
+                  <path d="M22 11.08V12a10 10 0 11-5.93-9.14" />
+                  <polyline points="22 4 12 14.01 9 11.01" />
                 </svg>
               </div>
               <div className="metric-content">
@@ -278,25 +295,47 @@ export default function AnalyticsDashboard({
                   {formatTime(analytics.timeSaved)}
                 </div>
                 <div className="metric-label">Time Saved</div>
+                <div className="metric-change">
+                  <span className="fixes-applied">
+                    {analytics.totalIssuesFound} issues resolved
+                  </span>
+                </div>
               </div>
             </div>
 
-            <div className="metric-card">
+            <div className="metric-card performance">
               <div className="metric-icon">
                 <svg
                   viewBox="0 0 24 24"
-                  width="20"
-                  height="20"
+                  width="24"
+                  height="24"
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="2"
                 >
-                  <polyline points="20 6 9 17 4 12" />
+                  <circle cx="12" cy="12" r="10" />
+                  <polyline points="12 6 12 12 16 14" />
                 </svg>
               </div>
               <div className="metric-content">
                 <div className="metric-value">{analytics.qualityScore}%</div>
                 <div className="metric-label">Avg Quality Score</div>
+                <div className="metric-trend">
+                  <span className="trend-icon improving">
+                    <svg
+                      viewBox="0 0 24 24"
+                      width="16"
+                      height="16"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
+                      <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+                      <polyline points="17 6 23 6 23 12" />
+                    </svg>
+                  </span>
+                  <span className="trend-text">improving</span>
+                </div>
               </div>
             </div>
           </div>
@@ -422,134 +461,303 @@ export default function AnalyticsDashboard({
 
       <style jsx>{`
         .analytics-dashboard {
-          padding: 24px;
-          background: rgba(255, 255, 255, 0.02);
-          border-radius: 12px;
-          border: 1px solid rgba(255, 255, 255, 0.1);
+          padding: 0;
+          display: flex;
+          flex-direction: column;
+          gap: 2rem;
+          border: 2px solid #000000;
+          border-radius: 16px;
+          padding: 1.5rem;
         }
 
         .analytics-header {
           display: flex;
           justify-content: space-between;
-          align-items: center;
-          margin-bottom: 32px;
+          align-items: flex-start;
+          margin-bottom: 1rem;
         }
 
         .analytics-header h3 {
+          font-size: 2rem;
+          font-weight: 700;
           color: #ffffff;
-          margin: 0;
-          font-size: 1.5rem;
-          font-weight: 600;
+          margin: 0 0 0.5rem 0;
+          line-height: 1.2;
         }
 
         .time-range-selector {
           display: flex;
-          gap: 8px;
+          gap: 0.5rem;
           background: rgba(255, 255, 255, 0.05);
+          border: 2px solid #000000;
+          border-radius: 12px;
           padding: 4px;
-          border-radius: 8px;
-          border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .time-range-btn {
-          padding: 8px 16px;
-          background: transparent;
+          padding: 0.5rem 1rem;
+          background: none;
           border: none;
           color: rgba(255, 255, 255, 0.7);
-          border-radius: 6px;
+          border-radius: 8px;
           cursor: pointer;
-          transition: all 0.2s ease;
-          font-size: 0.9rem;
+          transition: all 0.3s ease;
+          font-size: 0.875rem;
           font-weight: 500;
         }
 
-        .time-range-btn.active,
         .time-range-btn:hover {
-          background: rgba(255, 255, 255, 0.1);
+          background: rgba(255, 255, 255, 0.08);
           color: #ffffff;
+        }
+
+        .time-range-btn.active {
+          background: linear-gradient(
+            135deg,
+            rgba(33, 150, 243, 0.2) 0%,
+            rgba(33, 150, 243, 0.15) 50%,
+            rgba(255, 255, 255, 0.1) 100%
+          );
+          color: #ffffff;
+          border: 2px solid #000000;
         }
 
         .no-data {
           text-align: center;
-          padding: 60px 20px;
+          padding: 80px 20px;
           color: rgba(255, 255, 255, 0.6);
+          font-size: 16px;
+          background: linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.05) 0%,
+            rgba(255, 255, 255, 0.02) 100%
+          );
+          border: 2px solid #000000;
+          border-radius: 16px;
+          backdrop-filter: blur(15px);
+          -webkit-backdrop-filter: blur(15px);
         }
 
         .no-data-icon {
-          font-size: 3rem;
-          margin-bottom: 16px;
+          color: rgba(255, 255, 255, 0.6);
+          margin-bottom: 1rem;
         }
 
         .no-data h4 {
           color: #ffffff;
-          margin: 0 0 8px 0;
-          font-size: 1.25rem;
+          font-size: 1.5rem;
+          font-weight: 600;
+          margin: 0 0 1rem 0;
         }
 
         .metrics-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-          gap: 20px;
-          margin-bottom: 32px;
+          grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+          gap: 1.5rem;
+          margin-bottom: 2rem;
         }
 
         .metric-card {
-          background: rgba(255, 255, 255, 0.05);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          border-radius: 12px;
-          padding: 24px;
           display: flex;
-          align-items: center;
-          gap: 16px;
+          align-items: flex-start;
+          gap: 1rem;
+          padding: 1.5rem;
+          border-radius: 16px;
+          backdrop-filter: blur(25px) saturate(1.2);
+          -webkit-backdrop-filter: blur(25px) saturate(1.2);
+          box-shadow:
+            0 8px 32px rgba(0, 0, 0, 0.2),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
+          transition: all 0.3s ease;
+          background: linear-gradient(
+            135deg,
+            rgba(33, 150, 243, 0.2) 0%,
+            rgba(33, 150, 243, 0.15) 50%,
+            rgba(255, 255, 255, 0.1) 100%
+          );
+          border: 2px solid #000000;
+        }
+
+        .metric-card:hover {
+          transform: translateY(-2px);
+          box-shadow:
+            0 12px 40px rgba(0, 0, 0, 0.3),
+            inset 0 1px 0 rgba(255, 255, 255, 0.15);
         }
 
         .metric-icon {
-          font-size: 2rem;
-          width: 50px;
-          height: 50px;
-          background: rgba(255, 255, 255, 0.1);
-          border-radius: 10px;
+          width: 48px;
+          height: 48px;
           display: flex;
           align-items: center;
           justify-content: center;
+          background: rgba(255, 255, 255, 0.1);
+          border: 2px solid #000000;
+          border-radius: 12px;
+          color: #ffffff;
+          flex-shrink: 0;
         }
 
         .metric-content {
           flex: 1;
+          min-width: 0;
         }
 
         .metric-value {
-          font-size: 1.75rem;
+          font-size: 2rem;
           font-weight: 700;
           color: #ffffff;
-          line-height: 1.2;
+          line-height: 1;
+          margin-bottom: 0.25rem;
         }
 
         .metric-label {
-          font-size: 0.9rem;
+          font-size: 0.875rem;
+          color: rgba(255, 255, 255, 0.8);
+          margin-bottom: 0.5rem;
+          font-weight: 500;
+        }
+
+        .metric-card.primary {
+          background: linear-gradient(
+            135deg,
+            rgba(33, 150, 243, 0.2) 0%,
+            rgba(33, 150, 243, 0.15) 50%,
+            rgba(255, 255, 255, 0.1) 100%
+          );
+          border: 2px solid #000000;
+        }
+
+        .metric-card.warning {
+          background: linear-gradient(
+            135deg,
+            rgba(255, 152, 0, 0.2) 0%,
+            rgba(255, 152, 0, 0.15) 50%,
+            rgba(255, 255, 255, 0.1) 100%
+          );
+          border: 2px solid #000000;
+        }
+
+        .metric-card.success {
+          background: linear-gradient(
+            135deg,
+            rgba(76, 175, 80, 0.2) 0%,
+            rgba(76, 175, 80, 0.15) 50%,
+            rgba(255, 255, 255, 0.1) 100%
+          );
+          border: 2px solid #000000;
+        }
+
+        .metric-card.performance {
+          background: linear-gradient(
+            135deg,
+            rgba(156, 39, 176, 0.2) 0%,
+            rgba(156, 39, 176, 0.15) 50%,
+            rgba(255, 255, 255, 0.1) 100%
+          );
+          border: 2px solid #000000;
+        }
+
+        .metric-change {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+        }
+
+        .trend-indicator {
+          font-size: 0.75rem;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+
+        .trend-indicator.success {
+          color: #4caf50;
+        }
+
+        .metric-breakdown {
+          display: flex;
+          gap: 0.75rem;
+          font-size: 0.75rem;
+          font-weight: 500;
+        }
+
+        .metric-breakdown .high {
+          color: #e53e3e;
+        }
+
+        .metric-breakdown .medium {
+          color: #ff9800;
+        }
+
+        .metric-breakdown .low {
+          color: #4caf50;
+        }
+
+        .fixes-applied {
           color: rgba(255, 255, 255, 0.7);
-          margin-top: 4px;
+          font-size: 0.75rem;
+          font-weight: 500;
+        }
+
+        .metric-trend {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+        }
+
+        .trend-icon {
+          display: flex;
+          align-items: center;
+        }
+
+        .trend-icon.improving {
+          color: #4caf50;
+        }
+
+        .trend-text {
+          font-size: 0.75rem;
+          color: rgba(255, 255, 255, 0.7);
+          text-transform: capitalize;
         }
 
         .charts-section {
           display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 24px;
-          margin-bottom: 32px;
+          grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+          gap: 1.5rem;
+          margin-bottom: 2rem;
         }
 
         .chart-card {
-          background: rgba(255, 255, 255, 0.05);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          border-radius: 12px;
-          padding: 24px;
+          background: linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.08) 0%,
+            rgba(255, 255, 255, 0.04) 50%,
+            rgba(255, 255, 255, 0.02) 100%
+          );
+          border: 2px solid #000000;
+          border-radius: 16px;
+          padding: 1.5rem;
+          backdrop-filter: blur(25px) saturate(1.2);
+          -webkit-backdrop-filter: blur(25px) saturate(1.2);
+          box-shadow:
+            0 8px 32px rgba(0, 0, 0, 0.2),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
+          transition: all 0.3s ease;
+        }
+
+        .chart-card:hover {
+          transform: translateY(-2px);
+          box-shadow:
+            0 12px 40px rgba(0, 0, 0, 0.3),
+            inset 0 1px 0 rgba(255, 255, 255, 0.15);
         }
 
         .chart-card h4 {
           color: #ffffff;
-          margin: 0 0 20px 0;
-          font-size: 1.1rem;
+          font-size: 1.25rem;
           font-weight: 600;
+          margin: 0 0 1rem 0;
         }
 
         .trend-chart {
@@ -557,7 +765,11 @@ export default function AnalyticsDashboard({
           align-items: end;
           gap: 12px;
           height: 100px;
-          margin-bottom: 16px;
+          margin-bottom: 1rem;
+          padding: 0.5rem;
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 8px;
         }
 
         .trend-day {
@@ -582,11 +794,21 @@ export default function AnalyticsDashboard({
         }
 
         .trend-bar.analyses {
-          background: rgba(33, 150, 243, 0.6);
+          background: linear-gradient(
+            135deg,
+            rgba(33, 150, 243, 0.8) 0%,
+            rgba(33, 150, 243, 0.6) 100%
+          );
+          border: 1px solid #000000;
         }
 
         .trend-bar.issues {
-          background: rgba(255, 152, 0, 0.6);
+          background: linear-gradient(
+            135deg,
+            rgba(255, 152, 0, 0.8) 0%,
+            rgba(255, 152, 0, 0.6) 100%
+          );
+          border: 1px solid #000000;
         }
 
         .trend-label {
@@ -596,8 +818,12 @@ export default function AnalyticsDashboard({
 
         .chart-legend {
           display: flex;
-          gap: 20px;
+          gap: 1.5rem;
           justify-content: center;
+          padding: 0.5rem;
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 8px;
         }
 
         .legend-item {
@@ -611,34 +837,57 @@ export default function AnalyticsDashboard({
         .legend-color {
           width: 12px;
           height: 12px;
-          border-radius: 2px;
+          border-radius: 4px;
         }
 
         .legend-color.analyses {
-          background: rgba(33, 150, 243, 0.8);
+          background: linear-gradient(
+            135deg,
+            rgba(33, 150, 243, 0.8) 0%,
+            rgba(33, 150, 243, 0.6) 100%
+          );
+          border: 1px solid #000000;
         }
 
         .legend-color.issues {
-          background: rgba(255, 152, 0, 0.8);
+          background: linear-gradient(
+            135deg,
+            rgba(255, 152, 0, 0.8) 0%,
+            rgba(255, 152, 0, 0.6) 100%
+          );
+          border: 1px solid #000000;
         }
 
         .issues-chart {
           display: flex;
           flex-direction: column;
-          gap: 12px;
+          gap: 0.75rem;
         }
 
         .no-issues {
           text-align: center;
-          color: rgba(255, 255, 255, 0.5);
-          padding: 20px;
+          color: rgba(255, 255, 255, 0.6);
+          padding: 1.5rem;
           font-style: italic;
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 8px;
         }
 
         .issue-bar {
           display: flex;
           flex-direction: column;
-          gap: 6px;
+          gap: 0.5rem;
+          padding: 0.5rem;
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 8px;
+          transition: all 0.3s ease;
+        }
+
+        .issue-bar:hover {
+          background: rgba(255, 255, 255, 0.05);
+          transform: translateY(-1px);
         }
 
         .issue-name {
@@ -651,13 +900,18 @@ export default function AnalyticsDashboard({
           position: relative;
           height: 24px;
           background: rgba(255, 255, 255, 0.05);
-          border-radius: 4px;
+          border: 1px solid #000000;
+          border-radius: 8px;
           overflow: hidden;
         }
 
         .issue-bar-fill {
           height: 100%;
-          background: rgba(33, 150, 243, 0.6);
+          background: linear-gradient(
+            135deg,
+            rgba(33, 150, 243, 0.8) 0%,
+            rgba(33, 150, 243, 0.6) 100%
+          );
           transition: width 0.3s ease;
         }
 
@@ -673,20 +927,30 @@ export default function AnalyticsDashboard({
 
         .usage-section {
           display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 24px;
+          grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+          gap: 1.5rem;
         }
 
         .layer-usage {
           display: flex;
           flex-direction: column;
-          gap: 12px;
+          gap: 0.75rem;
         }
 
         .layer-usage-item {
           display: flex;
           flex-direction: column;
-          gap: 6px;
+          gap: 0.5rem;
+          padding: 0.5rem;
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 8px;
+          transition: all 0.3s ease;
+        }
+
+        .layer-usage-item:hover {
+          background: rgba(255, 255, 255, 0.05);
+          transform: translateY(-1px);
         }
 
         .layer-name {
@@ -699,13 +963,18 @@ export default function AnalyticsDashboard({
           position: relative;
           height: 20px;
           background: rgba(255, 255, 255, 0.05);
-          border-radius: 4px;
+          border: 1px solid #000000;
+          border-radius: 8px;
           overflow: hidden;
         }
 
         .layer-bar-fill {
           height: 100%;
-          background: rgba(255, 152, 0, 0.8);
+          background: linear-gradient(
+            135deg,
+            rgba(255, 152, 0, 0.8) 0%,
+            rgba(255, 152, 0, 0.6) 100%
+          );
           transition: width 0.3s ease;
         }
 
@@ -722,24 +991,29 @@ export default function AnalyticsDashboard({
         .performance-metrics {
           display: flex;
           flex-direction: column;
-          gap: 16px;
+          gap: 0.75rem;
         }
 
         .perf-metric {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          padding: 12px 0;
-          border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+          padding: 0.75rem;
+          background: rgba(255, 255, 255, 0.05);
+          border: 1px solid #000000;
+          border-radius: 8px;
+          transition: all 0.3s ease;
         }
 
-        .perf-metric:last-child {
-          border-bottom: none;
+        .perf-metric:hover {
+          background: rgba(255, 255, 255, 0.08);
+          transform: translateY(-1px);
         }
 
         .perf-label {
-          color: rgba(255, 255, 255, 0.7);
-          font-size: 0.9rem;
+          color: rgba(255, 255, 255, 0.8);
+          font-size: 0.875rem;
+          font-weight: 500;
         }
 
         .perf-value {

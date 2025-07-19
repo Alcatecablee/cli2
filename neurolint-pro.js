@@ -25,7 +25,7 @@ const { execSync } = require("child_process");
 
 /**
  * Core Architecture Principles (from IMPLEMENTATION_PATTERNS.md)
- * Layers must execute in order (1→2→3→4→5→6) because each builds on the previous
+ * Layers must execute in order (1→2→3→4��5→6) because each builds on the previous
  */
 const LAYER_EXECUTION_ORDER = [
   { id: 1, name: "Configuration", description: "Foundation setup" },
@@ -113,6 +113,42 @@ class LayerDependencyManager {
    * Suggests optimal layer combinations based on code analysis
    * Exact implementation from IMPLEMENTATION_PATTERNS.md
    */
+  /**
+   * Advanced emoji content analysis for intelligent detection
+   */
+  static analyzeEmojiContent(code) {
+    const emojiRegex =
+      /[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|🔧|⚙️|🛠️|🧹|⚛️|🚀|⚡|🛡️|✅|📝|⚠️|❌|🔍|💡|➡️|⬅️|⬆️|⬇️|1️⃣|2️⃣|3️⃣|4️⃣|5️⃣|6️⃣/gu;
+
+    const emojis = code.match(emojiRegex) || [];
+    const totalCount = emojis.length;
+    const density = (totalCount / code.length) * 1000; // Per 1000 characters
+
+    // Check for contextual emoji usage (in comments, documentation, etc.)
+    const hasContextualEmojis =
+      /\/{2}.*[\u{1F600}-\u{1F64F}]|\/{2}.*[\u{1F300}-\u{1F5FF}]|#{1,6}\s+.*[\u{1F600}-\u{1F64F}]|\*\*.*[\u{1F300}-\u{1F5FF}]/u.test(
+        code,
+      );
+
+    // Categorize emoji types for better analysis
+    const categories = {
+      technical: (code.match(/🔧|⚙️|🛠️/g) || []).length,
+      interface: (code.match(/✅|❌|⚠️|🔍/g) || []).length,
+      performance: (code.match(/🚀|⚡/g) || []).length,
+      documentation: (code.match(/📝|💡/g) || []).length,
+      navigation: (code.match(/➡️|⬅️|⬆️|⬇️/g) || []).length,
+      numbers: (code.match(/1️⃣|2️⃣|3️⃣|4️⃣|5️⃣|6️⃣/g) || []).length,
+    };
+
+    return {
+      totalCount,
+      density,
+      hasContextualEmojis,
+      categories,
+      recommendsIntelligentProcessing: hasContextualEmojis || density > 3,
+    };
+  }
+
   static suggestLayers(code) {
     const recommended = [];
     const reasons = [];
@@ -121,14 +157,50 @@ class LayerDependencyManager {
     recommended.push(1);
     reasons.push("Configuration layer provides essential foundation");
 
-    // Check for HTML entities or old patterns
-    if (
+    // Advanced Content Analysis with Emoji Intelligence
+    const hasEntityIssues =
       /&quot;|&amp;|&lt;|&gt;|&#36;|&amp;#36;|&nbsp;|&copy;|&reg;|&trade;|&#39;|&apos;|&ndash;|&mdash;|&hellip;|&euro;|&pound;|console\.log/.test(
         code,
-      )
-    ) {
+      );
+
+    // Enhanced emoji detection with context analysis
+    const emojiAnalysis = this.analyzeEmojiContent(code);
+    const hasEmojiContent = emojiAnalysis.totalCount > 0;
+
+    if (hasEntityIssues || hasEmojiContent) {
       recommended.push(2);
-      reasons.push("Entity cleanup needed for HTML entities and old patterns");
+
+      // Smart reasoning based on emoji analysis
+      if (hasEntityIssues && hasEmojiContent) {
+        if (emojiAnalysis.density > 5) {
+          reasons.push(
+            `Advanced content standardization needed - HTML entities + high emoji density (${emojiAnalysis.density.toFixed(1)} per 1000 chars)`,
+          );
+        } else {
+          reasons.push(
+            "Content standardization needed for HTML entities and professional emoji cleanup",
+          );
+        }
+      } else if (hasEntityIssues) {
+        reasons.push(
+          "Entity cleanup needed for HTML entities and old patterns",
+        );
+      } else {
+        // Enhanced emoji-specific reasoning
+        if (emojiAnalysis.hasContextualEmojis) {
+          reasons.push(
+            `Intelligent emoji standardization needed - ${emojiAnalysis.totalCount} emojis detected with contextual preservation logic`,
+          );
+        } else if (emojiAnalysis.density > 10) {
+          reasons.push(
+            `High-priority emoji cleanup needed - density: ${emojiAnalysis.density.toFixed(1)} emojis per 1000 characters (enterprise threshold exceeded)`,
+          );
+        } else {
+          reasons.push(
+            "Professional content standardization needed for emoji cleanup",
+          );
+        }
+      }
     }
 
     // Check for React components needing fixes

@@ -28,7 +28,8 @@
     "lint:fix": "next lint --fix",
     "type-check": "tsc --noEmit",
     "clean": "rm -rf .next out dist",
-    "db:setup": "psql $SUPABASE_URL -f supabase-collaboration-schema.sql"
+    "db:setup": "psql $SUPABASE_URL -f supabase-collaboration-schema.sql",
+    "docs:clean-emojis": "node scripts/remove-emojis-from-docs.js"
   },
   "keywords": [
     "react",

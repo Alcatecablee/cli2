@@ -467,15 +467,15 @@ export default function GitHubIntegrationFixed() {
             rgba(255, 255, 255, 0.04) 50%,
             rgba(255, 255, 255, 0.02) 100%
           );
-          border: 1px solid rgba(255, 255, 255, 0.15);
-          border-radius: 20px;
+          border: 2px solid #000000;
+          border-radius: 16px;
           padding: 2rem;
           margin-bottom: 2rem;
           backdrop-filter: blur(25px) saturate(1.2);
           -webkit-backdrop-filter: blur(25px) saturate(1.2);
           box-shadow:
-            0 12px 40px rgba(0, 0, 0, 0.3),
-            inset 0 1px 0 rgba(255, 255, 255, 0.15);
+            0 8px 32px rgba(0, 0, 0, 0.2),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
           transition: all 0.3s ease;
         }
 
@@ -495,8 +495,8 @@ export default function GitHubIntegrationFixed() {
 
         .plan-info-card {
           background: rgba(255, 255, 255, 0.05);
-          border: 1px solid rgba(255, 255, 255, 0.15);
-          border-radius: 16px;
+          border: 2px solid #000000;
+          border-radius: 12px;
           padding: 1.5rem;
           margin-bottom: 2rem;
         }
@@ -546,7 +546,7 @@ export default function GitHubIntegrationFixed() {
             rgba(33, 150, 243, 0.15) 50%,
             rgba(255, 255, 255, 0.1) 100%
           );
-          border: 1px solid rgba(33, 150, 243, 0.4);
+          border: 2px solid #000000;
           border-radius: 8px;
           color: #ffffff;
           padding: 0.5rem 1rem;
@@ -579,8 +579,8 @@ export default function GitHubIntegrationFixed() {
           text-align: center;
           padding: 2.5rem;
           background: rgba(255, 255, 255, 0.03);
-          border: 2px dashed rgba(255, 255, 255, 0.2);
-          border-radius: 16px;
+          border: 2px solid #000000;
+          border-radius: 12px;
           gap: 1rem;
         }
 
@@ -610,7 +610,7 @@ export default function GitHubIntegrationFixed() {
             rgba(33, 150, 243, 0.15) 50%,
             rgba(255, 255, 255, 0.1) 100%
           );
-          border: 1px solid rgba(33, 150, 243, 0.4);
+          border: 2px solid #000000;
           border-radius: 8px;
           backdrop-filter: blur(20px) saturate(1.2);
           -webkit-backdrop-filter: blur(20px) saturate(1.2);
@@ -667,7 +667,7 @@ export default function GitHubIntegrationFixed() {
 
         .repository-card {
           background: rgba(255, 255, 255, 0.05);
-          border: 1px solid rgba(255, 255, 255, 0.1);
+          border: 2px solid #000000;
           border-radius: 12px;
           padding: 1.5rem;
           transition: all 0.3s ease;
@@ -708,6 +708,7 @@ export default function GitHubIntegrationFixed() {
 
         .repo-icon {
           background: rgba(255, 255, 255, 0.1);
+          border: 1px solid #000000;
           color: rgba(255, 255, 255, 0.8);
           width: 2rem;
           height: 2rem;
@@ -757,6 +758,7 @@ export default function GitHubIntegrationFixed() {
         .language,
         .size {
           background: rgba(255, 255, 255, 0.1);
+          border: 1px solid #000000;
           color: rgba(255, 255, 255, 0.8);
           padding: 0.2rem 0.5rem;
           border-radius: 4px;
@@ -767,7 +769,7 @@ export default function GitHubIntegrationFixed() {
         .scan-btn {
           width: 100%;
           background: rgba(33, 150, 243, 0.2);
-          border: 1px solid rgba(33, 150, 243, 0.4);
+          border: 2px solid #000000;
           color: #ffffff;
           padding: 0.75rem 1rem;
           border-radius: 8px;
@@ -800,7 +802,7 @@ export default function GitHubIntegrationFixed() {
           align-items: center;
           padding: 1.5rem;
           background: rgba(76, 175, 80, 0.1);
-          border: 1px solid rgba(76, 175, 80, 0.3);
+          border: 2px solid #000000;
           border-radius: 12px;
         }
 
@@ -814,7 +816,7 @@ export default function GitHubIntegrationFixed() {
           width: 48px;
           height: 48px;
           border-radius: 50%;
-          border: 2px solid rgba(76, 175, 80, 0.5);
+          border: 2px solid #000000;
         }
 
         .user-details h4 {
@@ -838,6 +840,7 @@ export default function GitHubIntegrationFixed() {
 
         .repo-stats span {
           background: rgba(255, 255, 255, 0.1);
+          border: 1px solid #000000;
           color: rgba(255, 255, 255, 0.8);
           padding: 0.2rem 0.5rem;
           border-radius: 4px;
@@ -846,7 +849,7 @@ export default function GitHubIntegrationFixed() {
 
         .refresh-btn {
           background: rgba(255, 255, 255, 0.1);
-          border: 1px solid rgba(255, 255, 255, 0.2);
+          border: 2px solid #000000;
           color: #ffffff;
           padding: 0.5rem 1rem;
           border-radius: 6px;
@@ -868,7 +871,7 @@ export default function GitHubIntegrationFixed() {
 
         .scan-results {
           background: rgba(33, 150, 243, 0.1);
-          border: 1px solid rgba(33, 150, 243, 0.3);
+          border: 2px solid #000000;
           border-radius: 12px;
           padding: 1.5rem;
         }
@@ -913,7 +916,7 @@ export default function GitHubIntegrationFixed() {
             rgba(33, 150, 243, 0.15) 50%,
             rgba(255, 255, 255, 0.1) 100%
           );
-          border: 1px solid rgba(33, 150, 243, 0.4);
+          border: 2px solid #000000;
           color: #ffffff;
           padding: 0.75rem 1.5rem;
           border-radius: 8px;
@@ -935,7 +938,7 @@ export default function GitHubIntegrationFixed() {
 
         .error-message {
           background: rgba(239, 68, 68, 0.1);
-          border: 1px solid rgba(239, 68, 68, 0.3);
+          border: 2px solid #000000;
           border-radius: 8px;
           padding: 1rem;
           display: flex;
