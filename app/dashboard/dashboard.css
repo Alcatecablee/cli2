@@ -3401,8 +3401,7 @@ legend {
 
   /* Results section mobile adjustments */
   .results-section {
-    min-height: calc(100vh - 150px);
-    max-height: calc(100vh - 150px);
+    left: 0;
     padding: 1rem;
   }
 
