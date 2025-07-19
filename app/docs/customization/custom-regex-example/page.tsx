@@ -256,7 +256,7 @@ export default function CustomRegexExamplePage() {
                     </div>
                     <div className="text-gray-300 text-sm mt-3">
                       <strong>Before:</strong> <code>&lt;Input name="email" validation="required,min:5" /&gt;</code><br/>
-                                            <strong>After:</strong> <code>&lt;Input name="email" rules={[{`{ required: true }, { minLength: 5 }`}]} /&gt;</code>
+                                                                  <strong>After:</strong> <code>&lt;Input name="email" rules={[{"{required: true}, {minLength: 5}"}]} /&gt;</code>
                     </div>
                   </div>
                 </div>
