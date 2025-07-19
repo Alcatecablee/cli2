@@ -594,7 +594,7 @@ export default function Overview({ analysisHistory }: OverviewProps) {
             rgba(33, 150, 243, 0.15) 50%,
             rgba(255, 255, 255, 0.1) 100%
           );
-          border: 1px solid rgba(33, 150, 243, 0.3);
+          border: 2px solid #000000;
         }
 
         .metric-card.warning {
@@ -604,7 +604,7 @@ export default function Overview({ analysisHistory }: OverviewProps) {
             rgba(255, 152, 0, 0.15) 50%,
             rgba(255, 255, 255, 0.1) 100%
           );
-          border: 1px solid rgba(255, 152, 0, 0.3);
+          border: 2px solid #000000;
         }
 
         .metric-card.success {
@@ -614,7 +614,7 @@ export default function Overview({ analysisHistory }: OverviewProps) {
             rgba(76, 175, 80, 0.15) 50%,
             rgba(255, 255, 255, 0.1) 100%
           );
-          border: 1px solid rgba(76, 175, 80, 0.3);
+          border: 2px solid #000000;
         }
 
         .metric-card.performance {
@@ -624,7 +624,7 @@ export default function Overview({ analysisHistory }: OverviewProps) {
             rgba(156, 39, 176, 0.15) 50%,
             rgba(255, 255, 255, 0.1) 100%
           );
-          border: 1px solid rgba(156, 39, 176, 0.3);
+          border: 2px solid #000000;
         }
 
         .metric-icon {
