@@ -3396,6 +3396,64 @@ legend {
     flex-direction: column;
     gap: 1rem;
   }
+
+  /* Results section mobile adjustments */
+  .results-section {
+    min-height: calc(100vh - 150px);
+    max-height: calc(100vh - 150px);
+    padding: 1rem;
+  }
+
+  .analysis-results {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .business-insights {
+    margin-bottom: 0.5rem;
+  }
+
+  .insights-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+
+  .comparison-grid {
+    grid-template-columns: 1fr;
+    height: auto;
+    gap: 1rem;
+  }
+
+  .overview-stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+
+  .stat {
+    padding: 0.75rem;
+  }
+
+  .stat-value {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .results-section {
+    padding: 0.75rem;
+  }
+
+  .insights-grid,
+  .overview-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .analysis-overview,
+  .code-comparison,
+  .issues-section,
+  .layers-section {
+    padding: 1rem;
+  }
 }
 
 /* Analysis History Button Styles - GitHub Integration Style */
