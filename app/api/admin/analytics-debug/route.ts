@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 export async function GET(request: NextRequest) {
   try {
     // Comprehensive debug information
-    const debugInfo = {
+    const debugInfo: any = {
       environment: {
         supabaseUrl: !!process.env.SUPABASE_URL,
         supabaseUrlValue: process.env.SUPABASE_URL ? "SET" : "NOT_SET",
