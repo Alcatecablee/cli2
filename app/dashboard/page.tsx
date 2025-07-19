@@ -2374,6 +2374,11 @@ export default function Dashboard() {
                             showResults: true,
                             currentFile: item.filename,
                           }));
+
+                          // Auto-scroll to results when viewing details
+                          setTimeout(() => {
+                            scrollToSection(resultsSectionRef);
+                          }, 100);
                         }}
                       >
                         View Details
