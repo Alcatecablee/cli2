@@ -1112,9 +1112,17 @@ export default function MyComponent() {
           align-items: center;
           gap: 0.5rem;
           padding: 0.75rem 1.5rem;
-          border: none;
+          border: 2px solid #000000;
           border-radius: 8px;
-          font-weight: 600;
+          backdrop-filter: blur(20px) saturate(1.2);
+          -webkit-backdrop-filter: blur(20px) saturate(1.2);
+          box-shadow:
+            0 8px 32px rgba(0, 0, 0, 0.2),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
+          color: #ffffff;
+          font-weight: 500;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
           cursor: pointer;
           transition: all 0.3s ease;
           font-size: 0.875rem;
@@ -1127,13 +1135,19 @@ export default function MyComponent() {
             rgba(255, 152, 0, 0.15) 50%,
             rgba(255, 255, 255, 0.1) 100%
           );
-          border: 2px solid #000000;
-          color: #ffffff;
         }
 
         .try-btn:hover {
+          background: linear-gradient(
+            135deg,
+            rgba(255, 152, 0, 0.3) 0%,
+            rgba(255, 152, 0, 0.22) 50%,
+            rgba(255, 255, 255, 0.12) 100%
+          );
           transform: translateY(-2px);
-          box-shadow: 0 8px 25px rgba(255, 152, 0, 0.3);
+          box-shadow:
+            0 12px 40px rgba(0, 0, 0, 0.3),
+            inset 0 1px 0 rgba(255, 255, 255, 0.15);
         }
 
         .sample-description {
