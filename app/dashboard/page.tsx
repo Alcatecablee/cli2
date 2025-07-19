@@ -1536,29 +1536,229 @@ export default function Dashboard() {
           <h1>NeuroLint Pro Dashboard</h1>
         </div>
 
-        <div className="dashboard-content">
-          {/* Enhanced Analysis Configuration */}
-          {(dashboardState.activeSection === "editor" ||
-            dashboardState.activeSection === "samples") && (
-            <div
-              className="analysis-configuration"
-              role="region"
-              aria-labelledby="config-title"
-            >
-              <div className="config-header">
-                <div className="config-title">
-                  <h2 id="config-title">Analysis Configuration</h2>
-                  <p>
-                    Configure analysis mode, engine type, and layer selection
-                  </p>
+                {/* Results Section - Outside Container */}
+        {dashboardState.showResults ? (
+          <div className="results-section-fullscreen">
+            {dashboardState.isLoading ? (
+              <div className="loading-state">
+                <div className="loading-spinner"></div>
+                <p>Analyzing code with NeuroLint Pro...</p>
+              </div>
+            ) : dashboardState.result?.error ? (
+              <div className="error-state">
+                <h3>Analysis Failed</h3>
+                <p>{dashboardState.result.error}</p>
+              </div>
+            ) : (
+              dashboardState.result && (
+                <div className="analysis-results-fullscreen">
+                  {/* Premium Business Insights */}
+                  {dashboardState.result.analysis && (
+                    <div className="business-insights">
+                      <h3>Technical Impact Analysis</h3>
+                      <div className="insights-grid">
+                        <div className="insight-card">
+                          <div className="insight-label">
+                            Potential Savings
+                          </div>
+                          <div className="insight-value">
+                            ~
+                            {Math.round(
+                              dashboardState.result.analysis.detectedIssues
+                                .length * 2.5,
+                            )}{" "}
+                            hours dev time
+                          </div>
+                        </div>
+                        <div className="insight-card">
+                          <div className="insight-label">
+                            Performance Gain
+                          </div>
+                          <div className="insight-value">
+                            {dashboardState.result.analysis.estimatedImpact
+                              .level === "high"
+                              ? "15-25%"
+                              : "5-15%"}{" "}
+                            faster
+                          </div>
+                        </div>
+                        <div className="insight-card">
+                          <div className="insight-label">Risk Reduction</div>
+                          <div className="insight-value">
+                            {
+                              dashboardState.result.analysis.detectedIssues.filter(
+                                (i) =>
+                                  i.severity === "high" ||
+                                  i.severity === "critical",
+                              ).length
+                            }{" "}
+                            critical issues
+                          </div>
+                        </div>
+                        <div className="insight-card">
+                          <div className="insight-label">
+                            Standards Compliance
+                          </div>
+                          <div className="insight-value">
+                            {Math.round(
+                              dashboardState.result.analysis.confidence * 100,
+                            )}
+                            % best practices
+                          </div>
+                        </div>
+                      </div>
+                      {/* Clear Results Button */}
+                      <div className="clear-results-section">
+                        <button
+                          className="btn btn-secondary"
+                          onClick={() =>
+                            setDashboardState((prev) => ({
+                              ...prev,
+                              showResults: false,
+                              result: null,
+                              currentFile: null,
+                            }))
+                          }
+                          aria-label="Clear analysis results and start over"
+                        >
+                          Clear Results
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Analysis Overview */}
+                  {dashboardState.result.analysis && (
+                    <div className="analysis-overview">
+                      <h3>Analysis Overview</h3>
+                      <div className="overview-stats">
+                        <div className="stat">
+                          <span className="stat-value">
+                            {
+                              dashboardState.result.analysis.detectedIssues
+                                .length
+                            }
+                          </span>
+                          <span className="stat-label">Issues Found</span>
+                        </div>
+                        <div className="stat">
+                          <span className="stat-value">
+                            {Math.round(dashboardState.result.analysis.confidence * 100)}%
+                          </span>
+                          <span className="stat-label">Analysis Score</span>
+                        </div>
+                        <div className="stat">
+                          <span className="stat-value">
+                            {dashboardState.result.analysis.estimatedImpact.level}
+                          </span>
+                          <span className="stat-label">Impact Level</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Code Comparison */}
+                  {dashboardState.result.originalCode && (
+                    <div className="code-comparison">
+                      <h3>Code Changes</h3>
+                      <div className="comparison-grid">
+                        <div className="code-panel">
+                          <div className="code-panel-header">
+                            <h4>Original Code</h4>
+                            <div className="code-actions">
+                              <button
+                                className="code-action-btn"
+                                onClick={() =>
+                                  copyToClipboard(
+                                    dashboardState.result?.originalCode || "",
+                                    "Original",
+                                  )
+                                }
+                                title="Copy original code"
+                                aria-label="Copy original code to clipboard"
+                              >
+                                <svg
+                                  viewBox="0 0 24 24"
+                                  width="16"
+                                  height="16"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  strokeWidth="2"
+                                >
+                                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                                  <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
+                                </svg>
+                              </button>
+                            </div>
+                          </div>
+                          <pre className="code-block original">
+                            <code>{dashboardState.result.originalCode}</code>
+                          </pre>
+                        </div>
+                        <div className="code-panel">
+                          <div className="code-panel-header">
+                            <h4>Fixed Code</h4>
+                            <div className="code-actions">
+                              <button
+                                className="code-action-btn"
+                                onClick={() =>
+                                  copyToClipboard(
+                                    dashboardState.result?.transformed || "",
+                                    "Fixed",
+                                  )
+                                }
+                                title="Copy fixed code"
+                                aria-label="Copy fixed code to clipboard"
+                              >
+                                <svg
+                                  viewBox="0 0 24 24"
+                                  width="16"
+                                  height="16"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  strokeWidth="2"
+                                >
+                                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                                  <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
+                                </svg>
+                              </button>
+                            </div>
+                          </div>
+                          <pre className="code-block fixed">
+                            <code>{dashboardState.result.transformed}</code>
+                          </pre>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
-                <div className="config-status">
-                  <div className="status-indicator">
-                    <div className="status-dot"></div>
-                    <span>Configuration Ready</span>
+              )
+            )}
+          </div>
+        ) : (
+          <div className="dashboard-content">
+            {/* Enhanced Analysis Configuration */}
+            {(dashboardState.activeSection === "editor" ||
+              dashboardState.activeSection === "samples") && (
+              <div
+                className="analysis-configuration"
+                role="region"
+                aria-labelledby="config-title"
+              >
+                <div className="config-header">
+                  <div className="config-title">
+                    <h2 id="config-title">Analysis Configuration</h2>
+                    <p>
+                      Configure analysis mode, engine type, and layer selection
+                    </p>
+                  </div>
+                  <div className="config-status">
+                    <div className="status-indicator">
+                      <div className="status-dot"></div>
+                      <span>Configuration Ready</span>
+                    </div>
                   </div>
                 </div>
-              </div>
 
               <div className="config-grid">
                 <fieldset className="control-group">
