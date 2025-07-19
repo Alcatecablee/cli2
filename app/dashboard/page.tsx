@@ -1792,10 +1792,11 @@ export default function Dashboard() {
             <div className="enhanced-settings-spotlight">
               <strong>🎯 CURRENT ANALYSIS CONFIGURATION</strong>
               <span
-                style={{
-                  color: dashboardState.applyFixes ? "#ff9800" : "#4caf50",
-                }}
+                className={`setting-mode ${dashboardState.applyFixes ? "apply-mode" : "dry-run-mode"}`}
               >
+                <span className="badge-icon">
+                  {dashboardState.applyFixes ? "🔧" : "🔍"}
+                </span>
                 {dashboardState.applyFixes
                   ? "Apply Fixes Mode"
                   : "Dry-Run Mode"}
