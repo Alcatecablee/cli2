@@ -1396,54 +1396,87 @@ export default function Dashboard() {
         </div>
 
         <nav className="sidebar-nav" role="menu">
-          {sidebarItems.map((item, index) => (
-            <button
-              key={item.id}
-              className={`nav-item ${dashboardState.activeSection === item.id ? "active" : ""}`}
-              onClick={() =>
-                setDashboardState((prev) => ({
-                  ...prev,
-                  activeSection: item.id,
-                  // Auto-hide results when switching tabs
-                  showResults:
-                    item.id === "editor" || item.id === "samples"
-                      ? prev.showResults
-                      : false,
-                }))
-              }
-              role="menuitem"
-              aria-current={
-                dashboardState.activeSection === item.id ? "page" : undefined
-              }
-              aria-label={`${item.label}: ${item.description}`}
-              tabIndex={0}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  e.preventDefault();
+          {sidebarItems.map((item, index) => {
+            if (item.isExternal) {
+              return (
+                <Link
+                  key={item.id}
+                  href={item.href}
+                  className="nav-item"
+                  role="menuitem"
+                  aria-label={`${item.label}: ${item.description}`}
+                  tabIndex={0}
+                  style={{
+                    animationDelay: `${index * 0.1}s`,
+                    display: "flex",
+                    alignItems: "center",
+                    textDecoration: "none",
+                  }}
+                >
+                  <span className="nav-icon" aria-hidden="true">
+                    {item.icon}
+                  </span>
+                  {!dashboardState.sidebarCollapsed && (
+                    <div className="nav-content">
+                      <span className="nav-label">{item.label}</span>
+                      <span className="nav-description">
+                        {item.description}
+                      </span>
+                    </div>
+                  )}
+                </Link>
+              );
+            }
+
+            return (
+              <button
+                key={item.id}
+                className={`nav-item ${dashboardState.activeSection === item.id ? "active" : ""}`}
+                onClick={() =>
                   setDashboardState((prev) => ({
                     ...prev,
                     activeSection: item.id,
-                    // Auto-hide results when switching tabs via keyboard
+                    // Auto-hide results when switching tabs
                     showResults:
                       item.id === "editor" || item.id === "samples"
                         ? prev.showResults
                         : false,
-                  }));
+                  }))
                 }
-              }}
-              style={{ animationDelay: `${index * 0.1}s` }}
-            >
-              <span className="nav-icon" aria-hidden="true">
-                {item.icon}
-              </span>
-              {!dashboardState.sidebarCollapsed && (
-                <div className="nav-content">
-                  <span className="nav-label">{item.label}</span>
-                  <span className="nav-description">{item.description}</span>
-                </div>
-              )}
-            </button>
-          ))}
+                role="menuitem"
+                aria-current={
+                  dashboardState.activeSection === item.id ? "page" : undefined
+                }
+                aria-label={`${item.label}: ${item.description}`}
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    setDashboardState((prev) => ({
+                      ...prev,
+                      activeSection: item.id,
+                      // Auto-hide results when switching tabs via keyboard
+                      showResults:
+                        item.id === "editor" || item.id === "samples"
+                          ? prev.showResults
+                          : false,
+                    }));
+                  }
+                }}
+                style={{ animationDelay: `${index * 0.1}s` }}
+              >
+                <span className="nav-icon" aria-hidden="true">
+                  {item.icon}
+                </span>
+                {!dashboardState.sidebarCollapsed && (
+                  <div className="nav-content">
+                    <span className="nav-label">{item.label}</span>
+                    <span className="nav-description">{item.description}</span>
+                  </div>
+                )}
+              </button>
+            );
+          })}
         </nav>
 
         <div
