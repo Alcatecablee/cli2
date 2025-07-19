@@ -1795,7 +1795,7 @@ export default function Dashboard() {
                 className={`setting-mode ${dashboardState.applyFixes ? "apply-mode" : "dry-run-mode"}`}
               >
                 <span className="badge-icon">
-                  {dashboardState.applyFixes ? "🔧" : "🔍"}
+                  {dashboardState.applyFixes ? "FIX" : "DRY"}
                 </span>
                 {dashboardState.applyFixes
                   ? "Apply Fixes Mode"
